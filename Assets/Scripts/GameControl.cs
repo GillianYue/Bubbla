@@ -11,15 +11,20 @@ public class GameControl : MonoBehaviour {
 	public GameObject Ballz;
 	public float startWait, pbSpawnWait, spawnRangeWidth;
 	public double WTSfactor;
-	public int scWidth, scHeight;
+	private int scWidth, scHeight;
 
 	public GameObject player;
+	public GameObject GameOverC;
+	public EnemySpawner eSpawner;
 
 	// Use this for initialization
 	void Start () {
 		scWidth = Screen.width;
 		scHeight = Screen.height;
+		GameOverC.SetActive (false);
+
 		StartCoroutine (SpawnPaintballs ());
+
 
 		Vector3 zero = mainCamera.WorldToScreenPoint (new Vector3 (0, 
 			player.transform.position.y, player.transform.position.z));
@@ -82,5 +87,12 @@ public class GameControl : MonoBehaviour {
 		}
 	}
 
+	public void gameOver(){
+		GameOverC.SetActive (true);
+	}
 
+	public void restart(){
+		player.GetComponent<Player> ().clearPaint ();
+
+	}
 }

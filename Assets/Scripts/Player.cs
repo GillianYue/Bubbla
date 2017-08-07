@@ -6,16 +6,20 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour
 {
 	public static List<Color> bulletGauge;
-	public Text BGText;
+	public Text BGText, lifeText;
 	public double spaceBtPaintSprites;
 	public GameObject PaintSpriteObj, BulletGaugeObj, BulletObj;
 	public List<GameObject> PaintSprites;
 	public int bulletGaugeCapacity, bulletSpeed;
+	private int life;
+	public GameControl gameControl;
+
 	//bulletSpeed is the absolute distance travelled per sec
 
 	// Use this for initialization
 	void Start ()
 	{
+		life = 100;
 		bulletGauge = new List<Color> ();
 		BGText.text = "BulletGauge";
 		PaintSprites = new List<GameObject> ();
@@ -24,6 +28,11 @@ public class Player : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		lifeText.text = ("Life: " + life.ToString ());
+
+		if (life < 1) {
+			gameControl.gameOver();
+		}
 
 		if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			transform.position += new Vector3 (1, 0, 0);
@@ -37,6 +46,8 @@ public class Player : MonoBehaviour
 		if (Input.GetKeyDown (KeyCode.DownArrow)) {
 			transform.position += new Vector3 (0, 0, -1); 
 		}
+
+
 
 	}
 
@@ -66,14 +77,29 @@ public class Player : MonoBehaviour
 			velocity = new Vector3 (((direction.y>0)? 1:-1) * Mathf.Sin(angle)*bulletSpeed, 0,
 				Mathf.Cos(angle)*bulletSpeed);
 
-			print (bullet.GetComponent<Rigidbody> ().
-				velocity+" "+direction+" sin"+Mathf.Sin(angle));
 			bullet.GetComponent<Renderer> ().materials [0].color 
 			= bulletGauge [bulletGauge.Count - 1];
 			removePaint ();
 		}
 	}
 
+	public void damage(int damage){
+		life -= damage;
+	}
+
+	public void cure(int addition){
+		life += addition;
+	}
+
+	public void respawn(){
+		life = 100;
+	}
+
+	public void clearPaint(){
+		for (int c = 0; c < bulletGauge.Count; c++) {
+			removePaint ();
+		}
+	}
 
 	private void removePaint(){
 			//removes both the color in list and the sprite
@@ -119,7 +145,7 @@ public class Player : MonoBehaviour
 		PaintSprites.RemoveAt (PaintSprites.Count - 1);
 	}
 
-		void printPlayer(){
+	public void printPlayer(){
 		print (transform.position +
 		Camera.main.WorldToScreenPoint
 						(transform.position));
