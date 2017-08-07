@@ -7,7 +7,7 @@ public class PaintballSpawner : MonoBehaviour {
 	private Renderer rend;
 	private int size;
 	private Color color;
-	public float sizeScale = 1.0f;
+	public float sizeScale;
 	private int myNumInList;
 	public GameObject explosion;
 	public GameObject absorption;
@@ -42,21 +42,23 @@ public class PaintballSpawner : MonoBehaviour {
 		}
 
 	}
-
-	void OnMouseOver(){
-		if(Input.GetMouseButtonDown(0)){
-			
-	if (GameObject.FindGameObjectWithTag ("Player").GetComponent
-				<Player> ().addPaint (color)) {
-				Instantiate (absorption, transform.position, transform.rotation);
-				Destroy (gameObject);
-			}
+		
+	public void getsAbsorbed(){
+		Instantiate (absorption, transform.position, transform.rotation);
+		if (size - 1 == 0) {
+			Destroy (gameObject);
+		} else {
+			setSize (size - 1);
 		}
-			}
+	}
 
 	public void setColor(Color c){
 		rend.materials[0].color = c;
 		color = c;
+	}
+
+	public Color getColor(){
+		return color;
 	}
 
 	public void setSize(int s){

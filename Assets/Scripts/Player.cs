@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	//shoooot paint; this is called in GameControl's update
 	public void launchBullet(Vector3 mouse){
 		if (bulletGauge.Count > 0) {
 			GameObject bullet = Instantiate (BulletObj, transform.position, 
@@ -62,18 +63,11 @@ public class Player : MonoBehaviour
 			float angle = Mathf.Atan (tan);
 
 			bullet.GetComponent<Rigidbody> ().
-			velocity = new Vector3 (Mathf.Sin(angle)*bulletSpeed, 0,
+			velocity = new Vector3 (((direction.y>0)? 1:-1) * Mathf.Sin(angle)*bulletSpeed, 0,
 				Mathf.Cos(angle)*bulletSpeed);
 
 			print (bullet.GetComponent<Rigidbody> ().
-				velocity);
-			bullet.transform.rotation = Quaternion.LookRotation
-				(bullet.GetComponent<Rigidbody> ().
-					velocity);
-			//TODO: some probs with the rotation here.....
-			//NEED to make it rotate around x for 90, SOMEHOW.
-			bullet.transform.RotateAround
-			(bullet.transform.position,Vector3.right,90);/////
+				velocity+" "+direction+" sin"+Mathf.Sin(angle));
 			bullet.GetComponent<Renderer> ().materials [0].color 
 			= bulletGauge [bulletGauge.Count - 1];
 			removePaint ();
