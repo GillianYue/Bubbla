@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DestroyByTime : MonoBehaviour {
 
-	public int seconds;
+	public float seconds;
 
 	// Use this for initialization
 	void Start () {
