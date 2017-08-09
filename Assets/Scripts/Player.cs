@@ -10,7 +10,9 @@ public class Player : MonoBehaviour
 	public double spaceBtPaintSprites;
 	public GameObject PaintSpriteObj, BulletGaugeObj, BulletObj;
 	public List<GameObject> PaintSprites;
-	public int bulletGaugeCapacity, bulletSpeed;
+	public int bulletGaugeCapacity;
+
+	public float bulletSpeed;
 	private int life;
 	public GameControl gameControl;
 

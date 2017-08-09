@@ -5,6 +5,7 @@ public class BulletAccl : MonoBehaviour {
 	
 	public float accl;
 	public GameObject trail;
+	public GameObject explosion;
 
 	void Start () {
 		GameObject t = trail;
@@ -20,6 +21,18 @@ public class BulletAccl : MonoBehaviour {
 			(GetComponent<Rigidbody> ().velocity.x * accl, 0, 
 				GetComponent<Rigidbody> ().velocity.z *accl);
 
+
+	}
+
+	void OnTriggerEnter(Collider other){
+
+		//if bullet hits enemy, it bursts and damages enemy
+		if (other.GetComponent<Collider>().tag == "Enemy") {
+			if (explosion != null) {
+				Instantiate (explosion, transform.position, transform.rotation);
+				Destroy (gameObject);
+			}
+		}
 
 	}
 }

@@ -33,8 +33,7 @@ public class PaintballSpawner : MonoBehaviour {
 	void OnCollisionEnter(Collision other){
 
 		//if paintball hit player, it bursts
-		if (other.collider.tag == "Player") {
-			print ("bumped into player!");
+		if (other.collider.tag == "Player" || other.collider.tag == "Bullet") {
 			if (explosion != null) {
 				Instantiate (explosion, transform.position, transform.rotation);
 				Destroy (gameObject);
