@@ -9,6 +9,10 @@ public class TrailFollowBall : MonoBehaviour {
 
 	void Start () {
 		dbt.enabled = false;
+		gameObject.transform.GetChild (0).gameObject.GetComponent<ParticleSystem> ().startColor = 
+		myBullet.gameObject.GetComponent<MeshRenderer> ().material.color;
+
+		//print (gameObject.transform.GetChild (0).gameObject.GetComponent<TrailRenderer> ().material.color);
 	}
 		
 	void Update () {
@@ -21,9 +25,12 @@ public class TrailFollowBall : MonoBehaviour {
 		}
 	}
 
-	public void setMyBall(GameObject b){
+	public void setMyBullet(GameObject b){
 		myBullet = b;
 	}
 
+	public GameObject getMyBullet(){
+		return myBullet;
+	}
 
 }

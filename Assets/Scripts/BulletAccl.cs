@@ -10,7 +10,7 @@ public class BulletAccl : MonoBehaviour {
 		GameObject t = trail;
 		t = Instantiate (trail, gameObject.transform.position,
 			trail.transform.rotation) as GameObject;
-		t.GetComponent<TrailFollowBall> ().setMyBall (gameObject);
+		t.GetComponent<TrailFollowBall> ().setMyBullet (gameObject);
 
 	}
 
