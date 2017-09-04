@@ -79,3 +79,5 @@ extern "C"  Component_t3501516275 * GameObject_Internal_AddComponentWithType_m22
 extern "C"  Component_t3501516275 * GameObject_AddComponent_m2208780168 (GameObject_t3674682005 * __this, Type_t * ___componentType0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Void UnityEngine.GameObject::Internal_CreateGameObject(UnityEngine.GameObject,System.String)
 extern "C"  void GameObject_Internal_CreateGameObject_m2521325981 (Il2CppObject * __this /* static, unused */, GameObject_t3674682005 * ___mono0, String_t* ___name1, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// UnityEngine.GameObject UnityEngine.GameObject::get_gameObject()
+extern "C"  GameObject_t3674682005 * GameObject_get_gameObject_m1966529385 (GameObject_t3674682005 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;

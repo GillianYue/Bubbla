@@ -6,11 +6,11 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour
 {
 	public static List<Color> bulletGauge;
-	public Text BGText, lifeText;
-	public double spaceBtPaintSprites;
-	public GameObject PaintSpriteObj, BulletGaugeObj, BulletObj;
+	public Text lifeText;
+	public GameObject PaintSpriteObj, BulletGaugeObj, BulletObj, cannon;
 	public List<GameObject> PaintSprites;
 	public int bulletGaugeCapacity;
+	public int maxLife;
 
 	public float bulletSpeed;
 	private int life;
@@ -21,9 +21,8 @@ public class Player : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		life = 100;
+		life = maxLife;
 		bulletGauge = new List<Color> ();
-		BGText.text = "BulletGauge";
 		PaintSprites = new List<GameObject> ();
 	}
 	
@@ -35,6 +34,8 @@ public class Player : MonoBehaviour
 		if (life < 1) {
 			gameControl.gameOver();
 		}
+
+		gameControl.updateLife (life);
 
 		if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			transform.position += new Vector3 (1, 0, 0);
@@ -79,8 +80,10 @@ public class Player : MonoBehaviour
 			velocity = new Vector3 (((direction.y>0)? 1:-1) * Mathf.Sin(angle)*bulletSpeed, 0,
 				Mathf.Cos(angle)*bulletSpeed);
 
-			bullet.GetComponent<Renderer> ().materials [0].color 
+			bullet.GetComponent<SpriteRenderer> ().color 
 			= bulletGauge [bulletGauge.Count - 1];
+			bullet.transform.Rotate (new Vector3(0,0,
+				((direction.y>0)? -1:1) * Mathf.Rad2Deg*angle));
 			removePaint ();
 		}
 	}
@@ -94,10 +97,11 @@ public class Player : MonoBehaviour
 	}
 
 	public void respawn(){
-		life = 100;
+		life = maxLife;
+		clearPaint ();
 	}
 
-	public void clearPaint(){
+	private void clearPaint(){
 		for (int c = 0; c < bulletGauge.Count; c++) {
 			removePaint ();
 		}
@@ -115,11 +119,13 @@ public class Player : MonoBehaviour
 			
 			GameObject ps = PaintSpriteObj;
 			PaintSprites.Add (Instantiate (ps,
-				BGText.transform.position
-			+ new Vector3 ((float)(1.5 //text space
-			+ (bulletGauge.Count + 1) * spaceBtPaintSprites //mid space
-			+ bulletGauge.Count * 1) //ball space
-					, 0, 0), Quaternion.FromToRotation (Vector3.up,
+				cannon.transform.position
+				+ new Vector3 (0.01f+
+					0.03f*(bulletGauge.Count==1 ? 1:0), 
+					-0.01f, 
+					//to ensure pbSprite appears BELOW cannon img
+					(bulletGauge.Count-2)*0.96f), 
+				Quaternion.FromToRotation (Vector3.up,
 						Vector3.forward)) as GameObject);
 			
 			PaintSprites[PaintSprites.Count-1].transform.parent 
@@ -153,5 +159,9 @@ public class Player : MonoBehaviour
 						(transform.position));
 					
 				}
+
+	public int getMaxLife(){
+		return maxLife;
+	}
 }
 

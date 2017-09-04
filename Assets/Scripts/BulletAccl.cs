@@ -30,6 +30,7 @@ public class BulletAccl : MonoBehaviour {
 		if (other.GetComponent<Collider>().tag == "Enemy") {
 			if (explosion != null) {
 				Instantiate (explosion, transform.position, transform.rotation);
+				other.GetComponent<Enemy> ().damage (1);
 				Destroy (gameObject);
 			}
 		}

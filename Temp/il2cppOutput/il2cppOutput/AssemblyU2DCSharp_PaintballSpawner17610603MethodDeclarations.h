@@ -14,11 +14,11 @@
 
 // PaintballSpawner
 struct PaintballSpawner_t17610603;
-// UnityEngine.Collision
-struct Collision_t2494107688;
+// UnityEngine.Collider
+struct Collider_t2939674232;
 
 #include "codegen/il2cpp-codegen.h"
-#include "UnityEngine_UnityEngine_Collision2494107688.h"
+#include "UnityEngine_UnityEngine_Collider2939674232.h"
 #include "UnityEngine_UnityEngine_Color4194546905.h"
 #include "UnityEngine_UnityEngine_Vector34282066566.h"
 
@@ -28,14 +28,16 @@ extern "C"  void PaintballSpawner__ctor_m4015560592 (PaintballSpawner_t17610603 
 extern "C"  void PaintballSpawner_Start_m2962698384 (PaintballSpawner_t17610603 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Void PaintballSpawner::Update()
 extern "C"  void PaintballSpawner_Update_m1655188861 (PaintballSpawner_t17610603 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
-// System.Void PaintballSpawner::OnCollisionEnter(UnityEngine.Collision)
-extern "C"  void PaintballSpawner_OnCollisionEnter_m1551833438 (PaintballSpawner_t17610603 * __this, Collision_t2494107688 * ___other0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Void PaintballSpawner::OnTriggerEnter(UnityEngine.Collider)
+extern "C"  void PaintballSpawner_OnTriggerEnter_m3483319784 (PaintballSpawner_t17610603 * __this, Collider_t2939674232 * ___other0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Void PaintballSpawner::getsAbsorbed()
 extern "C"  void PaintballSpawner_getsAbsorbed_m3980232669 (PaintballSpawner_t17610603 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Void PaintballSpawner::setColor(UnityEngine.Color)
 extern "C"  void PaintballSpawner_setColor_m679030993 (PaintballSpawner_t17610603 * __this, Color_t4194546905  ___c0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // UnityEngine.Color PaintballSpawner::getColor()
 extern "C"  Color_t4194546905  PaintballSpawner_getColor_m2342862920 (PaintballSpawner_t17610603 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Void PaintballSpawner::randomizeSpriteKind()
+extern "C"  void PaintballSpawner_randomizeSpriteKind_m844960792 (PaintballSpawner_t17610603 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Void PaintballSpawner::setSize(System.Int32)
 extern "C"  void PaintballSpawner_setSize_m4015498274 (PaintballSpawner_t17610603 * __this, int32_t ___s0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Single PaintballSpawner::getScale()

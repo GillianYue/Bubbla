@@ -1,4 +1,4 @@
-//Generated on : 8/5/2017 8:41:46 PM
+//Generated on : 9/4/2017 3:51:57 PM
 void RegisterAllStrippedInternalCalls()
 {
 	//Start Registrations for type : UnityEngine.AnimationCurve
@@ -108,6 +108,14 @@ void RegisterAllStrippedInternalCalls()
 		Register_UnityEngine_AsyncOperation_set_priority();
 
 	//End Registrations for type : UnityEngine.AsyncOperation
+
+	//Start Registrations for type : UnityEngine.AudioSource
+
+		//System.Void UnityEngine.AudioSource::set_pitch(System.Single)
+		void Register_UnityEngine_AudioSource_set_pitch();
+		Register_UnityEngine_AudioSource_set_pitch();
+
+	//End Registrations for type : UnityEngine.AudioSource
 
 	//Start Registrations for type : UnityEngine.Behaviour
 
@@ -1127,6 +1135,10 @@ void RegisterAllStrippedInternalCalls()
 		void Register_UnityEngine_Input_INTERNAL_CALL_GetTouch();
 		Register_UnityEngine_Input_INTERNAL_CALL_GetTouch();
 
+		//System.Void UnityEngine.Input::INTERNAL_get_acceleration(UnityEngine.Vector3&)
+		void Register_UnityEngine_Input_INTERNAL_get_acceleration();
+		Register_UnityEngine_Input_INTERNAL_get_acceleration();
+
 		//System.Void UnityEngine.Input::INTERNAL_get_mousePosition(UnityEngine.Vector3&)
 		void Register_UnityEngine_Input_INTERNAL_get_mousePosition();
 		Register_UnityEngine_Input_INTERNAL_get_mousePosition();
@@ -1797,6 +1809,22 @@ void RegisterAllStrippedInternalCalls()
 
 	//End Registrations for type : UnityEngine.Object
 
+	//Start Registrations for type : UnityEngine.ParticleSystem
+
+		//System.Void UnityEngine.ParticleSystem::INTERNAL_set_startColor(UnityEngine.Color&)
+		void Register_UnityEngine_ParticleSystem_INTERNAL_set_startColor();
+		Register_UnityEngine_ParticleSystem_INTERNAL_set_startColor();
+
+	//End Registrations for type : UnityEngine.ParticleSystem
+
+	//Start Registrations for type : UnityEngine.ParticleSystem/EmissionModule
+
+		//System.Void UnityEngine.ParticleSystem/EmissionModule::SetEnabled(UnityEngine.ParticleSystem,System.Boolean)
+		void Register_UnityEngine_ParticleSystem_EmissionModule_SetEnabled();
+		Register_UnityEngine_ParticleSystem_EmissionModule_SetEnabled();
+
+	//End Registrations for type : UnityEngine.ParticleSystem/EmissionModule
+
 	//Start Registrations for type : UnityEngine.Physics
 
 		//System.Boolean UnityEngine.Physics::INTERNAL_CALL_Internal_Raycast(UnityEngine.Vector3&,UnityEngine.Vector3&,UnityEngine.RaycastHit&,System.Single,System.Int32,UnityEngine.QueryTriggerInteraction)
@@ -1826,6 +1854,10 @@ void RegisterAllStrippedInternalCalls()
 		//System.Void UnityEngine.Quaternion::INTERNAL_CALL_FromToRotation(UnityEngine.Vector3&,UnityEngine.Vector3&,UnityEngine.Quaternion&)
 		void Register_UnityEngine_Quaternion_INTERNAL_CALL_FromToRotation();
 		Register_UnityEngine_Quaternion_INTERNAL_CALL_FromToRotation();
+
+		//System.Void UnityEngine.Quaternion::INTERNAL_CALL_Internal_FromEulerRad(UnityEngine.Vector3&,UnityEngine.Quaternion&)
+		void Register_UnityEngine_Quaternion_INTERNAL_CALL_Internal_FromEulerRad();
+		Register_UnityEngine_Quaternion_INTERNAL_CALL_Internal_FromEulerRad();
 
 		//System.Void UnityEngine.Quaternion::INTERNAL_CALL_Inverse(UnityEngine.Quaternion&,UnityEngine.Quaternion&)
 		void Register_UnityEngine_Quaternion_INTERNAL_CALL_Inverse();
@@ -2013,6 +2045,14 @@ void RegisterAllStrippedInternalCalls()
 
 	//End Registrations for type : UnityEngine.Rigidbody
 
+	//Start Registrations for type : UnityEngine.SceneManagement.SceneManager
+
+		//UnityEngine.AsyncOperation UnityEngine.SceneManagement.SceneManager::LoadSceneAsyncNameIndexInternal(System.String,System.Int32,System.Boolean,System.Boolean)
+		void Register_UnityEngine_SceneManagement_SceneManager_LoadSceneAsyncNameIndexInternal();
+		Register_UnityEngine_SceneManagement_SceneManager_LoadSceneAsyncNameIndexInternal();
+
+	//End Registrations for type : UnityEngine.SceneManagement.SceneManager
+
 	//Start Registrations for type : UnityEngine.Screen
 
 		//System.Int32 UnityEngine.Screen::get_height()
@@ -2185,6 +2225,26 @@ void RegisterAllStrippedInternalCalls()
 
 	//End Registrations for type : UnityEngine.Sprite
 
+	//Start Registrations for type : UnityEngine.SpriteRenderer
+
+		//System.Void UnityEngine.SpriteRenderer::INTERNAL_get_color(UnityEngine.Color&)
+		void Register_UnityEngine_SpriteRenderer_INTERNAL_get_color();
+		Register_UnityEngine_SpriteRenderer_INTERNAL_get_color();
+
+		//System.Void UnityEngine.SpriteRenderer::INTERNAL_set_color(UnityEngine.Color&)
+		void Register_UnityEngine_SpriteRenderer_INTERNAL_set_color();
+		Register_UnityEngine_SpriteRenderer_INTERNAL_set_color();
+
+		//System.Void UnityEngine.SpriteRenderer::SetSprite_INTERNAL(UnityEngine.Sprite)
+		void Register_UnityEngine_SpriteRenderer_SetSprite_INTERNAL();
+		Register_UnityEngine_SpriteRenderer_SetSprite_INTERNAL();
+
+		//System.Void UnityEngine.SpriteRenderer::set_flipX(System.Boolean)
+		void Register_UnityEngine_SpriteRenderer_set_flipX();
+		Register_UnityEngine_SpriteRenderer_set_flipX();
+
+	//End Registrations for type : UnityEngine.SpriteRenderer
+
 	//Start Registrations for type : UnityEngine.Sprites.DataUtility
 
 		//System.Void UnityEngine.Sprites.DataUtility::INTERNAL_CALL_GetInnerUV(UnityEngine.Sprite,UnityEngine.Vector4&)
@@ -2299,6 +2359,10 @@ void RegisterAllStrippedInternalCalls()
 		void Register_UnityEngine_Time_get_unscaledTime();
 		Register_UnityEngine_Time_get_unscaledTime();
 
+		//System.Void UnityEngine.Time::set_timeScale(System.Single)
+		void Register_UnityEngine_Time_set_timeScale();
+		Register_UnityEngine_Time_set_timeScale();
+
 	//End Registrations for type : UnityEngine.Time
 
 	//Start Registrations for type : UnityEngine.TouchScreenKeyboard
@@ -2355,6 +2419,10 @@ void RegisterAllStrippedInternalCalls()
 		void Register_UnityEngine_Transform_INTERNAL_CALL_InverseTransformPoint();
 		Register_UnityEngine_Transform_INTERNAL_CALL_InverseTransformPoint();
 
+		//System.Void UnityEngine.Transform::INTERNAL_CALL_TransformDirection(UnityEngine.Transform,UnityEngine.Vector3&,UnityEngine.Vector3&)
+		void Register_UnityEngine_Transform_INTERNAL_CALL_TransformDirection();
+		Register_UnityEngine_Transform_INTERNAL_CALL_TransformDirection();
+
 		//System.Void UnityEngine.Transform::INTERNAL_CALL_TransformPoint(UnityEngine.Transform,UnityEngine.Vector3&,UnityEngine.Vector3&)
 		void Register_UnityEngine_Transform_INTERNAL_CALL_TransformPoint();
 		Register_UnityEngine_Transform_INTERNAL_CALL_TransformPoint();
@@ -2398,6 +2466,10 @@ void RegisterAllStrippedInternalCalls()
 		//System.Void UnityEngine.Transform::INTERNAL_set_position(UnityEngine.Vector3&)
 		void Register_UnityEngine_Transform_INTERNAL_set_position();
 		Register_UnityEngine_Transform_INTERNAL_set_position();
+
+		//System.Void UnityEngine.Transform::INTERNAL_set_rotation(UnityEngine.Quaternion&)
+		void Register_UnityEngine_Transform_INTERNAL_set_rotation();
+		Register_UnityEngine_Transform_INTERNAL_set_rotation();
 
 		//System.Void UnityEngine.Transform::SetAsFirstSibling()
 		void Register_UnityEngine_Transform_SetAsFirstSibling();

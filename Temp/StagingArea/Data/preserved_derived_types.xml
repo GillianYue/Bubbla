@@ -1,14 +1,20 @@
 <linker>
 <assembly fullname="Assembly-CSharp">
+<type fullname="Accelerometer" preserve="all"/>
+<type fullname="BGMover" preserve="all"/>
+<type fullname="BulletAccl" preserve="all"/>
+<type fullname="CollisionCheck" preserve="all"/>
 <type fullname="DestroyByBoundary" preserve="all"/>
 <type fullname="DestroyByTime" preserve="all"/>
+<type fullname="DestroyNow" preserve="all"/>
+<type fullname="Enemy" preserve="all"/>
+<type fullname="EnemyMover" preserve="all"/>
 <type fullname="EnemySpawner" preserve="all"/>
 <type fullname="GameControl" preserve="all"/>
 <type fullname="Global" preserve="all"/>
-<type fullname="Mover" preserve="all"/>
 <type fullname="PaintballSpawner" preserve="all"/>
 <type fullname="Player" preserve="all"/>
-<type fullname="Spiee" preserve="all"/>
+<type fullname="TrailFollowBall" preserve="all"/>
 </assembly>
 <assembly fullname="UnityEngine.UI">
 <type fullname="UnityEngine.EventSystems.EventSystem" preserve="all"/>

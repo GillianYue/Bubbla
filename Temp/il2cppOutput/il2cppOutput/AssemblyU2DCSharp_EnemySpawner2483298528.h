@@ -34,12 +34,14 @@ public:
 	float ___waveSpawnWait_4;
 	// System.Single EnemySpawner::range
 	float ___range_5;
-	// UnityEngine.GameObject EnemySpawner::enemy
-	GameObject_t3674682005 * ___enemy_6;
+	// UnityEngine.GameObject EnemySpawner::spike
+	GameObject_t3674682005 * ___spike_6;
 	// UnityEngine.GameObject EnemySpawner::enemiz
 	GameObject_t3674682005 * ___enemiz_7;
+	// UnityEngine.GameObject EnemySpawner::bird
+	GameObject_t3674682005 * ___bird_8;
 	// UnityEngine.Vector3 EnemySpawner::spawnValues
-	Vector3_t4282066566  ___spawnValues_8;
+	Vector3_t4282066566  ___spawnValues_9;
 
 public:
 	inline static int32_t get_offset_of_startWait_2() { return static_cast<int32_t>(offsetof(EnemySpawner_t2483298528, ___startWait_2)); }
@@ -74,13 +76,13 @@ public:
 		___range_5 = value;
 	}
 
-	inline static int32_t get_offset_of_enemy_6() { return static_cast<int32_t>(offsetof(EnemySpawner_t2483298528, ___enemy_6)); }
-	inline GameObject_t3674682005 * get_enemy_6() const { return ___enemy_6; }
-	inline GameObject_t3674682005 ** get_address_of_enemy_6() { return &___enemy_6; }
-	inline void set_enemy_6(GameObject_t3674682005 * value)
+	inline static int32_t get_offset_of_spike_6() { return static_cast<int32_t>(offsetof(EnemySpawner_t2483298528, ___spike_6)); }
+	inline GameObject_t3674682005 * get_spike_6() const { return ___spike_6; }
+	inline GameObject_t3674682005 ** get_address_of_spike_6() { return &___spike_6; }
+	inline void set_spike_6(GameObject_t3674682005 * value)
 	{
-		___enemy_6 = value;
-		Il2CppCodeGenWriteBarrier(&___enemy_6, value);
+		___spike_6 = value;
+		Il2CppCodeGenWriteBarrier(&___spike_6, value);
 	}
 
 	inline static int32_t get_offset_of_enemiz_7() { return static_cast<int32_t>(offsetof(EnemySpawner_t2483298528, ___enemiz_7)); }
@@ -92,12 +94,21 @@ public:
 		Il2CppCodeGenWriteBarrier(&___enemiz_7, value);
 	}
 
-	inline static int32_t get_offset_of_spawnValues_8() { return static_cast<int32_t>(offsetof(EnemySpawner_t2483298528, ___spawnValues_8)); }
-	inline Vector3_t4282066566  get_spawnValues_8() const { return ___spawnValues_8; }
-	inline Vector3_t4282066566 * get_address_of_spawnValues_8() { return &___spawnValues_8; }
-	inline void set_spawnValues_8(Vector3_t4282066566  value)
+	inline static int32_t get_offset_of_bird_8() { return static_cast<int32_t>(offsetof(EnemySpawner_t2483298528, ___bird_8)); }
+	inline GameObject_t3674682005 * get_bird_8() const { return ___bird_8; }
+	inline GameObject_t3674682005 ** get_address_of_bird_8() { return &___bird_8; }
+	inline void set_bird_8(GameObject_t3674682005 * value)
 	{
-		___spawnValues_8 = value;
+		___bird_8 = value;
+		Il2CppCodeGenWriteBarrier(&___bird_8, value);
+	}
+
+	inline static int32_t get_offset_of_spawnValues_9() { return static_cast<int32_t>(offsetof(EnemySpawner_t2483298528, ___spawnValues_9)); }
+	inline Vector3_t4282066566  get_spawnValues_9() const { return ___spawnValues_9; }
+	inline Vector3_t4282066566 * get_address_of_spawnValues_9() { return &___spawnValues_9; }
+	inline void set_spawnValues_9(Vector3_t4282066566  value)
+	{
+		___spawnValues_9 = value;
 	}
 };
 

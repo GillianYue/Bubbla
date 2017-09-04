@@ -2,8 +2,10 @@
 using System.Collections;
 
 public class EnemySpawner : MonoBehaviour {
+	
 	public float startWait, enemySpawnWait, waveSpawnWait, range;
-	public GameObject enemy, enemiz;
+	//range is worldspace width on screen/2 (+ and then -)
+	public GameObject spike, enemiz, bird;
 	public Vector3 spawnValues;
 
 
@@ -12,7 +14,7 @@ public class EnemySpawner : MonoBehaviour {
 	*/
 	// Use this for initialization
 	void Start () {
-		int[] t = new int[6]{0, 1, 2, 0, 0, 1};
+		int[] t = new int[6]{0, 1, 2, 3, 0, 1};
 		StartCoroutine (SpawnEnemyLevel (t));
 	}
 	
@@ -29,20 +31,19 @@ public class EnemySpawner : MonoBehaviour {
 			int curr = type;
 			switch(curr){
 			case 0:
-				print ("horizontal!");
 				SpawnHorizontal (3);
 				break;
 			case 1:
-				print ("forward slash !");
 				yield return StartCoroutine (SpawnSlash(true, 3));
 				break;
 			case 2:
-				print ("back slash !");
 				yield return StartCoroutine (SpawnSlash (false, 3));
+				break;
+			case 3:
+				yield return StartCoroutine (SpawnCaret (5));
 				break;
 
 			default:
-				print ("default!");
 				break;
 				
 			}
@@ -53,36 +54,70 @@ public class EnemySpawner : MonoBehaviour {
 
 	}
 
+
+	//SPAWN WAVES
+
 	void SpawnHorizontal(int numEnemy){
 		
 		for (int c = 0; c < numEnemy; c++) {
-			GameObject e = enemy;
-
-			Vector3 spawnPosition = new Vector3 (
-				(-range + c*(2*range/(float)(numEnemy-1))), spawnValues.y, spawnValues.z);
-			e = Instantiate (e, spawnPosition, e.transform.rotation)
-			as GameObject;
 			
-			e.transform.parent = enemiz.transform;
+		genSpike((-range + c*(2*range/(float)(numEnemy-1))), spawnValues.y, spawnValues.z);
 
 		}
 	}
 
 	IEnumerator SpawnSlash(bool ForB, int numEnemy){
 		for (int c = 0; c < numEnemy; c++) {
-
-				GameObject e = enemy;
-
-				Vector3 spawnPosition = new Vector3 (
-				(((ForB)? -1:1) * (range - c*(2*range/(float)(numEnemy-1)))), 
+				
+			genBird (((ForB) ? -1 : 1) * (range - c * (2 * range / (float)(numEnemy - 1))), 
 				spawnValues.y, spawnValues.z);
-				e = Instantiate (e, spawnPosition, e.transform.rotation)
-					as GameObject;
 
-				e.transform.parent = enemiz.transform;
+			yield return new WaitForSeconds (enemySpawnWait+0.5f);
+		}
+	}
 
+	IEnumerator SpawnCaret(int numEnemy){
+		//numEnemy has to be odd for this shaped formation
+		for (int c = 0; c < (numEnemy/2); c++) {
+			genSpike (-range + c * (2*range/(float)(numEnemy-1)), spawnValues.y, spawnValues.z);
+			genSpike (range - c * (2*range/(float)(numEnemy-1)), spawnValues.y, spawnValues.z);
 
 			yield return new WaitForSeconds (enemySpawnWait);
 		}
+
+		genSpike (0, spawnValues.y, spawnValues.z);
 	}
+
+
+
+	//GENERATE MONSTERS
+
+	void genSpike(float x, float y, float z){
+		GameObject s = spike;
+
+		Vector3 spawnPosition = new Vector3 (x, y, z);
+		s = Instantiate (s, spawnPosition, s.transform.rotation) as GameObject;
+
+		//NOTE: it's crucial that setLife is AFTER instantiation!
+		s.GetComponent<Enemy> ().setValues (1, 1);
+		s.transform.parent = enemiz.transform;
+
+		if(Random.Range(0, 100.0f)<5){
+			s.GetComponent<Animator> ().enabled = false;
+			s.GetComponent<Enemy>().setValues(s.GetComponent<Enemy>().getLife(), 0);
+		}
+	}
+
+	void genBird(float x, float y, float z){
+		GameObject b = bird;
+
+		Vector3 spawnPosition = new Vector3 (x, y, z);
+		b = Instantiate (b, spawnPosition, b.transform.rotation) as GameObject;
+
+		//NOTE: it's crucial that setLife is AFTER instantiation!
+		b.GetComponent<Enemy> ().setValues (1, 1);
+		b.transform.parent = enemiz.transform;
+	}
+
+
 }

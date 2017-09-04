@@ -1,0 +1,192 @@
+fileFormatVersion: 2
+guid: 20b611276e10e49aabca52f9384e28d1
+timeCreated: 1504422177
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: BadGuySpriteSheet_0
+    21300002: BadGuySpriteSheet_1
+    21300004: BadGuySpriteSheet_2
+    21300006: BadGuySpriteSheet_3
+    21300008: BadGuySpriteSheet_4
+    21300010: BadGuySpriteSheet_5
+    21300012: BadGuySpriteSheet_6
+    21300014: BadGuySpriteSheet_7
+    21300016: BadGuySpriteSheet_8
+    21300018: BadGuySpriteSheet_9
+    21300020: BadGuySpriteSheet_10
+    21300022: BadGuySpriteSheet_11
+    21300024: BadGuySpriteSheet_12
+    21300026: BadGuySpriteSheet_13
+    21300028: BadGuySpriteSheet_14
+    21300030: BadGuySpriteSheet_15
+    21300032: BadGuySpriteSheet_16
+    21300034: BadGuySpriteSheet_17
+    21300036: BadGuySpriteSheet_18
+    21300038: BadGuySpriteSheet_19
+    21300040: BadGuySpriteSheet_20
+    21300042: BadGuySpriteSheet_21
+    21300044: BadGuySpriteSheet_22
+    21300046: BadGuySpriteSheet_23
+    21300048: BadGuySpriteSheet_24
+    21300050: BadGuySpriteSheet_25
+    21300052: BadGuySpriteSheet_26
+    21300054: BadGuySpriteSheet_27
+    21300056: BadGuySpriteSheet_28
+    21300058: BadGuySpriteSheet_29
+    21300060: BadGuySpriteSheet_30
+    21300062: BadGuySpriteSheet_31
+    21300064: BadGuySpriteSheet_32
+    21300066: BadGuySpriteSheet_33
+    21300068: BadGuySpriteSheet_34
+    21300070: BadGuySpriteSheet_35
+    21300072: BadGuySpriteSheet_36
+    21300074: BadGuySpriteSheet_37
+    21300076: BadGuySpriteSheet_38
+    21300078: BadGuySpriteSheet_39
+    21300080: BadGuySpriteSheet_40
+    21300082: BadGuySpriteSheet_41
+    21300084: BadGuySpriteSheet_42
+    21300086: BadGuySpriteSheet_43
+    21300088: BadGuySpriteSheet_44
+    21300090: BadGuySpriteSheet_45
+    21300092: BadGuySpriteSheet_46
+    21300094: BadGuySpriteSheet_47
+    21300096: BadGuySpriteSheet_48
+    21300098: BadGuySpriteSheet_49
+    21300100: BadGuySpriteSheet_50
+    21300102: BadGuySpriteSheet_51
+    21300104: BadGuySpriteSheet_52
+    21300106: BadGuySpriteSheet_53
+    21300108: BadGuySpriteSheet_54
+    21300110: BadGuySpriteSheet_55
+    21300112: BadGuySpriteSheet_56
+    21300114: BadGuySpriteSheet_57
+    21300116: BadGuySpriteSheet_58
+    21300118: BadGuySpriteSheet_59
+    21300120: BadGuySpriteSheet_60
+    21300122: BadGuySpriteSheet_61
+    21300124: BadGuySpriteSheet_62
+    21300126: BadGuySpriteSheet_63
+    21300128: BadGuySpriteSheet_64
+    21300130: BadGuySpriteSheet_65
+    21300132: BadGuySpriteSheet_66
+    21300134: BadGuySpriteSheet_67
+    21300136: BadGuySpriteSheet_68
+    21300138: BadGuySpriteSheet_69
+    21300140: BadGuySpriteSheet_70
+    21300142: BadGuySpriteSheet_71
+    21300144: BadGuySpriteSheet_72
+    21300146: BadGuySpriteSheet_73
+    21300148: BadGuySpriteSheet_74
+    21300150: BadGuySpriteSheet_75
+    21300152: BadGuySpriteSheet_76
+    21300154: BadGuySpriteSheet_77
+    21300156: BadGuySpriteSheet_78
+    21300158: BadGuySpriteSheet_79
+    21300160: BadGuySpriteSheet_80
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 0
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 300
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BadGuySpriteSheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: BadGuySpriteSheet_1
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: BadGuySpriteSheet_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: BadGuySpriteSheet_3
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

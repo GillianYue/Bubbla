@@ -33,3 +33,9 @@ extern "C"  Il2CppObject * EnemySpawner_SpawnEnemyLevel_m2040548535 (EnemySpawne
 extern "C"  void EnemySpawner_SpawnHorizontal_m2852622441 (EnemySpawner_t2483298528 * __this, int32_t ___numEnemy0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Collections.IEnumerator EnemySpawner::SpawnSlash(System.Boolean,System.Int32)
 extern "C"  Il2CppObject * EnemySpawner_SpawnSlash_m1286335533 (EnemySpawner_t2483298528 * __this, bool ___ForB0, int32_t ___numEnemy1, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Collections.IEnumerator EnemySpawner::SpawnCaret(System.Int32)
+extern "C"  Il2CppObject * EnemySpawner_SpawnCaret_m1946091786 (EnemySpawner_t2483298528 * __this, int32_t ___numEnemy0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Void EnemySpawner::genSpike(System.Single,System.Single,System.Single)
+extern "C"  void EnemySpawner_genSpike_m2658595318 (EnemySpawner_t2483298528 * __this, float ___x0, float ___y1, float ___z2, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Void EnemySpawner::genBird(System.Single,System.Single,System.Single)
+extern "C"  void EnemySpawner_genBird_m3172914067 (EnemySpawner_t2483298528 * __this, float ___x0, float ___y1, float ___z2, const MethodInfo* method) IL2CPP_METHOD_ATTR;

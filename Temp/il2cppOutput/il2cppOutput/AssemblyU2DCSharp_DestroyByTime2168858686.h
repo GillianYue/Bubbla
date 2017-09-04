@@ -23,14 +23,14 @@
 struct  DestroyByTime_t2168858686  : public MonoBehaviour_t667441552
 {
 public:
-	// System.Int32 DestroyByTime::seconds
-	int32_t ___seconds_2;
+	// System.Single DestroyByTime::seconds
+	float ___seconds_2;
 
 public:
 	inline static int32_t get_offset_of_seconds_2() { return static_cast<int32_t>(offsetof(DestroyByTime_t2168858686, ___seconds_2)); }
-	inline int32_t get_seconds_2() const { return ___seconds_2; }
-	inline int32_t* get_address_of_seconds_2() { return &___seconds_2; }
-	inline void set_seconds_2(int32_t value)
+	inline float get_seconds_2() const { return ___seconds_2; }
+	inline float* get_address_of_seconds_2() { return &___seconds_2; }
+	inline void set_seconds_2(float value)
 	{
 		___seconds_2 = value;
 	}

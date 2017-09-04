@@ -18,6 +18,8 @@ struct Text_t9039225;
 struct GameObject_t3674682005;
 // System.Collections.Generic.List`1<UnityEngine.GameObject>
 struct List_1_t747900261;
+// GameControl
+struct GameControl_t2485871851;
 
 #include "UnityEngine_UnityEngine_MonoBehaviour667441552.h"
 
@@ -31,66 +33,73 @@ struct List_1_t747900261;
 struct  Player_t2393081601  : public MonoBehaviour_t667441552
 {
 public:
-	// UnityEngine.UI.Text Player::BGText
-	Text_t9039225 * ___BGText_3;
-	// System.Double Player::spaceBtPaintSprites
-	double ___spaceBtPaintSprites_4;
+	// UnityEngine.UI.Text Player::lifeText
+	Text_t9039225 * ___lifeText_3;
 	// UnityEngine.GameObject Player::PaintSpriteObj
-	GameObject_t3674682005 * ___PaintSpriteObj_5;
+	GameObject_t3674682005 * ___PaintSpriteObj_4;
 	// UnityEngine.GameObject Player::BulletGaugeObj
-	GameObject_t3674682005 * ___BulletGaugeObj_6;
+	GameObject_t3674682005 * ___BulletGaugeObj_5;
 	// UnityEngine.GameObject Player::BulletObj
-	GameObject_t3674682005 * ___BulletObj_7;
+	GameObject_t3674682005 * ___BulletObj_6;
+	// UnityEngine.GameObject Player::cannon
+	GameObject_t3674682005 * ___cannon_7;
 	// System.Collections.Generic.List`1<UnityEngine.GameObject> Player::PaintSprites
 	List_1_t747900261 * ___PaintSprites_8;
 	// System.Int32 Player::bulletGaugeCapacity
 	int32_t ___bulletGaugeCapacity_9;
-	// System.Int32 Player::bulletSpeed
-	int32_t ___bulletSpeed_10;
+	// System.Int32 Player::maxLife
+	int32_t ___maxLife_10;
+	// System.Single Player::bulletSpeed
+	float ___bulletSpeed_11;
+	// System.Int32 Player::life
+	int32_t ___life_12;
+	// GameControl Player::gameControl
+	GameControl_t2485871851 * ___gameControl_13;
 
 public:
-	inline static int32_t get_offset_of_BGText_3() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___BGText_3)); }
-	inline Text_t9039225 * get_BGText_3() const { return ___BGText_3; }
-	inline Text_t9039225 ** get_address_of_BGText_3() { return &___BGText_3; }
-	inline void set_BGText_3(Text_t9039225 * value)
+	inline static int32_t get_offset_of_lifeText_3() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___lifeText_3)); }
+	inline Text_t9039225 * get_lifeText_3() const { return ___lifeText_3; }
+	inline Text_t9039225 ** get_address_of_lifeText_3() { return &___lifeText_3; }
+	inline void set_lifeText_3(Text_t9039225 * value)
 	{
-		___BGText_3 = value;
-		Il2CppCodeGenWriteBarrier(&___BGText_3, value);
+		___lifeText_3 = value;
+		Il2CppCodeGenWriteBarrier(&___lifeText_3, value);
 	}
 
-	inline static int32_t get_offset_of_spaceBtPaintSprites_4() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___spaceBtPaintSprites_4)); }
-	inline double get_spaceBtPaintSprites_4() const { return ___spaceBtPaintSprites_4; }
-	inline double* get_address_of_spaceBtPaintSprites_4() { return &___spaceBtPaintSprites_4; }
-	inline void set_spaceBtPaintSprites_4(double value)
+	inline static int32_t get_offset_of_PaintSpriteObj_4() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___PaintSpriteObj_4)); }
+	inline GameObject_t3674682005 * get_PaintSpriteObj_4() const { return ___PaintSpriteObj_4; }
+	inline GameObject_t3674682005 ** get_address_of_PaintSpriteObj_4() { return &___PaintSpriteObj_4; }
+	inline void set_PaintSpriteObj_4(GameObject_t3674682005 * value)
 	{
-		___spaceBtPaintSprites_4 = value;
+		___PaintSpriteObj_4 = value;
+		Il2CppCodeGenWriteBarrier(&___PaintSpriteObj_4, value);
 	}
 
-	inline static int32_t get_offset_of_PaintSpriteObj_5() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___PaintSpriteObj_5)); }
-	inline GameObject_t3674682005 * get_PaintSpriteObj_5() const { return ___PaintSpriteObj_5; }
-	inline GameObject_t3674682005 ** get_address_of_PaintSpriteObj_5() { return &___PaintSpriteObj_5; }
-	inline void set_PaintSpriteObj_5(GameObject_t3674682005 * value)
+	inline static int32_t get_offset_of_BulletGaugeObj_5() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___BulletGaugeObj_5)); }
+	inline GameObject_t3674682005 * get_BulletGaugeObj_5() const { return ___BulletGaugeObj_5; }
+	inline GameObject_t3674682005 ** get_address_of_BulletGaugeObj_5() { return &___BulletGaugeObj_5; }
+	inline void set_BulletGaugeObj_5(GameObject_t3674682005 * value)
 	{
-		___PaintSpriteObj_5 = value;
-		Il2CppCodeGenWriteBarrier(&___PaintSpriteObj_5, value);
+		___BulletGaugeObj_5 = value;
+		Il2CppCodeGenWriteBarrier(&___BulletGaugeObj_5, value);
 	}
 
-	inline static int32_t get_offset_of_BulletGaugeObj_6() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___BulletGaugeObj_6)); }
-	inline GameObject_t3674682005 * get_BulletGaugeObj_6() const { return ___BulletGaugeObj_6; }
-	inline GameObject_t3674682005 ** get_address_of_BulletGaugeObj_6() { return &___BulletGaugeObj_6; }
-	inline void set_BulletGaugeObj_6(GameObject_t3674682005 * value)
+	inline static int32_t get_offset_of_BulletObj_6() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___BulletObj_6)); }
+	inline GameObject_t3674682005 * get_BulletObj_6() const { return ___BulletObj_6; }
+	inline GameObject_t3674682005 ** get_address_of_BulletObj_6() { return &___BulletObj_6; }
+	inline void set_BulletObj_6(GameObject_t3674682005 * value)
 	{
-		___BulletGaugeObj_6 = value;
-		Il2CppCodeGenWriteBarrier(&___BulletGaugeObj_6, value);
+		___BulletObj_6 = value;
+		Il2CppCodeGenWriteBarrier(&___BulletObj_6, value);
 	}
 
-	inline static int32_t get_offset_of_BulletObj_7() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___BulletObj_7)); }
-	inline GameObject_t3674682005 * get_BulletObj_7() const { return ___BulletObj_7; }
-	inline GameObject_t3674682005 ** get_address_of_BulletObj_7() { return &___BulletObj_7; }
-	inline void set_BulletObj_7(GameObject_t3674682005 * value)
+	inline static int32_t get_offset_of_cannon_7() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___cannon_7)); }
+	inline GameObject_t3674682005 * get_cannon_7() const { return ___cannon_7; }
+	inline GameObject_t3674682005 ** get_address_of_cannon_7() { return &___cannon_7; }
+	inline void set_cannon_7(GameObject_t3674682005 * value)
 	{
-		___BulletObj_7 = value;
-		Il2CppCodeGenWriteBarrier(&___BulletObj_7, value);
+		___cannon_7 = value;
+		Il2CppCodeGenWriteBarrier(&___cannon_7, value);
 	}
 
 	inline static int32_t get_offset_of_PaintSprites_8() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___PaintSprites_8)); }
@@ -110,12 +119,37 @@ public:
 		___bulletGaugeCapacity_9 = value;
 	}
 
-	inline static int32_t get_offset_of_bulletSpeed_10() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___bulletSpeed_10)); }
-	inline int32_t get_bulletSpeed_10() const { return ___bulletSpeed_10; }
-	inline int32_t* get_address_of_bulletSpeed_10() { return &___bulletSpeed_10; }
-	inline void set_bulletSpeed_10(int32_t value)
+	inline static int32_t get_offset_of_maxLife_10() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___maxLife_10)); }
+	inline int32_t get_maxLife_10() const { return ___maxLife_10; }
+	inline int32_t* get_address_of_maxLife_10() { return &___maxLife_10; }
+	inline void set_maxLife_10(int32_t value)
 	{
-		___bulletSpeed_10 = value;
+		___maxLife_10 = value;
+	}
+
+	inline static int32_t get_offset_of_bulletSpeed_11() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___bulletSpeed_11)); }
+	inline float get_bulletSpeed_11() const { return ___bulletSpeed_11; }
+	inline float* get_address_of_bulletSpeed_11() { return &___bulletSpeed_11; }
+	inline void set_bulletSpeed_11(float value)
+	{
+		___bulletSpeed_11 = value;
+	}
+
+	inline static int32_t get_offset_of_life_12() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___life_12)); }
+	inline int32_t get_life_12() const { return ___life_12; }
+	inline int32_t* get_address_of_life_12() { return &___life_12; }
+	inline void set_life_12(int32_t value)
+	{
+		___life_12 = value;
+	}
+
+	inline static int32_t get_offset_of_gameControl_13() { return static_cast<int32_t>(offsetof(Player_t2393081601, ___gameControl_13)); }
+	inline GameControl_t2485871851 * get_gameControl_13() const { return ___gameControl_13; }
+	inline GameControl_t2485871851 ** get_address_of_gameControl_13() { return &___gameControl_13; }
+	inline void set_gameControl_13(GameControl_t2485871851 * value)
+	{
+		___gameControl_13 = value;
+		Il2CppCodeGenWriteBarrier(&___gameControl_13, value);
 	}
 };
 

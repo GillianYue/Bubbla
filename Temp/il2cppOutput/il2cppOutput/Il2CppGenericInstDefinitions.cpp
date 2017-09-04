@@ -1459,18 +1459,33 @@ extern const Il2CppGenericInst GenInst_Animator_t2776330603_0_0_0 = { 1, GenInst
 extern const Il2CppType Direction_t94975348_0_0_0;
 static const Il2CppType* GenInst_Direction_t94975348_0_0_0_Types[] = { &Direction_t94975348_0_0_0 };
 extern const Il2CppGenericInst GenInst_Direction_t94975348_0_0_0 = { 1, GenInst_Direction_t94975348_0_0_0_Types };
-extern const Il2CppType PaintballSpawner_t17610603_0_0_0;
-static const Il2CppType* GenInst_PaintballSpawner_t17610603_0_0_0_Types[] = { &PaintballSpawner_t17610603_0_0_0 };
-extern const Il2CppGenericInst GenInst_PaintballSpawner_t17610603_0_0_0 = { 1, GenInst_PaintballSpawner_t17610603_0_0_0_Types };
-extern const Il2CppType Player_t2393081601_0_0_0;
-static const Il2CppType* GenInst_Player_t2393081601_0_0_0_Types[] = { &Player_t2393081601_0_0_0 };
-extern const Il2CppGenericInst GenInst_Player_t2393081601_0_0_0 = { 1, GenInst_Player_t2393081601_0_0_0_Types };
+extern const Il2CppType TrailFollowBall_t1723313110_0_0_0;
+static const Il2CppType* GenInst_TrailFollowBall_t1723313110_0_0_0_Types[] = { &TrailFollowBall_t1723313110_0_0_0 };
+extern const Il2CppGenericInst GenInst_TrailFollowBall_t1723313110_0_0_0 = { 1, GenInst_TrailFollowBall_t1723313110_0_0_0_Types };
 extern const Il2CppType Rigidbody_t3346577219_0_0_0;
 static const Il2CppType* GenInst_Rigidbody_t3346577219_0_0_0_Types[] = { &Rigidbody_t3346577219_0_0_0 };
 extern const Il2CppGenericInst GenInst_Rigidbody_t3346577219_0_0_0 = { 1, GenInst_Rigidbody_t3346577219_0_0_0_Types };
+extern const Il2CppType Collider_t2939674232_0_0_0;
+static const Il2CppType* GenInst_Collider_t2939674232_0_0_0_Types[] = { &Collider_t2939674232_0_0_0 };
+extern const Il2CppGenericInst GenInst_Collider_t2939674232_0_0_0 = { 1, GenInst_Collider_t2939674232_0_0_0_Types };
+extern const Il2CppType Enemy_t67100520_0_0_0;
+static const Il2CppType* GenInst_Enemy_t67100520_0_0_0_Types[] = { &Enemy_t67100520_0_0_0 };
+extern const Il2CppGenericInst GenInst_Enemy_t67100520_0_0_0 = { 1, GenInst_Enemy_t67100520_0_0_0_Types };
+extern const Il2CppType Player_t2393081601_0_0_0;
+static const Il2CppType* GenInst_Player_t2393081601_0_0_0_Types[] = { &Player_t2393081601_0_0_0 };
+extern const Il2CppGenericInst GenInst_Player_t2393081601_0_0_0 = { 1, GenInst_Player_t2393081601_0_0_0_Types };
+extern const Il2CppType PaintballSpawner_t17610603_0_0_0;
+static const Il2CppType* GenInst_PaintballSpawner_t17610603_0_0_0_Types[] = { &PaintballSpawner_t17610603_0_0_0 };
+extern const Il2CppGenericInst GenInst_PaintballSpawner_t17610603_0_0_0 = { 1, GenInst_PaintballSpawner_t17610603_0_0_0_Types };
+extern const Il2CppType AudioSource_t1740077639_0_0_0;
+static const Il2CppType* GenInst_AudioSource_t1740077639_0_0_0_Types[] = { &AudioSource_t1740077639_0_0_0 };
+extern const Il2CppGenericInst GenInst_AudioSource_t1740077639_0_0_0 = { 1, GenInst_AudioSource_t1740077639_0_0_0_Types };
 extern const Il2CppType Renderer_t3076687687_0_0_0;
 static const Il2CppType* GenInst_Renderer_t3076687687_0_0_0_Types[] = { &Renderer_t3076687687_0_0_0 };
 extern const Il2CppGenericInst GenInst_Renderer_t3076687687_0_0_0 = { 1, GenInst_Renderer_t3076687687_0_0_0_Types };
+extern const Il2CppType ParticleSystem_t381473177_0_0_0;
+static const Il2CppType* GenInst_ParticleSystem_t381473177_0_0_0_Types[] = { &ParticleSystem_t381473177_0_0_0 };
+extern const Il2CppGenericInst GenInst_ParticleSystem_t381473177_0_0_0 = { 1, GenInst_ParticleSystem_t381473177_0_0_0_Types };
 static const Il2CppType* GenInst_Byte_t2862609660_0_0_0_Byte_t2862609660_0_0_0_Types[] = { &Byte_t2862609660_0_0_0, &Byte_t2862609660_0_0_0 };
 extern const Il2CppGenericInst GenInst_Byte_t2862609660_0_0_0_Byte_t2862609660_0_0_0 = { 2, GenInst_Byte_t2862609660_0_0_0_Byte_t2862609660_0_0_0_Types };
 static const Il2CppType* GenInst_Int32_t1153838500_0_0_0_Int32_t1153838500_0_0_0_Types[] = { &Int32_t1153838500_0_0_0, &Int32_t1153838500_0_0_0 };
@@ -1519,7 +1534,7 @@ static const Il2CppType* GenInst_KeyValuePair_2_t1944668977_0_0_0_KeyValuePair_2
 extern const Il2CppGenericInst GenInst_KeyValuePair_2_t1944668977_0_0_0_KeyValuePair_2_t1944668977_0_0_0 = { 2, GenInst_KeyValuePair_2_t1944668977_0_0_0_KeyValuePair_2_t1944668977_0_0_0_Types };
 static const Il2CppType* GenInst_KeyValuePair_2_t1944668977_0_0_0_Il2CppObject_0_0_0_Types[] = { &KeyValuePair_2_t1944668977_0_0_0, &Il2CppObject_0_0_0 };
 extern const Il2CppGenericInst GenInst_KeyValuePair_2_t1944668977_0_0_0_Il2CppObject_0_0_0 = { 2, GenInst_KeyValuePair_2_t1944668977_0_0_0_Il2CppObject_0_0_0_Types };
-extern const Il2CppGenericInst* const g_Il2CppGenericInstTable[525] = 
+extern const Il2CppGenericInst* const g_Il2CppGenericInstTable[530] = 
 {
 	&GenInst_Il2CppObject_0_0_0,
 	&GenInst_Int32_t1153838500_0_0_0,
@@ -2018,10 +2033,15 @@ extern const Il2CppGenericInst* const g_Il2CppGenericInstTable[525] =
 	&GenInst_AnimationTriggers_t115197445_0_0_0,
 	&GenInst_Animator_t2776330603_0_0_0,
 	&GenInst_Direction_t94975348_0_0_0,
-	&GenInst_PaintballSpawner_t17610603_0_0_0,
-	&GenInst_Player_t2393081601_0_0_0,
+	&GenInst_TrailFollowBall_t1723313110_0_0_0,
 	&GenInst_Rigidbody_t3346577219_0_0_0,
+	&GenInst_Collider_t2939674232_0_0_0,
+	&GenInst_Enemy_t67100520_0_0_0,
+	&GenInst_Player_t2393081601_0_0_0,
+	&GenInst_PaintballSpawner_t17610603_0_0_0,
+	&GenInst_AudioSource_t1740077639_0_0_0,
 	&GenInst_Renderer_t3076687687_0_0_0,
+	&GenInst_ParticleSystem_t381473177_0_0_0,
 	&GenInst_Byte_t2862609660_0_0_0_Byte_t2862609660_0_0_0,
 	&GenInst_Int32_t1153838500_0_0_0_Int32_t1153838500_0_0_0,
 	&GenInst_CustomAttributeNamedArgument_t3059612989_0_0_0_CustomAttributeNamedArgument_t3059612989_0_0_0,

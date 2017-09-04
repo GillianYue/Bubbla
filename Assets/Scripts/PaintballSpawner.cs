@@ -4,22 +4,22 @@ using System.Collections;
 
 public class PaintballSpawner : MonoBehaviour {
 
-	private Renderer rend;
 	private int size;
 	private Color color;
 	public float sizeScale;
 	private int myNumInList;
 	public GameObject explosion;
 	public GameObject absorption;
+	public Sprite[] pbSprites, highlights;
+	private int num;
 
 	void Start () {
-		rend = GetComponent<Renderer> ();
-
 		Color rdmColor = new Color (Random.Range (0.0f, 1.0f),
 			Random.Range (0.0f, 1.0f),
 			Random.Range (0.0f, 1.0f),
 			1);
 		setColor (rdmColor);
+		randomizeSpriteKind ();
 
 		int rdmSize = (int) Random.Range (1.0f, 3.99f);
 		setSize(rdmSize);
@@ -30,12 +30,15 @@ public class PaintballSpawner : MonoBehaviour {
 	void Update () {
 	}
 
-	void OnCollisionEnter(Collision other){
+	void OnTriggerEnter(Collider other){
 
 		//if paintball hit player, it bursts
-		if (other.collider.tag == "Player" || other.collider.tag == "Bullet") {
+		if (other.GetComponent<Collider>().tag == "Player"
+			|| other.GetComponent<Collider>().tag == "Bullet") {
 			if (explosion != null) {
-				Instantiate (explosion, transform.position, transform.rotation);
+		GameObject vfx = Instantiate 
+					(explosion, transform.position, transform.rotation) as GameObject;
+				vfx.GetComponent<SpriteRenderer> ().color = color;
 				Destroy (gameObject);
 			}
 		}
@@ -43,7 +46,10 @@ public class PaintballSpawner : MonoBehaviour {
 	}
 		
 	public void getsAbsorbed(){
-		Instantiate (absorption, transform.position, transform.rotation);
+		GameObject vfx = Instantiate 
+			(absorption, transform.position, transform.rotation) as GameObject;
+		vfx.GetComponent<SpriteRenderer> ().color = color;
+		vfx.transform.localScale = new Vector3 (getScale(), getScale(), getScale());
 		if (size - 1 == 0) {
 			Destroy (gameObject);
 		} else {
@@ -52,7 +58,7 @@ public class PaintballSpawner : MonoBehaviour {
 	}
 
 	public void setColor(Color c){
-		rend.materials[0].color = c;
+		GetComponent<SpriteRenderer> ().color = c;
 		color = c;
 	}
 
@@ -60,6 +66,13 @@ public class PaintballSpawner : MonoBehaviour {
 		return color;
 	}
 
+	public void randomizeSpriteKind(){
+		num = (int)Random.Range (0, 3.99f);
+		GetComponent<SpriteRenderer> ().sprite = pbSprites [num];
+		transform.GetChild(0).gameObject.GetComponent<SpriteRenderer> ().sprite 
+		= highlights [num];
+	}
+		
 	public void setSize(int s){
 		size = s;
 		changeScale (new Vector3 
@@ -72,7 +85,7 @@ public class PaintballSpawner : MonoBehaviour {
 	}
 
 	public void changeScale(Vector3 vector){
-		rend.transform.localScale = vector;
+		transform.localScale = vector;
 	}
 
 	public int getNumInList(){

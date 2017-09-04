@@ -12,7 +12,7 @@ public class TrailFollowBall : MonoBehaviour {
 		dbt.enabled = false;
 		smokeTrail = gameObject.transform.GetChild (0).gameObject.GetComponent<ParticleSystem> ();
 		smokeTrail.startColor = 
-		myBullet.gameObject.GetComponent<MeshRenderer> ().material.color;
+			myBullet.gameObject.GetComponent<SpriteRenderer>().color;
 
 		//print (gameObject.transform.GetChild (0).gameObject.GetComponent<TrailRenderer> ().material.color);
 	}
@@ -27,7 +27,6 @@ public class TrailFollowBall : MonoBehaviour {
 				em.enabled = false;
 			}
 		}
-		print (smokeTrail.emission.enabled);
 	}
 
 	public void setMyBullet(GameObject b){

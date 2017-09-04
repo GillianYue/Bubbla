@@ -7420,6 +7420,7 @@ extern "C" void AudioConfigurationChangeHandler__ctor_m2273531181 ();
 extern "C" void AudioConfigurationChangeHandler_Invoke_m3047533822 ();
 extern "C" void AudioConfigurationChangeHandler_BeginInvoke_m194625699 ();
 extern "C" void AudioConfigurationChangeHandler_EndInvoke_m218260925 ();
+extern "C" void AudioSource_set_pitch_m1518407234 ();
 extern "C" void Behaviour__ctor_m1624944828 ();
 extern "C" void Behaviour_get_enabled_m1239363704 ();
 extern "C" void Behaviour_set_enabled_m2046806933 ();
@@ -7914,6 +7915,7 @@ extern "C" void GameObject_SendMessage_m423373689 ();
 extern "C" void GameObject_Internal_AddComponentWithType_m2266369934 ();
 extern "C" void GameObject_AddComponent_m2208780168 ();
 extern "C" void GameObject_Internal_CreateGameObject_m2521325981 ();
+extern "C" void GameObject_get_gameObject_m1966529385 ();
 extern "C" void Gradient__ctor_m3068495933 ();
 extern "C" void Gradient_Init_m2544372343 ();
 extern "C" void Gradient_Cleanup_m850820223 ();
@@ -8242,6 +8244,8 @@ extern "C" void Input_INTERNAL_get_mousePosition_m4008828427 ();
 extern "C" void Input_get_mouseScrollDelta_m3050122505 ();
 extern "C" void Input_INTERNAL_get_mouseScrollDelta_m2726147504 ();
 extern "C" void Input_get_mousePresent_m3235491246 ();
+extern "C" void Input_get_acceleration_m3697865796 ();
+extern "C" void Input_INTERNAL_get_acceleration_m3372612331 ();
 extern "C" void Input_GetTouch_m2282421092 ();
 extern "C" void Input_INTERNAL_CALL_GetTouch_m1845826650 ();
 extern "C" void Input_get_touchCount_m1430909390 ();
@@ -8650,6 +8654,16 @@ extern "C" void Object_FindObjectOfType_m3820159265 ();
 extern "C" void Object_op_Implicit_m2106766291 ();
 extern "C" void Object_op_Equality_m3964590952 ();
 extern "C" void Object_op_Inequality_m1296218211 ();
+extern "C" void ParticleSystem_set_startColor_m2918045596 ();
+extern "C" void ParticleSystem_INTERNAL_set_startColor_m1434257916 ();
+extern "C" void ParticleSystem_get_emission_m3239150265 ();
+extern "C" void EmissionModule__ctor_m1408409344_AdjustorThunk ();
+extern "C" void EmissionModule_set_enabled_m3114269541_AdjustorThunk ();
+extern "C" void EmissionModule_SetEnabled_m1550105266 ();
+extern "C" void IteratorDelegate__ctor_m2534678614 ();
+extern "C" void IteratorDelegate_Invoke_m3641019902 ();
+extern "C" void IteratorDelegate_BeginInvoke_m3274238639 ();
+extern "C" void IteratorDelegate_EndInvoke_m3581459136 ();
 extern "C" void Physics_Raycast_m1758069759 ();
 extern "C" void Physics_Raycast_m1600345803 ();
 extern "C" void Physics_Raycast_m165875788 ();
@@ -8672,15 +8686,18 @@ extern "C" void Plane_get_distance_m2612484153_AdjustorThunk ();
 extern "C" void Plane_Raycast_m2829769106_AdjustorThunk ();
 extern "C" void PropertyAttribute__ctor_m1741701746 ();
 extern "C" void Quaternion__ctor_m1100844011_AdjustorThunk ();
-extern "C" void Quaternion_get_identity_m1743882806 ();
 extern "C" void Quaternion_Dot_m580284 ();
 extern "C" void Quaternion_FromToRotation_m2335489018 ();
 extern "C" void Quaternion_INTERNAL_CALL_FromToRotation_m3717286698 ();
 extern "C" void Quaternion_Inverse_m3542515566 ();
 extern "C" void Quaternion_INTERNAL_CALL_Inverse_m4175627710 ();
 extern "C" void Quaternion_ToString_m1793285860_AdjustorThunk ();
+extern "C" void Quaternion_Euler_m1204688217 ();
+extern "C" void Quaternion_Internal_FromEulerRad_m3681319598 ();
+extern "C" void Quaternion_INTERNAL_CALL_Internal_FromEulerRad_m1312441940 ();
 extern "C" void Quaternion_GetHashCode_m3823258238_AdjustorThunk ();
 extern "C" void Quaternion_Equals_m3843409946_AdjustorThunk ();
+extern "C" void Quaternion_op_Multiply_m3077481361 ();
 extern "C" void Quaternion_op_Multiply_m3771288979 ();
 extern "C" void Quaternion_op_Inequality_m4197259746 ();
 extern "C" void Random_Range_m3362417303 ();
@@ -8820,6 +8837,9 @@ extern "C" void RPC__ctor_m281827604 ();
 extern "C" void Scene_get_handle_m2277248521_AdjustorThunk ();
 extern "C" void Scene_GetHashCode_m2000109307_AdjustorThunk ();
 extern "C" void Scene_Equals_m93578403_AdjustorThunk ();
+extern "C" void SceneManager_LoadScene_m193744610 ();
+extern "C" void SceneManager_LoadScene_m2455768283 ();
+extern "C" void SceneManager_LoadSceneAsyncNameIndexInternal_m3775081569 ();
 extern "C" void SceneManager_Internal_SceneLoaded_m1398790415 ();
 extern "C" void SceneManager_Internal_SceneUnloaded_m3773648285 ();
 extern "C" void SceneManager_Internal_ActiveSceneChanged_m3583151927 ();
@@ -8998,6 +9018,13 @@ extern "C" void Sprite_get_textureRect_m3946160520 ();
 extern "C" void Sprite_INTERNAL_get_textureRect_m1939414807 ();
 extern "C" void Sprite_get_border_m1562752938 ();
 extern "C" void Sprite_INTERNAL_get_border_m855941073 ();
+extern "C" void SpriteRenderer_set_sprite_m1519408453 ();
+extern "C" void SpriteRenderer_SetSprite_INTERNAL_m3702741208 ();
+extern "C" void SpriteRenderer_get_color_m3519203926 ();
+extern "C" void SpriteRenderer_set_color_m2701854973 ();
+extern "C" void SpriteRenderer_INTERNAL_get_color_m1699852957 ();
+extern "C" void SpriteRenderer_INTERNAL_set_color_m1427138729 ();
+extern "C" void SpriteRenderer_set_flipX_m4285205544 ();
 extern "C" void DataUtility_GetInnerUV_m860985145 ();
 extern "C" void DataUtility_INTERNAL_CALL_GetInnerUV_m4066645897 ();
 extern "C" void DataUtility_GetOuterUV_m2974486430 ();
@@ -9079,6 +9106,7 @@ extern "C" void ThreadAndSerializationSafe__ctor_m4149745981 ();
 extern "C" void Time_get_deltaTime_m2741110510 ();
 extern "C" void Time_get_unscaledTime_m319114521 ();
 extern "C" void Time_get_unscaledDeltaTime_m285638843 ();
+extern "C" void Time_set_timeScale_m1848691981 ();
 extern "C" void Time_get_realtimeSinceStartup_m2972554983 ();
 extern "C" void TooltipAttribute__ctor_m3341446606 ();
 extern "C" void Touch_get_fingerId_m1427167959_AdjustorThunk ();
@@ -9113,7 +9141,9 @@ extern "C" void Transform_INTERNAL_get_localPosition_m2703574131 ();
 extern "C" void Transform_INTERNAL_set_localPosition_m221305727 ();
 extern "C" void Transform_get_forward_m877665793 ();
 extern "C" void Transform_get_rotation_m11483428 ();
+extern "C" void Transform_set_rotation_m1525803229 ();
 extern "C" void Transform_INTERNAL_get_rotation_m2389720173 ();
+extern "C" void Transform_INTERNAL_set_rotation_m2051942009 ();
 extern "C" void Transform_get_localRotation_m3343229381 ();
 extern "C" void Transform_set_localRotation_m3719981474 ();
 extern "C" void Transform_INTERNAL_get_localRotation_m1409235788 ();
@@ -9130,6 +9160,13 @@ extern "C" void Transform_SetParent_m3449663462 ();
 extern "C" void Transform_SetParent_m263985879 ();
 extern "C" void Transform_get_worldToLocalMatrix_m3792395652 ();
 extern "C" void Transform_INTERNAL_get_worldToLocalMatrix_m3861589095 ();
+extern "C" void Transform_Translate_m1056984957 ();
+extern "C" void Transform_Translate_m2900276092 ();
+extern "C" void Transform_Translate_m4280329625 ();
+extern "C" void Transform_Rotate_m637363399 ();
+extern "C" void Transform_Rotate_m3141515812 ();
+extern "C" void Transform_TransformDirection_m83001769 ();
+extern "C" void Transform_INTERNAL_CALL_TransformDirection_m3704788692 ();
 extern "C" void Transform_TransformPoint_m437395512 ();
 extern "C" void Transform_INTERNAL_CALL_TransformPoint_m1435510371 ();
 extern "C" void Transform_InverseTransformPoint_m1626812000 ();
@@ -10692,51 +10729,98 @@ extern "C" void VerticalLayoutGroup_CalculateLayoutInputHorizontal_m1704122566 (
 extern "C" void VerticalLayoutGroup_CalculateLayoutInputVertical_m920247256 ();
 extern "C" void VerticalLayoutGroup_SetLayoutHorizontal_m244631242 ();
 extern "C" void VerticalLayoutGroup_SetLayoutVertical_m2764536540 ();
+extern "C" void U3CPrivateImplementationDetailsU3E__ctor_m795736486 ();
+extern "C" void Accelerometer__ctor_m400180764 ();
+extern "C" void Accelerometer_Update_m1247563889 ();
+extern "C" void BGMover__ctor_m854946159 ();
+extern "C" void BGMover_Start_m4097051247 ();
+extern "C" void BGMover_Update_m2460389246 ();
+extern "C" void BGMover_stopBGScroll_m2216230473 ();
+extern "C" void BGMover_resumeBGScroll_m892002228 ();
+extern "C" void BulletAccl__ctor_m2718769902 ();
+extern "C" void BulletAccl_Start_m1665907694 ();
+extern "C" void BulletAccl_Update_m109383135 ();
+extern "C" void BulletAccl_OnTriggerEnter_m167876426 ();
+extern "C" void CollisionCheck__ctor_m284720197 ();
+extern "C" void CollisionCheck_Start_m3526825285 ();
+extern "C" void CollisionCheck_Update_m1963253608 ();
+extern "C" void CollisionCheck_OnCollisionEnter_m1595337235 ();
 extern "C" void DestroyByBoundary__ctor_m1790090928 ();
 extern "C" void DestroyByBoundary_OnTriggerExit_m1776189914 ();
 extern "C" void DestroyByTime__ctor_m397057773 ();
 extern "C" void DestroyByTime_Start_m3639162861 ();
+extern "C" void DestroyNow__ctor_m1631474559 ();
+extern "C" void DestroyNow_DestroyObject_m3568997942 ();
+extern "C" void Enemy__ctor_m1781972739 ();
+extern "C" void Enemy_Start_m729110531 ();
+extern "C" void Enemy_Update_m1133442154 ();
+extern "C" void Enemy_getLife_m1093666113 ();
+extern "C" void Enemy_setValues_m360617825 ();
+extern "C" void Enemy_damage_m331865793 ();
+extern "C" void Enemy_OnTriggerEnter_m87527253 ();
+extern "C" void EnemyMover__ctor_m1167259778 ();
+extern "C" void EnemyMover_Start_m114397570 ();
+extern "C" void EnemyMover_Update_m3552176843 ();
+extern "C" void EnemyMover_movePause_m615387795 ();
+extern "C" void U3CmovePauseU3Ec__Iterator0__ctor_m586965757 ();
+extern "C" void U3CmovePauseU3Ec__Iterator0_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m953708991 ();
+extern "C" void U3CmovePauseU3Ec__Iterator0_System_Collections_IEnumerator_get_Current_m1590416211 ();
+extern "C" void U3CmovePauseU3Ec__Iterator0_MoveNext_m1289251007 ();
+extern "C" void U3CmovePauseU3Ec__Iterator0_Dispose_m1331659770 ();
+extern "C" void U3CmovePauseU3Ec__Iterator0_Reset_m2528365994 ();
 extern "C" void EnemySpawner__ctor_m648727995 ();
 extern "C" void EnemySpawner_Start_m3890833083 ();
 extern "C" void EnemySpawner_Update_m362593458 ();
 extern "C" void EnemySpawner_SpawnEnemyLevel_m2040548535 ();
 extern "C" void EnemySpawner_SpawnHorizontal_m2852622441 ();
 extern "C" void EnemySpawner_SpawnSlash_m1286335533 ();
-extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator0__ctor_m1695192424 ();
-extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator0_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m461760308 ();
-extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator0_System_Collections_IEnumerator_get_Current_m4290040520 ();
-extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator0_MoveNext_m185640564 ();
-extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator0_Dispose_m1185597349 ();
-extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator0_Reset_m3636592661 ();
-extern "C" void U3CSpawnSlashU3Ec__Iterator1__ctor_m91827932 ();
-extern "C" void U3CSpawnSlashU3Ec__Iterator1_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m3144735158 ();
-extern "C" void U3CSpawnSlashU3Ec__Iterator1_System_Collections_IEnumerator_get_Current_m4236839242 ();
-extern "C" void U3CSpawnSlashU3Ec__Iterator1_MoveNext_m1380804760 ();
-extern "C" void U3CSpawnSlashU3Ec__Iterator1_Dispose_m2245579801 ();
-extern "C" void U3CSpawnSlashU3Ec__Iterator1_Reset_m2033228169 ();
+extern "C" void EnemySpawner_SpawnCaret_m1946091786 ();
+extern "C" void EnemySpawner_genSpike_m2658595318 ();
+extern "C" void EnemySpawner_genBird_m3172914067 ();
+extern "C" void U3CSpawnCaretU3Ec__Iterator3__ctor_m3189173920 ();
+extern "C" void U3CSpawnCaretU3Ec__Iterator3_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m729377906 ();
+extern "C" void U3CSpawnCaretU3Ec__Iterator3_System_Collections_IEnumerator_get_Current_m2015794182 ();
+extern "C" void U3CSpawnCaretU3Ec__Iterator3_MoveNext_m1337746004 ();
+extern "C" void U3CSpawnCaretU3Ec__Iterator3_Dispose_m2382738141 ();
+extern "C" void U3CSpawnCaretU3Ec__Iterator3_Reset_m835606861 ();
+extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator1__ctor_m1498678919 ();
+extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator1_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m253062005 ();
+extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator1_System_Collections_IEnumerator_get_Current_m1966012681 ();
+extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator1_MoveNext_m4187204853 ();
+extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator1_Dispose_m1314680068 ();
+extern "C" void U3CSpawnEnemyLevelU3Ec__Iterator1_Reset_m3440079156 ();
+extern "C" void U3CSpawnSlashU3Ec__Iterator2__ctor_m4190281723 ();
+extern "C" void U3CSpawnSlashU3Ec__Iterator2_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m2936036855 ();
+extern "C" void U3CSpawnSlashU3Ec__Iterator2_System_Collections_IEnumerator_get_Current_m1912811403 ();
+extern "C" void U3CSpawnSlashU3Ec__Iterator2_MoveNext_m1087401753 ();
+extern "C" void U3CSpawnSlashU3Ec__Iterator2_Dispose_m2374662520 ();
+extern "C" void U3CSpawnSlashU3Ec__Iterator2_Reset_m1836714664 ();
 extern "C" void GameControl__ctor_m788229856 ();
 extern "C" void GameControl_Start_m4030334944 ();
 extern "C" void GameControl_Update_m392183853 ();
 extern "C" void GameControl_SpawnPaintballs_m2498701911 ();
-extern "C" void U3CSpawnPaintballsU3Ec__Iterator2__ctor_m1053197925 ();
-extern "C" void U3CSpawnPaintballsU3Ec__Iterator2_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m3275036749 ();
-extern "C" void U3CSpawnPaintballsU3Ec__Iterator2_System_Collections_IEnumerator_get_Current_m2519946721 ();
-extern "C" void U3CSpawnPaintballsU3Ec__Iterator2_MoveNext_m427700847 ();
-extern "C" void U3CSpawnPaintballsU3Ec__Iterator2_Dispose_m2704174434 ();
-extern "C" void U3CSpawnPaintballsU3Ec__Iterator2_Reset_m2994598162 ();
+extern "C" void GameControl_gameOver_m2045046570 ();
+extern "C" void GameControl_restart_m1654669101 ();
+extern "C" void GameControl_updateLife_m868876794 ();
+extern "C" void GameControl_genHearts_m3808038796 ();
+extern "C" void GameControl_updateBGM_m3698830062 ();
+extern "C" void U3CSpawnPaintballsU3Ec__Iterator4__ctor_m660170915 ();
+extern "C" void U3CSpawnPaintballsU3Ec__Iterator4_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m2857640143 ();
+extern "C" void U3CSpawnPaintballsU3Ec__Iterator4_System_Collections_IEnumerator_get_Current_m2166858339 ();
+extern "C" void U3CSpawnPaintballsU3Ec__Iterator4_MoveNext_m4135862129 ();
+extern "C" void U3CSpawnPaintballsU3Ec__Iterator4_Dispose_m2962339872 ();
+extern "C" void U3CSpawnPaintballsU3Ec__Iterator4_Reset_m2601571152 ();
 extern "C" void Global__ctor_m1478983736 ();
 extern "C" void Global_touching_m3681978019 ();
 extern "C" void Global_touching_m1968161383 ();
-extern "C" void Mover__ctor_m2504810474 ();
-extern "C" void Mover_Start_m1451948266 ();
-extern "C" void Mover_Update_m2066575459 ();
 extern "C" void PaintballSpawner__ctor_m4015560592 ();
 extern "C" void PaintballSpawner_Start_m2962698384 ();
 extern "C" void PaintballSpawner_Update_m1655188861 ();
-extern "C" void PaintballSpawner_OnCollisionEnter_m1551833438 ();
+extern "C" void PaintballSpawner_OnTriggerEnter_m3483319784 ();
 extern "C" void PaintballSpawner_getsAbsorbed_m3980232669 ();
 extern "C" void PaintballSpawner_setColor_m679030993 ();
 extern "C" void PaintballSpawner_getColor_m2342862920 ();
+extern "C" void PaintballSpawner_randomizeSpriteKind_m844960792 ();
 extern "C" void PaintballSpawner_setSize_m4015498274 ();
 extern "C" void PaintballSpawner_getScale_m1391182708 ();
 extern "C" void PaintballSpawner_changeScale_m2624646865 ();
@@ -10747,15 +10831,22 @@ extern "C" void Player_Start_m4113811386 ();
 extern "C" void Player_Update_m2979953555 ();
 extern "C" void Player_addPaint_m40737323 ();
 extern "C" void Player_launchBullet_m2598747642 ();
+extern "C" void Player_damage_m784396394 ();
+extern "C" void Player_cure_m1269086944 ();
+extern "C" void Player_respawn_m156777824 ();
+extern "C" void Player_clearPaint_m3402025531 ();
 extern "C" void Player_removePaint_m2589966962 ();
 extern "C" void Player_addPaintSprite_m1862680282 ();
 extern "C" void Player_removePaintSprite_m3816840744 ();
 extern "C" void Player_removePaintSprite_m96465751 ();
 extern "C" void Player_printPlayer_m4119668518 ();
-extern "C" void Spiee__ctor_m54655935 ();
-extern "C" void Spiee_Start_m3296761023 ();
-extern "C" void Spiee_Update_m3421196078 ();
-extern const Il2CppMethodPointer g_MethodPointers[10744] = 
+extern "C" void Player_getMaxLife_m233350978 ();
+extern "C" void TrailFollowBall__ctor_m1296370773 ();
+extern "C" void TrailFollowBall_Start_m243508565 ();
+extern "C" void TrailFollowBall_Update_m3259650392 ();
+extern "C" void TrailFollowBall_setMyBullet_m756846491 ();
+extern "C" void TrailFollowBall_getMyBullet_m2001354316 ();
+extern const Il2CppMethodPointer g_MethodPointers[10835] = 
 {
 	Locale_GetText_m2389348044,
 	Locale_GetText_m2218462520,
@@ -18166,6 +18257,7 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	AudioConfigurationChangeHandler_Invoke_m3047533822,
 	AudioConfigurationChangeHandler_BeginInvoke_m194625699,
 	AudioConfigurationChangeHandler_EndInvoke_m218260925,
+	AudioSource_set_pitch_m1518407234,
 	Behaviour__ctor_m1624944828,
 	Behaviour_get_enabled_m1239363704,
 	Behaviour_set_enabled_m2046806933,
@@ -18660,6 +18752,7 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	GameObject_Internal_AddComponentWithType_m2266369934,
 	GameObject_AddComponent_m2208780168,
 	GameObject_Internal_CreateGameObject_m2521325981,
+	GameObject_get_gameObject_m1966529385,
 	Gradient__ctor_m3068495933,
 	Gradient_Init_m2544372343,
 	Gradient_Cleanup_m850820223,
@@ -18988,6 +19081,8 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	Input_get_mouseScrollDelta_m3050122505,
 	Input_INTERNAL_get_mouseScrollDelta_m2726147504,
 	Input_get_mousePresent_m3235491246,
+	Input_get_acceleration_m3697865796,
+	Input_INTERNAL_get_acceleration_m3372612331,
 	Input_GetTouch_m2282421092,
 	Input_INTERNAL_CALL_GetTouch_m1845826650,
 	Input_get_touchCount_m1430909390,
@@ -19396,6 +19491,16 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	Object_op_Implicit_m2106766291,
 	Object_op_Equality_m3964590952,
 	Object_op_Inequality_m1296218211,
+	ParticleSystem_set_startColor_m2918045596,
+	ParticleSystem_INTERNAL_set_startColor_m1434257916,
+	ParticleSystem_get_emission_m3239150265,
+	EmissionModule__ctor_m1408409344_AdjustorThunk,
+	EmissionModule_set_enabled_m3114269541_AdjustorThunk,
+	EmissionModule_SetEnabled_m1550105266,
+	IteratorDelegate__ctor_m2534678614,
+	IteratorDelegate_Invoke_m3641019902,
+	IteratorDelegate_BeginInvoke_m3274238639,
+	IteratorDelegate_EndInvoke_m3581459136,
 	Physics_Raycast_m1758069759,
 	Physics_Raycast_m1600345803,
 	Physics_Raycast_m165875788,
@@ -19418,15 +19523,18 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	Plane_Raycast_m2829769106_AdjustorThunk,
 	PropertyAttribute__ctor_m1741701746,
 	Quaternion__ctor_m1100844011_AdjustorThunk,
-	Quaternion_get_identity_m1743882806,
 	Quaternion_Dot_m580284,
 	Quaternion_FromToRotation_m2335489018,
 	Quaternion_INTERNAL_CALL_FromToRotation_m3717286698,
 	Quaternion_Inverse_m3542515566,
 	Quaternion_INTERNAL_CALL_Inverse_m4175627710,
 	Quaternion_ToString_m1793285860_AdjustorThunk,
+	Quaternion_Euler_m1204688217,
+	Quaternion_Internal_FromEulerRad_m3681319598,
+	Quaternion_INTERNAL_CALL_Internal_FromEulerRad_m1312441940,
 	Quaternion_GetHashCode_m3823258238_AdjustorThunk,
 	Quaternion_Equals_m3843409946_AdjustorThunk,
+	Quaternion_op_Multiply_m3077481361,
 	Quaternion_op_Multiply_m3771288979,
 	Quaternion_op_Inequality_m4197259746,
 	Random_Range_m3362417303,
@@ -19566,6 +19674,9 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	Scene_get_handle_m2277248521_AdjustorThunk,
 	Scene_GetHashCode_m2000109307_AdjustorThunk,
 	Scene_Equals_m93578403_AdjustorThunk,
+	SceneManager_LoadScene_m193744610,
+	SceneManager_LoadScene_m2455768283,
+	SceneManager_LoadSceneAsyncNameIndexInternal_m3775081569,
 	SceneManager_Internal_SceneLoaded_m1398790415,
 	SceneManager_Internal_SceneUnloaded_m3773648285,
 	SceneManager_Internal_ActiveSceneChanged_m3583151927,
@@ -19744,6 +19855,13 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	Sprite_INTERNAL_get_textureRect_m1939414807,
 	Sprite_get_border_m1562752938,
 	Sprite_INTERNAL_get_border_m855941073,
+	SpriteRenderer_set_sprite_m1519408453,
+	SpriteRenderer_SetSprite_INTERNAL_m3702741208,
+	SpriteRenderer_get_color_m3519203926,
+	SpriteRenderer_set_color_m2701854973,
+	SpriteRenderer_INTERNAL_get_color_m1699852957,
+	SpriteRenderer_INTERNAL_set_color_m1427138729,
+	SpriteRenderer_set_flipX_m4285205544,
 	DataUtility_GetInnerUV_m860985145,
 	DataUtility_INTERNAL_CALL_GetInnerUV_m4066645897,
 	DataUtility_GetOuterUV_m2974486430,
@@ -19825,6 +19943,7 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	Time_get_deltaTime_m2741110510,
 	Time_get_unscaledTime_m319114521,
 	Time_get_unscaledDeltaTime_m285638843,
+	Time_set_timeScale_m1848691981,
 	Time_get_realtimeSinceStartup_m2972554983,
 	TooltipAttribute__ctor_m3341446606,
 	Touch_get_fingerId_m1427167959_AdjustorThunk,
@@ -19859,7 +19978,9 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	Transform_INTERNAL_set_localPosition_m221305727,
 	Transform_get_forward_m877665793,
 	Transform_get_rotation_m11483428,
+	Transform_set_rotation_m1525803229,
 	Transform_INTERNAL_get_rotation_m2389720173,
+	Transform_INTERNAL_set_rotation_m2051942009,
 	Transform_get_localRotation_m3343229381,
 	Transform_set_localRotation_m3719981474,
 	Transform_INTERNAL_get_localRotation_m1409235788,
@@ -19876,6 +19997,13 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	Transform_SetParent_m263985879,
 	Transform_get_worldToLocalMatrix_m3792395652,
 	Transform_INTERNAL_get_worldToLocalMatrix_m3861589095,
+	Transform_Translate_m1056984957,
+	Transform_Translate_m2900276092,
+	Transform_Translate_m4280329625,
+	Transform_Rotate_m637363399,
+	Transform_Rotate_m3141515812,
+	Transform_TransformDirection_m83001769,
+	Transform_INTERNAL_CALL_TransformDirection_m3704788692,
 	Transform_TransformPoint_m437395512,
 	Transform_INTERNAL_CALL_TransformPoint_m1435510371,
 	Transform_InverseTransformPoint_m1626812000,
@@ -21438,51 +21566,98 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	VerticalLayoutGroup_CalculateLayoutInputVertical_m920247256,
 	VerticalLayoutGroup_SetLayoutHorizontal_m244631242,
 	VerticalLayoutGroup_SetLayoutVertical_m2764536540,
+	U3CPrivateImplementationDetailsU3E__ctor_m795736486,
+	Accelerometer__ctor_m400180764,
+	Accelerometer_Update_m1247563889,
+	BGMover__ctor_m854946159,
+	BGMover_Start_m4097051247,
+	BGMover_Update_m2460389246,
+	BGMover_stopBGScroll_m2216230473,
+	BGMover_resumeBGScroll_m892002228,
+	BulletAccl__ctor_m2718769902,
+	BulletAccl_Start_m1665907694,
+	BulletAccl_Update_m109383135,
+	BulletAccl_OnTriggerEnter_m167876426,
+	CollisionCheck__ctor_m284720197,
+	CollisionCheck_Start_m3526825285,
+	CollisionCheck_Update_m1963253608,
+	CollisionCheck_OnCollisionEnter_m1595337235,
 	DestroyByBoundary__ctor_m1790090928,
 	DestroyByBoundary_OnTriggerExit_m1776189914,
 	DestroyByTime__ctor_m397057773,
 	DestroyByTime_Start_m3639162861,
+	DestroyNow__ctor_m1631474559,
+	DestroyNow_DestroyObject_m3568997942,
+	Enemy__ctor_m1781972739,
+	Enemy_Start_m729110531,
+	Enemy_Update_m1133442154,
+	Enemy_getLife_m1093666113,
+	Enemy_setValues_m360617825,
+	Enemy_damage_m331865793,
+	Enemy_OnTriggerEnter_m87527253,
+	EnemyMover__ctor_m1167259778,
+	EnemyMover_Start_m114397570,
+	EnemyMover_Update_m3552176843,
+	EnemyMover_movePause_m615387795,
+	U3CmovePauseU3Ec__Iterator0__ctor_m586965757,
+	U3CmovePauseU3Ec__Iterator0_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m953708991,
+	U3CmovePauseU3Ec__Iterator0_System_Collections_IEnumerator_get_Current_m1590416211,
+	U3CmovePauseU3Ec__Iterator0_MoveNext_m1289251007,
+	U3CmovePauseU3Ec__Iterator0_Dispose_m1331659770,
+	U3CmovePauseU3Ec__Iterator0_Reset_m2528365994,
 	EnemySpawner__ctor_m648727995,
 	EnemySpawner_Start_m3890833083,
 	EnemySpawner_Update_m362593458,
 	EnemySpawner_SpawnEnemyLevel_m2040548535,
 	EnemySpawner_SpawnHorizontal_m2852622441,
 	EnemySpawner_SpawnSlash_m1286335533,
-	U3CSpawnEnemyLevelU3Ec__Iterator0__ctor_m1695192424,
-	U3CSpawnEnemyLevelU3Ec__Iterator0_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m461760308,
-	U3CSpawnEnemyLevelU3Ec__Iterator0_System_Collections_IEnumerator_get_Current_m4290040520,
-	U3CSpawnEnemyLevelU3Ec__Iterator0_MoveNext_m185640564,
-	U3CSpawnEnemyLevelU3Ec__Iterator0_Dispose_m1185597349,
-	U3CSpawnEnemyLevelU3Ec__Iterator0_Reset_m3636592661,
-	U3CSpawnSlashU3Ec__Iterator1__ctor_m91827932,
-	U3CSpawnSlashU3Ec__Iterator1_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m3144735158,
-	U3CSpawnSlashU3Ec__Iterator1_System_Collections_IEnumerator_get_Current_m4236839242,
-	U3CSpawnSlashU3Ec__Iterator1_MoveNext_m1380804760,
-	U3CSpawnSlashU3Ec__Iterator1_Dispose_m2245579801,
-	U3CSpawnSlashU3Ec__Iterator1_Reset_m2033228169,
+	EnemySpawner_SpawnCaret_m1946091786,
+	EnemySpawner_genSpike_m2658595318,
+	EnemySpawner_genBird_m3172914067,
+	U3CSpawnCaretU3Ec__Iterator3__ctor_m3189173920,
+	U3CSpawnCaretU3Ec__Iterator3_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m729377906,
+	U3CSpawnCaretU3Ec__Iterator3_System_Collections_IEnumerator_get_Current_m2015794182,
+	U3CSpawnCaretU3Ec__Iterator3_MoveNext_m1337746004,
+	U3CSpawnCaretU3Ec__Iterator3_Dispose_m2382738141,
+	U3CSpawnCaretU3Ec__Iterator3_Reset_m835606861,
+	U3CSpawnEnemyLevelU3Ec__Iterator1__ctor_m1498678919,
+	U3CSpawnEnemyLevelU3Ec__Iterator1_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m253062005,
+	U3CSpawnEnemyLevelU3Ec__Iterator1_System_Collections_IEnumerator_get_Current_m1966012681,
+	U3CSpawnEnemyLevelU3Ec__Iterator1_MoveNext_m4187204853,
+	U3CSpawnEnemyLevelU3Ec__Iterator1_Dispose_m1314680068,
+	U3CSpawnEnemyLevelU3Ec__Iterator1_Reset_m3440079156,
+	U3CSpawnSlashU3Ec__Iterator2__ctor_m4190281723,
+	U3CSpawnSlashU3Ec__Iterator2_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m2936036855,
+	U3CSpawnSlashU3Ec__Iterator2_System_Collections_IEnumerator_get_Current_m1912811403,
+	U3CSpawnSlashU3Ec__Iterator2_MoveNext_m1087401753,
+	U3CSpawnSlashU3Ec__Iterator2_Dispose_m2374662520,
+	U3CSpawnSlashU3Ec__Iterator2_Reset_m1836714664,
 	GameControl__ctor_m788229856,
 	GameControl_Start_m4030334944,
 	GameControl_Update_m392183853,
 	GameControl_SpawnPaintballs_m2498701911,
-	U3CSpawnPaintballsU3Ec__Iterator2__ctor_m1053197925,
-	U3CSpawnPaintballsU3Ec__Iterator2_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m3275036749,
-	U3CSpawnPaintballsU3Ec__Iterator2_System_Collections_IEnumerator_get_Current_m2519946721,
-	U3CSpawnPaintballsU3Ec__Iterator2_MoveNext_m427700847,
-	U3CSpawnPaintballsU3Ec__Iterator2_Dispose_m2704174434,
-	U3CSpawnPaintballsU3Ec__Iterator2_Reset_m2994598162,
+	GameControl_gameOver_m2045046570,
+	GameControl_restart_m1654669101,
+	GameControl_updateLife_m868876794,
+	GameControl_genHearts_m3808038796,
+	GameControl_updateBGM_m3698830062,
+	U3CSpawnPaintballsU3Ec__Iterator4__ctor_m660170915,
+	U3CSpawnPaintballsU3Ec__Iterator4_System_Collections_Generic_IEnumeratorU3CobjectU3E_get_Current_m2857640143,
+	U3CSpawnPaintballsU3Ec__Iterator4_System_Collections_IEnumerator_get_Current_m2166858339,
+	U3CSpawnPaintballsU3Ec__Iterator4_MoveNext_m4135862129,
+	U3CSpawnPaintballsU3Ec__Iterator4_Dispose_m2962339872,
+	U3CSpawnPaintballsU3Ec__Iterator4_Reset_m2601571152,
 	Global__ctor_m1478983736,
 	Global_touching_m3681978019,
 	Global_touching_m1968161383,
-	Mover__ctor_m2504810474,
-	Mover_Start_m1451948266,
-	Mover_Update_m2066575459,
 	PaintballSpawner__ctor_m4015560592,
 	PaintballSpawner_Start_m2962698384,
 	PaintballSpawner_Update_m1655188861,
-	PaintballSpawner_OnCollisionEnter_m1551833438,
+	PaintballSpawner_OnTriggerEnter_m3483319784,
 	PaintballSpawner_getsAbsorbed_m3980232669,
 	PaintballSpawner_setColor_m679030993,
 	PaintballSpawner_getColor_m2342862920,
+	PaintballSpawner_randomizeSpriteKind_m844960792,
 	PaintballSpawner_setSize_m4015498274,
 	PaintballSpawner_getScale_m1391182708,
 	PaintballSpawner_changeScale_m2624646865,
@@ -21493,12 +21668,19 @@ extern const Il2CppMethodPointer g_MethodPointers[10744] =
 	Player_Update_m2979953555,
 	Player_addPaint_m40737323,
 	Player_launchBullet_m2598747642,
+	Player_damage_m784396394,
+	Player_cure_m1269086944,
+	Player_respawn_m156777824,
+	Player_clearPaint_m3402025531,
 	Player_removePaint_m2589966962,
 	Player_addPaintSprite_m1862680282,
 	Player_removePaintSprite_m3816840744,
 	Player_removePaintSprite_m96465751,
 	Player_printPlayer_m4119668518,
-	Spiee__ctor_m54655935,
-	Spiee_Start_m3296761023,
-	Spiee_Update_m3421196078,
+	Player_getMaxLife_m233350978,
+	TrailFollowBall__ctor_m1296370773,
+	TrailFollowBall_Start_m243508565,
+	TrailFollowBall_Update_m3259650392,
+	TrailFollowBall_setMyBullet_m756846491,
+	TrailFollowBall_getMyBullet_m2001354316,
 };

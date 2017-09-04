@@ -413,6 +413,9 @@ extern "C" void NetworkViewID_t3400394436_marshal_pinvoke_cleanup ();
 extern "C" void Object_t3071478659_marshal_pinvoke ();
 extern "C" void Object_t3071478659_marshal_pinvoke_back ();
 extern "C" void Object_t3071478659_marshal_pinvoke_cleanup ();
+extern "C" void EmissionModule_t3736167958_marshal_pinvoke ();
+extern "C" void EmissionModule_t3736167958_marshal_pinvoke_back ();
+extern "C" void EmissionModule_t3736167958_marshal_pinvoke_cleanup ();
 extern "C" void Plane_t4206452690_marshal_pinvoke ();
 extern "C" void Plane_t4206452690_marshal_pinvoke_back ();
 extern "C" void Plane_t4206452690_marshal_pinvoke_cleanup ();
@@ -536,7 +539,10 @@ extern "C" void Navigation_t1108456480_marshal_pinvoke_cleanup ();
 extern "C" void SpriteState_t2895308594_marshal_pinvoke ();
 extern "C" void SpriteState_t2895308594_marshal_pinvoke_back ();
 extern "C" void SpriteState_t2895308594_marshal_pinvoke_cleanup ();
-extern const Il2CppMarshalingFunctions g_MarshalingFunctions[176] = 
+extern "C" void U24ArrayTypeU2424_t3379220382_marshal_pinvoke ();
+extern "C" void U24ArrayTypeU2424_t3379220382_marshal_pinvoke_back ();
+extern "C" void U24ArrayTypeU2424_t3379220382_marshal_pinvoke_cleanup ();
+extern const Il2CppMarshalingFunctions g_MarshalingFunctions[178] = 
 {
 	{ U24ArrayTypeU241024_t435478332_marshal_pinvoke, U24ArrayTypeU241024_t435478332_marshal_pinvoke_back, U24ArrayTypeU241024_t435478332_marshal_pinvoke_cleanup },
 	{ U24ArrayTypeU2412_t3379220348_marshal_pinvoke, U24ArrayTypeU2412_t3379220348_marshal_pinvoke_back, U24ArrayTypeU2412_t3379220348_marshal_pinvoke_cleanup },
@@ -672,6 +678,7 @@ extern const Il2CppMarshalingFunctions g_MarshalingFunctions[176] =
 	{ NetworkPlayer_t3231273765_marshal_pinvoke, NetworkPlayer_t3231273765_marshal_pinvoke_back, NetworkPlayer_t3231273765_marshal_pinvoke_cleanup },
 	{ NetworkViewID_t3400394436_marshal_pinvoke, NetworkViewID_t3400394436_marshal_pinvoke_back, NetworkViewID_t3400394436_marshal_pinvoke_cleanup },
 	{ Object_t3071478659_marshal_pinvoke, Object_t3071478659_marshal_pinvoke_back, Object_t3071478659_marshal_pinvoke_cleanup },
+	{ EmissionModule_t3736167958_marshal_pinvoke, EmissionModule_t3736167958_marshal_pinvoke_back, EmissionModule_t3736167958_marshal_pinvoke_cleanup },
 	{ Plane_t4206452690_marshal_pinvoke, Plane_t4206452690_marshal_pinvoke_back, Plane_t4206452690_marshal_pinvoke_cleanup },
 	{ Quaternion_t1553702882_marshal_pinvoke, Quaternion_t1553702882_marshal_pinvoke_back, Quaternion_t1553702882_marshal_pinvoke_cleanup },
 	{ Ray_t3134616544_marshal_pinvoke, Ray_t3134616544_marshal_pinvoke_back, Ray_t3134616544_marshal_pinvoke_cleanup },
@@ -713,5 +720,6 @@ extern const Il2CppMarshalingFunctions g_MarshalingFunctions[176] =
 	{ Resources_t2719315882_marshal_pinvoke, Resources_t2719315882_marshal_pinvoke_back, Resources_t2719315882_marshal_pinvoke_cleanup },
 	{ Navigation_t1108456480_marshal_pinvoke, Navigation_t1108456480_marshal_pinvoke_back, Navigation_t1108456480_marshal_pinvoke_cleanup },
 	{ SpriteState_t2895308594_marshal_pinvoke, SpriteState_t2895308594_marshal_pinvoke_back, SpriteState_t2895308594_marshal_pinvoke_cleanup },
+	{ U24ArrayTypeU2424_t3379220382_marshal_pinvoke, U24ArrayTypeU2424_t3379220382_marshal_pinvoke_back, U24ArrayTypeU2424_t3379220382_marshal_pinvoke_cleanup },
 	NULL,
 };

@@ -29,6 +29,14 @@ extern "C"  void Player_Update_m2979953555 (Player_t2393081601 * __this, const M
 extern "C"  bool Player_addPaint_m40737323 (Player_t2393081601 * __this, Color_t4194546905  ___c0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Void Player::launchBullet(UnityEngine.Vector3)
 extern "C"  void Player_launchBullet_m2598747642 (Player_t2393081601 * __this, Vector3_t4282066566  ___mouse0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Void Player::damage(System.Int32)
+extern "C"  void Player_damage_m784396394 (Player_t2393081601 * __this, int32_t ___damage0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Void Player::cure(System.Int32)
+extern "C"  void Player_cure_m1269086944 (Player_t2393081601 * __this, int32_t ___addition0, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Void Player::respawn()
+extern "C"  void Player_respawn_m156777824 (Player_t2393081601 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Void Player::clearPaint()
+extern "C"  void Player_clearPaint_m3402025531 (Player_t2393081601 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Void Player::removePaint()
 extern "C"  void Player_removePaint_m2589966962 (Player_t2393081601 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Void Player::addPaintSprite(UnityEngine.Color)
@@ -39,3 +47,5 @@ extern "C"  void Player_removePaintSprite_m3816840744 (Player_t2393081601 * __th
 extern "C"  void Player_removePaintSprite_m96465751 (Player_t2393081601 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
 // System.Void Player::printPlayer()
 extern "C"  void Player_printPlayer_m4119668518 (Player_t2393081601 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
+// System.Int32 Player::getMaxLife()
+extern "C"  int32_t Player_getMaxLife_m233350978 (Player_t2393081601 * __this, const MethodInfo* method) IL2CPP_METHOD_ATTR;
