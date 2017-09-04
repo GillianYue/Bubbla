@@ -5,6 +5,10 @@ public class Accelerometer : MonoBehaviour
 {
 	void Update () 
 	{
-		transform.Translate(Input.acceleration.x, 0, -Input.acceleration.z);
+		//if(gameObject.tag.Equals("Player")){
+		transform.Translate(Input.acceleration.x, 0, 0);
+		//}else{
+
+		//}
 	}
 }

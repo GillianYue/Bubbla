@@ -294,19 +294,14 @@ extern "C"  void Accelerometer_Update_m1247563889 (Accelerometer_t1496834095 * _
 	}
 	Vector3_t4282066566  V_0;
 	memset(&V_0, 0, sizeof(V_0));
-	Vector3_t4282066566  V_1;
-	memset(&V_1, 0, sizeof(V_1));
 	{
 		Transform_t1659122786 * L_0 = Component_get_transform_m4257140443(__this, /*hidden argument*/NULL);
 		IL2CPP_RUNTIME_CLASS_INIT(Input_t4200062272_il2cpp_TypeInfo_var);
 		Vector3_t4282066566  L_1 = Input_get_acceleration_m3697865796(NULL /*static, unused*/, /*hidden argument*/NULL);
 		V_0 = L_1;
 		float L_2 = (&V_0)->get_x_1();
-		Vector3_t4282066566  L_3 = Input_get_acceleration_m3697865796(NULL /*static, unused*/, /*hidden argument*/NULL);
-		V_1 = L_3;
-		float L_4 = (&V_1)->get_z_3();
 		NullCheck(L_0);
-		Transform_Translate_m2900276092(L_0, L_2, (0.0f), ((-L_4)), /*hidden argument*/NULL);
+		Transform_Translate_m2900276092(L_0, L_2, (0.0f), (0.0f), /*hidden argument*/NULL);
 		return;
 	}
 }
