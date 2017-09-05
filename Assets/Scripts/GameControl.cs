@@ -12,18 +12,16 @@ public class GameControl : MonoBehaviour {
 	public GameObject Ballz, Hs_Holder;
 	public float startWait, pbSpawnWait, spawnRangeWidth;
 	public double WTSfactor;
-	private int scWidth, scHeight;
 	public GameObject[] hearts;
 	public GameObject HeartVFX;
 
 	public GameObject player;
 	public GameObject GameOverC;
 	public EnemySpawner eSpawner;
+	private AudioSource lakeC0, lakeC1, lakeC2;
 
 	// Use this for initialization
 	void Start () {
-		scWidth = Screen.width;
-		scHeight = Screen.height;
 		GameOverC.SetActive (false);
 
 		StartCoroutine (SpawnPaintballs ());
@@ -35,6 +33,10 @@ public class GameControl : MonoBehaviour {
 			player.transform.position.y, player.transform.position.z));
 		WTSfactor = (one.x - zero.x);
 
+		AudioSource[] adios = GetComponents<AudioSource> ();
+		lakeC0 = adios [0];
+		lakeC1 = adios [1];
+		lakeC2 = adios [2];
 	}
 	
 	// Update is called once per frame
@@ -135,13 +137,28 @@ public class GameControl : MonoBehaviour {
 
 	public void updateBGM(int life){
 		if(life > player.GetComponent<Player>().getMaxLife()/3*2){
-			GetComponent<AudioSource> ().pitch = 1;
+			lakeC2.volume += (0.8f-lakeC2.volume ==0 ? 0 : 
+				(0.8f-lakeC2.volume>0? 1:-1) ) * 0.01f;
+			// * 0.01f so that volume is GRADUALLY adjusted through multiple updates
+			lakeC1.volume += (0.2f-lakeC1.volume ==0 ? 0 : 
+				(0.2f-lakeC1.volume>0? 1:-1) ) * 0.01f;
+			lakeC0.volume += (0.2f-lakeC0.volume ==0 ? 0 : 
+				(0.2f-lakeC0.volume>0? 1:-1) ) * 0.01f;
 		}else if(life > player.GetComponent<Player>().getMaxLife()/3){
-			GetComponent<AudioSource> ().pitch = 0.9f;
+			lakeC2.volume += (0.2f-lakeC2.volume ==0 ? 0 : 
+				(0.2f-lakeC2.volume>0? 1:-1) ) * 0.01f;
+			lakeC1.volume += (0.8f-lakeC1.volume ==0 ? 0 : 
+				(0.8f-lakeC1.volume>0? 1:-1) ) * 0.01f;
+			lakeC0.volume += (0.2f-lakeC0.volume ==0 ? 0 : 
+				(0.2f-lakeC0.volume>0? 1:-1) ) * 0.01f;
 		}else{
-			GetComponent<AudioSource> ().pitch = 0.8f;
+			lakeC2.volume += (0.2f-lakeC2.volume ==0 ? 0 : 
+				(0.2f-lakeC2.volume>0? 1:-1) ) * 0.01f;
+			lakeC1.volume += (0.2f-lakeC1.volume ==0 ? 0 : 
+				(0.2f-lakeC1.volume>0? 1:-1) ) * 0.01f;
+			lakeC0.volume += (0.8f-lakeC0.volume ==0 ? 0 : 
+				(0.8f-lakeC0.volume>0? 1:-1) ) * 0.01f;
 		}
-		//special status: 1.2f!
 	}
 
 }

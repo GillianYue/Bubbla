@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
 	public float bulletSpeed;
 	private int life;
 	public GameControl gameControl;
+	private AudioSource[] fire, ouch;
 
 	//bulletSpeed is the absolute distance travelled per sec
 
@@ -24,6 +25,20 @@ public class Player : MonoBehaviour
 		life = maxLife;
 		bulletGauge = new List<Color> ();
 		PaintSprites = new List<GameObject> ();
+
+		fire = new AudioSource[5];
+		ouch = new AudioSource[3];
+
+		for (int i = 0; i < 5; i++) {
+				fire.SetValue (GetComponents<AudioSource> ()[i], i);
+			} 
+
+		for(int i = 0; i<3; i++) {
+				ouch.SetValue (GetComponents<AudioSource> ()[i+5], i);
+			}
+
+
+
 	}
 	
 	// Update is called once per frame
@@ -70,7 +85,8 @@ public class Player : MonoBehaviour
 		if (bulletGauge.Count > 0) {
 			GameObject bullet = Instantiate (BulletObj, transform.position, 
 				                   BulletObj.transform.rotation) as GameObject;
-		
+			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play ();
+
 			Vector3 direction = mouse - 
 				Camera.main.WorldToScreenPoint(transform.position);
 			float tan = direction.x / direction.y;
@@ -90,6 +106,17 @@ public class Player : MonoBehaviour
 
 	public void damage(int damage){
 		life -= damage;
+		StartCoroutine (damageVFX ());
+		ouch [(int)(Random.Range (0, ouch.Length - 0.01f))].Play ();
+	}
+
+	IEnumerator damageVFX(){
+		for (int i = 0; i < 6; i++) {
+			//flip visibility for three times
+		GetComponent<SpriteRenderer> ().enabled = !GetComponent<SpriteRenderer> ().enabled;
+
+			yield return new WaitForSeconds (0.1f);
+		}
 	}
 
 	public void cure(int addition){

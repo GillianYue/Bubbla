@@ -14,7 +14,8 @@ public class EnemySpawner : MonoBehaviour {
 	*/
 	// Use this for initialization
 	void Start () {
-		int[] t = new int[6]{0, 1, 2, 3, 0, 1};
+		int[] t = new int[20]{0, 1, 2, 3, 0, 1, 3, 3, 2, 0,
+		1, 1, 2, 3, 2, 1, 0, 0, 0, 2};
 		StartCoroutine (SpawnEnemyLevel (t));
 	}
 	
@@ -99,7 +100,7 @@ public class EnemySpawner : MonoBehaviour {
 		s = Instantiate (s, spawnPosition, s.transform.rotation) as GameObject;
 
 		//NOTE: it's crucial that setLife is AFTER instantiation!
-		s.GetComponent<Enemy> ().setValues (1, 1);
+		s.GetComponent<Enemy> ().setValues (2, 1);
 		s.transform.parent = enemiz.transform;
 
 		if(Random.Range(0, 100.0f)<5){

@@ -1,7 +1,0 @@
-<linker>
-	<assembly fullname="Assembly-CSharp">
-		<type fullname="GameControl">
-			<method name="restart"/>
-		</type>
-	</assembly>
-</linker>

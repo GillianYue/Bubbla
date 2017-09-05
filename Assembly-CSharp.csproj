@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Accelerometer.cs" />
+     <Compile Include="Assets\Scripts\AudioStorage.cs" />
      <Compile Include="Assets\Scripts\BGMover.cs" />
      <Compile Include="Assets\Scripts\BulletAccl.cs" />
      <Compile Include="Assets\Scripts\CollisionCheck.cs" />

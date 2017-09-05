@@ -13,6 +13,8 @@ public class PaintballSpawner : MonoBehaviour {
 	public Sprite[] pbSprites, highlights;
 	private int num;
 
+	public AudioStorage audioz;
+
 	void Start () {
 		Color rdmColor = new Color (Random.Range (0.0f, 1.0f),
 			Random.Range (0.0f, 1.0f),
@@ -24,6 +26,7 @@ public class PaintballSpawner : MonoBehaviour {
 		int rdmSize = (int) Random.Range (1.0f, 3.99f);
 		setSize(rdmSize);
 
+		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
 	}
 	
 	// Update is called once per frame
@@ -38,6 +41,7 @@ public class PaintballSpawner : MonoBehaviour {
 			if (explosion != null) {
 		GameObject vfx = Instantiate 
 					(explosion, transform.position, transform.rotation) as GameObject;
+				audioz.paintballExplosionSE ();
 				vfx.GetComponent<SpriteRenderer> ().color = color;
 				Destroy (gameObject);
 			}
@@ -49,6 +53,7 @@ public class PaintballSpawner : MonoBehaviour {
 		GameObject vfx = Instantiate 
 			(absorption, transform.position, transform.rotation) as GameObject;
 		vfx.GetComponent<SpriteRenderer> ().color = color;
+		audioz.paintballAbsorptionSE ();
 		vfx.transform.localScale = new Vector3 (getScale(), getScale(), getScale());
 		if (size - 1 == 0) {
 			Destroy (gameObject);
