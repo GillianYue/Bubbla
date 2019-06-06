@@ -1,0 +1,4 @@
+NAME,TEXT,SPRITE_STATE,DISP_SPD,Weight
+BUNNY,"Good morning, Agent 9523.",0,1,1
+BUNNY,A new day of hard work awaits!,3,1,1
+BUNNY,Did you have lunch? I'll search up nearby restaurants for you.,1,1,1

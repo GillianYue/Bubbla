@@ -1,0 +1,12 @@
+MODE,NAME(DLG); WAVE_TYPE(GAME),TEXT(DLG); ENEMY_TYPE(GAME),SPRITE_STATE(DLG); STD_COL(GAME),DISP_SPD(DLG); MX_D(GAME),VOICE_NO,SPECIAL,PLAYER_POS,PLAYER_SPRITE,SFX
+DLG,BUNNY,"Agent 7963, can you hear me?",0,1,,,,,
+,BUNNY,Your GPS location has successfully been sent to me.,1,1,,,,,
+,BUNNY,You are currently in the Sea of Miracle.,1,1,,,,,
+,BUNNY,"The mission this time is to retrieve the legendary treasure, Pearl de la Lune.",1,1,,,,,
+,BUNNY,It would be quite a difficult adventure!,0,1,,,,,
+,BUNNY,Eh.,4,1,,,,,
+,BUNNY,I heard there're crazy squids lurking in deep sea...,4,1,,,,,
+,BUNNY,Maybe you should bring a sashimi knife with you.,6,1,,,,,
+,BUNNY,"But hey, I trust you!",3,1,,,,,
+,BUNNY,Good luck!,2,1,,,,,
+GAME,"0,1,2,3,0,1,3,3,2,0,1,1,2,3,2,1,0,0,0,2","0,1,1,0,0,1,0,0,1,0,1,1,1,0,1,1,0,0,0,1","0,255,255",100,,,,,
