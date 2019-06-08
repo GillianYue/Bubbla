@@ -11,10 +11,54 @@ public class TitleBGanim : MonoBehaviour {
 	public GameFlow dlg;
 	public GameObject clock;
 	public float startAnimWait = 0.08f; //speed of how fast it loads
+    private GameObject canvas;
+    private int numRows;
 
 	void Start () {
-		StartCoroutine (startTitleScreenAnim ());
-	}
+        canvas = GameObject.FindGameObjectWithTag("Canvas");
+        var sh = canvas.GetComponent<RectTransform>().rect.height;
+
+        // set up the first row (exists already in prefab)
+        var sr_0 = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        var width = sr_0.sprite.bounds.size.x;
+        var screenWidth = canvas.GetComponent<RectTransform>().rect.width;
+        // var screenHeight = canvas.GetComponent<RectTransform>().rect.height;
+        var tf_0 = sr_0.gameObject.transform;
+
+        Vector3 scale = new Vector3(1, 1, 1);
+        scale.x = screenWidth / width;
+        scale.y = scale.x;
+        tf_0.localScale = scale;
+
+        Vector3 pos = new Vector3(0, sh, 1);
+        transform.GetChild(0).transform.position = pos;
+        sh -= sr_0.bounds.size.y;
+
+        Debug.Log("sh: " + sh + " sizeY: " + sr_0.bounds.size.y+" nr: "+ (int)(sh / sr_0.bounds.size.y));
+        numRows = (int)(sh / sr_0.bounds.size.y)+1;
+
+        // set up rest of the rows (including duplicating the first row)
+        for (int r = 1; r <= numRows; r++)
+        {
+            GameObject n = Instantiate(transform.GetChild(0).gameObject);
+            n.transform.parent = transform;
+            var sr = transform.GetChild(r).GetComponent<SpriteRenderer>();
+            width = sr.sprite.bounds.size.x;
+            screenWidth = canvas.GetComponent<RectTransform>().rect.width;
+            // var screenHeight = canvas.GetComponent<RectTransform>().rect.height;
+            var tf = sr.gameObject.transform;
+
+           scale = new Vector3(1, 1, 1);
+            scale.x = screenWidth / width;
+            scale.y = scale.x;
+            tf.localScale = scale;
+
+            pos = new Vector3(0, sh, 1);
+            transform.GetChild(r).transform.position = pos;
+            sh -= sr.bounds.size.y;
+        }
+        StartCoroutine (startTitleScreenAnim ());
+        }
 	
 	// Update is called once per frame
 	void Update () {
@@ -36,7 +80,8 @@ public class TitleBGanim : MonoBehaviour {
 		}
 		StartCoroutine (showClockText(clock, clock.GetComponent<Text>()));
 
-		for (int r = 21; r>=0; r--) {
+        // There is 21 rows in total
+		for (int r = numRows; r>=0; r--) {
 			UIBar1.GetComponent<RectTransform> ().localScale = v1;
 			UIBar2.GetComponent<RectTransform> ().localScale = v2;
 			v1.x += 0.008f;
@@ -57,9 +102,11 @@ public class TitleBGanim : MonoBehaviour {
 	}
 
 	private IEnumerator singleRowAnim(SpriteRenderer sr){
-		for (int n = 0; n < 15; n++) {
+
+
+        for (int n = 0; n < 15; n++) {
 			sr.sprite = tt0To14[n];
-			yield return new WaitForSeconds (startAnimWait);
+            yield return new WaitForSeconds (startAnimWait);
 		}
 	}
 
