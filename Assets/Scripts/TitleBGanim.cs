@@ -16,7 +16,8 @@ public class TitleBGanim : MonoBehaviour {
 
 	void Start () {
         canvas = GameObject.FindGameObjectWithTag("Canvas");
-        var sh = canvas.GetComponent<RectTransform>().rect.height;
+        var sh = canvas.GetComponent<RectTransform>().rect.height * 
+            canvas.transform.localScale.y;
 
         // set up the first row (exists already in prefab)
         var sr_0 = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -34,7 +35,7 @@ public class TitleBGanim : MonoBehaviour {
         transform.GetChild(0).transform.position = pos;
         sh -= sr_0.bounds.size.y;
 
-        Debug.Log("sh: " + sh + " sizeY: " + sr_0.bounds.size.y+" nr: "+ (int)(sh / sr_0.bounds.size.y));
+        // Debug.Log("sh: " + sh + " sizeY: " + sr_0.bounds.size.y+" nr: "+ (int)(sh / sr_0.bounds.size.y));
         numRows = (int)(sh / sr_0.bounds.size.y)+1;
 
         // set up rest of the rows (including duplicating the first row)
