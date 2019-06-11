@@ -91,11 +91,11 @@ public class TitleBGanim : MonoBehaviour {
 			(singleRowAnim (transform.GetChild (r).GetComponent<SpriteRenderer> ()));
 			yield return new WaitForSeconds (startAnimWait);
 		}
-		for (int r = 12; r>=0; r--) {
+		for (int r = 10; r>=0; r--) {
 			UIBar1.GetComponent<RectTransform> ().localScale = v1;
 			UIBar2.GetComponent<RectTransform> ().localScale = v2;
-			v1.x += 0.008f;
-			v2.x += 0.008f;
+			v1.x += 0.006f;
+			v2.x += 0.006f;
 			yield return new WaitForSeconds (startAnimWait);
 		}
 
