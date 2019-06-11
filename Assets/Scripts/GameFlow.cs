@@ -114,6 +114,7 @@ public class GameFlow : MonoBehaviour {
 
 	public IEnumerator displayTitleDLG(){ //ONLY applies to the special csv file of title
 
+        //randomly chooses dialogue for bunny to say
 		int ttlWeight = 0; int line = -1;
 		for (int r = 1; r < data.GetLength (1); r++) {
             ttlWeight += int.Parse (data [4, r]);
@@ -127,6 +128,8 @@ public class GameFlow : MonoBehaviour {
 			}
 		}
 
+        //Assumes character is already given, TODO set this based on data
+        resizeSpriteToDLG(character, character.transform.parent.gameObject);
 
 		int StageNum;
 		int.TryParse (data [2, line], out StageNum);
@@ -140,6 +143,8 @@ public class GameFlow : MonoBehaviour {
 		DIALOGUE.text = store[0];
 		Canvas.ForceUpdateCanvases();
 		DIALOGUE.text = "";
+
+
 		character.GetComponent<Animator> ().SetBool ("Talking", true);
 		character.GetComponent<Animator> ().SetBool ("Typing", true);
 
@@ -240,4 +245,19 @@ public class GameFlow : MonoBehaviour {
 	public void skipDLG(){
 		skipping = true;
 	}
+
+    /*
+     * resizes the sprite of a character to the right size in the dialogue box UI. 
+     * Needs to pass in both the character gameObject and the DLG background box for profile sprite.
+     * 
+     * Here, we're scaling the character gameObject, as the sprite is pixel-to-pixel.
+     * Prioritizes y-axis of the bg box for scaling, and scales that ratio in x to prevent distortion.    
+     */   
+    public void resizeSpriteToDLG(GameObject character, GameObject DLGbg)
+    {
+        Vector3 sSize = character.GetComponent<SpriteRenderer>().sprite.bounds.size;
+        var ratio = DLGbg.GetComponent<RectTransform>().rect.height / sSize.y;
+        Vector3 scale = new Vector3(ratio, ratio, 1);
+        character.GetComponent<RectTransform>().localScale = scale;
+    }
 }
