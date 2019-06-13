@@ -87,7 +87,7 @@ public class SetUpQuestBoard : MonoBehaviour {
 		float height = GetComponent<RectTransform> ().rect.height;
 
 			q.GetComponent<RectTransform> ().offsetMax = 
-				new Vector2(0,  - which * questHeight);
+				new Vector2(0,  - which * (questHeight) -2);
 			q.GetComponent<RectTransform> ().offsetMin = 
 				new Vector2(0, height - (which+1) * questHeight);
 

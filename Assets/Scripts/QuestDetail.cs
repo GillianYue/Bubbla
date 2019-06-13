@@ -12,8 +12,7 @@ public class QuestDetail : MonoBehaviour {
 
 	void Start () {
 		cancel = cancelScn; //cancel will block interaction w background UIs
-		cancel = Instantiate (cancel, transform.position, 
-			new Quaternion(0,0,0,0)) as GameObject;
+		cancel = Instantiate (cancel) as GameObject;
 		cancel.transform.SetParent (GameObject.Find ("Canvas").transform, false);
 		cancel.SetActive (true);
 		this.transform.SetAsLastSibling ();

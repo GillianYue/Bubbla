@@ -22,8 +22,7 @@ public class QuestSelect : MonoBehaviour {
 
 	public void openQuestDetail(){ //happens when pressed
 		GameObject qd = questDetails; //GO with the aiming sprite
-		qd = Instantiate (qd, GetComponent<RectTransform>().position,
-			GetComponent<RectTransform>().rotation) as GameObject;
+		qd = Instantiate (qd) as GameObject;
 
 		qd.transform.Find("Description").GetComponent<Text>().text = longDesc;
 		qd.transform.Find("Message").GetComponent<Text>().text = longMSG;
