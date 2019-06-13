@@ -67,8 +67,9 @@ public class TitleBGanim : MonoBehaviour {
 	}
 
 	IEnumerator startTitleScreenAnim(){
+      
 		while (!dlg.checkLoadDone()) {//wait till csv's loaded
-			yield return null;
+            yield return null;
 		}
 		StartCoroutine (dlg.displayTitleDLG());
 

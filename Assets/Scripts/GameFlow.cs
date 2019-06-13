@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameFlow : MonoBehaviour {
 	public TextAsset csv; //dialogue file for a specific level
 	private int pointer = 1; //indicates which line of script the game is at
-	private bool lineDone = true, loadDone = false, pointerCheck = true,
+	private bool lineDone = true, loadDone, pointerCheck = true,
 	skipping = false;
 	public bool canSkip;
 	public Text NAME, DIALOGUE;
@@ -26,7 +26,7 @@ public class GameFlow : MonoBehaviour {
 	IEnumerator processCSV(){ //TODO move this to loading, as opposed to in game
 		data = CSVReader.SplitCsvGrid (csv.text); 
 		while (!(data.Length > 0)) {
-			yield return null;
+            yield return null;
 		}
 		loadDone = true;
 	}

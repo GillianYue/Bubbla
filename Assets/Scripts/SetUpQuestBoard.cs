@@ -8,19 +8,24 @@ public class SetUpQuestBoard : MonoBehaviour {
 	public int numOfQuests;
 	public GameObject quest;
 	private bool loadDone = false;
+    private float questHeight;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		StartCoroutine (processCSV ()); //start reading quests from csv file
 
-		//first set the dimensions of our questBoard rect (based on num of quests
-		//the "height" of the rect in RectTransform of quests should always be 80
-		//NOTE: this MUST be done before quests are generated
+        //first set the dimensions of our questBoard rect (based on num of quests
+        //the "height" of the rect in RectTransform of quests should always be 80
+        //NOTE: this MUST be done before quests are generated
 
-		float heightNeeded = numOfQuests * 80;
-		if (heightNeeded > GetComponent<RectTransform> ().rect.height) {
+        questHeight = Mathf.Abs(quest.GetComponent<RectTransform>().rect.height);
+        var qbHeight = GetComponent<RectTransform>().rect.height;
+
+
+        float heightNeeded = numOfQuests * questHeight;
+		if (heightNeeded > qbHeight) {
 			GetComponent<RectTransform> ().offsetMin = 
-				new Vector2 (0, -1 * (heightNeeded - GetComponent<RectTransform> ().rect.height));
+				new Vector2 (0, -1 * (heightNeeded - qbHeight));
 			//OffsetMin.x = left, OffsetMin.y = bottom
 			GetComponent<RectTransform> ().offsetMax = 
 				new Vector2(0, 0);
@@ -66,9 +71,6 @@ public class SetUpQuestBoard : MonoBehaviour {
 			GetComponent<RectTransform>().rotation) as GameObject;
 
 		q.transform.SetParent (transform);
-		//the "height" of the rect in RectTransform of quests should always be 80
-		//the "top" & "bottom" value is set in Offset, which is dependent on the size of the parent
-		//figure out the current Offset "top" and "bottom" values based on 80 and parent rect height
 		q.transform.localScale = new Vector3 (1, 1, 1);
 
 
@@ -82,18 +84,12 @@ public class SetUpQuestBoard : MonoBehaviour {
 		q.GetComponent<QuestSelect> ().setQuestSpecifics (questData [7, rowInData],
 			questData [8, rowInData]);
 		
-		if (numOfQuests < 4) {
-			float height = GetComponent<RectTransform> ().rect.height;
-			q.GetComponent<RectTransform> ().offsetMin = 
-				new Vector2(0,  height - (which+1)*80);
+		float height = GetComponent<RectTransform> ().rect.height;
+
 			q.GetComponent<RectTransform> ().offsetMax = 
-				new Vector2(0, -1 * which * 80);
-		} else { //if scroll bar is needed
+				new Vector2(0,  - which * questHeight);
 			q.GetComponent<RectTransform> ().offsetMin = 
-				new Vector2(0,  (numOfQuests - which -1) * 80);
-			q.GetComponent<RectTransform> ().offsetMax = 
-				new Vector2(0, -1 * which * 80);
-		}
+				new Vector2(0, height - (which+1) * questHeight);
 
 	}
 }
