@@ -170,18 +170,18 @@ public class GameFlow : MonoBehaviour {
 		ArrayList result = new ArrayList();
 		string[] words = text.Split(' ');
 
-		int width = Mathf.FloorToInt(textUI.rectTransform.sizeDelta.x);
-		int height = Mathf.FloorToInt(DIALOGUE.rectTransform.sizeDelta.y);
+		int width = Mathf.Abs(Mathf.FloorToInt(textUI.rectTransform.rect.width));
+		int height = Mathf.Abs(Mathf.FloorToInt(DIALOGUE.rectTransform.rect.height));
 		int space = GetWordSize(textUI, " ", textUI.font, textUI.fontSize);
 		int charH = space + Mathf.CeilToInt(DIALOGUE.lineSpacing); //height of single char
 		int charW = space; //treat character as little square
-		int maxChar = (height / charH) * (width / charW);
+		int maxChar = (height / charH) * (width / charW) -4; //in dlg box, -4 is for error (tested)
 
 		string newText = string.Empty;
 		int count = 0;
 		for (int i = 0; i < words.Length; i++) {
 			int size = GetWordSize(textUI, words[i], textUI.font, textUI.fontSize);
-			//size of the current word
+            //size of the current word
 			if (newText.Length + words [i].Length > maxChar) {
 				result.Add (newText); //one time displayable dlg record complete
 				newText = ""; //start anew
@@ -197,12 +197,12 @@ public class GameFlow : MonoBehaviour {
 				newText += words[i];
 				count = size;
 			} else if (count + space + size <= width) {
-				newText += " " + words[i];
+                newText += " " + words[i];
 				count += space + size;
 			}
 		}
-		result.Add (newText);
-		return result;
+		result.Add (newText); 
+		return result; //result.length is how many "pages" there are, each with multiple '\n' within
 	}
 
 	private int GetWordSize (Text textUI, string word, Font font, int fontSize) {
@@ -212,7 +212,7 @@ public class GameFlow : MonoBehaviour {
 		for (int i = 0; i < arr.Length; i++) {
 			textUI.font.RequestCharactersInTexture(word, fontSize, textUI.fontStyle);
 			font.GetCharacterInfo(arr[i], out info, fontSize);
-			size += info.advance;
+            size += info.advance;
 		}
 		return size;
 	}
