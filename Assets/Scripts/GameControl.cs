@@ -22,6 +22,8 @@ public class GameControl : MonoBehaviour {
 	public BGMover[] backgrounds;
 	public ScriptableObject levelScript;
 
+    public GameObject fixedBG;
+
 	private float pressTime=-1;
 
 	// Use this for initialization
@@ -41,8 +43,9 @@ public class GameControl : MonoBehaviour {
 			player.transform.position.y, player.transform.position.z));
 		WTSfactor = (one.x - zero.x);
 
+        gFlow.resizeSpriteToRectX(fixedBG);
 
-	}
+    }
 
 	// Update is called once per frame
 	void Update () {

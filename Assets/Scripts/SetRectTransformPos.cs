@@ -9,7 +9,7 @@ public class SetRectTransformPos : MonoBehaviour {
 	void Start () {
 		RectTransform rt = GetComponent<RectTransform>();
 		rt.anchoredPosition = copyRect.anchoredPosition;
-		Debug.Log( gameObject.transform.position + " " + rt.anchoredPosition ) ;
+		// Debug.Log( gameObject.transform.position + " " + rt.anchoredPosition ) ;
 	}
 	
 	// Update is called once per frame

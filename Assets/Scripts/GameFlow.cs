@@ -54,7 +54,10 @@ public class GameFlow : MonoBehaviour {
 
 		switch(currMode){
 		case Mode.DLG: //still in dialogue mode
-			lineDone = false; //dialogue is shown one char at a time
+
+                resizeSpriteToDLG(character, character.transform.parent.gameObject);
+
+                lineDone = false; //dialogue is shown one char at a time
 			NAME.text = data [1, pointer];
 			int StageNum;
 			int.TryParse (data [3, pointer], out StageNum);
@@ -259,5 +262,15 @@ public class GameFlow : MonoBehaviour {
         var ratio = DLGbg.GetComponent<RectTransform>().rect.height / sSize.y;
         Vector3 scale = new Vector3(ratio, ratio, 1);
         character.GetComponent<RectTransform>().localScale = scale;
+    }
+
+    public void resizeSpriteToRectX(GameObject obj)
+    {
+        Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
+        //Debug.Log("sSize: " + sSize);
+        var ratio = obj.GetComponent<RectTransform>().rect.width / sSize.x;
+        //Debug.Log("ratio: " + ratio);
+        Vector3 scale = new Vector3(ratio, ratio, 1);
+       obj.GetComponent<RectTransform>().localScale = scale;
     }
 }
