@@ -43,7 +43,12 @@ public class GameControl : MonoBehaviour {
 			player.transform.position.y, player.transform.position.z));
 		WTSfactor = (one.x - zero.x);
 
-        gFlow.resizeSpriteToRectX(fixedBG);
+        GameFlow.resizeSpriteToRectX(fixedBG);
+        foreach (BGMover m in backgrounds)
+        {
+            GameFlow.resizeSpriteToRectX(m.gameObject);
+            GameFlow.centerX(m.gameObject);
+        }
 
     }
 
