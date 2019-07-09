@@ -24,7 +24,7 @@ public class GameFlow : MonoBehaviour {
                      //		"SpriteBox").GetChild (0).gameObject;
     }
 
-    IEnumerator processCSV() { //TODO move this to loading, as opposed to in game
+    IEnumerator processCSV() { //TODO move this to loading (a scene), as opposed to in game
         data = CSVReader.SplitCsvGrid(csv.text);
         while (!(data.Length > 0)) {
             yield return null;
@@ -44,19 +44,26 @@ public class GameFlow : MonoBehaviour {
         return lineDone;
     }
 
+    /**
+     * this function is called in GameControl. Thus, GameFlow is not in charge of 
+     * calling process itself, only updates the pointer. When GameControl sees a change
+     * in pointer, this function is invoked.    
+     */   
     public IEnumerator processCurrentLine() { //current being where the pointer is
 
-        if (data[0, pointer] != "") {//check if done (if yes move on to actual game play)
+        if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
             if (currMode == Mode.DLG) disableDialogueBox(); //if transitioning from dlg to others
             currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]);
-            if (currMode == Mode.DLG) enableDialogueBox();
+            if (currMode == Mode.DLG) enableDialogueBox(); //if the new mode is actually dlg
             print("Mode changed to " + currMode);
         }
 
         switch (currMode) {
             case Mode.DLG: //still in dialogue mode
 
-                resizeSpriteToDLG(character, character.transform.parent.gameObject);
+                //sprite fixes size of background square
+                //Assumes character is already given, TODO set this based on data
+                Global.resizeSpriteToDLG(character, character.transform.parent.gameObject);
 
                 lineDone = false; //dialogue is shown one char at a time
                 NAME.text = data[1, pointer];
@@ -100,8 +107,8 @@ public class GameFlow : MonoBehaviour {
                 int.TryParse(rgb[0], out r);
                 int.TryParse(rgb[1], out g);
                 int.TryParse(rgb[2], out b);
-                PaintballSpawner.standard = new Color(r, g, b);
-                PaintballSpawner.setMaxD(mx_D);
+                PaintballBehavior.standard = new Color(r, g, b);
+                PaintballBehavior.setMaxD(mx_D);
                 int[] wv, em;
                 wv = System.Array.ConvertAll<string, int>(waves, int.Parse);
                 em = System.Array.ConvertAll<string, int>(enemies, int.Parse);
@@ -133,7 +140,7 @@ public class GameFlow : MonoBehaviour {
         }
 
         //Assumes character is already given, TODO set this based on data
-        resizeSpriteToDLG(character, character.transform.parent.gameObject);
+        Global.resizeSpriteToDLG(character, character.transform.parent.gameObject);
 
         int StageNum;
         int.TryParse(data[2, line], out StageNum);
@@ -221,6 +228,8 @@ public class GameFlow : MonoBehaviour {
         return size;
     }
 
+    //pointer check is a buffer to prevent multiple pointer addition from a single click
+    //also movePointer is not called here, it's called in GameControl, the global control
     public IEnumerator movePointer() {
         if (lineDone && pointerCheck) {
             pointerCheck = false;
@@ -242,6 +251,7 @@ public class GameFlow : MonoBehaviour {
         dlgBox.SetActive(true);
     }
 
+    //not used yet, but will prob be used for crucial parts of the story
     public bool Skippable() {
         return canSkip;
     }
@@ -250,71 +260,5 @@ public class GameFlow : MonoBehaviour {
         skipping = true;
     }
 
-    /*
-     * resizes the sprite of a character to the right size in the dialogue box UI. 
-     * Needs to pass in both the character gameObject and the DLG background box for profile sprite.
-     * 
-     * Here, we're scaling the character gameObject, as the sprite is pixel-to-pixel.
-     * Prioritizes y-axis of the bg box for scaling, and scales that ratio in x to prevent distortion.    
-     */
-    public void resizeSpriteToDLG(GameObject character, GameObject DLGbg)
-    {
-        Vector3 sSize = character.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        var ratio = DLGbg.GetComponent<RectTransform>().rect.height / sSize.y;
-        Vector3 scale = new Vector3(ratio, ratio, 1);
-        character.GetComponent<RectTransform>().localScale = scale;
-    }
-
-    /*
-     * resizes sprite of a gameobj to the rect transform of this gameobj based on its x scale (ignoring y)
-     */
-    public static void resizeSpriteToRectX(GameObject obj)
-    {
-        Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
-       // Debug.Log("sSize: " + sSize);
-        var ratio = obj.GetComponent<RectTransform>().rect.width / sSize.x;
-      //  Debug.Log("ratio: " + ratio);
-        Vector3 scale = new Vector3(ratio, ratio, 1);
-        obj.GetComponent<RectTransform>().localScale = scale;
-       // Debug.Log("after set: " + obj.GetComponent<RectTransform>().localScale);
-    }
-
-    /*
- * resizes sprite of a gameobj to the rect transform of this gameobj based on its y scale (ignoring x)
- */
-    public static void resizeSpriteToRectY(GameObject obj)
-    {
-        Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        // Debug.Log("sSize: " + sSize);
-        var ratio = obj.GetComponent<RectTransform>().rect.height / sSize.y;
-        //  Debug.Log("ratio: " + ratio);
-        Vector3 scale = new Vector3(ratio, ratio, 1);
-        obj.GetComponent<RectTransform>().localScale = scale;
-        // Debug.Log("after set: " + obj.GetComponent<RectTransform>().localScale);
-    }
-
-    /*
- * resizes sprite of a gameobj to the rect transform of this gameobj completely based on rect dimensions
- */
-    public static void resizeSpriteToRectXY(GameObject obj)
-    {
-        Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        // Debug.Log("sSize: " + sSize);
-        var ratioX = obj.GetComponent<RectTransform>().rect.width / sSize.x;
-        var ratioY = obj.GetComponent<RectTransform>().rect.height / sSize.y;
-        //  Debug.Log("ratio: " + ratio);
-        Vector3 scale = new Vector3(ratioX, ratioY, 1);
-        obj.GetComponent<RectTransform>().localScale = scale;
-        // Debug.Log("after set: " + obj.GetComponent<RectTransform>().localScale);
-    }
-
-    // center rect transform x
-    public static void centerX(GameObject obj)
-    {
-       // Debug.Log(obj.GetComponent<RectTransform>().localPosition);
-        Vector3 n = obj.GetComponent<RectTransform>().localPosition;
-        n.x = 0;
-        obj.GetComponent<RectTransform>().localPosition = n;
-            }
 
 }

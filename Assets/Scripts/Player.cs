@@ -140,10 +140,10 @@ public class Player : MonoBehaviour
 		//actual shooting
 		if (bulletGauge.Count > 0) {
 			Vector3 pos = transform.position;
-			pos.x += (direction.y>0 ? 1:-1) * 
-				Mathf.Sin (angle) * (32 * CONSTANTS.PixelToWorldFactor.x);
+			pos.x += (direction.y>0 ? 1:-1) * //TODO the 32 looks fishy here
+				Mathf.Sin (angle) * (32 * Global.PixelToWorldFactor.x);
 			pos.z += (direction.y>0 ? 1:-1) *
-				Mathf.Cos (angle) * (32 * CONSTANTS.PixelToWorldFactor.y);
+				Mathf.Cos (angle) * (32 * Global.PixelToWorldFactor.y);
 			//from cannon's position plus a little bit of delta x and y to find the firing pos
 
 			GameObject bullet = Instantiate (BulletObj, pos,
@@ -177,16 +177,16 @@ public class Player : MonoBehaviour
 		}
 		anim.SetBool ("Shoot", true);
 
-			float d = PaintballSpawner.find2ColorDist (bulletGauge [bulletGauge.Count - 1],
+			float d = Global.find2ColorDist (bulletGauge [bulletGauge.Count - 1],
 				          bulletGauge [bulletGauge.Count - 2]);
 			print ("dist bt 2:"+d);
 		//actual shooting
 			if (d<3) { //if colors r actually close enough
 			Vector3 pos = transform.position;
-			pos.x += (direction.y>0 ? 1:-1) * 
-				Mathf.Sin (angle) * (32 * CONSTANTS.PixelToWorldFactor.x);
+			pos.x += (direction.y>0 ? 1:-1) *  //TODO fishy 32
+				Mathf.Sin (angle) * (32 * Global.PixelToWorldFactor.x);
 			pos.z += (direction.y>0 ? 1:-1) *
-				Mathf.Cos (angle) * (32 * CONSTANTS.PixelToWorldFactor.y);
+				Mathf.Cos (angle) * (32 * Global.PixelToWorldFactor.y);
 			//from cannon's position plus a little bit of delta x and y to find the firing pos
 
 			GameObject bullet = Instantiate (BulletObj, pos,

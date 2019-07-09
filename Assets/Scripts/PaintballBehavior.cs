@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-public class PaintballSpawner : MonoBehaviour {
+public class PaintballBehavior : MonoBehaviour {
 	//instantiated for each paintball
 	private int size;
 	private Color color;
@@ -114,11 +114,6 @@ public class PaintballSpawner : MonoBehaviour {
 		return rdmColor;
 	}
 
-	public static float find2ColorDist(Color c1, Color c2){
-		float d = Mathf.Sqrt (Mathf.Pow((c1.r-c2.r),2) + 
-			Mathf.Pow((c1.g-c2.g),2) + Mathf.Pow((c1.b-c2.b),2));
-		return d;
-	}
 
 	public void randomizeSpriteKind(){
 		num = (int)Random.Range (0, 3.99f);

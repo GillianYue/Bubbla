@@ -3,6 +3,28 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
+
+/**
+ * GameControl is a global level game control script. It is in charge of starting the game
+ * and switching between different stages of the game. It talks with GameFlow, which is a
+ * game logic script on a more micro level, to run each level based on inputs. 
+ * 
+ * GameControl does not have access to the CSV scripts. It only has access to some of the
+ * more permanent elements, like player, and the game play UI. It has access to an 
+ * EnemySpawner script, which is in charge of spawning the enemies. 
+ * 
+ * User input (touch screen) is also checked here in Update. Whenever there is input, the
+ * GameControl global script sends the information to sub logic scripts correspondingly. 
+ * It then acts on a macro level according to the feedback of those sub scripts.
+ * For example, mode of the game is being determined in this way:
+ * Mode transitions are written in csv files available in GameFlow;
+ * Each line is performed out using a function in GameFlow (which is called here globally);
+ * GameFlow has a pointer to know which line it's supposed to perform;
+ * GameControl notifies GameFlow when it's time to update the pointer (user clicks screen);
+ * when Mode changes (done in processLine in gameflow) GameControl acts accordingly globally;
+ * if in DLG it only checks for clicks;
+ * if in GAME it activates UI, wakes EnemySpawner, checks paint collection, etc.
+ */
 public class GameControl : MonoBehaviour {
 	//screen: 320x480
 	//world to screen factor: 1:35.6
@@ -31,6 +53,7 @@ public class GameControl : MonoBehaviour {
 		
 		GameOverC.SetActive (false);
 		player.GetComponent<Player> ().enabled = false;
+        //gadgets are GOs like life container that are needed in game play but not in DLG mode
 		foreach (GameObject g in gadgets) {
 			g.SetActive (false);
 		}
@@ -43,11 +66,12 @@ public class GameControl : MonoBehaviour {
 			player.transform.position.y, player.transform.position.z));
 		WTSfactor = (one.x - zero.x);
 
-        GameFlow.resizeSpriteToRectX(fixedBG);
+        //correct sizing for the backgrounds of this level, fixed or non-fixed
+        Global.resizeSpriteToRectX(fixedBG);
         foreach (BGMover m in backgrounds)
         {
-            GameFlow.resizeSpriteToRectX(m.gameObject);
-            GameFlow.centerX(m.gameObject);
+            Global.resizeSpriteToRectX(m.gameObject);
+            Global.centerX(m.gameObject);
         }
 
     }
@@ -73,25 +97,25 @@ public class GameControl : MonoBehaviour {
 			if (Input.GetMouseButtonDown (0)) {
 				foreach (Transform child in Ballz.transform) {//
 					Vector3 screen = mainCamera.WorldToScreenPoint
-					(child.transform.position);
+					(child.transform.position); //TODO debug? is paint transform based
 
 					//checks if clicking on any paintball
 					if (child.CompareTag ("Paintball") &&
 					   Global.touching (new Vector2 (Input.mousePosition.x,
 						   Input.mousePosition.y),
 						   new Vector2 (screen.x, screen.y),
-						   child.GetComponentInParent<PaintballSpawner>
+						   child.GetComponentInParent<PaintballBehavior>
 						().getScale () * WTSfactor)) {
-						/**if yes, terminate the method so that
+						/**if yes, terminate the method early so that
 					bullet wouldn't be launched; the interaction with
 					paintball will be handled by PaintballSpawner
 					**/
 
 						//checking if bulletgauge is full(the process takes in paint automatically)
 						if (player.GetComponent<Player> ().addPaint 
-						(child.GetComponentInParent<PaintballSpawner> ().getColor ())) {
+						(child.GetComponentInParent<PaintballBehavior> ().getColor ())) {
 							//generates effect
-							child.GetComponentInParent<PaintballSpawner> ().getsAbsorbed ();
+							child.GetComponentInParent<PaintballBehavior> ().getsAbsorbed ();
 						} 
 						return;
 					} else if (child.CompareTag ("Potion") &&
@@ -113,9 +137,9 @@ public class GameControl : MonoBehaviour {
 				//paintball/potion
 				GameObject a = aim; //GO with the aiming sprite
 				a = Instantiate (a, new Vector3 (
-					CONSTANTS.PixelToWorldFactor.x * Input.mousePosition.x,
+					Global.PixelToWorldFactor.x * Input.mousePosition.x,
 					player.transform.position.y,
-					CONSTANTS.PixelToWorldFactor.y * Input.mousePosition.y),
+					Global.PixelToWorldFactor.y * Input.mousePosition.y),
 					player.transform.rotation) as GameObject;
 				a.transform.SetParent (Ballz.transform);
 				a.GetComponent<Animator> ().SetBool ("Focused", false);
@@ -203,11 +227,11 @@ public class GameControl : MonoBehaviour {
 			yield return null;
 		}
 
-		int tempPT = -1;
+		int tempPT = -1; //temp pointer, is passive, updates as gFlow pointer updates
 		do{//once code gets here, should be ready to start gameFlow
 			if(tempPT != gFlow.getPointer()){ //avoid redundant work; only rerender if changed
 				StartCoroutine(gFlow.processCurrentLine());
-			tempPT = gFlow.getPointer();
+			tempPT = gFlow.getPointer(); 
 			}
 			yield return new WaitForSeconds(0.2f); //essentially check dialogue status every one s
 		}while(!gFlow.checkIfEnded()); //as long as there's still something to be done
@@ -226,6 +250,7 @@ public class GameControl : MonoBehaviour {
 		}
 	}
 
+    //TODO move this to an actual paintball spawner script
 	IEnumerator SpawnPaintballs(){
 		yield return new WaitForSeconds (startWait);
 		while (true) {
@@ -272,7 +297,9 @@ public class GameControl : MonoBehaviour {
 		genHearts (life);
 	}
 
-
+    /*
+     * checks for existing hearts vs. life (num hearts there should be) and gens as needed
+     */
 	public void genHearts(int life){
 		
 		int dif = life - Hs_Holder.transform.childCount;
@@ -282,6 +309,7 @@ public class GameControl : MonoBehaviour {
 			for (int c = 0; c < dif; c++) {
 				Vector3 pos = Hs_Holder.transform.position + 
 					new Vector3 (Random.Range (0.2f, 1.0f), 0, 1.0f);
+                //picks a random heart prefab out of the hearts prefab group
 				GameObject tmpH = Instantiate (hearts [(int)(Random.Range (0.0f, 3.99f))], 
 					                 pos, hearts [0].transform.rotation) as GameObject;
 				tmpH.transform.parent = Hs_Holder.transform;
@@ -304,10 +332,10 @@ public class GameControl : MonoBehaviour {
 	{
 		Vector2 returnVec2;
 
-		returnVec2.x = ((TouchLocation.x * CONSTANTS.PixelToWorldFactor.x) - 
-			(CONSTANTS.WorldUnitsInCamera.x / 2)) + mainCamera.transform.position.x;
-		returnVec2.y = ((TouchLocation.y * CONSTANTS.PixelToWorldFactor.y) - 
-			(CONSTANTS.WorldUnitsInCamera.y / 2)) + mainCamera.transform.position.z;
+		returnVec2.x = ((TouchLocation.x * Global.PixelToWorldFactor.x) - 
+			(Global.WorldUnitsInCamera.x / 2)) + mainCamera.transform.position.x;
+		returnVec2.y = ((TouchLocation.y * Global.PixelToWorldFactor.y) - 
+			(Global.WorldUnitsInCamera.y / 2)) + mainCamera.transform.position.z;
 
 		return returnVec2;
 	}

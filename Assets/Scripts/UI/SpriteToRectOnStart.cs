@@ -13,16 +13,16 @@ public class SpriteToRectOnStart : MonoBehaviour
         switch (how)
         {
             case Mode.X:
-                GameFlow.resizeSpriteToRectX(gameObject);
+                Global.resizeSpriteToRectX(gameObject);
                 break;
             case Mode.Y:
-                GameFlow.resizeSpriteToRectY(gameObject);
+                Global.resizeSpriteToRectY(gameObject);
                 break;
             case Mode.BothWays:
-                GameFlow.resizeSpriteToRectXY(gameObject);
+                Global.resizeSpriteToRectXY(gameObject);
                 break;
             default:
-                GameFlow.resizeSpriteToRectXY(gameObject);
+                Global.resizeSpriteToRectXY(gameObject);
                 break;
         }
        
