@@ -178,6 +178,92 @@ public class Global : MonoBehaviour
         obj.GetComponent<RectTransform>().localPosition = n;
     }
 
+    /**
+     * rect transform setter
+     * 
+     * this method sets one rect transform to be the exact same shape as the other
+     * GO's rect transform. We deal with this simply by setting the anchors to all be 
+     * 0 (so fixed size), then forcefully set the width and height of the rect. 
+     * This function does not move the obj to WHERE the other GO is.     
+     *     
+     * OFFSET MAX def: The offset of the upper right corner of the rectangle 
+     * relative to the upper right anchor.    
+     *     
+     * OFFSET MIN def: The offset of the lower left corner of the rectangle 
+     * relative to the lower left anchor.    
+     * 
+     * ANCHOR MAX def: The normalized position in the parent RectTransform
+     * that the upper right corner is anchored to. this is the 0 to 1 thing
+     * 
+     * ANCHOR MIN def: The normalized position in the parent RectTransform 
+     * that the lower left corner is anchored to. also the 0 to 1 thing
+     * 
+     * SIZEDELTA def: If the anchors are together, sizeDelta is the same as size.
+     * If the anchors are in each of the four corners of the parent, the sizeDelta 
+     * is how much bigger or smaller the rectangle is compared to its parent.    
+     * 
+     */
+    public static void setToRectTransform(GameObject obj, GameObject target)
+    {
+        setRectTransform(obj, target.GetComponent<RectTransform>().rect.width,
+           target.GetComponent<RectTransform>().rect.height);
+    }
+
+    /**
+     * variant of the upper function, assumes the anchors are properly set (to parents)
+     * does not modify the anchors in any way    
+     *     
+     * only requires the offset values    
+     */
+    public static void setToRectTransform(GameObject obj,
+   float leftOffset, float rightOffset, float upperOffset, float lowerOffset)
+    {
+        RectTransform rt = obj.GetComponent<RectTransform>();
+
+        Vector2 upperRight = new Vector2(rightOffset, upperOffset);
+        Vector2 lowerLeft = new Vector2(leftOffset, lowerOffset);
+        rt.offsetMax = upperRight;
+        rt.offsetMin = lowerLeft;
+    }
+
+    /**
+     * You know the dimensions of the rect you want it to be, and voila, here's
+     * a function just for that.
+     * 
+     * This function will set the anchors to be 0-0, 0-0 to keep the sizes fixed.     
+     */
+     public static void setRectTransform(GameObject obj, float width, float height)
+    {
+        setRectTransformAnchorsIndependent(obj);
+        RectTransform rt = obj.GetComponent<RectTransform>();
+
+        rt.sizeDelta = new Vector2(width, height);
+
+    }
+
+    /**
+     * so that it's always fixed size (width and height)
+     */
+    public static void setRectTransformAnchorsIndependent(GameObject obj)
+    {
+        RectTransform rt = obj.GetComponent<RectTransform>();
+
+        //setting the anchors
+        rt.anchorMax = new Vector2(0, 0);
+        rt.anchorMin = new Vector2(0, 0);
+    }
+
+    /**
+ * so that it's always 100% dependent on parent size
+ */
+    public static void setRectTransformAnchorsDependent(GameObject obj)
+    {
+        RectTransform rt = obj.GetComponent<RectTransform>();
+
+        //setting the anchors
+        rt.anchorMax = new Vector2(1, 1);
+        rt.anchorMin = new Vector2(0, 0);
+    }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~UI logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

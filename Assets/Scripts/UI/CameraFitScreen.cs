@@ -13,6 +13,7 @@ public class CameraFitScreen : MonoBehaviour
             canv.transform.localScale.y ;
         Global.setGlobalConstants(GetComponent<Camera>().orthographicSize);
 
+
         Vector2 cPos = canv.GetComponent<RectTransform>().localPosition;
         Vector3 pos = new Vector3(cPos.x, cPos.y, -500); //camera is the farthest away, sees everything
 //******* thus, in our game, the more negative (smaller) the z axis is, the higher priority of the visibility
