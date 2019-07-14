@@ -21,6 +21,10 @@ public class Global : MonoBehaviour
     public static Vector2 WorldToPixelFactor;
     public static Vector2 PixelToWorldFactor;
 
+    public static float aspectRatio = (640.0f / 1136.0f);
+    public static float MainCanvasWidth = 640.0f;
+    public static float MainCanvasHeight = 1136.0f;
+
     //is called in CameraFitScreen, which is called on start, attached to the camera
     public static void setGlobalConstants(float orthSize)
     {
@@ -215,7 +219,7 @@ public class Global : MonoBehaviour
      *     
      * only requires the offset values    
      */
-    public static void setToRectTransform(GameObject obj,
+    public static void setRectTransform(GameObject obj,
    float leftOffset, float rightOffset, float upperOffset, float lowerOffset)
     {
         RectTransform rt = obj.GetComponent<RectTransform>();
@@ -239,6 +243,24 @@ public class Global : MonoBehaviour
 
         rt.sizeDelta = new Vector2(width, height);
 
+    }
+
+    /**
+     * sets the gameobject's rect transform width to target,
+     * and scales GO's height to the same scale    
+     * 
+     * Note: with a GO that has spriteRenderer, the sprite will not be stretched with
+     * width/height! Always scale instead of changing dimensions    
+     */
+     public static void setRectTransformX(GameObject obj, GameObject target)
+    {
+        RectTransform rt = obj.GetComponent<RectTransform>();
+        RectTransform trt = target.GetComponent<RectTransform>();
+
+        float w = trt.rect.width;
+        float ratio = (float)w / (float)rt.rect.width;
+
+        setRectTransform(obj, w, rt.rect.height * ratio);
     }
 
     /**

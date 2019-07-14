@@ -16,6 +16,7 @@ public class TitleBGanim : MonoBehaviour {
 
 	void Start () {
         canvas = GameObject.FindGameObjectWithTag("Canvas");
+        //total sum of heights
         var sh = canvas.GetComponent<RectTransform>().rect.height * 
             canvas.transform.localScale.y;
 
@@ -24,7 +25,7 @@ public class TitleBGanim : MonoBehaviour {
         var width = sr_0.sprite.bounds.size.x;
         var screenWidth = canvas.GetComponent<RectTransform>().rect.width;
         // var screenHeight = canvas.GetComponent<RectTransform>().rect.height;
-        var tf_0 = sr_0.gameObject.transform;
+        var tf_0 = sr_0.gameObject.GetComponent<RectTransform>();
 
         Vector3 scale = new Vector3(1, 1, 1);
         scale.x = screenWidth / width;
@@ -32,10 +33,10 @@ public class TitleBGanim : MonoBehaviour {
         tf_0.localScale = scale;
 
         Vector3 pos = new Vector3(0, sh, 1);
-        transform.GetChild(0).transform.position = pos;
+        tf_0.localPosition = pos;
+
         sh -= sr_0.bounds.size.y;
 
-        // Debug.Log("sh: " + sh + " sizeY: " + sr_0.bounds.size.y+" nr: "+ (int)(sh / sr_0.bounds.size.y));
         numRows = (int)(sh / sr_0.bounds.size.y)+1;
 
         // set up rest of the rows (including duplicating the first row)
@@ -55,7 +56,7 @@ public class TitleBGanim : MonoBehaviour {
             tf.localScale = scale;
 
             pos = new Vector3(0, sh, 1);
-            transform.GetChild(r).transform.position = pos;
+            tf.localPosition = pos;
             sh -= sr.bounds.size.y;
         }
         StartCoroutine (startTitleScreenAnim ());
@@ -71,6 +72,7 @@ public class TitleBGanim : MonoBehaviour {
 		while (!dlg.checkLoadDone()) {//wait till csv's loaded
             yield return null;
 		}
+        //gameFlow dlg has access to the csv containing scripts of dialogue
 		StartCoroutine (dlg.displayTitleDLG());
 
 		Vector3 v1 = UIBar1.GetComponent<RectTransform> ().localScale;
@@ -84,6 +86,7 @@ public class TitleBGanim : MonoBehaviour {
 
         // There is 21 rows in total
 		for (int r = numRows; r>=0; r--) {
+            //slowly extend the 2 UI bars around dialogue
 			UIBar1.GetComponent<RectTransform> ().localScale = v1;
 			UIBar2.GetComponent<RectTransform> ().localScale = v2;
 			v1.x += 0.008f;
@@ -93,6 +96,7 @@ public class TitleBGanim : MonoBehaviour {
 			yield return new WaitForSeconds (startAnimWait);
 		}
 		for (int r = 10; r>=0; r--) {
+            //continue doing so even after background is loaded to create discontinuity
 			UIBar1.GetComponent<RectTransform> ().localScale = v1;
 			UIBar2.GetComponent<RectTransform> ().localScale = v2;
 			v1.x += 0.006f;
@@ -104,7 +108,6 @@ public class TitleBGanim : MonoBehaviour {
 	}
 
 	private IEnumerator singleRowAnim(SpriteRenderer sr){
-
 
         for (int n = 0; n < 15; n++) {
 			sr.sprite = tt0To14[n];

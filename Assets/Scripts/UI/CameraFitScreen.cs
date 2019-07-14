@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class CameraFitScreen : MonoBehaviour
 {
-    // Start is called before the first frame update
+    /**
+     * this script fits the camera to the screen by adjusting its orthographic size.
+     */
     void Start()
     {
+
+        //getting resolution of phone: see below commented line
+        Vector2 gameViewSize = UnityEditor.Handles.GetMainGameViewSize();
+        float gvRatio = (float)gameViewSize.y / (float)gameViewSize.x;
+
         GameObject canv = GameObject.FindGameObjectWithTag("Canvas");
-        GetComponent<Camera>().orthographicSize = (canv.
-            GetComponent<RectTransform>().rect.height / 2) *
-            canv.transform.localScale.y ;
+        GetComponent<Camera>().orthographicSize = (gvRatio * Global.MainCanvasWidth / 2)
+            /canv.transform.localScale.y;
         Global.setGlobalConstants(GetComponent<Camera>().orthographicSize);
 
 

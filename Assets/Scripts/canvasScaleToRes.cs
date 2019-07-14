@@ -4,12 +4,24 @@ using UnityEngine;
 
 public class canvasScaleToRes : MonoBehaviour
 {
-    // Start is called before the first frame update
+    /**
+     * this script sets the dimensions of the main canvas
+     * dimension is always the same: 640*1136, iphone 5
+     * if resolution is different than default,
+     * main camera will adjust orthographic size to show only 640*???, where the extra space
+     * in ???-1136 will be covered by black space.    
+     */
     void Start()
     {
+        GameObject blackSpace = GameObject.FindWithTag("BlackSpace");
         Vector2 gameViewSize = UnityEditor.Handles.GetMainGameViewSize();
         Debug.Log("Game View resolution: " + gameViewSize);
-        Global.setRectTransform(gameObject, gameViewSize.x, gameViewSize.y);
+        //setting black border background to exactly the size of resolution
+        Global.setRectTransform(blackSpace, gameViewSize.x, gameViewSize.y);
+
+        //the main canvas' dimension is constant, independent of resolution.
+        Global.setRectTransform(gameObject, Global.MainCanvasWidth, 
+            Global.MainCanvasHeight);
     }
 
     // Update is called once per frame

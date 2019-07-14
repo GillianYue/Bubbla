@@ -152,7 +152,7 @@ public class GameFlow : MonoBehaviour {
         string[] store = GetFormattedText
             (DIALOGUE, data[1, line]).ToArray(typeof(string)) as string[];
         DIALOGUE.text = store[0];
-        Canvas.ForceUpdateCanvases();
+        //Canvas.ForceUpdateCanvases();
         DIALOGUE.text = "";
 
 
