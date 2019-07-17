@@ -46,7 +46,7 @@ public class PaintballBehavior : MonoBehaviour {
 		randomizeSpriteKind ();
 
 		int rdmSize = (int) Random.Range (1.0f, 3.99f);
-		setSize(rdmSize);
+		setSize(rdmSize * (int) GameObject.FindWithTag("Player").transform.localScale.x);
 
 		randomizeRotateVelocity ();
 
@@ -124,7 +124,7 @@ public class PaintballBehavior : MonoBehaviour {
 
 	public void randomizeRotateVelocity(){
 		Vector3 angVel = this.gameObject.GetComponent<Rigidbody> ().angularVelocity;
-		angVel.y += Random.Range(-0.5f, 0.5f);
+		angVel.z += Random.Range(-0.5f, 0.5f);
 		this.gameObject.GetComponent<Rigidbody> ().angularVelocity = angVel;
 	}
 		

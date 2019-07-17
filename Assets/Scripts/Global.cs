@@ -14,36 +14,28 @@ public class Global : MonoBehaviour
 
     public static float orthographicSize; //entered manually by ME, here
 
-    private static float worldY;
-    private static float worldX;
-
-    public static Vector2 WorldUnitsInCamera;
-    public static Vector2 WorldToPixelFactor;
-    public static Vector2 PixelToWorldFactor;
-
     public static float aspectRatio = (640.0f / 1136.0f);
     public static float MainCanvasWidth = 640.0f;
     public static float MainCanvasHeight = 1136.0f;
-
-    //is called in CameraFitScreen, which is called on start, attached to the camera
-    public static void setGlobalConstants(float orthSize)
-    {
-        orthographicSize = orthSize;
-
-           worldY = orthographicSize * 2;
-           worldX = worldY * Screen.width / Screen.height;
-
-         WorldUnitsInCamera = new Vector2(worldX, worldY);
-        WorldToPixelFactor = new Vector2(Screen.width / worldX,
-        Screen.height / worldY);
-        PixelToWorldFactor = new Vector2(worldX / Screen.width,
-        worldY / Screen.height);
-}
+    public static Vector2 WTSfactor, STWfactor;
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~CONSTANTS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
     public static int Scene_To_Load;
+
+
+    public static void setGlobalConstants(Camera mainCamera)
+    {
+        Vector3 zero = mainCamera.WorldToScreenPoint(new Vector3(0,
+    0,0));
+        Vector3 one = mainCamera.WorldToScreenPoint(new Vector3(1,
+           1,0));
+        WTSfactor = new Vector2((one.x - zero.x), (one.y - zero.y));
+
+        Debug.Log("wtsFactor: " + WTSfactor);
+        STWfactor = new Vector2((1 / WTSfactor.x), (1/WTSfactor.y));
+    }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~game play logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

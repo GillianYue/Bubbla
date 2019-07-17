@@ -42,13 +42,13 @@ public class EnemyMover : MonoBehaviour {
 			//even numbers: positive velocity
 			if (t % 2 == 0) {
 				while (rb.transform.position.x < 
-					(Screen.width * Global.PixelToWorldFactor.x/2)*0.8) {
+					(Screen.width * Global.STWfactor.x/2)*0.8) {
 					yield return new WaitForSeconds (.5f);
 					//not changing the velocity (stuck in this loop) until reaching the target
 				}
 			} else { //else, odd, negative velocity
 				while (rb.transform.position.x > 
-					-1*(Screen.width * Global.PixelToWorldFactor.x/2)*0.8) {
+					-1*(Screen.width * Global.STWfactor.x/2)*0.8) {
 					yield return new WaitForSeconds (.5f);
 				}
 			}

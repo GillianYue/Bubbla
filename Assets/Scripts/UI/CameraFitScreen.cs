@@ -17,7 +17,7 @@ public class CameraFitScreen : MonoBehaviour
         GameObject canv = GameObject.FindGameObjectWithTag("Canvas");
         GetComponent<Camera>().orthographicSize = (gvRatio * Global.MainCanvasWidth / 2)
             /canv.transform.localScale.y;
-        Global.setGlobalConstants(GetComponent<Camera>().orthographicSize);
+        Global.setGlobalConstants(GetComponent<Camera>());
 
 
         Vector2 cPos = canv.GetComponent<RectTransform>().localPosition;

@@ -29,18 +29,16 @@ public class GameControl : MonoBehaviour {
     //screen: 320x480
     //world to screen factor: 1:35.6
     public GameObject mainCanvas;
-    public GameObject paintBall, potion;
     public Camera mainCamera;
-    public Vector3 spawnValues;
-    public GameObject Ballz, Hs_Holder;
-    public float startWait, pbSpawnWait, spawnRangeWidth;
-    public double WTSfactor;
+    public GameObject Hs_Holder, Ballz; //ballz is the empty parent GO holding all paintballs
+    //Hs_holder likewise for hearts
+
     public GameObject[] hearts, gadgets; //gadgets being hearts_container, bulletGauge, etc.
     public GameObject HeartVFX, aim;
-
     public GameObject player;
     public GameObject GameOverC;
     public EnemySpawner eSpawner;
+    public PaintballSpawner pSpawner;
     public GameFlow gFlow;
     public BGMover[] backgrounds;
     public ScriptableObject levelScript;
@@ -60,12 +58,6 @@ public class GameControl : MonoBehaviour {
         }
 
         StartCoroutine (StartGame());
-
-        Vector3 zero = mainCamera.WorldToScreenPoint (new Vector3 (0, 
-            player.transform.position.y, player.transform.position.z));
-        Vector3 one = mainCamera.WorldToScreenPoint (new Vector3 (1, 
-            player.transform.position.y, player.transform.position.z));
-        WTSfactor = (one.x - zero.x);
 
         //correct sizing for the backgrounds of this level, fixed or non-fixed
         Global.resizeSpriteToRectX(fixedBG);
@@ -120,8 +112,9 @@ public class GameControl : MonoBehaviour {
                        Global.touching (new Vector2 (Input.mousePosition.x,
                            Input.mousePosition.y),
                            new Vector2 (screen.x, screen.y),
+                           //gets the radius of paintball on screen
                            child.GetComponentInParent<PaintballBehavior>
-                        ().getScale () * WTSfactor)) {
+                        ().getScale () * Global.WTSfactor.x)) {
                         /**if yes, terminate the method early so that
                     bullet wouldn't be launched; the interaction with
                     paintball will be handled by PaintballSpawner
@@ -139,7 +132,7 @@ public class GameControl : MonoBehaviour {
                                   Input.mousePosition.y),
                                   new Vector2 (screen.x, screen.y),
                                   child.GetComponentInParent<PotionBehav>
-                        ().getScale () * WTSfactor)) {
+                        ().getScale () * Global.WTSfactor.x)) {
 
                         child.GetComponent<PotionBehav> ().getsAbsorbed ();
                         player.GetComponent<Player> ().cure 
@@ -153,9 +146,9 @@ public class GameControl : MonoBehaviour {
                 //paintball/potion
                 GameObject a = aim; //GO with the aiming sprite
                 a = Instantiate (a, new Vector3 (
-                    Global.PixelToWorldFactor.x * Input.mousePosition.x,
+                    Global.STWfactor.x * Input.mousePosition.x,
                     player.transform.position.y,
-                    Global.PixelToWorldFactor.y * Input.mousePosition.y),
+                    Global.STWfactor.y * Input.mousePosition.y),
                     player.transform.rotation) as GameObject;
                 a.transform.SetParent (Ballz.transform);
                 a.GetComponent<Animator> ().SetBool ("Focused", false);
@@ -255,7 +248,7 @@ public class GameControl : MonoBehaviour {
     }
         
     public void startEnemyWaves(int[] w, int[] e){
-        StartCoroutine (SpawnPaintballs ()); 
+       pSpawner.StartSpawn (); 
         eSpawner.StartSpawn(w, e);
         foreach(BGMover m in backgrounds){
             m.StartScrolling ();
@@ -263,38 +256,6 @@ public class GameControl : MonoBehaviour {
         player.GetComponent<Player> ().enabled = true; //generation of heart, updates, etc. 
         foreach (GameObject g in gadgets) {
             g.SetActive (true); //make bullet gauge and life container show
-        }
-    }
-
-    //TODO move this to an actual paintball spawner script
-    IEnumerator SpawnPaintballs(){
-        yield return new WaitForSeconds (startWait);
-        while (true) {
-            if(Random.Range(0, 99.99f)>5){
-            GameObject pb = paintBall;
-
-            Vector3 spawnPosition = new Vector3 (
-                Random.Range(spawnValues.x-spawnRangeWidth,
-                    spawnValues.x + spawnRangeWidth),
-                spawnValues.y, spawnValues.z);
-            pb = Instantiate (pb, spawnPosition, pb.transform.rotation)
-                as GameObject;
-            pb.transform.Rotate (new Vector3(0,0,Random.Range(0, 360)));
-            pb.transform.SetParent (Ballz.transform);
-
-            yield return new WaitForSeconds (pbSpawnWait);
-            
-            }else{//5% chance to generate potion
-                GameObject pt = potion;
-
-                Vector3 spawnPosition = new Vector3 (
-                    Random.Range(spawnValues.x-spawnRangeWidth,
-                        spawnValues.x + spawnRangeWidth),
-                    spawnValues.y, spawnValues.z);
-                pt = Instantiate (pt, spawnPosition, pt.transform.rotation)
-                    as GameObject;
-                pt.transform.SetParent (Ballz.transform);
-            }
         }
     }
 
@@ -351,10 +312,10 @@ public class GameControl : MonoBehaviour {
     {
         Vector2 returnVec2;
 
-        returnVec2.x = ((TouchLocation.x * Global.PixelToWorldFactor.x) - 
-            (Global.WorldUnitsInCamera.x / 2)) + mainCamera.transform.position.x;
-        returnVec2.y = ((TouchLocation.y * Global.PixelToWorldFactor.y) - 
-            (Global.WorldUnitsInCamera.y / 2)) + mainCamera.transform.position.z;
+        returnVec2.x = ((TouchLocation.x * Global.STWfactor.x) - 
+            (Global.MainCanvasWidth / 2)) + mainCamera.transform.position.x;
+        returnVec2.y = ((TouchLocation.y * Global.STWfactor.y) - 
+            (Global.MainCanvasHeight / 2)) + mainCamera.transform.position.z;
 
         return returnVec2;
     }
