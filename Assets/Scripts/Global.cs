@@ -18,7 +18,12 @@ public class Global : MonoBehaviour
     public static float MainCanvasWidth = 640.0f;
     public static float MainCanvasHeight = 1136.0f;
     public static Vector2 WTSfactor, STWfactor;
-
+    public static int scaleRatio; 
+    /**raw sprite presented on screen would be too small
+    * as some sprites have low resolution when drawn (a 30 by 30, for example) but need
+    * to be larger on screen. This ratio should be the same for most things for visual
+    * consistency. This value will be set from player's scale once we enter game mode.   
+    */
     //~~~~~~~~~~~~~~~~~~~~~~~~~~CONSTANTS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 

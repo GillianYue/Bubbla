@@ -2,8 +2,9 @@
 using System.Collections;
 
 public class EnemySpawner : MonoBehaviour {
-	
-	public float startWait, enemySpawnWait, waveSpawnWait, range;
+
+    public float startWait, enemySpawnWait, waveSpawnWait;
+    private float range;
 	//range is worldspace width on screen/2 (+ and then -)
 	public GameObject enemiz;
 	public GameObject[] enemies;
@@ -16,16 +17,27 @@ public class EnemySpawner : MonoBehaviour {
 	public void StartSpawn (int[] w, int[] m) {
 
 
-		//int[] w: waves in this level
+        //int[] w: waves in this level
 
-		//int[] m: types of monsters for each of the waves; the EXACT SAME SIZE as w[]
-
-		StartCoroutine (SpawnEnemyLevel (w, m));
+        //int[] m: types of monsters for each of the waves; the EXACT SAME SIZE as w[]
+        StartCoroutine(setSpawnerValues());
+        StartCoroutine (SpawnEnemyLevel (w, m));
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    public IEnumerator setSpawnerValues()
+    {
+        while ((int)range == 0)
+        {
+            range = Global.STWfactor.x * (Global.MainCanvasWidth / 2);
+            spawnValues = new Vector3(0, Global.STWfactor.y * (Global.MainCanvasHeight / 2) + 200, 0);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+    }
+
+    // Update is called once per frame
+    void Update () {
 	
 	}
 

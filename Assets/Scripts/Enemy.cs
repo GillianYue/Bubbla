@@ -10,6 +10,10 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
+        if(Global.scaleRatio != 0)
+        {
+            transform.localScale *= Global.scaleRatio;
+        }
 	}
 	
 	// Update is called once per frame

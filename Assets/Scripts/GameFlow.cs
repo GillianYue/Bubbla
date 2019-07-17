@@ -53,7 +53,7 @@ public class GameFlow : MonoBehaviour {
 
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
             if (currMode == Mode.DLG) disableDialogueBox(); //if transitioning from dlg to others
-            currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]);
+                currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////
             if (currMode == Mode.DLG) enableDialogueBox(); //if the new mode is actually dlg
             print("Mode changed to " + currMode);
         }
@@ -98,6 +98,7 @@ public class GameFlow : MonoBehaviour {
                 break;
 
             case Mode.GAME:
+                Global.scaleRatio = (int)GameObject.FindWithTag("Player").transform.localScale.x;
                 string[] waves = data[1, pointer].Split(',');
                 string[] enemies = data[2, pointer].Split(',');
                 string[] rgb = data[3, pointer].Split(',');

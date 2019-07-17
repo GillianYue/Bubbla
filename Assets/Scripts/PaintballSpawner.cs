@@ -17,10 +17,10 @@ public class PaintballSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(setValues());
+        StartCoroutine(setSpawnerValues());
     }
 
-public IEnumerator setValues()
+    public IEnumerator setSpawnerValues()
     {
         while ((int)spawnRangeWidth == 0) {
             spawnRangeWidth = Global.STWfactor.x * (Global.MainCanvasWidth / 2);
@@ -55,7 +55,6 @@ public IEnumerator setValues()
                     Random.Range(spawnValues.x - spawnRangeWidth,
                         spawnValues.x + spawnRangeWidth),
                     spawnValues.y, spawnValues.z);
-                Debug.Log("spawnPos: " + spawnPosition);
                 pb = Instantiate(pb, spawnPosition, pb.transform.rotation)
                     as GameObject;
                 pb.transform.Rotate(new Vector3(0, 0, Random.Range(0, 360)));
