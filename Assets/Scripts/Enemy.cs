@@ -6,13 +6,15 @@ public class Enemy : MonoBehaviour {
 	int life = 1000;
 	int attack;
 	public AudioStorage audioz;
+    public float sizeScale; //same as paintball, base scale to be multiplied with global
 
 	// Use this for initialization
 	void Start () {
 		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
         if(Global.scaleRatio != 0)
         {
-            transform.localScale *= Global.scaleRatio;
+            transform.localScale = new Vector3(sizeScale * Global.scaleRatio,
+                sizeScale * Global.scaleRatio, sizeScale * Global.scaleRatio);
         }
 	}
 	

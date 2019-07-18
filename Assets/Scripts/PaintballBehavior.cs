@@ -46,7 +46,8 @@ public class PaintballBehavior : MonoBehaviour {
 		randomizeSpriteKind ();
 
 		int rdmSize = (int) Random.Range (1.0f, 3.99f);
-		setSize(rdmSize * (int) GameObject.FindWithTag("Player").transform.localScale.x);
+        setSizeScale(1.8f);
+		setSize(rdmSize);
 
 		randomizeRotateVelocity ();
 
@@ -134,6 +135,15 @@ public class PaintballBehavior : MonoBehaviour {
 			((size) * sizeScale,
 				(size) * sizeScale,(size) * sizeScale));
 	}
+
+    /**
+     * sizeScale is a basis common factor for all paintballs out there
+     * say sizeScale is 2, diff paintballs could be 2*1.5, 2*2, 2*4 big    
+     */
+    public void setSizeScale(float s)
+    {
+        sizeScale = s;
+    }
 
 	public float getScale(){
 		return size*sizeScale;
