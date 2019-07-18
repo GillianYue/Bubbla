@@ -104,14 +104,13 @@ public class GameControl : MonoBehaviour {
         case GameFlow.Mode.GAME:
             if (Input.GetMouseButtonDown (0)) {
                 foreach (Transform child in Ballz.transform) {//
-                    Vector3 screen = mainCamera.WorldToScreenPoint
-                    (child.transform.position); //TODO debug? is paint transform based
+                    Vector2 item = Global.WorldToScreen(child.transform.position); //screen
 
                     //checks if clicking on any paintball
                     if (child.CompareTag ("Paintball") &&
                        Global.touching (new Vector2 (Input.mousePosition.x,
-                           Input.mousePosition.y),
-                           new Vector2 (screen.x, screen.y),
+                           Input.mousePosition.y), //screen 
+                           item, //screen
                            //gets the radius of paintball on screen
                            child.GetComponentInParent<PaintballBehavior>
                         ().getScale () * Global.WTSfactor.x)) {
@@ -120,7 +119,7 @@ public class GameControl : MonoBehaviour {
                     paintball will be handled by PaintballSpawner
                     **/
 
-                        //checking if bulletgauge is full(the process takes in paint automatically)
+                        //checking if bulletgauge is full (the process takes in paint automatically)
                         if (player.GetComponent<Player> ().addPaint 
                         (child.GetComponentInParent<PaintballBehavior> ().getColor ())) {
                             //generates effect
@@ -130,7 +129,7 @@ public class GameControl : MonoBehaviour {
                     } else if (child.CompareTag ("Potion") &&
                               Global.touching (new Vector2 (Input.mousePosition.x,
                                   Input.mousePosition.y),
-                                  new Vector2 (screen.x, screen.y),
+                                  new Vector2 (item.x, item.y),
                                   child.GetComponentInParent<PotionBehav>
                         ().getScale () * Global.WTSfactor.x)) {
 
@@ -145,10 +144,8 @@ public class GameControl : MonoBehaviour {
                 //if code reaches here, treat as starting to press down, as opposed to a light tap on
                 //paintball/potion
                 GameObject a = aim; //GO with the aiming sprite
-                a = Instantiate (a, new Vector3 (
-                    Global.STWfactor.x * Input.mousePosition.x,
-                    player.transform.position.y,
-                    Global.STWfactor.y * Input.mousePosition.y),
+                a = Instantiate (a, Global.ScreenToWorld(Input.mousePosition,
+                    player.transform.position.z), 
                     player.transform.rotation) as GameObject;
                 a.transform.SetParent (Ballz.transform);
                 a.GetComponent<Animator> ().SetBool ("Focused", false);
@@ -157,11 +154,12 @@ public class GameControl : MonoBehaviour {
             }
 
             if (pressTime != -1) { //if is currently pressing
-                Vector2 XZ = ConvertToWorldUnits (Input.mousePosition);
+                Vector2 mouseWorld = Global.ScreenToWorld (Input.mousePosition);
+                    Debug.Log("mouse " + Input.mousePosition + " world " + mouseWorld);
 
                 Transform aimy = Ballz.transform.Find ("Aim(Clone)");
                 aimy.position = new Vector3 (
-                    XZ.x,    player.transform.position.y, XZ.y); //put aim at pressed position
+                    mouseWorld.x, mouseWorld.y, player.transform.position.z); //put aim at pressed position
 
                 if ((Time.time - pressTime) > 0.7 &&
                    !aimy.GetComponent<Animator> ().GetBool ("Focused")) {
@@ -304,20 +302,5 @@ public class GameControl : MonoBehaviour {
         }
                 
             }
-
-
-        
-
-    public Vector2 ConvertToWorldUnits(Vector2 TouchLocation)
-    {
-        Vector2 returnVec2;
-
-        returnVec2.x = ((TouchLocation.x * Global.STWfactor.x) - 
-            (Global.MainCanvasWidth / 2)) + mainCamera.transform.position.x;
-        returnVec2.y = ((TouchLocation.y * Global.STWfactor.y) - 
-            (Global.MainCanvasHeight / 2)) + mainCamera.transform.position.z;
-
-        return returnVec2;
-    }
 
 }

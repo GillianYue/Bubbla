@@ -17,29 +17,40 @@ public class Global : MonoBehaviour
     public static float aspectRatio = (640.0f / 1136.0f);
     public static float MainCanvasWidth = 640.0f;
     public static float MainCanvasHeight = 1136.0f;
-    public static Vector2 WTSfactor, STWfactor;
+    /**
+     * world is consistently 640*1136; screen depends on resolution. 
+     * So for XR screen (828*1792), WTSfactor would allow world * WTSfactor = screen.
+     * So WTSfactor in this case would be 1.3, 1.3    
+     */
+     public static Vector2 WTSfactor, STWfactor;
+    public static Vector2 gameViewSize;
     public static int scaleRatio; 
     /**raw sprite presented on screen would be too small
     * as some sprites have low resolution when drawn (a 30 by 30, for example) but need
     * to be larger on screen. This ratio should be the same for most things for visual
     * consistency. This value will be set from player's scale once we enter game mode.   
     */
+
+        public static Camera mainCamera;
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~CONSTANTS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
     public static int Scene_To_Load;
 
-
     public static void setGlobalConstants(Camera mainCamera)
     {
+        Global.mainCamera = mainCamera;
         Vector3 zero = mainCamera.WorldToScreenPoint(new Vector3(0,
     0,0));
         Vector3 one = mainCamera.WorldToScreenPoint(new Vector3(1,
            1,0));
         WTSfactor = new Vector2((one.x - zero.x), (one.y - zero.y));
 
-        Debug.Log("wtsFactor: " + WTSfactor);
-        STWfactor = new Vector2((1 / WTSfactor.x), (1/WTSfactor.y));
+        STWfactor = new Vector2((1.0f / WTSfactor.x), (1.0f /WTSfactor.y));
+    
+        gameViewSize = UnityEditor.Handles.GetMainGameViewSize();
+        //Debug.Log("WTS: " + WTSfactor + " STW: " + STWfactor);
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~game play logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -79,6 +90,26 @@ public class Global : MonoBehaviour
             Mathf.Pow((c1.g - c2.g), 2) + Mathf.Pow((c1.b - c2.b), 2));
         return d;
     }
+
+
+    public static Vector2 ScreenToWorld(Vector2 mousePos)
+    {
+        Vector3 res = mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 0));
+        return new Vector2(res.x, res.y);
+    }
+
+    public static Vector3 ScreenToWorld(Vector2 mousePos, float z)
+    {
+        return mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, z)); ;
+    }
+
+    public static Vector2 WorldToScreen(Vector3 pos)
+    {
+        Vector3 res = mainCamera.WorldToScreenPoint(pos);
+        return new Vector2(res.x, res.y);
+
+    }
+
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~game play logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
