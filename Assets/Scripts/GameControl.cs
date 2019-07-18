@@ -151,11 +151,13 @@ public class GameControl : MonoBehaviour {
                 //if code reaches here, treat as starting to press down, as opposed to a light tap on
                 //paintball/potion
                 GameObject a = aim; //GO with the aiming sprite
-                a = Instantiate (a, Global.ScreenToWorld(Input.mousePosition,
-                    player.transform.position.z), 
+
+                    a = Instantiate (a, Global.ScreenToWorld(Input.mousePosition,
+                    5), 
                     player.transform.rotation) as GameObject;
-                a.transform.SetParent (Ballz.transform);
-                a.GetComponent<Animator> ().SetBool ("Focused", false);
+                    a.transform.SetParent(player.transform);
+
+                    a.GetComponent<Animator> ().SetBool ("Focused", false);
 
                 pressTime = Time.time;
             }
@@ -163,9 +165,9 @@ public class GameControl : MonoBehaviour {
             if (pressTime != -1) { //if is currently pressing
                 Vector2 mouseWorld = Global.ScreenToWorld (Input.mousePosition);
 
-                Transform aimy = Ballz.transform.Find ("Aim(Clone)");
+                Transform aimy = player.transform.Find ("Aim(Clone)");
                 aimy.position = new Vector3 (
-                    mouseWorld.x, mouseWorld.y, player.transform.position.z); //put aim at pressed position
+                    mouseWorld.x, mouseWorld.y, aimy.position.z); //put aim at pressed position
 
                 if ((Time.time - pressTime) > 0.7 &&
                    !aimy.GetComponent<Animator> ().GetBool ("Focused")) {
@@ -200,7 +202,7 @@ public class GameControl : MonoBehaviour {
 
                 if (Input.GetMouseButtonUp (0)) { //release
 
-                    Destroy (Ballz.transform.Find ("Aim(Clone)").gameObject);
+                    Destroy (player.transform.Find ("Aim(Clone)").gameObject);
                 
                     float pressedLength = (Time.time - pressTime);
                     pressTime = -1; //set to -1 so that we know it's not pressing
