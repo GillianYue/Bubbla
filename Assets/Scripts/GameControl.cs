@@ -104,20 +104,24 @@ public class GameControl : MonoBehaviour {
         case GameFlow.Mode.GAME:
             if (Input.GetMouseButtonDown (0)) {
                 foreach (Transform child in Ballz.transform) {//
-                    Vector2 item = Global.WorldToScreen(child.transform.position); //screen
+                    Vector2 item = Global.WorldToScreen(child.GetComponent<
+                        RectTransform>().position); //screen
 
-                    //checks if clicking on any paintball
-                    if (child.CompareTag ("Paintball") &&
-                       Global.touching (new Vector2 (Input.mousePosition.x,
-                           Input.mousePosition.y), //screen 
-                           item, //screen
-                           //gets the radius of paintball on screen
-                           child.GetComponentInParent<PaintballBehavior>
-                        ().getScale () * Global.WTSfactor.x)) {
-                        /**if yes, terminate the method early so that
-                    bullet wouldn't be launched; the interaction with
-                    paintball will be handled by PaintballSpawner
-                    **/
+                        //checks if clicking on any paintball
+                        if (child.CompareTag("Paintball") &&
+                           Global.touching(new Vector2(Input.mousePosition.x,
+                               Input.mousePosition.y), //screen 
+                               item, //screen
+                                     //gets the radius of paintball on screen
+                               child.GetComponent<SpriteRenderer>().sprite.rect.width * 
+                               Global.WTSfactor.x * child.transform.localScale.x,
+                               child.GetComponent<SpriteRenderer>().sprite.rect.height *
+                               Global.WTSfactor.y * child.transform.localScale.y
+                               )) {
+                            /**if yes, terminate the method early so that
+                        bullet wouldn't be launched; the interaction with
+                        paintball will be handled by PaintballSpawner
+                        **/
 
                         //checking if bulletgauge is full (the process takes in paint automatically)
                         if (player.GetComponent<Player> ().addPaint 
@@ -127,11 +131,14 @@ public class GameControl : MonoBehaviour {
                         } 
                         return;
                     } else if (child.CompareTag ("Potion") &&
-                              Global.touching (new Vector2 (Input.mousePosition.x,
-                                  Input.mousePosition.y),
-                                  new Vector2 (item.x, item.y),
-                                  child.GetComponentInParent<PotionBehav>
-                        ().getScale () * Global.WTSfactor.x)) {
+                              Global.touching (new Vector2(Input.mousePosition.x,
+                               Input.mousePosition.y), //screen 
+                               item, //screen
+                                     //gets the radius of paintball on screen
+                               child.GetComponent<SpriteRenderer>().sprite.rect.width *
+                               Global.WTSfactor.x * child.transform.localScale.x,
+                               child.GetComponent<SpriteRenderer>().sprite.rect.height *
+                               Global.WTSfactor.y * child.transform.localScale.y)) {
 
                         child.GetComponent<PotionBehav> ().getsAbsorbed ();
                         player.GetComponent<Player> ().cure 
@@ -155,7 +162,6 @@ public class GameControl : MonoBehaviour {
 
             if (pressTime != -1) { //if is currently pressing
                 Vector2 mouseWorld = Global.ScreenToWorld (Input.mousePosition);
-                    Debug.Log("mouse " + Input.mousePosition + " world " + mouseWorld);
 
                 Transform aimy = Ballz.transform.Find ("Aim(Clone)");
                 aimy.position = new Vector3 (

@@ -49,6 +49,9 @@ public class Player : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+        //Debug.Log("player on screen: " + Global.WorldToScreen
+            //(GetComponent<RectTransform>().position));
+
 		lifeText.text = ("Life: " + life.ToString ());
 
 		if (life < 1) {

@@ -60,10 +60,10 @@ public class Global : MonoBehaviour
      */
 	public static bool touching(Vector2 touch, Vector2 itemPos,
 		double itemwidth, double itemheight){
-		if (touch.x > (itemPos.x) &&
-		    touch.x < (itemPos.x + itemwidth)
-			&& touch.y > (itemPos.y)
-			&& touch.y < (itemPos.y + itemheight)) {
+		if (touch.x > (itemPos.x - itemwidth/2) &&
+		    touch.x < (itemPos.x + itemwidth/2)
+			&& touch.y > (itemPos.y - itemheight/2)
+			&& touch.y < (itemPos.y + itemheight/2)) {
 			return true;
 		} else {
 			return false;
@@ -73,10 +73,10 @@ public class Global : MonoBehaviour
     //same as above, only radius for balls
 	public static bool touching(Vector2 touch, Vector2 itemPos,
 		double radius){
-		if (touch.x > (itemPos.x - radius / 2) &&
-			touch.x < (itemPos.x + radius / 2)
-			&& touch.y > (itemPos.y - radius / 2)
-			&& touch.y < (itemPos.y + radius / 2)) {
+		if (touch.x > (itemPos.x - radius) &&
+			touch.x < (itemPos.x + radius)
+			&& touch.y > (itemPos.y - radius)
+			&& touch.y < (itemPos.y + radius)) {
 			return true;
 		} else {
 			return false;
