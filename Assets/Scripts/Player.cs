@@ -259,18 +259,19 @@ public class Player : MonoBehaviour
 			
 			GameObject ps = PaintSpriteObj;
 			PaintSprites.Add (Instantiate (ps,
-				BulletCont.transform.position
-				+ new Vector3 (0.01f
-					+0.01f*((bulletGauge.Count==2||bulletGauge.Count==1) ? 1f:0), 
-					-0.01f, 
-					//to ensure pbSprite appears BELOW cannon img
-					(bulletGauge.Count-2)*0.85f+0.0057f), 
-				Quaternion.FromToRotation (Vector3.up,
-						Vector3.forward)) as GameObject);
+			new Vector3(0,0,0),
+new Quaternion(0,0,0,0)) as GameObject);
 			
 			PaintSprites[PaintSprites.Count-1].transform.parent 
-			= BulletGaugeObj.transform;
-			PaintSprites[PaintSprites.Count-1].GetComponent
+			= BulletCont.transform; //bulletContainer
+            PaintSprites[PaintSprites.Count - 1].transform.localPosition =
+                new Vector3(12.8f,
+                    //to ensure pbSprite appears BELOW cannon img
+                    (bulletGauge.Count == 3 || bulletGauge.Count == 2) ?
+                    ((bulletGauge.Count == 3) ? 39.0f : 25.0f) : 10.5f,
+                   0.01f);
+
+            PaintSprites[PaintSprites.Count-1].GetComponent
 			<Renderer> ().materials [0].color = c;
 
 		} else {
