@@ -1,25 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BulletAccl : MonoBehaviour {
+public class Bullet : MonoBehaviour {
 	
 	public float accl;
 	public GameObject trail;
 	public GameObject explosion;
+    public int damage = 1;
 
 	void Start () {
 		GameObject t = trail;
 		t = Instantiate (trail, gameObject.transform.position,
 			trail.transform.rotation) as GameObject;
 		t.GetComponent<TrailFollowBall> ().setMyBullet (gameObject);
-
 	}
 
 	void Update () {
 		//acceleration
 		GetComponent<Rigidbody> ().velocity += new Vector3 
-			(GetComponent<Rigidbody> ().velocity.x * accl, 0, 
-				GetComponent<Rigidbody> ().velocity.z *accl);
+			(GetComponent<Rigidbody> ().velocity.x * accl,  
+				GetComponent<Rigidbody> ().velocity.y *accl, 0);
 
 
 	}
@@ -30,7 +30,7 @@ public class BulletAccl : MonoBehaviour {
 		if (other.GetComponent<Collider>().tag == "Enemy") {
 			if (explosion != null) {
 				Instantiate (explosion, transform.position, transform.rotation);
-				other.GetComponent<Enemy> ().damage (1, 
+				other.GetComponent<Enemy> ().damage (damage, 
 					gameObject.GetComponent<SpriteRenderer>().color);
 				Destroy (gameObject);
 			}

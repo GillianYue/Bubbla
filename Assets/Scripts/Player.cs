@@ -142,11 +142,12 @@ public class Player : MonoBehaviour
 
 		//actual shooting
 		if (bulletGauge.Count > 0) {
-			Vector3 pos = transform.position;
+			Vector3 pos = transform.GetComponent<RectTransform>().position;
 			pos.x += (direction.y>0 ? 1:-1) * //TODO the 32 looks fishy here
 				Mathf.Sin (angle) * (32 * Global.STWfactor.x);
-			pos.z += (direction.y>0 ? 1:-1) *
+			pos.y += (direction.y>0 ? 1:-1) *
 				Mathf.Cos (angle) * (32 * Global.STWfactor.y);
+            pos.z = 5;
 			//from cannon's position plus a little bit of delta x and y to find the firing pos
 
 			GameObject bullet = Instantiate (BulletObj, pos,
@@ -154,8 +155,8 @@ public class Player : MonoBehaviour
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
 			bullet.GetComponent<Rigidbody> ().
-			velocity = new Vector3 (((direction.y>0)? 1:-1) * Mathf.Sin(angle)*bulletSpeed, 0,
-				((direction.y>0)? 1:-1) * Mathf.Cos(angle)*bulletSpeed);
+			velocity = new Vector3 (((direction.y>0)? 10:-10) * Mathf.Sin(angle)*bulletSpeed,
+				((direction.y>0)? 10:-10) * Mathf.Cos(angle)*bulletSpeed, 0);
 
 			bullet.GetComponent<SpriteRenderer> ().color 
 			= bulletGauge [bulletGauge.Count - 1];

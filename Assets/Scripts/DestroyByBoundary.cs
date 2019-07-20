@@ -6,10 +6,10 @@ using System.Collections;
 public class DestroyByBoundary : MonoBehaviour {
 
 	void OnTriggerExit(Collider other){
-        if (other.CompareTag("Hearts"))
-        {
+        //if (! (other.CompareTag("Enemy") || other.CompareTag("Paintball")))
+        //{
             Destroy(other.gameObject);
-        }
+        //}
 	}
 
 }

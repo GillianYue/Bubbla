@@ -30,7 +30,7 @@ public class EnemySpawner : MonoBehaviour {
         while ((int)range == 0)
         {
             range = Global.STWfactor.x * (Global.MainCanvasWidth / 2);
-            spawnValues = new Vector3(0, Global.STWfactor.y * (Global.MainCanvasHeight / 2) + 200, 0);
+            spawnValues = new Vector3(0, Global.STWfactor.y * (Global.MainCanvasHeight / 2) + 200, spawnValues.z);
             yield return new WaitForSeconds(0.1f);
         }
 
@@ -138,7 +138,8 @@ public class EnemySpawner : MonoBehaviour {
 
 		//NOTE: it's crucial that setLife is AFTER instantiation!
 		e.GetComponent<Enemy> ().setValues (LIFE, ATTACK);
-		e.transform.parent = enemiz.transform;
+	//	e.transform.parent = enemiz.transform;
+      // e.transform.localPosition.z = 0;
 	}
 		
 
