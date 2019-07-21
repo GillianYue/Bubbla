@@ -3,14 +3,17 @@ using System.Collections;
 
 public class BGMover : MonoBehaviour {
 
-	public float topZ, bottomZ, startZ;
+	public float topY, bottomY, startY;
 	//starting Z coordinate and ending Z coordinate
 	public float scrollSpd;
 	private bool scrollin;
 
 	void Start(){
-		gameObject.transform.position = new Vector3(0f, 0f, startZ);
-	}
+        Global.resizeSpriteToRectX(gameObject);
+        Global.centerX(gameObject);
+        GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, startY,
+    GetComponent<RectTransform>().localPosition.z);
+    }
 
 	public void StartScrolling () {
 		scrollin = true;
@@ -18,14 +21,16 @@ public class BGMover : MonoBehaviour {
 
 
 	void Update () {
-		if (gameObject.transform.position.z <= bottomZ) {
-			//if it goes beyond the lower threshold
-			gameObject.transform.position = new Vector3(0, 0, topZ);
+        Vector3 p = GetComponent<RectTransform>().localPosition;
+
+        if (p.y <= bottomY) {
+            //if it goes beyond the lower threshold
+            GetComponent<RectTransform>().anchoredPosition = new Vector3(0, topY, p.z);
 			//reset
 		}
 
 		if (scrollin) {
-			gameObject.transform.position -= new Vector3 (0, 0, scrollSpd);
+            GetComponent<RectTransform>().anchoredPosition3D -= new Vector3 (0, scrollSpd, 0);
 			//negative is UP, so
 
 		}

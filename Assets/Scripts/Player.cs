@@ -13,14 +13,15 @@ public class Player : MonoBehaviour
 	public int maxLife;
 
 	public float bulletSpeed;
+    private float bulletWeaponDist = 3;
 	private int life;
 	public GameControl gameControl;
 	private AudioSource[] fire, ouch;
 
 	//those are relative to player, since Cannon(player's cannon) is a child of player
-	private Vector3 CannNormStart = new Vector3(0.01f, -0.27f, 3.33f), 
-	CannLShoot = new Vector3(-0.05f, 0.06f, 3.33f), 
-	CannRShoot = new Vector3(0.07f,0.09f,3.33f);
+	private Vector3 CannNormStart = new Vector3(1.36f, 14.89f, 3.33f), 
+	CannLShoot = new Vector3(-3.82f, 6.45f, 3.33f), 
+	CannRShoot = new Vector3(2.68f,2.75f,3.33f);
 
 	//bulletSpeed is the absolute distance travelled per sec
 
@@ -143,9 +144,9 @@ public class Player : MonoBehaviour
 		//actual shooting
 		if (bulletGauge.Count > 0) {
 			Vector3 pos = transform.GetComponent<RectTransform>().position;
-			pos.x += (direction.y>0 ? 1:-1) * //TODO the 32 looks fishy here
+			pos.x += (direction.y>0 ? bulletWeaponDist:-bulletWeaponDist) * //TODO the 32 looks fishy here
 				Mathf.Sin (angle) * (32 * Global.STWfactor.x);
-			pos.y += (direction.y>0 ? 1:-1) *
+			pos.y += (direction.y>0 ? bulletWeaponDist : -bulletWeaponDist) *
 				Mathf.Cos (angle) * (32 * Global.STWfactor.y);
             pos.z = 5;
 			//from cannon's position plus a little bit of delta x and y to find the firing pos

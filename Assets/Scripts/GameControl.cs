@@ -74,14 +74,6 @@ public class GameControl : MonoBehaviour {
             BGMask.GetComponent<RectTransform>().localScale = scale;
         }
 
-        foreach (BGMover m in backgrounds)
-        {
-            Global.resizeSpriteToRectX(m.gameObject);
-            Global.centerX(m.gameObject);
-        }
-
-
-
     }
 
     // Update is called once per frame

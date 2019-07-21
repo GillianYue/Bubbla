@@ -66,7 +66,8 @@ public class PaintballBehavior : MonoBehaviour {
 			if (explosion != null) {
 		GameObject vfx = Instantiate 
 					(explosion, transform.position, transform.rotation) as GameObject;
-				audioz.paintballExplosionSE ();
+                vfx.transform.localScale = new Vector3(getScale(), getScale(), getScale());
+                audioz.paintballExplosionSE ();
 				vfx.GetComponent<SpriteRenderer> ().color = color;
 				Destroy (gameObject);
 			}
