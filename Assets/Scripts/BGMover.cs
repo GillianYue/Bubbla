@@ -21,15 +21,17 @@ public class BGMover : MonoBehaviour {
 
 
 	void Update () {
-        Vector3 p = GetComponent<RectTransform>().localPosition;
-
-        if (p.y <= bottomY) {
-            //if it goes beyond the lower threshold
-            GetComponent<RectTransform>().anchoredPosition = new Vector3(0, topY, p.z);
-			//reset
-		}
 
 		if (scrollin) {
+            Vector3 p = GetComponent<RectTransform>().localPosition;
+
+            if (p.y <= bottomY)
+            {
+                //if it goes beyond the lower threshold
+                GetComponent<RectTransform>().anchoredPosition = new Vector3(0, topY, p.z);
+                //reset
+            }
+
             GetComponent<RectTransform>().anchoredPosition3D -= new Vector3 (0, scrollSpd, 0);
 			//negative is UP, so
 

@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour {
 
 
 	/*
-		Types of waves: ––, /, \, ^, T, U, A, X, *, #, S
+		Types of waves: singleEnemy, ––, /, \, ^, T, U, A, X, *, #, S
 	*/
 	public void StartSpawn (int[] w, int[] m) {
 
@@ -50,16 +50,19 @@ public class EnemySpawner : MonoBehaviour {
 			int currE = enemTypes [c];
 
 			switch(currW){ //current wave
-			case 0:
+                case 0:
+                //spawn SINGLE MONSTER
+                    break;
+                case 1:
 				SpawnHorizontal (3, currE);
 				break;
-			case 1: 
+			case 2: 
 				yield return StartCoroutine (SpawnSlash(true, 3, currE));
 				break;
-			case 2:
+			case 3:
 				yield return StartCoroutine (SpawnSlash (false, 3, currE));
 				break;
-			case 3:
+			case 4:
 				yield return StartCoroutine (SpawnCaret (5, currE));
 				break;
 
@@ -68,11 +71,21 @@ public class EnemySpawner : MonoBehaviour {
 				
 			}
 
+            if(c == waveTypes.Length - 1)
+            {
+                StartCoroutine(PerformEndCheck());
+            }
 				yield return new WaitForSeconds (waveSpawnWait);
 			}
 			//wait time between each wave
 
 	}
+
+    IEnumerator PerformEndCheck(GameFlow)
+    {
+
+
+    }
 
 
 	//SPAWN WAVES

@@ -11,7 +11,7 @@ using System.Collections.Generic;
  * 
  * GameControl does not have access to the CSV scripts. It only has access to some of the
  * more permanent elements, like player, and the game play UI. It has access to an 
- * EnemySpawner script, which is in charge of spawning the enemies. 
+ * EnemySpawner, which is in charge of spawning the enemies. 
  * 
  * User input (touch screen) is also checked here in Update. Whenever there is input, the
  * GameControl global script sends the information to sub logic scripts correspondingly. 
@@ -41,7 +41,7 @@ public class GameControl : MonoBehaviour {
     public PaintballSpawner pSpawner;
     public GameFlow gFlow;
     public BGMover[] backgrounds;
-    public ScriptableObject levelScript;
+    public LevelScript levelScript;
 
     public GameObject fixedBG;
 

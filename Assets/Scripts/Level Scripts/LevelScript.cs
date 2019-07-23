@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Level1 : MonoBehaviour {
+public class LevelScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -12,4 +12,6 @@ public class Level1 : MonoBehaviour {
 	void Update () {
 	
 	}
+
+
 }
