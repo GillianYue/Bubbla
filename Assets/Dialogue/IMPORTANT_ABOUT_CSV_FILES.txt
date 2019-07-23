@@ -1,3 +1,10 @@
 Note:
 
 In order for the csv file to be properly processed, it has to be saved as MS-DOS csv format, not anything else! 
+
+Special:
+ 
+Under this column the number will indicate <<which>> special effect we want to apply to the current
+dialogue. e.g. Special Effect #1 is to change sprite in the middle of the dialogue, the columns after
+special are the parameters to this special effect. So for #1 it might be after which character to 
+change sprite, and change into what sprite, etc. 

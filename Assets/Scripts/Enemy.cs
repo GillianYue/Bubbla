@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
-        if(Global.scaleRatio != 0)
+        if (Global.scaleRatio != 0)
         {
             transform.localScale = new Vector3(sizeScale * Global.scaleRatio,
                 sizeScale * Global.scaleRatio, sizeScale * Global.scaleRatio);

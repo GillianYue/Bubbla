@@ -19,11 +19,11 @@ public class L1 : LevelScript
                 break;
 
         }
+
     }
 
     private IEnumerator tutorialEnemy()
     {
-        Debug.Log("spawnValues" + eSpawner.spawnValues);
         GameObject e = eSpawner.genMonster(0, eSpawner.spawnValues.y, eSpawner.spawnValues.z, 0);
         e.GetComponent<EnemyMover>().enabled = false;
 
@@ -38,9 +38,17 @@ public class L1 : LevelScript
         StartCoroutine(EnemyMover.moveToInSecs(e, 0, 200, 2, done));
         yield return new WaitUntil(() => done[0]);
 
-        Debug.Log("hey! tutorial done");
+        yield return new WaitForSeconds(2);
 
-        gameFlow.processCurrentLine(); //move on to the next thing
+        moveOn(); //all set and ready to continue
+    }
+
+    void moveOn()
+    {
+        gameFlow.incrementPointer();
+        //move on to the next thing
+        //no need to call processCurrentLine in gFlow because GameControl is constantly 
+        //watching over the pointer
     }
 
 }

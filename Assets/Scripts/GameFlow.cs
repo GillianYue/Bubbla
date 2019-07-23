@@ -51,7 +51,7 @@ public class GameFlow : MonoBehaviour {
      * in pointer, this function is invoked.    
      */   
     public IEnumerator processCurrentLine() { //current being where the pointer is
-
+       
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
             if (currMode == Mode.DLG) disableDialogueBox(); //if transitioning from dlg to others
                 currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////
@@ -68,25 +68,44 @@ public class GameFlow : MonoBehaviour {
 
                 lineDone = false; //dialogue is shown one char at a time
                 NAME.text = data[1, pointer];
-                int StageNum;
-                int.TryParse(data[3, pointer], out StageNum);
-                character.GetComponent<Animator>().SetInteger("State",
-                    StageNum);
 
-                int disp_spd;
-                int.TryParse(data[4, pointer], out disp_spd); //converts string to int
+                int SpriteNum;
+                int.TryParse(data[3, pointer], out SpriteNum);
+                character.GetComponent<Animator>().SetInteger("State",
+                    SpriteNum);
+
+                float disp_spd;
+                float.TryParse(data[4, pointer], out disp_spd); //converts string to int
                 string[] store = GetFormattedText
                     (DIALOGUE, data[2, pointer]).ToArray(typeof(string)) as string[];
-                DIALOGUE.text = store[0];
                 Canvas.ForceUpdateCanvases();
                 DIALOGUE.text = "";
+
+                int special;
+                int.TryParse(data[7, pointer], out special);
+
+                if (special == 0)
                 character.GetComponent<Animator>().SetBool("Talking", true);
+
+
+                //string[] param1 = GetFormattedText
+                //    (DIALOGUE, data[8, pointer]).ToArray(typeof(string)) as string[];
+                //string[] param2 = GetFormattedText
+                //(DIALOGUE, data[9, pointer]).ToArray(typeof(string)) as string[];
+                int param1, param2;
+                int.TryParse(data[8, pointer], out param1);
+                int.TryParse(data[9, pointer], out param2);
 
                 for (int s = 0; s < store.Length; s++) {
                     for (int n = 0; n < store[s].Length; n++) {
                         DIALOGUE.text += store[s][n];
+                        if(special == 1 && n == param1)
+                        {
+                            character.GetComponent<Animator>().SetInteger("State",
+                    param2);
+                        }
                         if (!skipping) {
-                            yield return new WaitForSeconds(0.02f * disp_spd + 0.05f); //TODO adjust
+                            yield return new WaitForSeconds(- 1.0333f * disp_spd + 1.1f);
                         }
                     }
                     if (!(s == (store.Length - 1))) {
@@ -99,13 +118,13 @@ public class GameFlow : MonoBehaviour {
                 break;
 
             case Mode.GAME:
+                Global.scaleRatio = (int)GameObject.FindWithTag("Player").transform.localScale.x;
                 if (data[1, pointer].Equals("99")) {
                     //special customized event
                     int index;
                     int.TryParse(data[2, pointer], out index);
                     levelScript.customEvent(index);
                 } else {
-                    Global.scaleRatio = (int)GameObject.FindWithTag("Player").transform.localScale.x;
                     string[] waves = data[1, pointer].Split(',');
                     string[] enemies = data[2, pointer].Split(',');
                     string[] rgb = data[3, pointer].Split(',');
@@ -151,10 +170,10 @@ public class GameFlow : MonoBehaviour {
         //Assumes character is already given, TODO set this based on data
         Global.resizeSpriteToDLG(character, character.transform.parent.gameObject);
 
-        int StageNum;
-        int.TryParse(data[2, line], out StageNum);
+        int SpriteNum;
+        int.TryParse(data[2, line], out SpriteNum);
         character.GetComponent<Animator>().SetInteger("State",
-            StageNum);
+            SpriteNum);
 
         int disp_spd;
         int.TryParse(data[3, line], out disp_spd); //converts string to int
@@ -239,6 +258,8 @@ public class GameFlow : MonoBehaviour {
 
     //pointer check is a buffer to prevent multiple pointer addition from a single click
     //also movePointer is not called here, it's called in GameControl, the global control
+    //this should only be used for dialogues, not in other modes
+    //in other modes, incrementPointer, which is instantaneous, should be used
     public IEnumerator movePointer() {
         if (lineDone && pointerCheck) {
             pointerCheck = false;
@@ -246,6 +267,11 @@ public class GameFlow : MonoBehaviour {
             yield return new WaitForSeconds(0.2f);
             pointerCheck = true;
         }
+    }
+
+    public void incrementPointer()
+    {
+        pointer++; 
     }
 
     public int getPointer() {
