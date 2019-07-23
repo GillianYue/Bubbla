@@ -16,6 +16,7 @@ public class GameFlow : MonoBehaviour {
     public enum Mode { DLG, GAME, END };
     public Mode currMode;
     public GameControl gameControl;
+    public LevelScript levelScript;
 
     void Start() {
         StartCoroutine(processCSV());
@@ -98,22 +99,29 @@ public class GameFlow : MonoBehaviour {
                 break;
 
             case Mode.GAME:
-                Global.scaleRatio = (int)GameObject.FindWithTag("Player").transform.localScale.x;
-                string[] waves = data[1, pointer].Split(',');
-                string[] enemies = data[2, pointer].Split(',');
-                string[] rgb = data[3, pointer].Split(',');
-                float mx_D;
-                float.TryParse(data[4, pointer], out mx_D);
-                int r, g, b;
-                int.TryParse(rgb[0], out r);
-                int.TryParse(rgb[1], out g);
-                int.TryParse(rgb[2], out b);
-                PaintballBehavior.standard = new Color(r, g, b);
-                PaintballBehavior.setMaxD(mx_D);
-                int[] wv, em;
-                wv = System.Array.ConvertAll<string, int>(waves, int.Parse);
-                em = System.Array.ConvertAll<string, int>(enemies, int.Parse);
-                gameControl.startEnemyWaves(wv, em);
+                if (data[1, pointer].Equals("99")) {
+                    //special customized event
+                    int index;
+                    int.TryParse(data[2, pointer], out index);
+                    levelScript.customEvent(index);
+                } else {
+                    Global.scaleRatio = (int)GameObject.FindWithTag("Player").transform.localScale.x;
+                    string[] waves = data[1, pointer].Split(',');
+                    string[] enemies = data[2, pointer].Split(',');
+                    string[] rgb = data[3, pointer].Split(',');
+                    float mx_D;
+                    float.TryParse(data[4, pointer], out mx_D);
+                    int r, g, b;
+                    int.TryParse(rgb[0], out r);
+                    int.TryParse(rgb[1], out g);
+                    int.TryParse(rgb[2], out b);
+                    PaintballBehavior.standard = new Color(r, g, b);
+                    PaintballBehavior.setMaxD(mx_D);
+                    int[] wv, em;
+                    wv = System.Array.ConvertAll<string, int>(waves, int.Parse);
+                    em = System.Array.ConvertAll<string, int>(enemies, int.Parse);
+                    gameControl.startEnemyWaves(wv, em);
+                }
                 break;
 
             case Mode.END:

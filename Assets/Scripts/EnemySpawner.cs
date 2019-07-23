@@ -10,18 +10,21 @@ public class EnemySpawner : MonoBehaviour {
 	public GameObject[] enemies;
 	public Vector3 spawnValues;
 
+    void Start()
+    {
+        StartCoroutine(setSpawnerValues());
+    }
 
 	/*
 		Types of waves: singleEnemy, ––, /, \, ^, T, U, A, X, *, #, S
 	*/
-	public void StartSpawn (int[] w, int[] m) {
+	public void StartSpawn (GameFlow gf, int[] w, int[] m) {
 
 
         //int[] w: waves in this level
 
         //int[] m: types of monsters for each of the waves; the EXACT SAME SIZE as w[]
-        StartCoroutine(setSpawnerValues());
-        StartCoroutine (SpawnEnemyLevel (w, m));
+        StartCoroutine (SpawnEnemyWaves (gf, w, m));
 
 	}
 
@@ -41,7 +44,7 @@ public class EnemySpawner : MonoBehaviour {
 	
 	}
 
-	IEnumerator SpawnEnemyLevel(int[] waveTypes, int[] enemTypes){ //types of waves
+	IEnumerator SpawnEnemyWaves(GameFlow gf, int[] waveTypes, int[] enemTypes){ //types of waves
 		yield return new WaitForSeconds (startWait);
 		//start wait time
 
@@ -71,9 +74,14 @@ public class EnemySpawner : MonoBehaviour {
 				
 			}
 
+            /**
+             * when it's the last wave of enemies dispatch an enumerator checking whether 
+             * the last enemies are defeated, that is, there is no "enemy" in the scene
+             * anymore, if so proceed to what's after gameplay in gameflow            
+             */            
             if(c == waveTypes.Length - 1)
             {
-                StartCoroutine(PerformEndCheck());
+                StartCoroutine(PerformEndCheck(gf));
             }
 				yield return new WaitForSeconds (waveSpawnWait);
 			}
@@ -81,16 +89,21 @@ public class EnemySpawner : MonoBehaviour {
 
 	}
 
-    IEnumerator PerformEndCheck(GameFlow)
+    IEnumerator PerformEndCheck(GameFlow gf)
     {
+        while (GameObject.FindWithTag("Enemy") != null)
+        {
 
-
+            yield return new WaitForSeconds(0.5f);
+        }
+        //done
+        gf.processCurrentLine(); //move on to the line after GAME
     }
 
 
-	//SPAWN WAVES
+    //SPAWN WAVES
 
-	void SpawnHorizontal(int numEnemy, int enemyCode){
+    public void SpawnHorizontal(int numEnemy, int enemyCode){
 		
 		for (int c = 0; c < numEnemy; c++) {
 			
@@ -100,7 +113,7 @@ public class EnemySpawner : MonoBehaviour {
 		}
 	}
 
-	IEnumerator SpawnSlash(bool ForB, int numEnemy, int enemyCode){
+    public IEnumerator SpawnSlash(bool ForB, int numEnemy, int enemyCode){
 		for (int c = 0; c < numEnemy; c++) {
 				
 			genMonster (((ForB) ? -1 : 1) * (range - c * (2 * range / (float)(numEnemy - 1))), 
@@ -110,7 +123,7 @@ public class EnemySpawner : MonoBehaviour {
 		}
 	}
 
-	IEnumerator SpawnCaret(int numEnemy, int enemyCode){
+	public IEnumerator SpawnCaret(int numEnemy, int enemyCode){
 		//numEnemy has to be odd for this shaped formation
 		for (int c = 0; c < (numEnemy/2); c++) {
 			genMonster (-range + c * (2*range/(float)(numEnemy-1)), 
@@ -127,7 +140,7 @@ public class EnemySpawner : MonoBehaviour {
 
 
 	//ALL MONSTERS GENERATED HERE
-	void genMonster(float x, float y, float z, int monsterCode){
+	public GameObject genMonster(float x, float y, float z, int monsterCode){
 		GameObject e = enemies [monsterCode];
 		Vector3 spawnPosition = new Vector3 (x, y, z);
 		e = Instantiate (e, spawnPosition, e.transform.rotation) as GameObject;
@@ -151,6 +164,8 @@ public class EnemySpawner : MonoBehaviour {
 
 		//NOTE: it's crucial that setLife is AFTER instantiation!
 		e.GetComponent<Enemy> ().setValues (LIFE, ATTACK);
+
+        return e;
 	//	e.transform.parent = enemiz.transform;
       // e.transform.localPosition.z = 0;
 	}

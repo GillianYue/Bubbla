@@ -58,30 +58,30 @@ public class Global : MonoBehaviour
     /**
      * checks if a 2-d touch is hitting a 2D obj of certain width and height
      */
-	public static bool touching(Vector2 touch, Vector2 itemPos,
-		double itemwidth, double itemheight){
-		if (touch.x > (itemPos.x - itemwidth/2) &&
-		    touch.x < (itemPos.x + itemwidth/2)
-			&& touch.y > (itemPos.y - itemheight/2)
-			&& touch.y < (itemPos.y + itemheight/2)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public static bool touching(Vector2 touch, Vector2 itemPos,
+        double itemwidth, double itemheight){
+        if (touch.x > (itemPos.x - itemwidth/2) &&
+            touch.x < (itemPos.x + itemwidth/2)
+            && touch.y > (itemPos.y - itemheight/2)
+            && touch.y < (itemPos.y + itemheight/2)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //same as above, only radius for balls
-	public static bool touching(Vector2 touch, Vector2 itemPos,
-		double radius){
-		if (touch.x > (itemPos.x - radius) &&
-			touch.x < (itemPos.x + radius)
-			&& touch.y > (itemPos.y - radius)
-			&& touch.y < (itemPos.y + radius)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public static bool touching(Vector2 touch, Vector2 itemPos,
+        double radius){
+        if (touch.x > (itemPos.x - radius) &&
+            touch.x < (itemPos.x + radius)
+            && touch.y > (itemPos.y - radius)
+            && touch.y < (itemPos.y + radius)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //finds out how "close" two colors are for our game's purpose
     public static float find2ColorDist(Color c1, Color c2)
@@ -120,21 +120,21 @@ public class Global : MonoBehaviour
     //~~~~~~~~~~~~~~~~~~~~~~~~~~load scene logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     public static IEnumerator LoadAsyncScene(int sceneNO)
-	{
-		// The Application loads the Scene in the background as the current Scene runs.
-		// This is particularly good for creating loading screens.
-		// You could also load the Scene by using sceneBuildIndex. In this case Scene2 has
-		// a sceneBuildIndex of 1 as shown in Build Settings.
+    {
+        // The Application loads the Scene in the background as the current Scene runs.
+        // This is particularly good for creating loading screens.
+        // You could also load the Scene by using sceneBuildIndex. In this case Scene2 has
+        // a sceneBuildIndex of 1 as shown in Build Settings.
 
 
-		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneNO);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneNO);
 
-		// Wait until the asynchronous scene fully loads
-		while (!asyncLoad.isDone)
-		{
-			yield return null;
-		}
-	}
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~load scene logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

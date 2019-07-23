@@ -41,7 +41,6 @@ public class GameControl : MonoBehaviour {
     public PaintballSpawner pSpawner;
     public GameFlow gFlow;
     public BGMover[] backgrounds;
-    public LevelScript levelScript;
 
     public GameObject fixedBG;
 
@@ -247,7 +246,7 @@ public class GameControl : MonoBehaviour {
         
     public void startEnemyWaves(int[] w, int[] e){
        pSpawner.StartSpawn (); 
-        eSpawner.StartSpawn(w, e);
+        eSpawner.StartSpawn(gFlow, w, e);
         foreach(BGMover m in backgrounds){
             m.StartScrolling ();
         }
