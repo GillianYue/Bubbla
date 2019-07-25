@@ -11,7 +11,7 @@ public class GameFlow : MonoBehaviour {
     skipping = false;
     public bool canSkip;
     public Text NAME, DIALOGUE;
-    private string[,] data; //stores all info of this level
+    private string[,] data; //double array that stores all info of this level
     public GameObject character, dlgBox;
     public enum Mode { DLG, GAME, END };
     public Mode currMode;
@@ -31,6 +31,7 @@ public class GameFlow : MonoBehaviour {
             yield return null;
         }
         loadDone = true;
+        //levelScript.setLevelCsvData(data);
     }
 
     public bool checkIfEnded() { //checks if ended
@@ -123,7 +124,13 @@ public class GameFlow : MonoBehaviour {
                     //special customized event
                     int index;
                     int.TryParse(data[2, pointer], out index);
-                    levelScript.customEvent(index);
+                    //for now we assume there's at most 5 parameters to a custom event
+                    string[] parameters = new string[5];
+                    for (int p = 0; p < 5; p++)
+                    {
+                        parameters[p] = data[p+3, pointer];
+                    }
+                    levelScript.customEvent(index, parameters);
                 } else {
                     string[] waves = data[1, pointer].Split(',');
                     string[] enemies = data[2, pointer].Split(',');
