@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class GameFlow : MonoBehaviour {
-    public TextAsset csv; //dialogue file for a specific level
+
     private int pointer = 1; //indicates which line of script the game is at
-    private bool lineDone = true, loadDone, pointerCheck = true,
-    skipping = false;
+    private bool lineDone = true, pointerCheck = true, skipping = false;
+    private bool[] loadDone;
     public bool canSkip;
     public Text NAME, DIALOGUE;
     private string[,] data; //double array that stores all info of this level
@@ -16,34 +16,36 @@ public class GameFlow : MonoBehaviour {
     public enum Mode { DLG, GAME, END };
     public Mode currMode;
     public GameControl gameControl;
-    public LevelScript levelScript;
+    public CustomEvents customEvents;
+
+    public TextAsset DlgCsv; //dialogue file for a specific level
+    public EnemyLoader enemyLoader;
+
 
     void Start() {
-        StartCoroutine(processCSV());
+        loadDone = new bool[1];
+        StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData));
         pointer = 1; //row 0 are names of the categories
                      //	character = gameObject.transform.Find ("Background").Find (
                      //		"SpriteBox").GetChild (0).gameObject;
     }
 
-    IEnumerator processCSV() { //TODO move this to loading (a scene), as opposed to in game
-        data = CSVReader.SplitCsvGrid(csv.text);
-        while (!(data.Length > 0)) {
-            yield return null;
-        }
-        loadDone = true;
-        //levelScript.setLevelCsvData(data);
-    }
 
     public bool checkIfEnded() { //checks if ended
         return (currMode.Equals(Mode.END)); //the "big" done
     }
 
     public bool checkLoadDone() { //check if csv is loaded and dialogue is ready tb displayed
-        return loadDone;
+        return loadDone[0];
     }
 
     public bool checkCurrentLineDone() {
         return lineDone;
+    }
+
+    public void setData(string[,] d)
+    {
+        data = d;
     }
 
     /**
@@ -52,7 +54,7 @@ public class GameFlow : MonoBehaviour {
      * in pointer, this function is invoked.    
      */   
     public IEnumerator processCurrentLine() { //current being where the pointer is
-       
+
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
             if (currMode == Mode.DLG) disableDialogueBox(); //if transitioning from dlg to others
                 currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////
@@ -130,7 +132,7 @@ public class GameFlow : MonoBehaviour {
                     {
                         parameters[p] = data[p+3, pointer];
                     }
-                    levelScript.customEvent(index, parameters);
+                    customEvents.customEvent(index, parameters);
                 } else {
                     string[] waves = data[1, pointer].Split(',');
                     string[] enemies = data[2, pointer].Split(',');

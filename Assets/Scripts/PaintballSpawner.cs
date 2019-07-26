@@ -49,32 +49,53 @@ public class PaintballSpawner : MonoBehaviour
         {
             if (Random.Range(0, 99.99f) > 5)
             {
-                GameObject pb = paintBall;
 
-                Vector3 spawnPosition = new Vector3(
-                    Random.Range(spawnValues.x - spawnRangeWidth,
+                genPaintball(Random.Range(spawnValues.x - spawnRangeWidth,
                         spawnValues.x + spawnRangeWidth),
                     spawnValues.y, spawnValues.z);
-                pb = Instantiate(pb, spawnPosition, pb.transform.rotation)
-                    as GameObject;
-                pb.transform.Rotate(new Vector3(0, 0, Random.Range(0, 360)));
-                pb.transform.SetParent(Ballz.transform);
 
                 yield return new WaitForSeconds(pbSpawnWait);
 
             }
             else
             {//5% chance to generate potion
-                GameObject pt = potion;
-
-                Vector3 spawnPosition = new Vector3(
-                    Random.Range(spawnValues.x - spawnRangeWidth,
-                        spawnValues.x + spawnRangeWidth),
-                    spawnValues.y, spawnValues.z);
-                pt = Instantiate(pt, spawnPosition, pt.transform.rotation)
-                    as GameObject;
-                pt.transform.SetParent(Ballz.transform);
+                genItem(Random.Range(spawnValues.x - spawnRangeWidth,
+                spawnValues.x + spawnRangeWidth),
+            spawnValues.y, spawnValues.z);
             }
         }
     }
+
+    /**
+     * generates a paintball at location, with parent set to Ballz
+     */
+    public GameObject genPaintball(float x, float y, float z)
+    {
+        GameObject pb = paintBall;
+
+        Vector3 spawnPosition = new Vector3(x, y, z);
+        pb = Instantiate(pb, spawnPosition, pb.transform.rotation)
+            as GameObject;
+        pb.transform.Rotate(new Vector3(0, 0, Random.Range(0, 360)));
+        pb.transform.SetParent(Ballz.transform);
+
+        return pb;
+    }
+
+    public void genPaintball(Color c, float x, float y, float z)
+    {
+        GameObject pb = genPaintball(x, y, z);
+        pb.GetComponent<PaintballBehavior>().setColor(c);
+    }
+
+    public void genItem(float x, float y, float z)
+    {
+        GameObject pt = potion;
+
+        Vector3 spawnPosition = new Vector3(x, y, z);
+        pt = Instantiate(pt, spawnPosition, pt.transform.rotation)
+            as GameObject;
+        pt.transform.SetParent(Ballz.transform);
+    }
+
 }

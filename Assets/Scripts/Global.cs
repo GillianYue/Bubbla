@@ -123,7 +123,7 @@ public class Global : MonoBehaviour
         float dy = spd * y / hyp * (y > e.transform.position.y ? 1 : -1);
         Vector2 dir = new Vector2((dx > 0) ? 1 : -1, (dy > 0) ? 1 : -1);
 
-        e.GetComponent<Rigidbody>().velocity = new Vector3(dx, dy, 0);
+        e.GetComponent<Rigidbody2D>().velocity = new Vector2(dx, dy);
         /**
          * messy looking check here, but basically makes sure it keeps moving until it gets to target
          */
@@ -134,7 +134,7 @@ public class Global : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        e.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+        e.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         done[0] = true;
     }
 
@@ -145,11 +145,11 @@ public class Global : MonoBehaviour
         float dx = xDist / sec;
         float dy = yDist / sec;
 
-        e.GetComponent<Rigidbody>().velocity = new Vector3(dx, dy, 0);
+        e.GetComponent<Rigidbody2D>().velocity = new Vector2(dx, dy);
 
         yield return new WaitForSeconds(sec);
 
-        e.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+        e.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         done[0] = true;
     }
 

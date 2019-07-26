@@ -4,7 +4,7 @@ using System.Collections;
 public class EnemyMover : MonoBehaviour {
 
 	public float speed;
-	private Rigidbody rb;
+	private Rigidbody2D rb;
 	public Vector3 direction;
 	public int enemyType;
 	//type 0 inanimate, 1 move-stop, 2 screen span, 3 track
@@ -15,7 +15,7 @@ public class EnemyMover : MonoBehaviour {
 
 	void Start() {
 		//Rigidbody
-		rb = GetComponent<Rigidbody> ();
+		rb = GetComponent<Rigidbody2D> ();
 		rb.velocity = direction * speed;
 
 		switch(enemyType){
@@ -38,7 +38,7 @@ public class EnemyMover : MonoBehaviour {
 	IEnumerator movePause (int turns, float speed){
 
 		for (int t = 0; t < turns; t++) {
-			rb.velocity += new Vector3(speed * Mathf.Pow(-1, t%2), 0, 0);
+			rb.velocity += new Vector2(speed * Mathf.Pow(-1, t%2), 0);
 			GetComponent<SpriteRenderer> ().flipX = (t%2 == 0 ? false : true);
 			//even numbers: positive velocity
 			if (t % 2 == 0) {
@@ -55,7 +55,7 @@ public class EnemyMover : MonoBehaviour {
 			}
 
 			//reset speed upon reaching the target
-			rb.velocity = new Vector3(0, rb.velocity.y, rb.velocity.z);
+			rb.velocity = new Vector2(0, rb.velocity.y);
 		}
 	}
 

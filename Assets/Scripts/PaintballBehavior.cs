@@ -6,8 +6,11 @@ public class PaintballBehavior : MonoBehaviour {
 	//instantiated for each paintball
 	private int size;
 	private Color color;
+
 	public float sizeScale;
-	private int myNumInList;
+    public float colliderScale; //multiplied to the original generated polygon 2d collider shape to resize
+
+    private int myNumInList;
 	public GameObject explosion;
 	public GameObject absorption;
 	public Sprite[] pbSprites, highlights;
@@ -49,7 +52,17 @@ public class PaintballBehavior : MonoBehaviour {
         setSizeScale(1.8f);
 		setSize(rdmSize);
 
-		randomizeRotateVelocity ();
+        //resizing 2d polygon collider
+        Vector2[] colliderPoints = GetComponent<PolygonCollider2D>().points;
+        Vector2[] scaledPoints = new Vector2[colliderPoints.Length];
+        for (int p = 0; p < colliderPoints.Length; p++)
+        {
+            Vector2 np = GetComponent<PolygonCollider2D>().points[p] * colliderScale;
+            scaledPoints[p] = np;
+        }
+        GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
+
+        randomizeRotateVelocity ();
 
 		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
 	}
@@ -125,9 +138,7 @@ public class PaintballBehavior : MonoBehaviour {
 	}
 
 	public void randomizeRotateVelocity(){
-		Vector3 angVel = this.gameObject.GetComponent<Rigidbody> ().angularVelocity;
-		angVel.z += Random.Range(-0.5f, 0.5f);
-		this.gameObject.GetComponent<Rigidbody> ().angularVelocity = angVel;
+	this.gameObject.GetComponent<Rigidbody2D> ().AddTorque(Random.Range(-0.5f, 0.5f));
 	}
 		
 	public void setSize(int s){

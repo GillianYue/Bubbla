@@ -2,7 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LevelScript : MonoBehaviour {
+/**
+ * this class is in charge of carrying out the custom events (indicated by a code of 99 in game mode)
+ * whenever game flow gets to that command. Each event has a code number. With the params read in along
+ * with the custom event code, special effects can be created. 
+ */
+public class CustomEvents : MonoBehaviour {
 
     protected GameControl gameControl;
     protected GameFlow gameFlow;
@@ -94,6 +99,56 @@ public class LevelScript : MonoBehaviour {
      * optional param 4: an identifier id for the enemy, will not assign identifier if param is ""
      */
     void genEnemy(bool[] done, string[] prms)
+    {
+        int enemyCode;
+        int.TryParse(prms[0], out enemyCode);
+
+        float x, y, z;
+        if (!prms[1].Equals(""))
+        {
+            float.TryParse(prms[1], out x);
+        }
+        else
+        {
+            x = eSpawner.spawnValues.x;
+        }
+        if (!prms[2].Equals(""))
+        {
+            float.TryParse(prms[2], out y);
+        }
+        else
+        {
+            y = eSpawner.spawnValues.y;
+        }
+        if (!prms[3].Equals(""))
+        {
+            float.TryParse(prms[3], out z);
+        }
+        else
+        {
+            z = eSpawner.spawnValues.z;
+        }
+
+        GameObject e = eSpawner.genMonster(x, y, z, enemyCode);
+        if (!prms[4].Equals(""))
+        {
+            setIdentifier(e, prms[4]);
+        }
+        done[0] = true;
+    }
+
+    /**
+ * event #2
+ * 
+ * creating a paintball, item, non-living-things
+ * 
+ * param 0: item code indicating which item we want to create
+ * optional param 1: pos X, will use enemySpawner.spawnValues.x if param is ""
+ * optional param 2: pos Y, will use enemySpawner.spawnValues.y if param is ""
+ * optional param 3: pos Z, will use enemySpawner.spawnValues.z if param is ""
+ * optional param 4: an identifier id for the enemy, will not assign identifier if param is ""
+ */
+    void genItem(bool[] done, string[] prms)
     {
         int enemyCode;
         int.TryParse(prms[0], out enemyCode);

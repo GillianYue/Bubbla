@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour {
 	int attack;
 	public AudioStorage audioz;
     public float sizeScale; //same as paintball, base scale to be multiplied with global
+    public float colliderScale; //multiplied to the original generated polygon 2d collider shape to resize
 
 	// Use this for initialization
 	void Start () {
@@ -16,7 +17,19 @@ public class Enemy : MonoBehaviour {
             transform.localScale = new Vector3(sizeScale * Global.scaleRatio,
                 sizeScale * Global.scaleRatio, sizeScale * Global.scaleRatio);
         }
-	}
+
+        Vector2[] colliderPoints = GetComponent<PolygonCollider2D>().points;
+        Vector2[] scaledPoints = new Vector2[colliderPoints.Length];
+        for(int p = 0; p < colliderPoints.Length; p++)
+        {
+          //  Debug.Log("point: " + GetComponent<PolygonCollider2D>().points[p]+" to scale "+colliderScale);
+            Vector2 np = GetComponent<PolygonCollider2D>().points[p] * colliderScale;
+            scaledPoints[p] = np;
+          //  Debug.Log("point after scale: " + GetComponent<PolygonCollider2D>().points[p]);
+        }
+        GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
