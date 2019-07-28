@@ -138,7 +138,7 @@ public class PaintballBehavior : MonoBehaviour {
 	}
 
 	public void randomizeRotateVelocity(){
-	this.gameObject.GetComponent<Rigidbody2D> ().AddTorque(Random.Range(-1.5f, 1.5f));
+	this.gameObject.GetComponent<Rigidbody2D> ().AddTorque(Random.Range(30f, 50f)); //TODO this is arbitrary
 	}
 		
 	public void setSize(int s){

@@ -1,14 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PotionBehav : MonoBehaviour {
+/**
+ * was originally potion behavior, but will be modified into a general item behavior class.
+ */
+public class ItemBehav : MonoBehaviour {
 
 		private Color color;
 		public GameObject explosion;
 		public GameObject absorption;
 		private int size;
+
 		public float sizeScale;
-	private int curingPotency;
+        public float colliderScale;
+	    private int curingPotency;
 
 		private AudioStorage audioz;
 

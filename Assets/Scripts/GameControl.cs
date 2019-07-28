@@ -131,9 +131,9 @@ public class GameControl : MonoBehaviour {
                                child.GetComponent<SpriteRenderer>().sprite.rect.height *
                                Global.WTSfactor.y * child.transform.localScale.y)) {
 
-                        child.GetComponent<PotionBehav> ().getsAbsorbed ();
+                        child.GetComponent<ItemBehav> ().getsAbsorbed ();
                         player.GetComponent<Player> ().cure 
-                    (child.GetComponent<PotionBehav> ().getCuringPotency ());
+                    (child.GetComponent<ItemBehav> ().getCuringPotency ());
 
                         return;
                     }
