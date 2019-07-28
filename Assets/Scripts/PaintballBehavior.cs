@@ -71,11 +71,11 @@ public class PaintballBehavior : MonoBehaviour {
 	void Update () {
 	}
 
-	void OnTriggerEnter(Collider other){
+	void OnTriggerEnter2D(Collider2D other){
 
 		//if paintball hit player, it bursts
-		if (other.GetComponent<Collider>().tag == "Player"
-			|| other.GetComponent<Collider>().tag == "Bullet") {
+		if (other.GetComponent<Collider2D>().tag == "Player"
+			|| other.GetComponent<Collider2D>().tag == "Bullet") {
 			if (explosion != null) {
 		GameObject vfx = Instantiate 
 					(explosion, transform.position, transform.rotation) as GameObject;
@@ -138,7 +138,7 @@ public class PaintballBehavior : MonoBehaviour {
 	}
 
 	public void randomizeRotateVelocity(){
-	this.gameObject.GetComponent<Rigidbody2D> ().AddTorque(Random.Range(-0.5f, 0.5f));
+	this.gameObject.GetComponent<Rigidbody2D> ().AddTorque(Random.Range(-1.5f, 1.5f));
 	}
 		
 	public void setSize(int s){

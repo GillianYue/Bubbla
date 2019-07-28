@@ -17,17 +17,17 @@ public class Bullet : MonoBehaviour {
 
 	void Update () {
 		//acceleration
-		GetComponent<Rigidbody> ().velocity += new Vector3 
-			(GetComponent<Rigidbody> ().velocity.x * accl,  
-				GetComponent<Rigidbody> ().velocity.y *accl, 0);
+		GetComponent<Rigidbody2D> ().velocity += new Vector2 
+			(GetComponent<Rigidbody2D> ().velocity.x * accl,  
+				GetComponent<Rigidbody2D> ().velocity.y *accl);
 
 
 	}
 
-	void OnTriggerEnter(Collider other){
+	void OnTriggerEnter2D(Collider2D other){
 
 		//if bullet hits enemy, it bursts and damages enemy
-		if (other.GetComponent<Collider>().tag == "Enemy") {
+		if (other.GetComponent<Collider2D>().tag == "Enemy") {
 			if (explosion != null) {
 				Instantiate (explosion, transform.position, transform.rotation);
 				other.GetComponent<Enemy> ().damage (damage, 

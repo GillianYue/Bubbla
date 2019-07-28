@@ -155,9 +155,9 @@ public class Player : MonoBehaviour
 				                   BulletObj.transform.rotation) as GameObject;
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
-			bullet.GetComponent<Rigidbody> ().
-			velocity = new Vector3 (((direction.y>0)? 10:-10) * Mathf.Sin(angle)*bulletSpeed,
-				((direction.y>0)? 10:-10) * Mathf.Cos(angle)*bulletSpeed, 0);
+			bullet.GetComponent<Rigidbody2D> ().
+			velocity = new Vector2 (((direction.y>0)? 10:-10) * Mathf.Sin(angle)*bulletSpeed,
+				((direction.y>0)? 10:-10) * Mathf.Cos(angle)*bulletSpeed);
 
 			bullet.GetComponent<SpriteRenderer> ().color 
 			= bulletGauge [bulletGauge.Count - 1];

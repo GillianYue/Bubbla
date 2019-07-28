@@ -22,10 +22,8 @@ public class Enemy : MonoBehaviour {
         Vector2[] scaledPoints = new Vector2[colliderPoints.Length];
         for(int p = 0; p < colliderPoints.Length; p++)
         {
-          //  Debug.Log("point: " + GetComponent<PolygonCollider2D>().points[p]+" to scale "+colliderScale);
             Vector2 np = GetComponent<PolygonCollider2D>().points[p] * colliderScale;
             scaledPoints[p] = np;
-          //  Debug.Log("point after scale: " + GetComponent<PolygonCollider2D>().points[p]);
         }
         GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
 
@@ -54,8 +52,8 @@ public class Enemy : MonoBehaviour {
 		StartCoroutine (damageVFXenemy(col));
 	}
 
-	void OnTriggerEnter(Collider other){
-		if (other.GetComponent<Collider> ().tag == "Player") {
+	void OnTriggerEnter2D(Collider2D other){
+		if (other.GetComponent<Collider2D> ().tag == "Player") {
 			other.gameObject.GetComponent<Player> ().damage (attack);
 		}
 	}
