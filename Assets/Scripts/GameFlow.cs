@@ -21,6 +21,7 @@ public class GameFlow : MonoBehaviour {
     public TextAsset DlgCsv; //dialogue file for a specific level
     public EnemyLoader enemyLoader;
 
+    private string openTag, endTag; //those two variables are used for dialogue tag processing
 
     void Start() {
         loadDone = new bool[1];
@@ -79,30 +80,78 @@ public class GameFlow : MonoBehaviour {
 
                 float disp_spd;
                 float.TryParse(data[4, pointer], out disp_spd); //converts string to int
-                string[] store = GetFormattedText
-                    (DIALOGUE, data[2, pointer]).ToArray(typeof(string)) as string[];
+                string[] store; ArrayList result = new ArrayList();
+                int[] tags = GetFormattedText(DIALOGUE, data[2, pointer], result);
+                store = result.ToArray(typeof(string)) as string[];
                 Canvas.ForceUpdateCanvases();
                 DIALOGUE.text = "";
 
                 int special;
                 int.TryParse(data[7, pointer], out special);
 
-                if (special == 0)
-                character.GetComponent<Animator>().SetBool("Talking", true);
+                if (special != 1) 
+                { //1 is changing sprite in the middle of talking
+                    character.GetComponent<Animator>().SetBool("Talking", true);
+                }
+                /**
+                 * the two params for special event could be int, could be int arrays, so to cover all 
+                 * cases we create variables for all possibilities                
+                 */
+                int param1 = -1, param2 = -1; int[] PARAM1, PARAM2;
+                if (special != 0) //if there is special
+                {
+                    if (data[8, pointer].Contains(","))
+                    {
+                        string[] parsed = data[8, pointer].Split(',');
+                        PARAM1 = new int[parsed.Length];
+                        int c = 0;
+                        foreach (string num in parsed)
+                        {
+                            int.TryParse(num, out PARAM1[c]);
+                            c++;
+                        }
+                    }
+                    else
+                    {
+                        int.TryParse(data[8, pointer], out param1);
+                    }
 
+                    if (data[9, pointer].Contains(","))
+                    {
+                        string[] parsed = data[9, pointer].Split(',');
+                        PARAM2 = new int[parsed.Length];
+                        int c = 0;
+                        foreach (string num in parsed)
+                        {
+                            int.TryParse(num, out PARAM2[c]);
+                            c++;
+                        }
+                    }
+                    else
+                    {
+                        int.TryParse(data[9, pointer], out param2);
+                    }
+                }
 
-                //string[] param1 = GetFormattedText
-                //    (DIALOGUE, data[8, pointer]).ToArray(typeof(string)) as string[];
-                //string[] param2 = GetFormattedText
-                //(DIALOGUE, data[9, pointer]).ToArray(typeof(string)) as string[];
-                int param1, param2;
-                int.TryParse(data[8, pointer], out param1);
-                int.TryParse(data[9, pointer], out param2);
 
                 for (int s = 0; s < store.Length; s++) {
                     for (int n = 0; n < store[s].Length; n++) {
-                        DIALOGUE.text += store[s][n];
-                        if(special == 1 && n == param1)
+                        if(n == tags[0]) //we're at the first letter that needs to be tagged
+                        {
+                            DIALOGUE.text += openTag;
+                        }else if(n > tags[0] && n < tags[2])
+                        {
+                            DIALOGUE.text.Remove(DIALOGUE.text.Length - (endTag.Length) - 1); //remove temp ending tag
+                        }
+
+                        DIALOGUE.text += store[s][n]; //the actual adding of the char
+
+                        if (n > tags[0] && n <= tags[2])
+                        {
+                            DIALOGUE.text += endTag; //add temp ending tag
+                        }
+
+                        if (special == 1 && n == param1) //changing sprite in the middle of dialogue
                         {
                             character.GetComponent<Animator>().SetInteger("State",
                     param2);
@@ -186,9 +235,9 @@ public class GameFlow : MonoBehaviour {
 
         int disp_spd;
         int.TryParse(data[3, line], out disp_spd); //converts string to int
-        string[] store = GetFormattedText
-            (DIALOGUE, data[1, line]).ToArray(typeof(string)) as string[];
-        DIALOGUE.text = store[0];
+        string[] store; ArrayList result = new ArrayList();
+        int[] tags = GetFormattedText (DIALOGUE, data[1, line], result);
+        store = result.ToArray(typeof(string)) as string[];
         //Canvas.ForceUpdateCanvases();
         DIALOGUE.text = "";
 
@@ -213,9 +262,36 @@ public class GameFlow : MonoBehaviour {
     /*
      * prevents long words at end of line from jumping to the next when rendering
      *     
+     * adds the parsed sentences to ArrayList result one by one.
+     *     
+     * Checks if there are tags first. 
+     * If yes, stores the positions of the opening and ending tags in an int array that's returned.
+     * If no, the returned array[0] will be -1, indicating that there's no tags in this sentence.
+     * 
      */
-    private ArrayList GetFormattedText(Text textUI, string text) {
-        ArrayList result = new ArrayList();
+    private int[] GetFormattedText(Text textUI, string text, ArrayList result) {
+    
+        int[] tagPos = new int[4];
+
+        if (text.Contains("<")) //check if there's tag in this sentence
+        {
+            tagPos[0] = text.IndexOf('<'); //the starting pos of the opening tag
+            tagPos[1] = text.IndexOf('>'); //the ending pos of the opening tag
+
+            openTag = text.substring(tagPos[0], tagPos[1]);
+            text.Remove(tagPos[0], tagPos[1]);
+
+            tagPos[2] = text.IndexOf('<'); //the starting pos of the ending tag AFTER openTag is removed, recover this first later
+            tagPos[3] = text.IndexOf('>'); //the ending pos of the ending tag
+            endTag = text.substring(tagPos[2], tagPos[3]);
+            text.Remove(tagPos[2], tagPos[3]);
+        }
+        else
+        {
+            tagPos[0] = -1;
+        }
+
+
         string[] words = text.Split(' ');
 
         int width = Mathf.Abs(Mathf.FloorToInt(textUI.rectTransform.rect.width));
@@ -250,7 +326,7 @@ public class GameFlow : MonoBehaviour {
             }
         }
         result.Add(newText);
-        return result; //result.length is how many "pages" there are, each with multiple '\n' within
+        return tagPos; //result.length is how many "pages" there are, each with multiple '\n' within
     }
 
     private int GetWordSize(Text textUI, string word, Font font, int fontSize) {
