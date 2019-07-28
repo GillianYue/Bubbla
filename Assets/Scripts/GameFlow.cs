@@ -6,19 +6,24 @@ using UnityEngine.UI;
 
 public class GameFlow : MonoBehaviour {
 
+    public GameControl gameControl;
+    public CustomEvents customEvents;
+
     private int pointer = 1; //indicates which line of script the game is at
     private bool lineDone = true, pointerCheck = true, skipping = false;
     private bool[] loadDone;
     public bool canSkip;
+
     public Text NAME, DIALOGUE;
-    private string[,] data; //double array that stores all info of this level
     public GameObject character, dlgBox;
+
     public enum Mode { DLG, GAME, END };
     public Mode currMode;
-    public GameControl gameControl;
-    public CustomEvents customEvents;
+
+    public Text animIndicator;
 
     public TextAsset DlgCsv; //dialogue file for a specific level
+    private string[,] data; //double array that stores all info of this level
     public EnemyLoader enemyLoader;
 
     private string openTag, endTag; //those two variables are used for dialogue tag processing
@@ -75,8 +80,7 @@ public class GameFlow : MonoBehaviour {
 
                 int SpriteNum;
                 int.TryParse(data[3, pointer], out SpriteNum);
-                character.GetComponent<Animator>().SetInteger("State",
-                    SpriteNum);
+                setAnimState(character, SpriteNum);
 
                 float disp_spd;
                 float.TryParse(data[4, pointer], out disp_spd); //converts string to int
@@ -139,22 +143,22 @@ public class GameFlow : MonoBehaviour {
                         if(n == tags[0]) //we're at the first letter that needs to be tagged
                         {
                             DIALOGUE.text += openTag;
-                        }else if(n > tags[0] && n < tags[2])
+                        }else if(tags[0] != -1 && n > tags[0] && n <= tags[2])
                         {
-                            DIALOGUE.text.Remove(DIALOGUE.text.Length - (endTag.Length) - 1); //remove temp ending tag
+                            DIALOGUE.text = DIALOGUE.text.Remove
+                                (DIALOGUE.text.Length - (endTag.Length)); //remove temp ending tag
                         }
 
                         DIALOGUE.text += store[s][n]; //the actual adding of the char
 
-                        if (n > tags[0] && n <= tags[2])
+                        if (tags[0]!=-1 && n >= tags[0] && n <= tags[2])
                         {
                             DIALOGUE.text += endTag; //add temp ending tag
                         }
 
                         if (special == 1 && n == param1) //changing sprite in the middle of dialogue
                         {
-                            character.GetComponent<Animator>().SetInteger("State",
-                    param2);
+                            setAnimState(character, param2);
                         }
                         if (!skipping) {
                             yield return new WaitForSeconds(- 1.0333f * disp_spd + 1.1f);
@@ -230,8 +234,7 @@ public class GameFlow : MonoBehaviour {
 
         int SpriteNum;
         int.TryParse(data[2, line], out SpriteNum);
-        character.GetComponent<Animator>().SetInteger("State",
-            SpriteNum);
+        setAnimState(character, SpriteNum);
 
         int disp_spd;
         int.TryParse(data[3, line], out disp_spd); //converts string to int
@@ -278,13 +281,17 @@ public class GameFlow : MonoBehaviour {
             tagPos[0] = text.IndexOf('<'); //the starting pos of the opening tag
             tagPos[1] = text.IndexOf('>'); //the ending pos of the opening tag
 
-            openTag = text.substring(tagPos[0], tagPos[1]);
-            text.Remove(tagPos[0], tagPos[1]);
+            int ot_length = tagPos[1] - tagPos[0] + 1;
+            openTag = text.Substring(tagPos[0], ot_length);
+            text =  text.Remove(tagPos[0], ot_length);
 
-            tagPos[2] = text.IndexOf('<'); //the starting pos of the ending tag AFTER openTag is removed, recover this first later
+            tagPos[2] = text.IndexOf('<'); //the starting pos of the ending tag AFTER openTag is removed
             tagPos[3] = text.IndexOf('>'); //the ending pos of the ending tag
-            endTag = text.substring(tagPos[2], tagPos[3]);
-            text.Remove(tagPos[2], tagPos[3]);
+            endTag = text.Substring(tagPos[2], tagPos[3]-tagPos[2]+1);
+            text = text.Remove(tagPos[2], tagPos[3] - tagPos[2] + 1);
+
+            //Debug.Log("starting tag: from " + tagPos[0] + " to " + tagPos[1]);
+            //Debug.Log("ending tag: from " + tagPos[2] + " to " + tagPos[3]);
         }
         else
         {
@@ -378,6 +385,12 @@ public class GameFlow : MonoBehaviour {
 
     public void skipDLG() {
         skipping = true;
+    }
+
+    public void setAnimState(GameObject c, int n)
+    {
+        c.GetComponent<Animator>().SetInteger("State", n);
+        animIndicator.text = n.ToString();
     }
 
 
