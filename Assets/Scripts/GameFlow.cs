@@ -20,7 +20,8 @@ public class GameFlow : MonoBehaviour {
     public enum Mode { DLG, GAME, END };
     public Mode currMode;
 
-    public Text animIndicator;
+    public Text animIndicator; //number to show which state the character is
+    public bool animBool0, animBool1; //names of the two bool switches of the character's animator, e.g. talking, typing
 
     public TextAsset DlgCsv; //dialogue file for a specific level
     private string[,] data; //double array that stores all info of this level
@@ -80,7 +81,6 @@ public class GameFlow : MonoBehaviour {
 
                 int SpriteNum;
                 int.TryParse(data[3, pointer], out SpriteNum);
-                setAnimState(character, SpriteNum);
 
                 float disp_spd;
                 float.TryParse(data[4, pointer], out disp_spd); //converts string to int
@@ -95,8 +95,11 @@ public class GameFlow : MonoBehaviour {
 
                 if (special != 1) 
                 { //1 is changing sprite in the middle of talking
-                    character.GetComponent<Animator>().SetBool("Talking", true);
+                    setBoolParam(character, 0, true); //talking is param 0
+                   //character.GetComponent<Animator>().SetBool("Talking", true);
                 }
+
+                setAnimBaseState(character, SpriteNum);
                 /**
                  * the two params for special event could be int, could be int arrays, so to cover all 
                  * cases we create variables for all possibilities                
@@ -158,7 +161,7 @@ public class GameFlow : MonoBehaviour {
 
                         if (special == 1 && n == param1) //changing sprite in the middle of dialogue
                         {
-                            setAnimState(character, param2);
+                            setAnimBaseState(character, param2);
                         }
                         if (!skipping) {
                             yield return new WaitForSeconds(- 1.0333f * disp_spd + 1.1f);
@@ -168,7 +171,8 @@ public class GameFlow : MonoBehaviour {
                         DIALOGUE.text = ""; //reset and print the second section
                     }
                 }
-                character.GetComponent<Animator>().SetBool("Talking", false);
+                //character.GetComponent<Animator>().SetBool("Talking", false);
+                setBoolParam(character, 0, false); //talking is param 0
                 lineDone = true;
                 skipping = false;
                 break;
@@ -234,7 +238,7 @@ public class GameFlow : MonoBehaviour {
 
         int SpriteNum;
         int.TryParse(data[2, line], out SpriteNum);
-        setAnimState(character, SpriteNum);
+        setAnimBaseState(character, SpriteNum);
 
         int disp_spd;
         int.TryParse(data[3, line], out disp_spd); //converts string to int
@@ -244,9 +248,8 @@ public class GameFlow : MonoBehaviour {
         //Canvas.ForceUpdateCanvases();
         DIALOGUE.text = "";
 
-
-        character.GetComponent<Animator>().SetBool("Talking", true);
-        character.GetComponent<Animator>().SetBool("Typing", true);
+        setBoolParam(character, 0, true); //talking is param 0
+        setBoolParam(character, 1, true); //typing is param 1
 
         for (int s = 0; s < store.Length; s++) {
             for (int n = 0; n < store[s].Length; n++) {
@@ -257,8 +260,9 @@ public class GameFlow : MonoBehaviour {
                 DIALOGUE.text = ""; //reset and print the second section
             }
         }
-        character.GetComponent<Animator>().SetBool("Talking", false);
-        character.GetComponent<Animator>().SetBool("Typing", false);
+
+        setBoolParam(character, 0, false); //talking is param 0
+        setBoolParam(character, 1, false); //typing is param 1
     }
 
 
@@ -290,8 +294,6 @@ public class GameFlow : MonoBehaviour {
             endTag = text.Substring(tagPos[2], tagPos[3]-tagPos[2]+1);
             text = text.Remove(tagPos[2], tagPos[3] - tagPos[2] + 1);
 
-            //Debug.Log("starting tag: from " + tagPos[0] + " to " + tagPos[1]);
-            //Debug.Log("ending tag: from " + tagPos[2] + " to " + tagPos[3]);
         }
         else
         {
@@ -387,11 +389,58 @@ public class GameFlow : MonoBehaviour {
         skipping = true;
     }
 
-    public void setAnimState(GameObject c, int n)
+    public void setAnimState(GameObject c, float n)
     {
-        c.GetComponent<Animator>().SetInteger("State", n);
+        Animator a = c.GetComponent<Animator>();
+
+        a.SetFloat("State", n);
         animIndicator.text = n.ToString();
+
     }
 
+    public void setAnimBaseState(GameObject c, int n)
+    {
+        Animator a = c.GetComponent<Animator>();
 
+        float bools = a.GetFloat("State") - Mathf.Floor(a.GetFloat("State"));
+        setAnimState(c, n + bools);
+    }
+
+    /**
+     * calculates the overall State float based on the two bool params
+     */
+    public void setBoolParam(GameObject c, int num, bool b)
+    {
+        Animator a = c.GetComponent<Animator>();
+        // a.SetBool(name, b);
+
+        if(num == 0)
+        {
+            animBool0 = b;
+        }else if (num == 1)
+        {
+            animBool1 = b; 
+        }
+
+        bool p0 = animBool0, p1 = animBool1;
+        
+    if(p0 && p1)
+        {
+            setAnimState(c, Mathf.Floor(a.GetFloat("State")) + 0.15f);
+
+        }else if (p0 && (!p1))
+        {
+            setAnimState(c, Mathf.Floor(a.GetFloat("State")) + 0.1f);
+        }
+        else if ((!p0) && p1)
+        {
+            setAnimState(c, Mathf.Floor(a.GetFloat("State")) + 0.05f);
+        }
+        else //neither
+        {
+            setAnimState(c, Mathf.Floor(a.GetFloat("State")));
+        }
+
+
+    }
 }

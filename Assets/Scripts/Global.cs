@@ -198,6 +198,7 @@ public class Global : MonoBehaviour
         Vector3 sSize = character.GetComponent<SpriteRenderer>().sprite.bounds.size;
         var ratio = DLGbg.GetComponent<RectTransform>().rect.height / sSize.y;
         Vector3 scale = new Vector3(ratio, ratio, 1);
+        scale *= 0.98f; //this is because DLG background isn't a perfect rect, so sprite should be a little smaller
         character.GetComponent<RectTransform>().localScale = scale;
     }
 
