@@ -69,7 +69,7 @@ public class GameControl : MonoBehaviour {
             Vector3 sSize = BGMask.GetComponent<SpriteMask>().sprite.bounds.size;
             var ratioX = BGMask.GetComponent<RectTransform>().rect.width / sSize.x;
             var ratioY = BGMask.GetComponent<RectTransform>().rect.height / sSize.y;
-            Vector3 scale = new Vector3(ratioX, ratioY, 1);
+            Vector3 scale = new Vector3(ratioX, ratioY-0.04f, 1);
             BGMask.GetComponent<RectTransform>().localScale = scale;
         }
 

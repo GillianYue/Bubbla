@@ -32,6 +32,10 @@ public class CustomEvents : MonoBehaviour {
         pSpawner = GC.GetComponent<PaintballSpawner>();
 
         identified = new List<identifier>();
+        foreach ( identifier i in FindObjectsOfType<identifier>())
+        {
+            identified.Add(i);
+        }
 	}
 	
 	// Update is called once per frame
@@ -70,6 +74,9 @@ public class CustomEvents : MonoBehaviour {
                 break;
             case 5:
                 StartCoroutine(wait(done, prms));
+                break;
+            case 6:
+                changeAnimState(done, prms);
                 break;
             case 10:
                 moveTo(done, prms);
@@ -137,7 +144,7 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
-    /**
+    /**TODO
  * event #2
  * 
  * creating a paintball, item, non-living-things
@@ -187,6 +194,7 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
+
     /**
      * event #5
      * 
@@ -201,7 +209,23 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
+    /**
+     * event #6
+     * 
+     * param 0: identifier of the gameObject
+     * param 1: the integer to set "State" to
+     */
+    public void changeAnimState(bool[] done, string[] prms)
+    {
+        //look in identified for an identifier with the right id and return its gameObject
+        GameObject target = identified.Find(i => i.id.Equals(prms[0])).gameObject;
 
+        int x;
+        int.TryParse(prms[1], out x);
+
+        target.GetComponent<Animator>().SetInteger("State", x);
+        done[0] = true;
+    }
 
     /**
      * event #10
