@@ -1,6 +1,6 @@
 MODE,NAME(DLG); WAVE_TYPE(GAME),TEXT(DLG); ENEMY_TYPE(GAME),SPRITE_STATE(DLG); STD_COL(GAME),DISP_SPD(DLG); MX_D(GAME),VOICE_NO,ANIM_SPD,SPECIAL,SPE_PARAM_1,SPE_PARAM_2,SPE_PARAM3
 GAME,99,6,bgFixed,0,,,,,,
-DLG,BUNNY,"Agent 7963, can you hear me?",0,1,,,,,,
+DLG,BUNNY,"Agent 7846, can you hear me?",0,1,,,,,,
 ,BUNNY,Your GPS location has successfully been sent to me.,0,1,,,2,1,1,4
 ,BUNNY,You are currently in the <i>Sea of Miracle</i>.,0,1,,,2,1,0,5
 ,BUNNY,"The mission this time is to retrieve the legendary treasure, Pearl de la Lune.",0,1,,,,,,
