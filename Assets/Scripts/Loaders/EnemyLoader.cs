@@ -13,11 +13,17 @@ public class EnemyLoader : MonoBehaviour
     int[] life, attack;
     float[] sizeScale, colliderScale;
     string[] s0_anim, s1_anim, s2_anim; //path to animations
+    AnimationClip[] S0_ANIM, S1_ANIM, S2_ANIM;
+    GameObject enemyMold;
+
+    public bool enemyLoaderDone;
+
 
     void Start()
     {
         loadDone = new bool[1];
 
+        loadEnemyMold();
         StartCoroutine(LoadScene.processCSV(loadDone, enemyCsv, setData)); //processCSV will call setData
         StartCoroutine(parseEnemyData());
 
@@ -27,6 +33,39 @@ public class EnemyLoader : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public GameObject getEnemyInstance(int eCode)
+    {
+        if (enemyMold == null)
+        {
+            Debug.LogError("enemyMold is null... Can't create enemy instance");
+            return null;
+        }
+
+        GameObject e = Instantiate(enemyMold) as GameObject; //duplicate
+        Animator animator = e.GetComponent<Animator>();
+
+        AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        animator.runtimeAnimatorController = animatorOverrideController;
+
+        if(S0_ANIM[eCode] != null)
+        animatorOverrideController["State0"] = S0_ANIM[eCode];
+
+        if (S1_ANIM[eCode] != null)
+            animatorOverrideController["State1"] = S1_ANIM[eCode];
+
+        if (S2_ANIM[eCode] != null)
+            animatorOverrideController["State2"] = S2_ANIM[eCode];
+
+
+
+    }
+
+    void loadEnemyMold()
+    {
+        enemyMold = Instantiate(Resources.Load("EnemyMold", typeof(GameObject))) as GameObject;
+        if (enemyMold == null) Debug.LogError("load EnemyMold failed");
     }
 
     IEnumerator parseEnemyData()
@@ -39,6 +78,7 @@ public class EnemyLoader : MonoBehaviour
         life = new int[numRows]; attack = new int[numRows];
         sizeScale = new float[numRows]; colliderScale = new float[numRows];
         s0_anim = new string[numRows]; s1_anim = new string[numRows]; s2_anim = new string[numRows];
+        S0_ANIM = new AnimationClip[numRows];  S1_ANIM = new AnimationClip[numRows]; S2_ANIM = new AnimationClip[numRows]; 
 
         //skip row 0 because those are all descriptors
         for(int r = 1; r < numRows; r++)
@@ -52,11 +92,14 @@ public class EnemyLoader : MonoBehaviour
             s1_anim[r - 1] = data[7, r];
             s2_anim[r - 1] = data[8, r];
 
-            createEnemyAnimator("Assets/Prefabs/L1/Temp/" + enemyName[r - 1] + ".controller");
+            //createEnemyAnimator("Assets/Prefabs/L1/Temp/" + enemyName[r - 1] + ".controller", r-1);
         }
 
+        loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM);
+        yield return new WaitUntil(() => (S0_ANIM[S0_ANIM.Length - 1] != null)); //loaded
 
-        //TODO: parse
+        enemyLoaderDone = true;
+
     }
 
     public void setData(string[,] d)
@@ -64,37 +107,97 @@ public class EnemyLoader : MonoBehaviour
         data = d;
     }
 
-    static void createEnemyAnimator(string path)
+    void loadAnimationClips(AnimationClip[] s0, AnimationClip[] s1, AnimationClip[] s2)
     {
-        // Creates the controller
-        var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(path);
 
-        // Add parameters
-        controller.AddParameter("State", AnimatorControllerParameterType.Int);
+        //load the animation clips into the arrays
+        for (int eCode = 0; eCode < s0.GetLength(0); eCode++)
+        {
+            if (!s0_anim[eCode].Equals(""))
+            {
+                GameObject tmpAnim0 = Resources.Load("Assets/Resources/Animation/" + s0_anim[eCode], typeof(GameObject)) as GameObject;
 
-        // Add StateMachines
-        var rootStateMachine = controller.layers[0].stateMachine;
+            if (tmpAnim0 != null)
+            {
+                Debug.LogError("Animation 0 NOT found");
+            }
+            else
+            {
+                Animation animation0 = tmpAnim0.GetComponent<Animation>();
+                AnimationClip animanClip0 = animation0.clip;
 
-        // Add States
-        var state0 = rootStateMachine.AddState("state0");
-        var state1 = rootStateMachine.AddState("state1");
-        var state2 = rootStateMachine.AddState("state2");
+                s0[eCode] = animanClip0;
+            }
+        }
 
-        // Add Transitions
 
-        var tr0 = rootStateMachine.AddAnyStateTransition(state0);
-        tr0.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "State");
-        tr0.duration = 0;
+            if (!s1_anim[eCode].Equals(""))
+            {
+                GameObject tmpAnim1 = Resources.Load("Assets/Resources/Animation/" + s1_anim[eCode], typeof(GameObject)) as GameObject;
 
-        var tr1 = rootStateMachine.AddAnyStateTransition(state1);
-        tr1.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 1, "State");
-        tr1.duration = 0;
+            if (tmpAnim1 != null)
+            {
+                Debug.LogError("Animation 1 NOT found");
+            }
+            else
+            {
+                Animation animation1 = tmpAnim1.GetComponent<Animation>();
+                AnimationClip animanClip1 = animation1.clip;
 
-        var tr2 = rootStateMachine.AddAnyStateTransition(state2);
-        tr2.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 2, "State");
-        tr2.duration = 0;
+                s1[eCode] = animanClip1;
+            }
+        }
 
-        rootStateMachine.AddEntryTransition(state0);
+            if (!s2_anim[eCode].Equals(""))
+            {
+                GameObject tmpAnim2 = Resources.Load("Assets/Resources/Animation/" + s2_anim[eCode], typeof(GameObject)) as GameObject;
 
+                if (tmpAnim2 != null)
+                {
+                    Debug.LogError("Animation NOT found");
+                }
+                else
+                {
+                    Animation animation2 = tmpAnim2.GetComponent<Animation>();
+                    AnimationClip animanClip2 = animation2.clip;
+
+                    s2[eCode] = animanClip2;
+                }
+            }
+        }
     }
+
+    //void createEnemyAnimator(string path, int eCode)
+    //{
+    //    // Creates the controller
+    //    var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(path);
+
+    //    // Add parameters
+    //    controller.AddParameter("State", AnimatorControllerParameterType.Int);
+
+    //    // Add StateMachines
+    //    var rootStateMachine = controller.layers[0].stateMachine;
+
+    //    // Add States
+    //    var state0 = rootStateMachine.AddState("state0");
+    //    var state1 = rootStateMachine.AddState("state1");
+    //    var state2 = rootStateMachine.AddState("state2");
+
+    //    // Add Transitions
+
+    //    var tr0 = rootStateMachine.AddAnyStateTransition(state0);
+    //    tr0.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "State");
+    //    tr0.duration = 0;
+
+    //    var tr1 = rootStateMachine.AddAnyStateTransition(state1);
+    //    tr1.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 1, "State");
+    //    tr1.duration = 0;
+
+    //    var tr2 = rootStateMachine.AddAnyStateTransition(state2);
+    //    tr2.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 2, "State");
+    //    tr2.duration = 0;
+
+    //    rootStateMachine.AddEntryTransition(state0);
+
+    //}
 }

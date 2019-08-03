@@ -10,6 +10,8 @@ public class EnemySpawner : MonoBehaviour {
 	public GameObject[] enemies;
 	public Vector3 spawnValues;
 
+    public EnemyLoader enemyLoader;
+
     void Start()
     {
         StartCoroutine(setSpawnerValues());
@@ -141,9 +143,11 @@ public class EnemySpawner : MonoBehaviour {
 
 	//ALL MONSTERS GENERATED HERE
 	public GameObject genMonster(float x, float y, float z, int monsterCode){
-		GameObject e = enemies [monsterCode];
+
+		GameObject e = enemyLoader.getEnemyInstance(monsterCode); //is already Instantiated here
+
 		Vector3 spawnPosition = new Vector3 (x, y, z);
-		e = Instantiate (e, spawnPosition, e.transform.rotation) as GameObject;
+        e.transform.position = spawnPosition;
 
 		int LIFE, ATTACK;
 		switch (monsterCode) {
