@@ -12,20 +12,10 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
-        if (Global.scaleRatio != 0)
-        {
-            transform.localScale = new Vector3(sizeScale * Global.scaleRatio,
-                sizeScale * Global.scaleRatio, sizeScale * Global.scaleRatio);
-        }
 
-        Vector2[] colliderPoints = GetComponent<PolygonCollider2D>().points;
-        Vector2[] scaledPoints = new Vector2[colliderPoints.Length];
-        for(int p = 0; p < colliderPoints.Length; p++)
-        {
-            Vector2 np = GetComponent<PolygonCollider2D>().points[p] * colliderScale;
-            scaledPoints[p] = np;
-        }
-        GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
+        setSizeScale(sizeScale);
+
+        setColliderScale(colliderScale);
 
     }
 	
@@ -81,4 +71,27 @@ public class Enemy : MonoBehaviour {
 //		}
 //	}
 }
+
+    public void setSizeScale(float sScale)
+    {
+        sizeScale = sScale;
+
+        if (Global.scaleRatio != 0)
+        {
+            transform.localScale = new Vector3(sizeScale * Global.scaleRatio,
+                sizeScale * Global.scaleRatio, sizeScale * Global.scaleRatio);
+        }
+    }
+
+    public void setColliderScale(float cScale)
+    {
+        Vector2[] colliderPoints = GetComponent<PolygonCollider2D>().points;
+        Vector2[] scaledPoints = new Vector2[colliderPoints.Length];
+        for (int p = 0; p < colliderPoints.Length; p++)
+        {
+            Vector2 np = GetComponent<PolygonCollider2D>().points[p] * colliderScale;
+            scaledPoints[p] = np;
+        }
+        GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
+    }
 }
