@@ -1,3 +1,9 @@
 CHARACTER_CODE,CHARACTER_NAME,BOOL_1_NAME,BOOL_2_NAME,ANIMATOR_PATH,BG_COLOR_R,BG_COLOR_G,BG_COLOR_B
 0,BUNNY,Talking,Typing,Bunny,255,180,180
 1,BUNS,Talking,,CaptainBun,17,87,173
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,PAWN SHOP,,,,219,205,0
