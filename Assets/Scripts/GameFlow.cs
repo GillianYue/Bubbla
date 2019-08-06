@@ -87,8 +87,9 @@ public class GameFlow : MonoBehaviour {
                     character.GetComponent<Animator>().runtimeAnimatorController = 
                         characterLoader.getAnimatorByIndex(index);
                     prevChaName = NAME.text;
-                    bgBox.color = characterLoader.getColorByIndex(index);
-                    Debug.Log("color loaded is :" + bgBox.color);
+                    Color c = bgBox.color;
+                    c = characterLoader.getColorByIndex(index);
+                    bgBox.color = new Color(c.r/255.0f, c.g/255.0f, c.b/255.0f);
                 }
 
                 int SpriteNum;

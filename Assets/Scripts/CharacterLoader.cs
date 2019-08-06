@@ -68,7 +68,6 @@ public class CharacterLoader : MonoBehaviour
             int.TryParse(data[6, r], out G);
             int.TryParse(data[7, r], out B);
             bgColor[r - 1] = new Color(R, G, B);
-            Debug.Log("color is :" + bgColor[r - 1]);
         }
 
         loadAnimators(cAnimators);
