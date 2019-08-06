@@ -15,17 +15,20 @@ public class GameFlow : MonoBehaviour {
     public bool canSkip;
 
     public Text NAME, DIALOGUE;
-    public GameObject character, dlgBox;
+    public GameObject character, dlgBox; //character is current character speaking
+    public Image bgBox;
 
     public enum Mode { DLG, GAME, END };
     public Mode currMode;
 
     public Text animIndicator; //number to show which state the character is
     public bool animBool0, animBool1; //names of the two bool switches of the character's animator, e.g. talking, typing
+    public string prevChaName; //to inform whether there's a need to set animator for current line
 
     public TextAsset DlgCsv; //dialogue file for a specific level
     private string[,] data; //double array that stores all info of this level
     public EnemyLoader enemyLoader;
+    public CharacterLoader characterLoader;
 
     private string openTag, endTag; //those two variables are used for dialogue tag processing
 
@@ -73,11 +76,20 @@ public class GameFlow : MonoBehaviour {
             case Mode.DLG: //still in dialogue mode
 
                 //sprite fixes size of background square
-                //Assumes character is already given, TODO set this based on data
                 Global.resizeSpriteToDLG(character, character.transform.parent.gameObject);
 
                 lineDone = false; //dialogue is shown one char at a time
                 NAME.text = data[1, pointer];
+
+                if (!prevChaName.Equals(NAME.text))
+                {
+                    int index = characterLoader.getIndex(NAME.text);
+                    character.GetComponent<Animator>().runtimeAnimatorController = 
+                        characterLoader.getAnimatorByIndex(index);
+                    prevChaName = NAME.text;
+                    bgBox.color = characterLoader.getColorByIndex(index);
+                    Debug.Log("color loaded is :" + bgBox.color);
+                }
 
                 int SpriteNum;
                 int.TryParse(data[3, pointer], out SpriteNum);
