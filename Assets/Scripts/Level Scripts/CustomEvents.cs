@@ -43,11 +43,6 @@ public class CustomEvents : MonoBehaviour {
 	
 	}
 
-    //public void setLevelCsvData(string[,] d)
-    //{
-    //    data = d;
-
-    //}
 
     public void customEvent(int index, string[] prms)
     {
@@ -71,6 +66,9 @@ public class CustomEvents : MonoBehaviour {
         {
             case 1:
                 genEnemy(done, prms);
+                break;
+            case 3:
+                genPaintball(done, prms);
                 break;
             case 5:
                 StartCoroutine(wait(done, prms));
@@ -145,16 +143,16 @@ public class CustomEvents : MonoBehaviour {
     }
 
     /**TODO
- * event #2
- * 
- * creating a paintball, item, non-living-things
- * 
- * param 0: item code indicating which item we want to create
- * optional param 1: pos X, will use enemySpawner.spawnValues.x if param is ""
- * optional param 2: pos Y, will use enemySpawner.spawnValues.y if param is ""
- * optional param 3: pos Z, will use enemySpawner.spawnValues.z if param is ""
- * optional param 4: an identifier id for the enemy, will not assign identifier if param is ""
- */
+     * event #2
+     * 
+     * creating a item, non-living-things
+     * 
+     * param 0: item code indicating which item we want to create
+     * optional param 1: pos X, will use enemySpawner.spawnValues.x if param is ""
+     * optional param 2: pos Y, will use enemySpawner.spawnValues.y if param is ""
+     * optional param 3: pos Z, will use enemySpawner.spawnValues.z if param is ""
+     * optional param 4: an identifier id for the enemy, will not assign identifier if param is ""
+     */
     void genItem(bool[] done, string[] prms)
     {
         int enemyCode;
@@ -194,6 +192,68 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
+
+    /**
+     * event #3
+     * 
+     * create a paintball  
+     * 
+     * optional param 0: r,g,b of color, will use paintballSpawner's current atmospherical color if param is ""
+     * optional param 1: pos X,Y,Z, will use paintballSpawner.spawnValues if param is ""
+     * optional param 2: an identifier id for the paintball, will not assign if empty    
+     * optional param 3: size     
+     *   
+     */
+    void genPaintball(bool[] done, string[] prms)
+    {
+        int r,g,b;
+
+        float x, y, z;
+        if (!prms[1].Equals(""))
+        {
+            string[] res = prms[1].Split(',');
+            float.TryParse(res[0], out x);
+            float.TryParse(res[1], out y);
+            float.TryParse(res[2], out z);
+        }
+        else
+        {
+            x = pSpawner.spawnValues.x;
+            y = pSpawner.spawnValues.y;
+            z = pSpawner.spawnValues.z;
+        }
+     
+
+        GameObject p;
+
+        if (!prms[0].Equals(""))
+        {
+            string[] res = prms[0].Split(',');
+            int.TryParse(res[0], out r);
+            int.TryParse(res[1], out g);
+            int.TryParse(res[2], out b);
+
+            p = pSpawner.genPaintball(r, g, b, x, y, z); //need not worry about conversion, taken care of in PBbehavior.setColor
+        }
+        else
+        {
+            p = pSpawner.genPaintball(x, y, z);
+        }
+
+        int size;
+
+        if (!prms[3].Equals(""))
+        {
+            int.TryParse(prms[3], out size);
+            p.GetComponent<PaintballBehavior>().setSize(size);
+        }
+
+        if (!prms[2].Equals(""))
+        {
+            setIdentifier(p, prms[2]);
+        }
+        done[0] = true;
+    }
 
     /**
      * event #5

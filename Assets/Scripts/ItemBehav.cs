@@ -18,7 +18,7 @@ public class ItemBehav : MonoBehaviour {
 		private AudioStorage audioz;
 
 		void Start () {
-		setColor (Color.white);
+		setColor (Color.white.r, Color.white.g, Color.white.b);
 		size = 1;
 			setSize(size);
 
@@ -64,7 +64,8 @@ public class ItemBehav : MonoBehaviour {
 			}
 		}
 
-		public void setColor(Color c){
+		public void setColor(float r, float g, float b){
+            Color c = new Color(r, g, b);
 			GetComponent<SpriteRenderer> ().color = c;
 			color = c;
 		}

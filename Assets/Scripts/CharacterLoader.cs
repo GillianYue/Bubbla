@@ -48,7 +48,19 @@ public class CharacterLoader : MonoBehaviour
     {
         yield return new WaitUntil(() => loadDone[0]); //this would mean that data is ready to be parsed
 
-        int numRows = data.GetLength(1);
+        int numRows = 0;
+        for(int i=0; i< data.GetLength(1); i++) //we do this because we only want to record valid entries (number coded)
+        {
+            if (!data[1, i].Equals(""))
+            {
+                numRows++; //valid row++
+            }
+            else
+            {
+                break;
+            }
+        }
+
         characterCode = new int[numRows - 1]; //num rows, int[] is for the entire column
         cName = new ArrayList();
         bool1Name = new string[numRows - 1]; bool2Name = new string[numRows - 1];

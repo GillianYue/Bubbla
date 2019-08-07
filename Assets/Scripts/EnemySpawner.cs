@@ -157,8 +157,6 @@ public class EnemySpawner : MonoBehaviour {
 
 
         return e;
-    //    e.transform.parent = enemiz.transform;
-      // e.transform.localPosition.z = 0;
     }
         
 

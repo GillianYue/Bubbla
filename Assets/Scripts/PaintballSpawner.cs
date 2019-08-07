@@ -82,11 +82,20 @@ public class PaintballSpawner : MonoBehaviour
         return pb;
     }
 
-    public void genPaintball(Color c, float x, float y, float z)
+    public GameObject genPaintball(Color c, float x, float y, float z)
     {
         GameObject pb = genPaintball(x, y, z);
         pb.GetComponent<PaintballBehavior>().setColor(c);
+        return pb;
     }
+
+    public GameObject genPaintball(float R, float G, float B, float x, float y, float z)
+    {
+        GameObject pb = genPaintball(x, y, z);
+        pb.GetComponent<PaintballBehavior>().setColor(R,G,B);
+        return pb;
+    }
+
 
     public void genItem(float x, float y, float z)
     {

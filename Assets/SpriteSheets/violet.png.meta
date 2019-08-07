@@ -115,8 +115,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 48
-        height: 48
+        width: 42
+        height: 42
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,7 +124,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9d159b10696c54025a1e3d4f7fe2beb1
+      spriteID: 32d4c9351241b4a6a807de9ac16e97a6
       internalID: -8637307958777317588
       vertices: []
       indices: 
@@ -134,10 +134,10 @@ TextureImporter:
       name: violet_1
       rect:
         serializedVersion: 2
-        x: 48
+        x: 42
         y: 0
-        width: 48
-        height: 48
+        width: 42
+        height: 42
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,7 +145,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6cf15d073d5e349d5918f4d6c8d040e9
+      spriteID: 9e6d38e3aaa0e46e690e0b22997f4745
       internalID: -3756695647257517326
       vertices: []
       indices: 
@@ -155,10 +155,10 @@ TextureImporter:
       name: violet_2
       rect:
         serializedVersion: 2
-        x: 96
+        x: 84
         y: 0
-        width: 48
-        height: 48
+        width: 42
+        height: 42
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,7 +166,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1ca966e96724346efb546fdae5c7d432
+      spriteID: b0a9ecdc0c85c4f6c871eb79fcd76c91
       internalID: 7384670932655517085
       vertices: []
       indices: 
@@ -176,10 +176,10 @@ TextureImporter:
       name: violet_3
       rect:
         serializedVersion: 2
-        x: 144
+        x: 126
         y: 0
-        width: 48
-        height: 48
+        width: 42
+        height: 42
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,7 +187,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 48d6e3fe0b485428ba64273afd37e132
+      spriteID: e708eeada91dc4f64b638c4e18244e40
       internalID: -5956214865370139221
       vertices: []
       indices: 
@@ -197,10 +197,10 @@ TextureImporter:
       name: violet_4
       rect:
         serializedVersion: 2
-        x: 192
+        x: 168
         y: 0
-        width: 48
-        height: 48
+        width: 42
+        height: 42
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -208,7 +208,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cfebaf5aed45a4a7f95224ee633ab54e
+      spriteID: 8d2acba53e51f4fb09cf2a8da0b57646
       internalID: 3834981366710094643
       vertices: []
       indices: 

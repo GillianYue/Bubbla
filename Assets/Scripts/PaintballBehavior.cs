@@ -6,8 +6,9 @@ public class PaintballBehavior : MonoBehaviour {
 	//instantiated for each paintball
 	private int size;
 	private Color color;
+    public bool needGenCol = true; //that color isn't set externally, and that calling genColorWDist is needed
 
-	public float sizeScale;
+    public float sizeScale;
     public float colliderScale; //multiplied to the original generated polygon 2d collider shape to resize
 
     private int myNumInList;
@@ -31,12 +32,6 @@ public class PaintballBehavior : MonoBehaviour {
 
 
 	void Start () {
-		/*
-		Color rdmColor = new Color (Random.Range (0.0f, 1.0f),
-			Random.Range (0.0f, 1.0f),
-			Random.Range (0.0f, 1.0f),
-			1);
-			*/
 
 		//based on the 3D RGB cube, generate colors close to given color within a 
 		//certain 3D distance based on distance formula between two 3D points
@@ -45,7 +40,7 @@ public class PaintballBehavior : MonoBehaviour {
 //		//max distance possible: full color ranges: 441.6729 (from black corner to white corner)
 //		standard = Color.cyan; //a set "base" color
 
-		setColor (genColorWDist(mxD, standard));
+		if(needGenCol) setColor (genColorWDist(mxD, standard));
 		randomizeSpriteKind ();
 
 		int rdmSize = (int) Random.Range (1.0f, 3.99f);
@@ -102,11 +97,24 @@ public class PaintballBehavior : MonoBehaviour {
 	}
 
 	public void setColor(Color c){
+        needGenCol = false; //since it's already done
 		GetComponent<SpriteRenderer> ().color = c;
 		color = c;
 	}
 
-	public Color getColor(){
+    public void setColor(float R, float G, float B)
+    {
+        if(R>1 || G>1 || B > 1) //converting from 255 to 1 color mode
+        {
+            R /= 255.0f;
+            G /= 255.0f;
+            B /= 255.0f;
+        }
+        Color c = new Color(R, G, B);
+        setColor(c); //sets needGenCol to false
+    }
+
+    public Color getColor(){
 		return color;
 	}
 
@@ -123,7 +131,6 @@ public class PaintballBehavior : MonoBehaviour {
 			Mathf.Pow((standard.r - R),2)- Mathf.Pow((standard.g - G),2));
 		float B = Random.Range ((standard.b - mxD3 > 0)? (standard.b - mxD3):0, 
 			(standard.b + mxD3 < 1)? (standard.b + mxD3):1);
-
 
 		Color rdmColor = new Color(R,G,B);
 		return rdmColor;
