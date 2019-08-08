@@ -13,6 +13,8 @@ public class CustomEvents : MonoBehaviour {
     protected GameFlow gameFlow;
     protected EnemySpawner eSpawner;
     protected PaintballSpawner pSpawner;
+    public LevelScript levelScript;
+
     //protected string[,] data;
     /**
      * identified is a List that keeps track of all existing GOs with an identifier script attached
@@ -82,6 +84,8 @@ public class CustomEvents : MonoBehaviour {
             case 11:
                 moveToInSecs(done, prms);
                 break;
+            case 99:
+
 
             default:
                 Debug.Log("custom event index not recognized: " + index);
@@ -340,7 +344,20 @@ public class CustomEvents : MonoBehaviour {
         StartCoroutine(Global.moveToInSecs(target, x, y, secs, done));
     }
 
+    /**
+     * event #99
+     * 
+     * params dependent to levelScript functions
+     * 
+     */    
+    void levelScriptEvent(bool[] done, string[] prms)
+    {
+        int index;
+        int.TryParse(prms[0], out index);
 
+        StartCoroutine(levelScript.levelScriptEvent(index, done));
+
+    }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~helper functions~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
