@@ -69,6 +69,20 @@ public class GameFlow : MonoBehaviour {
             if (currMode == Mode.DLG) disableDialogueBox(); //if transitioning from dlg to others
                 currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////
             if (currMode == Mode.DLG) enableDialogueBox(); //if the new mode is actually dlg
+            if (currMode != Mode.GAME)
+            {
+                try
+                {
+                    GameObject go = gameControl.player.transform.Find("Aim(Clone)").gameObject;
+                    if (go != null)
+                    {
+                        Destroy(go);
+                        gameControl.player.GetComponent<Animator>().SetBool("aiming", false);
+                    }
+                }
+                catch {} //supress error here
+             
+            }
             print("Mode changed to " + currMode);
         }
 

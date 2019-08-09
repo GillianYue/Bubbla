@@ -59,7 +59,7 @@ public class CustomEvents : MonoBehaviour {
      * contains a switch statement for different custom events
      * the custom events all use the params parsed and the done bool array instantiated at the start
      */
-    public IEnumerator CustomEvent(int index, string[] prms) {
+    IEnumerator CustomEvent(int index, string[] prms) {
 
         bool[] done = new bool[1];
         done[0] = false;
@@ -85,8 +85,8 @@ public class CustomEvents : MonoBehaviour {
                 moveToInSecs(done, prms);
                 break;
             case 99:
-
-
+                levelScriptEvent(done, prms);
+                break;
             default:
                 Debug.Log("custom event index not recognized: " + index);
                 break;
@@ -107,7 +107,7 @@ public class CustomEvents : MonoBehaviour {
      * optional param 3: pos Z, will use enemySpawner.spawnValues.z if param is ""
      * optional param 4: an identifier id for the enemy, will not assign identifier if param is ""
      */
-    void genEnemy(bool[] done, string[] prms)
+    public void genEnemy(bool[] done, string[] prms)
     {
         int enemyCode;
         int.TryParse(prms[0], out enemyCode);
@@ -157,7 +157,7 @@ public class CustomEvents : MonoBehaviour {
      * optional param 3: pos Z, will use enemySpawner.spawnValues.z if param is ""
      * optional param 4: an identifier id for the enemy, will not assign identifier if param is ""
      */
-    void genItem(bool[] done, string[] prms)
+    public void genItem(bool[] done, string[] prms)
     {
         int enemyCode;
         int.TryParse(prms[0], out enemyCode);
@@ -205,10 +205,11 @@ public class CustomEvents : MonoBehaviour {
      * optional param 0: r,g,b of color, will use paintballSpawner's current atmospherical color if param is ""
      * optional param 1: pos X,Y,Z, will use paintballSpawner.spawnValues if param is ""
      * optional param 2: an identifier id for the paintball, will not assign if empty    
-     * optional param 3: size     
+     * optional param 3: size  
+     * param 4: whether EnemyMover is active initially (0 is inactive, 1 active)
      *   
      */
-    void genPaintball(bool[] done, string[] prms)
+    public void genPaintball(bool[] done, string[] prms)
     {
         int r,g,b;
 
@@ -256,6 +257,14 @@ public class CustomEvents : MonoBehaviour {
         {
             setIdentifier(p, prms[2]);
         }
+
+        int enemyMoverActive;
+        int.TryParse(prms[4], out enemyMoverActive);
+        if(enemyMoverActive == 0)
+        {
+            p.GetComponent<EnemyMover>().enabled = false;
+            p.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+        }
         done[0] = true;
     }
 
@@ -264,7 +273,7 @@ public class CustomEvents : MonoBehaviour {
      * 
      * param 0: time to wait and do nothing in seconds
      */
-    IEnumerator wait(bool[] done, string[] prms)
+    public IEnumerator wait(bool[] done, string[] prms)
     {
         float secs;
         float.TryParse(prms[0], out secs);
@@ -282,7 +291,7 @@ public class CustomEvents : MonoBehaviour {
     public void changeAnimState(bool[] done, string[] prms)
     {
         //look in identified for an identifier with the right id and return its gameObject
-        GameObject target = identified.Find(i => i.id.Equals(prms[0])).gameObject;
+        GameObject target = findByIdentifier(prms[0]);
 
         int x;
         int.TryParse(prms[1], out x);
@@ -303,10 +312,10 @@ public class CustomEvents : MonoBehaviour {
      * passed to a sub function in Global, who is in charge of changing done after
      * completing the actions.
      */
-    void moveTo(bool[] done, string[] prms)
+    public void moveTo(bool[] done, string[] prms)
     {
         //look in identified for an identifier with the right id and return its gameObject
-        GameObject target = identified.Find(i => i.id.Equals(prms[0])).gameObject;
+        GameObject target = findByIdentifier(prms[0]);
 
         int x;
         int.TryParse(prms[1], out x);
@@ -328,9 +337,9 @@ public class CustomEvents : MonoBehaviour {
      * param 2: pos y of destination
      * param 3: time to complete the move in seconds   
      */
-    void moveToInSecs(bool[] done, string[] prms)
+    public void moveToInSecs(bool[] done, string[] prms)
     {
-        GameObject target = identified.Find(i => i.id.Equals(prms[0])).gameObject;
+        GameObject target = findByIdentifier(prms[0]);
 
         int x;
         int.TryParse(prms[1], out x);
@@ -347,10 +356,11 @@ public class CustomEvents : MonoBehaviour {
     /**
      * event #99
      * 
-     * params dependent to levelScript functions
-     * 
+     * param 0: index for event in levelScript
+     * other params dependent to levelScript functions
+     *
      */    
-    void levelScriptEvent(bool[] done, string[] prms)
+    public void levelScriptEvent(bool[] done, string[] prms)
     {
         int index;
         int.TryParse(prms[0], out index);
@@ -370,6 +380,25 @@ public class CustomEvents : MonoBehaviour {
         identifier i = go.AddComponent<identifier>();
         i.setID(id);
         identified.Add(i);
+    }
+
+    public GameObject findByIdentifier(string id)
+    {
+
+        int target = identified.FindIndex(i => (i.id.Equals(id)));
+        if (target == -1)
+        {
+            return null;
+        }
+        else
+        {
+            return identified[target].gameObject;
+        }
+    }
+
+    public void removeFromIdentified(identifier i)
+    {
+        identified.Remove(i);
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~helper functions~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

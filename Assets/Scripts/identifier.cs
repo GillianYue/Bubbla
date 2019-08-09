@@ -5,20 +5,20 @@ using UnityEngine;
 public class identifier : MonoBehaviour
 {
     public string id;
-    // Start is called before the first frame update
+    CustomEvents ce;
+
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        ce = GameObject.FindWithTag("CustomEvent").GetComponent<CustomEvents>();
     }
 
     public void setID(string ID)
     {
         id = ID;
+    }
+
+    void OnDestroy()
+    {
+        ce.removeFromIdentified(this);
     }
 }

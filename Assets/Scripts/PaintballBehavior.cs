@@ -6,7 +6,8 @@ public class PaintballBehavior : MonoBehaviour {
 	//instantiated for each paintball
 	private int size;
 	private Color color;
-    public bool needGenCol = true; //that color isn't set externally, and that calling genColorWDist is needed
+    public bool needGenCol = true, //that color isn't set externally, and that calling genColorWDist is needed
+    needSetSize = true;
 
     public float sizeScale;
     public float colliderScale; //multiplied to the original generated polygon 2d collider shape to resize
@@ -43,9 +44,17 @@ public class PaintballBehavior : MonoBehaviour {
 		if(needGenCol) setColor (genColorWDist(mxD, standard));
 		randomizeSpriteKind ();
 
-		int rdmSize = (int) Random.Range (1.0f, 3.99f);
         setSizeScale(1.8f);
-		setSize(rdmSize);
+        if (needSetSize)
+        {
+            int rdmSize = (int)Random.Range(1.0f, 3.99f);
+            setSize(rdmSize);
+        }
+        else
+        {
+            setSize(size);
+        }
+
 
         //resizing 2d polygon collider
         Vector2[] colliderPoints = GetComponent<PolygonCollider2D>().points;
@@ -149,7 +158,8 @@ public class PaintballBehavior : MonoBehaviour {
 	}
 		
 	public void setSize(int s){
-		size = s;
+        needSetSize = false;
+       size = s;
 		changeScale (new Vector3 
 			((size) * sizeScale,
 				(size) * sizeScale,(size) * sizeScale));

@@ -149,7 +149,7 @@ public class Global : MonoBehaviour
 
         yield return new WaitForSeconds(sec);
 
-        e.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+        e.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0); //stops the GO at dest
         done[0] = true;
     }
 

@@ -34,7 +34,7 @@ public class EnemySpawner : MonoBehaviour {
     {
         while ((int)range == 0)
         {
-            range = Global.STWfactor.x * (Global.MainCanvasWidth / 2);
+            range = Global.STWfactor.x * (Global.MainCanvasWidth / 2) - 40; //TODO do this more smartly, dependent on enemy
             spawnValues = new Vector3(0, Global.STWfactor.y * (Global.MainCanvasHeight / 2) + 200, spawnValues.z);
             yield return new WaitForSeconds(0.1f);
         }

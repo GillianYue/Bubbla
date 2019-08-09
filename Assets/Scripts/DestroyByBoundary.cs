@@ -5,7 +5,7 @@ using System.Collections;
  */
 public class DestroyByBoundary : MonoBehaviour {
 
-	void OnTriggerExit(Collider other){
+	void OnTriggerExit2D(Collider2D other){
         //if (! (other.CompareTag("Enemy") || other.CompareTag("Paintball")))
         //{
             Destroy(other.gameObject);

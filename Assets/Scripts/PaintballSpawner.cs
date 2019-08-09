@@ -23,7 +23,7 @@ public class PaintballSpawner : MonoBehaviour
     public IEnumerator setSpawnerValues()
     {
         while ((int)spawnRangeWidth == 0) {
-            spawnRangeWidth = Global.STWfactor.x * (Global.MainCanvasWidth / 2);
+            spawnRangeWidth = Global.STWfactor.x * (Global.MainCanvasWidth / 2) - 20;
             spawnValues = new Vector3(0, Global.STWfactor.y * (Global.MainCanvasHeight / 2) + 200, 0);
             yield return new WaitForSeconds(0.1f);
         }

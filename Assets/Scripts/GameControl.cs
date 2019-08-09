@@ -157,14 +157,17 @@ public class GameControl : MonoBehaviour {
                 Vector2 mouseWorld = Global.ScreenToWorld (Input.mousePosition);
 
                 Transform aimy = player.transform.Find ("Aim(Clone)");
-                aimy.position = new Vector3 (
-                    mouseWorld.x, mouseWorld.y, aimy.position.z); //put aim at pressed position
+                    if (aimy != null)
+                    {
+                        aimy.position = new Vector3(
+                            mouseWorld.x, mouseWorld.y, aimy.position.z); //put aim at pressed position
 
-                if ((Time.time - pressTime) > 0.7 &&
-                   !aimy.GetComponent<Animator> ().GetBool ("Focused")) {
-                    aimy.GetComponent<Animator> ().SetBool ("Focused", true);
-                }
-
+                        if ((Time.time - pressTime) > 0.7 &&
+                           !aimy.GetComponent<Animator>().GetBool("Focused"))
+                        {
+                            aimy.GetComponent<Animator>().SetBool("Focused", true);
+                        }
+                    }
                 //start pointin cannon
                 Vector3 mouse = Input.mousePosition;
                 Vector3 direction = mouse -
@@ -192,8 +195,9 @@ public class GameControl : MonoBehaviour {
 
 
                 if (Input.GetMouseButtonUp (0)) { //release
-
-                    Destroy (player.transform.Find ("Aim(Clone)").gameObject);
+                
+                    if(aimy != null)
+                    Destroy (aimy.gameObject);
                 
                     float pressedLength = (Time.time - pressTime);
                     pressTime = -1; //set to -1 so that we know it's not pressing
