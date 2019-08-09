@@ -50,7 +50,7 @@ public class GameControl : MonoBehaviour {
     void Start () {
         
         GameOverC.SetActive (false);
-        player.GetComponent<Player> ().enabled = false;
+        //player.GetComponent<Player> ().enabled = false;
         //gadgets are GOs like life container that are needed in game play but not in DLG mode
         foreach (GameObject g in gadgets) {
             g.SetActive (false);

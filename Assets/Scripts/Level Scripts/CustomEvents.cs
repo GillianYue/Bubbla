@@ -78,6 +78,9 @@ public class CustomEvents : MonoBehaviour {
             case 6:
                 changeAnimState(done, prms);
                 break;
+            case 7:
+                setGOActive(done, prms);
+                break;
             case 10:
                 moveTo(done, prms);
                 break;
@@ -297,6 +300,30 @@ public class CustomEvents : MonoBehaviour {
         int.TryParse(prms[1], out x);
 
         target.GetComponent<Animator>().SetInteger("State", x);
+        done[0] = true;
+    }
+
+    /**
+     * event #7
+     * 
+     * param 0: identifier
+     * param 1: set to active (1) or inactive (0)    
+     */
+    public void setGOActive(bool[] done, string[] prms)
+    {
+        GameObject target = findByIdentifier(prms[0]);
+
+        int active;
+        int.TryParse(prms[1], out active);
+
+        if(active == 0)
+        {
+            target.SetActive(false);
+        }else if(active == 1)
+        {
+            target.SetActive(true);
+        }
+
         done[0] = true;
     }
 

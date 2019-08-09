@@ -14,6 +14,7 @@ public class L1 : LevelScript
                 StartCoroutine(tutorial(done));
                 break;
             case 1:
+                StartCoroutine(bulletGaugeTutorial(done));
                 break;
             default:
                 break;
@@ -63,5 +64,17 @@ public class L1 : LevelScript
         }
         done[0] = true;
     }
+
+    IEnumerator bulletGaugeTutorial(bool[] done)
+    {
+        while (Player.bulletGauge.Count == 0) //wait for player tapping on pb
+        {
+            yield return new WaitForSeconds(0.2f);
+        }
+        gameControl.gadgets[1].SetActive(true); //show bullet gauge
+        done[0] = true;
+    }
+
+
 
 }

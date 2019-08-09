@@ -7,12 +7,17 @@ using UnityEngine;
  */
 public abstract class LevelScript : MonoBehaviour
 {
-
+    protected GameControl gameControl;
+    protected GameFlow gameFlow;
     protected CustomEvents customEvents;
 
     void Start()
     {
         customEvents = gameObject.GetComponent<CustomEvents>();
+        GameObject gameController = GameObject.FindWithTag("GameController");
+        gameControl = gameController.GetComponent<GameControl>();
+        gameFlow = gameController.GetComponent<GameFlow>();
+
     }
 
     void Update()
