@@ -13,6 +13,7 @@ public class PaintballSpawner : MonoBehaviour
     public GameObject paintBall, potion; //prefabs to be cloned in game
     public Vector3 spawnValues;
     public GameObject Ballz;
+    public bool pbSpawnSwitch; //when start flip to true, elsewhere will set it to false to end pb Spawn
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +31,7 @@ public class PaintballSpawner : MonoBehaviour
 
     }
 
-    public void StartSpawn()
+    public void StartSpawn(bool[] esDone)
     {
 
 
@@ -38,14 +39,15 @@ public class PaintballSpawner : MonoBehaviour
 
         //int[] m: types of monsters for each of the waves; the EXACT SAME SIZE as w[]
 
-        StartCoroutine(SpawnPaintballs());
+        StartCoroutine(SpawnPaintballs(esDone));
 
     }
 
-    public IEnumerator SpawnPaintballs()
+    public IEnumerator SpawnPaintballs(bool[] esDone) //esDone is always specific to this one IEnumerator process
     {
+
         yield return new WaitForSeconds(startWait);
-        while (true)
+        while (!esDone[0])
         {
             if (Random.Range(0, 99.99f) > 5)
             {
@@ -53,7 +55,6 @@ public class PaintballSpawner : MonoBehaviour
                 genPaintball(Random.Range(spawnValues.x - spawnRangeWidth,
                         spawnValues.x + spawnRangeWidth),
                     spawnValues.y, spawnValues.z);
-
                 yield return new WaitForSeconds(pbSpawnWait);
 
             }
