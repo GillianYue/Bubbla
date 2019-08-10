@@ -81,6 +81,9 @@ public class CustomEvents : MonoBehaviour {
             case 7:
                 setGOActive(done, prms);
                 break;
+            case 8:
+                setScriptBoolean(done, prms);
+                break;
             case 10:
                 moveTo(done, prms);
                 break;
@@ -322,6 +325,34 @@ public class CustomEvents : MonoBehaviour {
         }else if(active == 1)
         {
             target.SetActive(true);
+        }
+
+        done[0] = true;
+    }
+
+    /**
+     * event #8
+     * 
+     * param 0: index of which boolean to set (hard-coded in script, here)
+     *      - 0: setting GameControl.   
+     * 
+     * param 1: to true (1) or false (0)    
+     */
+     public void setScriptBoolean(bool[] done, string[] prms)
+    {
+        int index;
+        int.TryParse(prms[0], out index);
+
+        int b;
+        int.TryParse(prms[1], out b);
+
+        switch (index)
+        {
+            case 0:
+                gameControl.ckTouch = (b == 1) ? true : false;
+                break;
+            default:
+                break;
         }
 
         done[0] = true;

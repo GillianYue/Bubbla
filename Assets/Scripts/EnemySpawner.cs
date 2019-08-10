@@ -99,7 +99,8 @@ public class EnemySpawner : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }
         //done
-        gf.processCurrentLine(); //move on to the line after GAME
+        Debug.Log("current enemy wave done");
+        gf.incrementPointer(); //move on to the line after GAME
     }
 
 

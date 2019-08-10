@@ -228,7 +228,7 @@ public class GameFlow : MonoBehaviour {
                     int.TryParse(rgb[0], out r);
                     int.TryParse(rgb[1], out g);
                     int.TryParse(rgb[2], out b);
-                    PaintballBehavior.standard = new Color(r, g, b);
+                    PaintballBehavior.standard = new Color(r, g, b); 
                     PaintballBehavior.setMaxD(mx_D);
                     int[] wv, em;
                     wv = System.Array.ConvertAll<string, int>(waves, int.Parse);

@@ -45,6 +45,7 @@ public class GameControl : MonoBehaviour {
     public GameObject fixedBG;
 
     private float pressTime=-1;
+    public bool ckTouch = true; //if false, won't check for user's touch input in GAME
 
     // Use this for initialization
     void Start () {
@@ -93,6 +94,7 @@ public class GameControl : MonoBehaviour {
             break;
 
         case GameFlow.Mode.GAME:
+                if(ckTouch)
             if (Input.GetMouseButtonDown (0)) {
                 foreach (Transform child in Ballz.transform) {//
                     Vector2 item = Global.WorldToScreen(child.GetComponent<
@@ -289,7 +291,7 @@ public class GameControl : MonoBehaviour {
             if (dif > 0) {//needs to increase hearts sprites
             for (int c = 0; c < dif; c++) {
                 Vector3 pos = Hs_Holder.transform.position + 
-                    new Vector3 (Random.Range (0.2f, 1.0f), 0, 0);
+                    new Vector3 (Random.Range (-20f, 20f), 30, 0);
                 //picks a random heart prefab out of the hearts prefab group
                 GameObject tmpH = Instantiate (hearts [(int)(Random.Range (0.0f, 3.99f))], 
                                      pos, hearts [0].transform.rotation) as GameObject;
