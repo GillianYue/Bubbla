@@ -9,9 +9,10 @@ public class GameFlow : MonoBehaviour {
     public GameControl gameControl;
     public CustomEvents customEvents;
 
+    //row 0 are names of the categories
     private int pointer = 1; //indicates which line of script the game is at
     private bool lineDone = true, pointerCheck = true, skipping = false;
-    private bool[] loadDone;
+    private bool[] loadDone;  //this bool is only for the level progress file, not everything
     public bool canSkip;
 
     public Text NAME, DIALOGUE;
@@ -35,9 +36,7 @@ public class GameFlow : MonoBehaviour {
     void Start() {
         loadDone = new bool[1];
         StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData));
-        pointer = 1; //row 0 are names of the categories
-                     //	character = gameObject.transform.Find ("Background").Find (
-                     //		"SpriteBox").GetChild (0).gameObject;
+
     }
 
 
@@ -45,8 +44,8 @@ public class GameFlow : MonoBehaviour {
         return (currMode.Equals(Mode.END)); //the "big" done
     }
 
-    public bool checkLoadDone() { //check if csv is loaded and dialogue is ready tb displayed
-        return loadDone[0];
+    public bool checkLoadDone() { //check if all loaders are ready for game
+        return (loadDone[0] && enemyLoader.enemyLoaderDone && characterLoader.characterLoaderDone);
     }
 
     public bool checkCurrentLineDone() {
@@ -95,15 +94,28 @@ public class GameFlow : MonoBehaviour {
                 lineDone = false; //dialogue is shown one char at a time
                 NAME.text = data[1, pointer];
 
-                if (!prevChaName.Equals(NAME.text))
+                if (!prevChaName.Equals(NAME.text)) //if equal, no need to change animator
                 {
                     int index = characterLoader.getIndex(NAME.text);
-                    character.GetComponent<Animator>().runtimeAnimatorController = 
+                    if(index == -1) //not found, check for special param instructing which Animator to use
+                    {
+                        int.TryParse(data[7, pointer], out index); //if success, assign animator accordingly
+                    }
+
+                    if (index == -1) //not assigned, no animator
+                    {
+                        bgBox.color = new Color(0, 0, 0); //black 
+                    }
+                    else
+                    {
+                        character.GetComponent<Animator>().runtimeAnimatorController =
                         characterLoader.getAnimatorByIndex(index);
+                        Color c = bgBox.color;
+                        c = characterLoader.getColorByIndex(index);
+                        bgBox.color = new Color(c.r / 255.0f, c.g / 255.0f, c.b / 255.0f);
+                    }
+
                     prevChaName = NAME.text;
-                    Color c = bgBox.color;
-                    c = characterLoader.getColorByIndex(index);
-                    bgBox.color = new Color(c.r/255.0f, c.g/255.0f, c.b/255.0f);
                 }
 
                 int SpriteNum;
@@ -447,6 +459,11 @@ public class GameFlow : MonoBehaviour {
     public void incrementPointer()
     {
         pointer++; 
+    }
+
+    public void setPointer(int p)
+    {
+        pointer = p;
     }
 
     public int getPointer() {
