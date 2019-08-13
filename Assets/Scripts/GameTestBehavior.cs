@@ -27,6 +27,11 @@ public class GameTestBehavior : MonoBehaviour
                 Time.timeScale = 5.0f;
             }
 
+            if (Input.GetKeyDown("enter")) 
+            {
+                gf.incrementPointer(); //to skip lines when necessary
+            }
+
             if (Input.GetKeyUp("space")) //release to go back to normal time
             {
                 Time.timeScale = 1.0f;

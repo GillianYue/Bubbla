@@ -326,7 +326,6 @@ public class CustomEvents : MonoBehaviour {
         {
             target.SetActive(true);
         }
-
         done[0] = true;
     }
 
