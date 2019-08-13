@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class L1 : LevelScript
 {
+    public PirateShip ps;
 
+    new void Start()
+    {
+        base.Start();
+    }
 
     public override IEnumerator levelScriptEvent(int code, bool[] done)
     {
@@ -16,6 +21,9 @@ public class L1 : LevelScript
             case 1:
                 StartCoroutine(bulletGaugeTutorial(done));
                 break;
+            case 2:
+                pirateShipFireCannon(done);
+                break;
             default:
                 break;
 
@@ -24,6 +32,12 @@ public class L1 : LevelScript
         yield return new WaitUntil(() => done[0]);
     }
 
+    void pirateShipFireCannon(bool[] done)
+    {
+        if(ps == null)
+        ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();
+        ps.fireCannonball(done);
+    }
 
     /**
      * enemy id is tutorial

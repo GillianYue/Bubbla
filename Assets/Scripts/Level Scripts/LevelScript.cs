@@ -11,9 +11,9 @@ public abstract class LevelScript : MonoBehaviour
     protected GameFlow gameFlow;
     protected CustomEvents customEvents;
 
-    void Start()
+    public void Start()
     {
-        customEvents = gameObject.GetComponent<CustomEvents>();
+        customEvents = GameObject.FindWithTag("CustomEvent").GetComponent<CustomEvents>();
         GameObject gameController = GameObject.FindWithTag("GameController");
         gameControl = gameController.GetComponent<GameControl>();
         gameFlow = gameController.GetComponent<GameFlow>();
