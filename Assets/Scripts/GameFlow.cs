@@ -13,7 +13,7 @@ public class GameFlow : MonoBehaviour {
     private int pointer = 1; //indicates which line of script the game is at
     private bool lineDone = true, pointerCheck = true, skipping = false;
     private bool[] loadDone;  //this bool is only for the level progress file, not everything
-    public bool canSkip;
+    public bool canSkip, canMovePointer = true; //canMovePointer MUST be set to true on start
 
     public Text NAME, DIALOGUE;
     public GameObject character, dlgBox; //character is current character speaking
@@ -151,6 +151,17 @@ public class GameFlow : MonoBehaviour {
                 //end parsing special param, start adding chars 
 
                 int wordCount = 1; int[] paramPointer = new int[3]; //paramPointer[2] would be pointer for special #2
+                if(special == 3)
+                {
+                    canMovePointer = false;
+                    //chains a WaitForSecond with <what should be done afterwards>
+                    StartCoroutine(Global.Chain(this, Global.WaitForSeconds(PARAM1[0]), Global.Do(() =>
+                    {
+                        canMovePointer = true;
+                        incrementPointer();
+                    })));
+                }
+
                 for (int s = 0; s < store.Length; s++) {
                     for (int n = 0; n < store[s].Length; n++) {
                         //tagging is for tags in rich text, not a part of the special effects system
@@ -448,7 +459,7 @@ public class GameFlow : MonoBehaviour {
     //this should only be used for dialogues, not in other modes
     //in other modes, incrementPointer, which is instantaneous, should be used
     public IEnumerator movePointer() {
-        if (lineDone && pointerCheck) {
+        if (canMovePointer && lineDone && pointerCheck) {
             pointerCheck = false;
             pointer++;
             yield return new WaitForSeconds(0.2f);
@@ -458,6 +469,7 @@ public class GameFlow : MonoBehaviour {
 
     public void incrementPointer()
     {
+        if (canMovePointer)
         pointer++; 
     }
 

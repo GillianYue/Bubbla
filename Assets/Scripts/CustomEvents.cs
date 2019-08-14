@@ -333,7 +333,8 @@ public class CustomEvents : MonoBehaviour {
      * event #8
      * 
      * param 0: index of which boolean to set (hard-coded in script, here)
-     *      - 0: setting GameControl.   
+     *      - 0: setting GameControl.ckTouch
+     *      - 1: gameFlow.canMovePointer
      * 
      * param 1: to true (1) or false (0)    
      */
@@ -349,6 +350,9 @@ public class CustomEvents : MonoBehaviour {
         {
             case 0:
                 gameControl.ckTouch = (b == 1) ? true : false;
+                break;
+            case 1:
+                gameFlow.canMovePointer = (b == 1) ? true : false;
                 break;
             default:
                 break;

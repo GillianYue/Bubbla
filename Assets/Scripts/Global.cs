@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System;
 using System.IO;
 using System.Collections;
 using UnityEngine.SceneManagement;
@@ -361,6 +362,49 @@ public class Global : MonoBehaviour
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~UI logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~Coroutine Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    /**
+      * Usage: StartCoroutine(Global.Chain(...))
+      * For example:
+      *     StartCoroutine(Global.Chain(
+      *         Global.Do(() => Debug.Log("A")),
+      *         Global.WaitForSeconds(2),
+      *         Global.Do(() => Debug.Log("B"))));
+      */
+    public static IEnumerator Chain(MonoBehaviour g, params IEnumerator[] actions)
+    {
+        foreach (IEnumerator action in actions)
+        {
+            yield return g.StartCoroutine(action);
+        }
+    }
+
+    /**
+     * Usage: StartCoroutine(Global.DelaySeconds(action, delay))
+     * For example:
+     *     StartCoroutine(Global.DelaySeconds(
+     *         () => DebugUtils.Log("2 seconds past"),
+     *         2);
+     */
+    public static IEnumerator DelaySeconds(Action action, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        action();
+    }
+
+    public static IEnumerator WaitForSeconds(float time)
+    {
+        yield return new WaitForSeconds(time);
+    }
+
+    public static IEnumerator Do(Action action)
+    {
+        action();
+        yield return 0;
+    }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~Coroutine Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 }
 
