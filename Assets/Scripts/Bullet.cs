@@ -8,14 +8,17 @@ public class Bullet : MonoBehaviour {
 	public GameObject explosion;
     public int damage = 1;
 
-	void Start () {
-		GameObject t = trail;
-		t = Instantiate (trail, gameObject.transform.position,
-			trail.transform.rotation) as GameObject;
-		t.GetComponent<TrailFollowBall> ().setMyBullet (gameObject);
+	public void Start () {
+        if (trail != null)
+        {
+            GameObject t = trail;
+            t = Instantiate(trail, gameObject.transform.position,
+                trail.transform.rotation) as GameObject;
+            t.GetComponent<TrailFollowBall>().setMyBullet(gameObject);
+        }
 	}
 
-	void Update () {
+	public void Update () {
 		//acceleration
 		GetComponent<Rigidbody2D> ().velocity += new Vector2 
 			(GetComponent<Rigidbody2D> ().velocity.x * accl,  

@@ -16,7 +16,7 @@ public class PirateShip : BossBehavior
         attack = 3; //cannonball damage
         player = gameControl.player.GetComponent<Player>();
 
-        projectile = transform.GetChild(0).gameObject;
+        projectile = Resources.Load("Projectile") as GameObject;
     }
 
     // Update is called once per frame
@@ -33,8 +33,7 @@ public class PirateShip : BossBehavior
     {
         //start pointin cannon
         Vector3 ship = Global.WorldToScreen(gameObject.transform.position);
-        Vector3 direction = ship -
-                           Camera.main.WorldToScreenPoint(player.transform.position);
+        Vector3 direction = Camera.main.WorldToScreenPoint(player.transform.position) - ship;
         float tan = direction.x / direction.y;
         float angle = Mathf.Atan(tan);
         //*************THE ANGLE IS HERE*************
