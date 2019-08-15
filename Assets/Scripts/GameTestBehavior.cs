@@ -7,6 +7,7 @@ public class GameTestBehavior : MonoBehaviour
     public int startLine; //which line for levelDLG to start
     public GameFlow gf;
     public bool test;
+    public int speedUpRate;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +25,7 @@ public class GameTestBehavior : MonoBehaviour
         {
             if (Input.GetKeyDown("space")) //space for speeding time up
             {
-                Time.timeScale = 5.0f;
+                Time.timeScale = 1.0f * speedUpRate;
             }
 
             if (Input.GetKeyDown("enter")) 

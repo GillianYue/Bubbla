@@ -76,10 +76,10 @@ public class CustomEvents : MonoBehaviour {
                 StartCoroutine(wait(done, prms));
                 break;
             case 6:
-                changeAnimState(done, prms);
+                StartCoroutine(changeAnimState(done, prms));
                 break;
             case 7:
-                setGOActive(done, prms);
+                StartCoroutine(setGOActive(done, prms));
                 break;
             case 8:
                 setScriptBoolean(done, prms);
@@ -293,16 +293,53 @@ public class CustomEvents : MonoBehaviour {
      * 
      * param 0: identifier of the gameObject
      * param 1: the integer to set "State" to
+     * optional param 2: index of transition effects
+     *      - 0: fade in (fade out of prev bg, change "State", fade in)
+     *     
      */
-    public void changeAnimState(bool[] done, string[] prms)
+    public IEnumerator changeAnimState(bool[] done, string[] prms)
     {
         //look in identified for an identifier with the right id and return its gameObject
         GameObject target = findByIdentifier(prms[0]);
+        Animator anim = target.GetComponent<Animator>();
+        SpriteRenderer spr = target.GetComponent<SpriteRenderer>();
+        Color orig = spr.color;
+        float origA = orig.a;
 
         int x;
         int.TryParse(prms[1], out x);
 
-        target.GetComponent<Animator>().SetInteger("State", x);
+        int effect = -1;
+        if (!prms[2].Equals(""))
+        {
+            int.TryParse(prms[2], out effect);
+        }
+
+        if (effect == 0)
+        {
+            for (float o = origA; o > 0.5f; o -= 0.3f) //fade out of current bg
+            {
+                spr.color = new Color(orig.r, orig.g, orig.b, o);
+                yield return new WaitForSeconds(0.1f);
+            }
+
+        }
+
+        anim.SetInteger("State", x);
+
+        orig = spr.color;
+        if (effect == 0)
+        {
+            for (float o = 0.5f; o <= origA; o += 0.2f) //fade in of new bg
+            {
+                spr.color = new Color(orig.r, orig.g, orig.b, o);
+                yield return new WaitForSeconds(0.1f);
+            }
+            if (Mathf.Abs(spr.color.a - origA) > 0.001f) //if unequal
+            {
+                spr.color = new Color(orig.r, orig.g, orig.b, origA);
+            }
+        }
         done[0] = true;
     }
 
@@ -311,21 +348,66 @@ public class CustomEvents : MonoBehaviour {
      * 
      * param 0: identifier
      * param 1: set to active (1) or inactive (0)    
+     * optional param 2: effect
+     *      - 0: fade in/out, depending on setting to active or inactive
      */
-    public void setGOActive(bool[] done, string[] prms)
+    public IEnumerator setGOActive(bool[] done, string[] prms)
     {
         GameObject target = findByIdentifier(prms[0]);
 
         int active;
         int.TryParse(prms[1], out active);
 
-        if(active == 0)
+        SpriteRenderer spr; int effect = -1; float origA = 1; Color orig = Color.black;
+        if ((spr = target.GetComponent<SpriteRenderer>()) != null)
+        {
+            //means this GO has a spriteRenderer, ok
+            orig = spr.color;
+            origA = orig.a;
+
+            if (!prms[2].Equals("")) //only parse effect when there is a spriteRenderer
+            {
+                int.TryParse(prms[2], out effect);
+            }
+
+            if (effect == 0)
+            {
+                if (active == 0)
+                {
+                    for (float o = origA; o > 0.3f; o -= 0.15f) //fade out of sprite
+                    {
+                        spr.color = new Color(orig.r, orig.g, orig.b, o);
+                        yield return new WaitForSeconds(0.2f);
+                    }
+                }
+            }
+        } //this all wouldn't happen if a spriterenderer doesn't exist
+
+
+        //normal procedure 
+        if (active == 0)
         {
             target.SetActive(false);
-        }else if(active == 1)
+        }
+        else if (active == 1)
         {
             target.SetActive(true);
         }
+
+        //continue from prev spr effect; fade in only happens after GO is set to active
+        if (effect == 0)
+        {
+            for (float o = 0; o <= origA; o += 0.15f) //fade in of sprite
+            {
+                spr.color = new Color(orig.r, orig.g, orig.b, o);
+                yield return new WaitForSeconds(0.2f);
+            }
+            if (Mathf.Abs(spr.color.a - origA) > 0.001f) //if unequal
+            {
+                spr.color = new Color(orig.r, orig.g, orig.b, origA);
+            }
+        }
+
         done[0] = true;
     }
 

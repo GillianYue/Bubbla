@@ -184,7 +184,6 @@ public class Player : MonoBehaviour
 
 			float d = Global.find2ColorDist (bulletGauge [bulletGauge.Count - 1],
 				          bulletGauge [bulletGauge.Count - 2]);
-			print ("dist bt 2:"+d);
 		//actual shooting
 			if (d<3) { //if colors r actually close enough
 			Vector3 pos = transform.position;
@@ -198,7 +197,7 @@ public class Player : MonoBehaviour
 				BulletObj.transform.rotation) as GameObject;
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
-			bullet.GetComponent<Rigidbody> ().
+			bullet.GetComponent<Rigidbody2D> ().
 			velocity = new Vector3 (((direction.y>0)? 1:-1) * Mathf.Sin(angle)*bulletSpeed, 0,
 				((direction.y>0)? 1:-1) * Mathf.Cos(angle)*bulletSpeed);
 
