@@ -69,7 +69,7 @@ public class TitleBGanim : MonoBehaviour {
 
 	IEnumerator startTitleScreenAnim(){
       
-		while (!dlg.checkLoadDone()) {//wait till csv's loaded
+		while (!dlg.checkTitleLoadDone()) {//wait till csv's loaded
             yield return null;
 		}
         //gameFlow dlg has access to the csv containing scripts of dialogue

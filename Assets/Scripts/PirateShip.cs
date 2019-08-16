@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PirateShip : BossBehavior
 {
     private Player player;
     public GameObject projectile;
     public float cannonSpeed;
+    public Text lifeText;
 
-    // Start is called before the first frame update
+
     new void Start()
     {
         base.Start();
@@ -19,10 +21,11 @@ public class PirateShip : BossBehavior
         projectile = Resources.Load("Projectile") as GameObject;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        lifeText.text = "boss life: " + life;
+
+
     }
 
     /**

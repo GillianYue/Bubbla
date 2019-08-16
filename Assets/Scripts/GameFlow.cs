@@ -48,6 +48,11 @@ public class GameFlow : MonoBehaviour {
         return (loadDone[0] && enemyLoader.enemyLoaderDone && characterLoader.characterLoaderDone);
     }
 
+    public bool checkTitleLoadDone()
+    { //check if title loaders are ready for game
+        return (loadDone[0]);
+    }
+
     public bool checkCurrentLineDone() {
         return lineDone;
     }
@@ -504,7 +509,7 @@ public class GameFlow : MonoBehaviour {
         Animator a = c.GetComponent<Animator>();
 
         a.SetFloat("State", n);
-        animIndicator.text = n.ToString();
+      //  animIndicator.text = n.ToString();
 
     }
 
