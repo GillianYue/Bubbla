@@ -24,12 +24,26 @@ public class L1 : LevelScript
             case 2:
                 pirateShipFireCannon(done);
                 break;
+            case 3:
+                StartCoroutine(bossFight());
+                break;
             default:
                 break;
 
         }
 
         yield return new WaitUntil(() => done[0]);
+    }
+
+    IEnumerator bossFight()
+    {
+        Debug.Log("starting boss fight");
+        bool[] bossFightEnd = new bool[1];
+
+        StartCoroutine(gameControl.pSpawner.SpawnPaintballs(bossFightEnd)); //will end when boss fight ends
+
+
+        yield return new WaitForSeconds(5f);
     }
 
     void pirateShipFireCannon(bool[] done)

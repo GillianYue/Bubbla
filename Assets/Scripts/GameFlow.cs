@@ -16,6 +16,7 @@ public class GameFlow : MonoBehaviour {
     public bool canSkip, canMovePointer = true; //canMovePointer MUST be set to true on start
 
     public Text NAME, DIALOGUE;
+    public Font ArcadeClassic, Invasion2000;
     public GameObject character, dlgBox; //character is current character speaking
     public Image bgBox;
 
@@ -36,6 +37,8 @@ public class GameFlow : MonoBehaviour {
     void Start() {
         loadDone = new bool[1];
         StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData));
+
+        if(ArcadeClassic != null) NAME.font = ArcadeClassic;
 
     }
 
@@ -104,7 +107,12 @@ public class GameFlow : MonoBehaviour {
                     int index = characterLoader.getIndex(NAME.text);
                     if(index == -1) //not found, check for special param instructing which Animator to use
                     {
+                        if (Invasion2000 != null) NAME.font = Invasion2000;
                         int.TryParse(data[7, pointer], out index); //if success, assign animator accordingly
+                    }
+                    else
+                    {
+                        if (ArcadeClassic != null) NAME.font = ArcadeClassic;
                     }
 
                     if (index == -1) //not assigned, no animator
