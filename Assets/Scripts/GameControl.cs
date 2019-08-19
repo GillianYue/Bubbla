@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 
 /**
@@ -33,7 +34,8 @@ public class GameControl : MonoBehaviour {
     public GameObject Hs_Holder, Ballz; //ballz is the empty parent GO holding all paintballs
     //Hs_holder likewise for hearts
 
-    public GameObject[] hearts, gadgets; //gadgets being hearts_container, bulletGauge, etc.
+    public GameObject[] hearts, gadgets, icons; //gadgets being hearts_container, bulletGauge, etc.
+    //icons being interactive UI that if pressed, should avoid any gameplay logic being carried out
     public GameObject HeartVFX, aim;
     public GameObject player;
     public GameObject GameOverC;
@@ -140,6 +142,23 @@ public class GameControl : MonoBehaviour {
                         return;
                     }
                 }//end check paintballs
+
+                foreach (GameObject i in icons)
+                        {
+                            Vector2 icon = Global.WorldToScreen(i.GetComponent<
+                            RectTransform>().position); //screen
+
+                            if (Global.touching(new Vector2(Input.mousePosition.x,
+                                Input.mousePosition.y), //screen 
+                          icon, //screen
+                    i.GetComponent<Image>().sprite.rect.width * Global.WTSfactor.x * i.transform.localScale.x,
+                    i.GetComponent<Image>().sprite.rect.height * Global.WTSfactor.y * i.transform.localScale.y
+                    ))
+                            {
+                                //if code reaches here, means that one icon is pressed
+                                return; //prevent aim from being created
+                            }
+                        }
 
                 //if code reaches here, treat as starting to press down, as opposed to a light tap on
                 //paintball/potion
@@ -308,5 +327,23 @@ public class GameControl : MonoBehaviour {
         }
                 
             }
+
+    public void pauseGame()
+    {
+        Time.timeScale = 0.0f; //stop gameplay
+        foreach (BGMover m in backgrounds)
+        {
+            m.stopBGScroll();
+        }
+    }
+
+    public void resumeGame()
+    {
+        Time.timeScale = 1.0f; //resume gameplay
+        foreach (BGMover m in backgrounds)
+        {
+            m.resumeBGScroll();
+        }
+    }
 
 }
