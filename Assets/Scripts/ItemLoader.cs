@@ -8,26 +8,26 @@ public class ItemLoader : MonoBehaviour
     public TextAsset itemCsv;
     private string[,] data; //double array that stores all info 
 
-    int[] itemCode; //this one's kinda stupid, cuz enemyCode[0] = 0, enemyCode[1] = 1...
+    int[] itemCode; 
     string[] itemName;
-    int[] life, attack; //TODO
+    string[] itemDescriptions;
     float[] sizeScale, colliderScale;
     string[] s0_anim, s1_anim, s2_anim; //path to animations
     AnimationClip[] S0_ANIM, S1_ANIM, S2_ANIM;
-    int[] movement;
+    int[] movement; //way of moving
 
-    GameObject enemyMold;
+    GameObject itemMold;
 
-    public bool enemyLoaderDone; //this will be set to true once EnemyLoader is ready for usage
+    public bool itemLoaderDone; //this will be set to true once EnemyLoader is ready for usage
 
 
     void Start()
     {
         loadDone = new bool[1];
 
-  //      loadItemMold(); //ready the mold prefab(s)
-//        StartCoroutine(LoadScene.processCSV(loadDone, enemyCsv, setData)); //processCSV will call setData
-  //      StartCoroutine(parseEnemyData()); //data will be parsed into local type arrays for speedy data retrieval
+        loadItemMold(); //ready the mold prefab(s)
+        StartCoroutine(LoadScene.processCSV(loadDone, itemCsv, setData)); //processCSV will call setData
+        StartCoroutine(parseItemData()); //data will be parsed into local type arrays for speedy data retrieval
 
     }
 
@@ -75,20 +75,20 @@ public class ItemLoader : MonoBehaviour
         return e;
     }
 
-    void loadEnemyMold()
+    void loadItemMold()
     {
-        enemyMold = Resources.Load("EnemyMold") as GameObject;
-        if (enemyMold == null) Debug.LogError("load EnemyMold failed");
+        itemMold = Resources.Load("ItemMold") as GameObject;
+        if (itemMold == null) Debug.LogError("load ItemMold failed");
     }
 
-    IEnumerator parseEnemyData()
+    IEnumerator parseItemData()
     {
         yield return new WaitUntil(() => loadDone[0]); //this would mean that data is ready to be parsed
 
         int numRows = data.GetLength(1);
-   //    enemyCode = new int[numRows - 1]; //num rows, int[] is for the entire column
-   //    enemyName = new string[numRows - 1];
-        life = new int[numRows - 1]; attack = new int[numRows - 1];
+       itemCode = new int[numRows - 1]; //num rows, int[] is for the entire column
+       itemName = new string[numRows - 1];
+        itemDescriptions = new string[numRows - 1];
         sizeScale = new float[numRows - 1]; colliderScale = new float[numRows - 1];
         s0_anim = new string[numRows - 1]; s1_anim = new string[numRows - 1]; s2_anim = new string[numRows - 1];
         S0_ANIM = new AnimationClip[numRows - 1]; S1_ANIM = new AnimationClip[numRows - 1]; S2_ANIM = new AnimationClip[numRows - 1];
@@ -97,15 +97,15 @@ public class ItemLoader : MonoBehaviour
         //skip row 0 because those are all descriptors
         for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
         {
-        //    enemyName[r - 1] = data[1, r]; //r-1 is for such that enemyName[enemyCode] matches that with the data
-            int.TryParse(data[2, r], out life[r - 1]);
-            int.TryParse(data[3, r], out attack[r - 1]);
-            float.TryParse(data[4, r], out sizeScale[r - 1]);
-            float.TryParse(data[5, r], out colliderScale[r - 1]);
-            s0_anim[r - 1] = data[6, r];
-            s1_anim[r - 1] = data[7, r];
-            s2_anim[r - 1] = data[8, r];
-            int.TryParse(data[9, r], out movement[r - 1]);
+         
+        itemName[r - 1] = data[1, r];
+            itemDescriptions[r - 1] = data[2, r];
+            float.TryParse(data[3, r], out sizeScale[r - 1]);
+            float.TryParse(data[4, r], out colliderScale[r - 1]);
+            s0_anim[r - 1] = data[5, r];
+            s1_anim[r - 1] = data[6, r];
+            s2_anim[r - 1] = data[7, r];
+            int.TryParse(data[8, r], out movement[r - 1]);
         }
 
         loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM);
@@ -113,8 +113,8 @@ public class ItemLoader : MonoBehaviour
             return (S0_ANIM[S0_ANIM.Length - 1] != null);
         }); //anim loaded, theoretically everything all set
 
-        enemyLoaderDone = true;
-        Debug.Log("EnemyLoader ready");
+        itemLoaderDone = true;
+        Debug.Log("ItemLoader ready");
     }
 
     public void setData(string[,] d)
@@ -126,11 +126,11 @@ public class ItemLoader : MonoBehaviour
     {
 
         //load the animation clips into the arrays
-        for (int eCode = 0; eCode < s0.GetLength(0); eCode++)
+        for (int iCode = 0; iCode < s0.GetLength(0); iCode++)
         {
-            if (!s0_anim[eCode].Equals(""))
+            if (!s0_anim[iCode].Equals(""))
             {
-                var tmpAnim0 = Resources.Load("Animation/" + s0_anim[eCode]) as AnimationClip;
+                var tmpAnim0 = Resources.Load("Animation/" + s0_anim[iCode]) as AnimationClip;
 
                 if (tmpAnim0 == null)
                 {
@@ -138,14 +138,14 @@ public class ItemLoader : MonoBehaviour
                 }
                 else
                 {
-                    s0[eCode] = tmpAnim0;
+                    s0[iCode] = tmpAnim0;
                 }
             }
 
 
-            if (!s1_anim[eCode].Equals(""))
+            if (!s1_anim[iCode].Equals(""))
             {
-                var tmpAnim1 = Resources.Load("Animation/" + s1_anim[eCode]) as AnimationClip;
+                var tmpAnim1 = Resources.Load("Animation/" + s1_anim[iCode]) as AnimationClip;
 
                 if (tmpAnim1 == null)
                 {
@@ -153,13 +153,13 @@ public class ItemLoader : MonoBehaviour
                 }
                 else
                 {
-                    s1[eCode] = tmpAnim1;
+                    s1[iCode] = tmpAnim1;
                 }
             }
 
-            if (!s2_anim[eCode].Equals(""))
+            if (!s2_anim[iCode].Equals(""))
             {
-                var tmpAnim2 = Resources.Load("Animation/" + s2_anim[eCode]) as AnimationClip;
+                var tmpAnim2 = Resources.Load("Animation/" + s2_anim[iCode]) as AnimationClip;
 
                 if (tmpAnim2 == null)
                 {
@@ -167,7 +167,7 @@ public class ItemLoader : MonoBehaviour
                 }
                 else
                 {
-                    s2[eCode] = tmpAnim2;
+                    s2[iCode] = tmpAnim2;
                 }
             }
         }

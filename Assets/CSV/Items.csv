@@ -1,3 +1,3 @@
-ITEM_CODE,ITEM_NAME
-0,
-1,
+ITEM_CODE,ITEM_NAME,ITEM_DESCRIPTION,SIZE_SCALE,COLLIDER_SCALE,S0_ANIM,S1_ANIM,S2_ANIM,MOVEMENT
+0,TRUSTY CANNON,Assigned weapon. Can shoot bullets at enemies.,1,1,,,,
+1,apple,crunchy and juicy,1,1,,,,

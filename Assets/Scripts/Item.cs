@@ -4,9 +4,11 @@ using System.Collections;
 /**
  * was originally potion behavior, but will be modified into a general item behavior class.
  */
-public class ItemBehav : MonoBehaviour {
+public class Item : MonoBehaviour {
 
 		private Color color;
+        public string itemName;
+        public string description;
 		public GameObject explosion;
 		public GameObject absorption;
 		private int size;

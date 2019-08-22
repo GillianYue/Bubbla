@@ -6,11 +6,21 @@ public class Backpack : MonoBehaviour
 {
     public GameObject backpack;
     public GameControl gameControl;
+    public int numItems;
+    public int[] itemList; //array indicating items belonging to a user via itemIndex
+    public int[] itemCount; //corresponds to the above array indicating num of item owned of that itemIndex
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
+        //for testing purposes
+        numItems = 3;
+        itemList = new int[numItems];
+        itemCount = new int[numItems];
+
+
+
     }
 
     // Update is called once per frame
