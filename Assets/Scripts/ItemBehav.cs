@@ -3,8 +3,10 @@ using System.Collections;
 
 /**
  * was originally potion behavior, but will be modified into a general item behavior class.
+ * 
+ * Note: this class is for game-items (mostly animated?), not for actual items (sprite, description, etc)
  */
-public class Item : MonoBehaviour {
+public class ItemBehav : MonoBehaviour {
 
 		private Color color;
         public string itemName;
@@ -91,6 +93,29 @@ public class Item : MonoBehaviour {
 			transform.localScale = vector;
 		}
 
-	}
+    public void setSizeScale(float sScale)
+    {
+        sizeScale = sScale;
+
+        if (Global.scaleRatio != 0)
+        {
+            transform.localScale = new Vector3(sizeScale * Global.scaleRatio,
+                sizeScale * Global.scaleRatio, sizeScale * Global.scaleRatio);
+        }
+    }
+
+    public void setColliderScale(float cScale)
+    {
+        Vector2[] colliderPoints = GetComponent<PolygonCollider2D>().points;
+        Vector2[] scaledPoints = new Vector2[colliderPoints.Length];
+        for (int p = 0; p < colliderPoints.Length; p++)
+        {
+            Vector2 np = GetComponent<PolygonCollider2D>().points[p] * colliderScale;
+            scaledPoints[p] = np;
+        }
+        GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
+    }
+
+}
 
 

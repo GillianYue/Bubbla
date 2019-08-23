@@ -37,17 +37,17 @@ public class ItemLoader : MonoBehaviour
 
     }
 
-    //this function should only be called by EnemySpawner, as it deals with base level data
-    public GameObject getEnemyInstance(int eCode)
+    //this function should only be called by ItemSpawner, as it deals with base level data
+    public GameObject getItemInstance(int eCode)
     {
-        if (enemyMold == null)
+        if (itemMold == null)
         {
-            Debug.LogError("enemyMold is null... Can't create enemy instance");
+            Debug.LogError("itemMold is null... Can't create item instance");
             return null;
         }
 
-        GameObject e = Instantiate(enemyMold) as GameObject; //duplicate
-        Animator animator = e.GetComponent<Animator>();
+        GameObject i = Instantiate(itemMold) as GameObject; //duplicate
+        Animator animator = i.GetComponent<Animator>();
 
         AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
 
@@ -63,16 +63,15 @@ public class ItemLoader : MonoBehaviour
         animator.runtimeAnimatorController = animatorOverrideController;
         animator.Update(0.0f);
 
-       // e.name = enemyName[eCode];
-        Enemy eScript = e.GetComponent<Enemy>();
-        //NOTE: it's crucial that setLife is AFTER instantiation!
-        eScript.setValues(life[eCode], attack[eCode]);
-        eScript.setSizeScale(sizeScale[eCode]);
-        eScript.setColliderScale(colliderScale[eCode]);
+        ItemBehav item = i.GetComponent<ItemBehav>();
+        item.itemName = itemName[eCode];
+        item.description = itemDescriptions[eCode];
+        item.setSizeScale(sizeScale[eCode]);
+        item.setColliderScale(colliderScale[eCode]);
 
-        e.GetComponent<EnemyMover>().enemyType = movement[eCode];
+        i.GetComponent<EnemyMover>().enemyType = movement[eCode];
 
-        return e;
+        return i;
     }
 
     void loadItemMold()
