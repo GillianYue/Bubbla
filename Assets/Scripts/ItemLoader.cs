@@ -14,7 +14,7 @@ public class ItemLoader : MonoBehaviour
     float[] sizeScale, colliderScale;
     string[] s0_anim, s1_anim, s2_anim; //path to animations
     AnimationClip[] S0_ANIM, S1_ANIM, S2_ANIM;
-    int[] movement; //way of moving
+    int[] itemType, movement; //way of moving
 
     GameObject itemMold;
 
@@ -68,6 +68,7 @@ public class ItemLoader : MonoBehaviour
         item.description = itemDescriptions[eCode];
         item.setSizeScale(sizeScale[eCode]);
         item.setColliderScale(colliderScale[eCode]);
+        item.type = itemType[eCode];
 
         i.GetComponent<EnemyMover>().enemyType = movement[eCode];
 
@@ -91,20 +92,21 @@ public class ItemLoader : MonoBehaviour
         sizeScale = new float[numRows - 1]; colliderScale = new float[numRows - 1];
         s0_anim = new string[numRows - 1]; s1_anim = new string[numRows - 1]; s2_anim = new string[numRows - 1];
         S0_ANIM = new AnimationClip[numRows - 1]; S1_ANIM = new AnimationClip[numRows - 1]; S2_ANIM = new AnimationClip[numRows - 1];
-        movement = new int[numRows - 1];
+        itemType = new int[numRows - 1];  movement = new int[numRows - 1];
 
         //skip row 0 because those are all descriptors
         for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
         {
          
-        itemName[r - 1] = data[1, r];
+            itemName[r - 1] = data[1, r];
             itemDescriptions[r - 1] = data[2, r];
             float.TryParse(data[3, r], out sizeScale[r - 1]);
             float.TryParse(data[4, r], out colliderScale[r - 1]);
             s0_anim[r - 1] = data[5, r];
             s1_anim[r - 1] = data[6, r];
             s2_anim[r - 1] = data[7, r];
-            int.TryParse(data[8, r], out movement[r - 1]);
+            int.TryParse(data[8, r], out itemType[r - 1]);
+            int.TryParse(data[9, r], out movement[r - 1]);
         }
 
         loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM);

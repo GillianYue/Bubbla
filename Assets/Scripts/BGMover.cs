@@ -10,7 +10,7 @@ public class BGMover : MonoBehaviour {
 
 	void Start(){
         Global.resizeSpriteToRectX(gameObject);
-        Global.centerX(gameObject);
+        Global.zeroX(gameObject);
         GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, startY,
     GetComponent<RectTransform>().localPosition.z);
     }

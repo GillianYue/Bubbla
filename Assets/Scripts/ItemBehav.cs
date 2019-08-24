@@ -14,6 +14,7 @@ public class ItemBehav : MonoBehaviour {
 		public GameObject explosion;
 		public GameObject absorption;
 		private int size;
+        public int type; //0 backpack item, 1 in-game
 
 		public float sizeScale;
         public float colliderScale;

@@ -209,12 +209,9 @@ public class Global : MonoBehaviour
     public static void resizeSpriteToRectX(GameObject obj)
     {
         Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        // Debug.Log("sSize: " + sSize);
         var ratio = obj.GetComponent<RectTransform>().rect.width / sSize.x;
-        //  Debug.Log("ratio: " + ratio);
         Vector3 scale = new Vector3(ratio, ratio, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
-        // Debug.Log("after set: " + obj.GetComponent<RectTransform>().localScale);
     }
 
     /*
@@ -223,12 +220,9 @@ public class Global : MonoBehaviour
     public static void resizeSpriteToRectY(GameObject obj)
     {
         Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        // Debug.Log("sSize: " + sSize);
         var ratio = obj.GetComponent<RectTransform>().rect.height / sSize.y;
-        //  Debug.Log("ratio: " + ratio);
         Vector3 scale = new Vector3(ratio, ratio, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
-        // Debug.Log("after set: " + obj.GetComponent<RectTransform>().localScale);
     }
 
     /*
@@ -237,19 +231,15 @@ public class Global : MonoBehaviour
     public static void resizeSpriteToRectXY(GameObject obj)
     {
         Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        // Debug.Log("sSize: " + sSize);
         var ratioX = obj.GetComponent<RectTransform>().rect.width / sSize.x;
         var ratioY = obj.GetComponent<RectTransform>().rect.height / sSize.y;
-        //  Debug.Log("ratio: " + ratio);
         Vector3 scale = new Vector3(ratioX, ratioY, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
-        // Debug.Log("after set: " + obj.GetComponent<RectTransform>().localScale);
     }
 
     // center rect transform x
-    public static void centerX(GameObject obj)
+    public static void zeroX(GameObject obj)
     {
-        // Debug.Log(obj.GetComponent<RectTransform>().localPosition);
         Vector3 n = obj.GetComponent<RectTransform>().localPosition;
         n.x = 0;
         obj.GetComponent<RectTransform>().localPosition = n;
@@ -358,6 +348,32 @@ public class Global : MonoBehaviour
         //setting the anchors
         rt.anchorMax = new Vector2(1, 1);
         rt.anchorMin = new Vector2(0, 0);
+    }
+
+    /**
+     * centers the sprite of withSpr in the rect transform of centerIn
+     *     
+     * assumes withSpr is child of centerIn    
+     */
+    public static void centerSpriteInGO(GameObject withSpr, GameObject centerIn)
+    {
+        SpriteRenderer sr = withSpr.GetComponent<SpriteRenderer>();
+        RectTransform rt = withSpr.GetComponent<RectTransform>();
+        RectTransform RT = centerIn.GetComponent<RectTransform>();
+
+        rt.anchorMax = new Vector2(0, 0);
+        rt.anchorMin = new Vector2(0, 0);
+        //with anchors all set to 0, a local pos of 0,0,0 will fit the sprite at lower left corner of rect
+
+        float posX = 0, posY = 0;
+        float targetWidth = RT.rect.width, targetHeight = RT.rect.height;
+        if(targetWidth > rt.rect.width)
+        {
+            posX = (targetWidth - sr.sprite.rect.width) / 2;
+            posY = (targetHeight - sr.sprite.rect.height) / 2;
+        }
+        rt.localPosition = new Vector3(posX, posY, 0);
+
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~UI logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
