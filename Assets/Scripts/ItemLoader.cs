@@ -77,7 +77,7 @@ public class ItemLoader : MonoBehaviour
 
     void loadItemMold()
     {
-        itemMold = Resources.Load("ItemMold") as GameObject;
+        itemMold = Resources.Load("IngameItemMold") as GameObject;
         if (itemMold == null) Debug.LogError("load ItemMold failed");
     }
 
@@ -129,46 +129,49 @@ public class ItemLoader : MonoBehaviour
         //load the animation clips into the arrays
         for (int iCode = 0; iCode < s0.GetLength(0); iCode++)
         {
-            if (!s0_anim[iCode].Equals(""))
+            if (itemType[iCode] != 0)
             {
-                var tmpAnim0 = Resources.Load("Animation/" + s0_anim[iCode]) as AnimationClip;
-
-                if (tmpAnim0 == null)
+                if (!s0_anim[iCode].Equals("")) //not inanimate
                 {
-                    Debug.LogError("Animation 0 NOT found");
+                    var tmpAnim0 = Resources.Load("Animation/" + s0_anim[iCode]) as AnimationClip;
+
+                    if (tmpAnim0 == null)
+                    {
+                        Debug.LogError("Animation 0 NOT found");
+                    }
+                    else
+                    {
+                        s0[iCode] = tmpAnim0;
+                    }
                 }
-                else
+
+
+                if (!s1_anim[iCode].Equals(""))
                 {
-                    s0[iCode] = tmpAnim0;
+                    var tmpAnim1 = Resources.Load("Animation/" + s1_anim[iCode]) as AnimationClip;
+
+                    if (tmpAnim1 == null)
+                    {
+                        Debug.LogError("Animation 1 NOT found");
+                    }
+                    else
+                    {
+                        s1[iCode] = tmpAnim1;
+                    }
                 }
-            }
 
-
-            if (!s1_anim[iCode].Equals(""))
-            {
-                var tmpAnim1 = Resources.Load("Animation/" + s1_anim[iCode]) as AnimationClip;
-
-                if (tmpAnim1 == null)
+                if (!s2_anim[iCode].Equals(""))
                 {
-                    Debug.LogError("Animation 1 NOT found");
-                }
-                else
-                {
-                    s1[iCode] = tmpAnim1;
-                }
-            }
+                    var tmpAnim2 = Resources.Load("Animation/" + s2_anim[iCode]) as AnimationClip;
 
-            if (!s2_anim[iCode].Equals(""))
-            {
-                var tmpAnim2 = Resources.Load("Animation/" + s2_anim[iCode]) as AnimationClip;
-
-                if (tmpAnim2 == null)
-                {
-                    Debug.LogError("Animation 2 NOT found");
-                }
-                else
-                {
-                    s2[iCode] = tmpAnim2;
+                    if (tmpAnim2 == null)
+                    {
+                        Debug.LogError("Animation 2 NOT found");
+                    }
+                    else
+                    {
+                        s2[iCode] = tmpAnim2;
+                    }
                 }
             }
         }

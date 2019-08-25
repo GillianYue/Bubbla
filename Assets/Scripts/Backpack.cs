@@ -6,7 +6,7 @@ public class Backpack : MonoBehaviour
 {
     public GameObject backpack;
     public GameControl gameControl;
-    public int numItems;
+    public int numGrids, numItems;
     public int[] itemList; //array indicating items belonging to a user via itemIndex
     public int[] itemCount; //corresponds to the above array indicating num of item owned of that itemIndex
     public GameObject itemBG; //initial bg to duplicate
@@ -16,13 +16,17 @@ public class Backpack : MonoBehaviour
     void Start()
     {
 
+        loadItemMold();
+
         //for testing purposes, arbitrarily put in 
-        numItems = 2;
+        numGrids = 7; numItems = 2;
         itemList = new int[numItems];
         itemCount = new int[numItems];
 
         itemList[0] = 0; itemList[1] = 1;
         itemCount[0] = 1; itemCount[1] = 5;
+
+        loadInItems();
 
     }
 
@@ -39,17 +43,27 @@ public class Backpack : MonoBehaviour
      */
     public void loadInItems()
     {
+
+        itemBG.SetActive(true);
+        itemMold.SetActive(true);
+
         //first create needed num of itemBG 
-        for(int n = 0; n < numItems; n++)
+        for (int n = 0; n < numGrids; n++)
         {
             GameObject currItemBG = Instantiate(itemBG, itemBG.transform.parent);
             int row = n / 4; int col = n % 4;
-            currItemBG.transform.localPosition = new Vector3(100 * col + 20, -(100 * row + 20), 0);
+            currItemBG.GetComponent<RectTransform>().offsetMax = new Vector2(100 * (col + 1), -(100 * row + 20));
+            currItemBG.GetComponent<RectTransform>().offsetMin = new Vector2(100 * col + 20, -100 * (row + 1));
 
-            GameObject currItem = Instantiate(itemMold, currItemBG.transform);
-            Global.centerSpriteInGO(currItem, currItemBG);
-
+            if (n < numItems)
+            {
+                GameObject currItem = Instantiate(itemMold, currItemBG.transform);
+                Global.centerSpriteInGO(currItem, currItemBG);
+            }
         }
+
+        itemBG.SetActive(false);
+        itemMold.SetActive(false);
     }
 
     public void openBackpackUI()
@@ -85,5 +99,14 @@ public class Backpack : MonoBehaviour
 
         }
     }
-     
+
+    void loadItemMold()
+    {
+        itemMold = Resources.Load("ItemMold") as GameObject;
+        if (itemMold == null)
+        {
+            Debug.LogError("load ItemMold failed");
+        }
     }
+
+}
