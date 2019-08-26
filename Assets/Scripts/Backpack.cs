@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Backpack : MonoBehaviour
 {
-    public GameObject backpack;
+    public GameObject backpack, itemSelected;
+    private ItemSelect itemSelect; //script to select item, interact with item select btns, etc. Found on itemSelected GO
     public GameControl gameControl;
     public int numGrids, numItems;
     public int[] itemList; //array indicating items belonging to a user via itemIndex
     public int[] itemCount; //corresponds to the above array indicating num of item owned of that itemIndex
     public GameObject itemBG; //initial bg to duplicate
-    public GameObject itemMold; //sprite to put in front of itemBG
-    public ItemLoader itemLoader; 
+    private GameObject itemMold; //sprite to put in front of itemBG
+    private ItemLoader itemLoader;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,8 @@ public class Backpack : MonoBehaviour
         {
             Debug.LogError("loader GO not found!");
         }
+
+        itemSelect = itemSelected.GetComponent<ItemSelect>();
 
         loadItemMold();
 
@@ -85,6 +88,8 @@ public class Backpack : MonoBehaviour
                 Global.centerSpriteInGO(currItem, currItemBG);
                 currItem.GetComponent<SpriteRenderer>().sprite = itemLoader.S0_SPRITE[itemList[n]]; //itemlist[n] returns itemCode
             }
+
+            if (n == 0) itemSelect.setItemSelected(currItemBG); //so that on start default is selecting the first item
         }
 
         itemBG.SetActive(false); //because this was in game
@@ -133,5 +138,6 @@ public class Backpack : MonoBehaviour
             Debug.LogError("load ItemMold failed");
         }
     }
+
 
 }

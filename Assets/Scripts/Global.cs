@@ -386,7 +386,7 @@ public class Global : MonoBehaviour
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~UI logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~Coroutine Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~Code Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     /**
       * Usage: StartCoroutine(Global.Chain(...))
@@ -428,7 +428,24 @@ public class Global : MonoBehaviour
         yield return 0;
     }
 
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~Coroutine Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    /**
+     *  helper function to copy the component of one GO to another; haven't tested out yet 
+     *     
+     */
+    public static Component CopyComponent(Component original, GameObject destination)
+    {
+        System.Type type = original.GetType();
+        Component copy = destination.AddComponent(type);
+        // Copied fields can be restricted with BindingFlags
+        System.Reflection.FieldInfo[] fields = type.GetFields();
+        foreach (System.Reflection.FieldInfo field in fields)
+        {
+            field.SetValue(copy, field.GetValue(original));
+        }
+        return copy;
+    }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~Code Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 }
 
