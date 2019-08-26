@@ -353,7 +353,7 @@ public class Global : MonoBehaviour
     /**
      * centers the sprite of withSpr in the rect transform of centerIn
      *     
-     * assumes withSpr is child of centerIn    
+     * assumes withSpr is child of centerIn, and that the sprite GO has transform as opposed to rectTransform
      */
     public static void centerSpriteInGO(GameObject withSpr, GameObject centerIn)
     {
@@ -361,18 +361,26 @@ public class Global : MonoBehaviour
         RectTransform rt = withSpr.GetComponent<RectTransform>();
         RectTransform RT = centerIn.GetComponent<RectTransform>();
 
-        rt.anchorMax = new Vector2(0, 0);
-        rt.anchorMin = new Vector2(0, 0);
-        //with anchors all set to 0, a local pos of 0,0,0 will fit the sprite at lower left corner of rect
-
-        float posX = 0, posY = 0;
+        float dX = 0, dY = 0; //local
         float targetWidth = RT.rect.width, targetHeight = RT.rect.height;
-        if(targetWidth > rt.rect.width)
+        float sizeScale = withSpr.GetComponent<ItemBehav>().sizeScale;
+        float srWidth = sr.sprite.rect.width * sizeScale,  //sprite pic dimensions
+            srHeight = sr.sprite.rect.height * sizeScale;
+        float rtWidth = rt.rect.width * sizeScale, rtHeight = rt.rect.height * sizeScale; //withSpr rectTransform rect dimensions
+
+        if (targetWidth > srWidth && targetHeight > srHeight) //sprite has to fit in bg box
         {
-            posX = (targetWidth - sr.sprite.rect.width) / 2;
-            posY = (targetHeight - sr.sprite.rect.height) / 2;
+            dX = rtWidth / 2;
+            dY = rtHeight / 2;
         }
-        rt.localPosition = new Vector3(posX, posY, 0);
+        else
+        {
+            Debug.Log("sprite size bigger than bg box, resize needed");
+        }
+
+        //assuming anchors are all centered at pivot
+        rt.offsetMax = new Vector2(dX, dY);
+        rt.offsetMin = new Vector2(-dX, -dY);
 
     }
 

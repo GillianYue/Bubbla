@@ -29,12 +29,18 @@ public class GameFlow : MonoBehaviour {
 
     public TextAsset DlgCsv; //dialogue file for a specific level
     private string[,] data; //double array that stores all info of this level
-    public EnemyLoader enemyLoader;
-    public CharacterLoader characterLoader;
+    public GameObject loader;
+    private EnemyLoader enemyLoader;
+    private CharacterLoader characterLoader;
+    private ItemLoader itemLoader;
 
     private string openTag, endTag; //those two variables are used for dialogue tag processing
 
     void Start() {
+        enemyLoader = loader.GetComponent<EnemyLoader>();
+        characterLoader = loader.GetComponent<CharacterLoader>();
+        itemLoader = loader.GetComponent<ItemLoader>();
+
         loadDone = new bool[1];
         StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData));
 
@@ -48,7 +54,7 @@ public class GameFlow : MonoBehaviour {
     }
 
     public bool checkLoadDone() { //check if all loaders are ready for game
-        return (loadDone[0] && enemyLoader.enemyLoaderDone && characterLoader.characterLoaderDone);
+        return (loadDone[0] && enemyLoader.enemyLoaderDone && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
     }
 
     public bool checkTitleLoadDone()

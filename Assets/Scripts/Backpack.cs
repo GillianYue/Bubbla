@@ -11,10 +11,20 @@ public class Backpack : MonoBehaviour
     public int[] itemCount; //corresponds to the above array indicating num of item owned of that itemIndex
     public GameObject itemBG; //initial bg to duplicate
     public GameObject itemMold; //sprite to put in front of itemBG
+    public ItemLoader itemLoader; 
 
     // Start is called before the first frame update
     void Start()
     {
+        GameObject loader = GameObject.FindWithTag("Loader");
+        if(loader != null)
+        {
+            itemLoader = loader.GetComponent<ItemLoader>();
+        }
+        else
+        {
+            Debug.LogError("loader GO not found!");
+        }
 
         loadItemMold();
 
@@ -26,14 +36,24 @@ public class Backpack : MonoBehaviour
         itemList[0] = 0; itemList[1] = 1;
         itemCount[0] = 1; itemCount[1] = 5;
 
-        loadInItems();
-
+        //loadInItems();
+        StartCoroutine(waitTilDone());
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    /**
+     *  tmp function to load backpack only after all loaders are ready. 
+     * this wouldn't be used in game because all the loading would be done in the loading scene
+     */
+    IEnumerator waitTilDone()
+    {
+        yield return new WaitUntil(() => itemLoader.itemLoaderDone);
+        loadInItems();
     }
 
     /**
@@ -57,13 +77,18 @@ public class Backpack : MonoBehaviour
 
             if (n < numItems)
             {
-                GameObject currItem = Instantiate(itemMold, currItemBG.transform);
+                GameObject currItem = itemLoader.getItemInstance(itemList[n]);
+                currItem.transform.parent = currItemBG.transform;
+                Vector3 newPos = currItem.transform.localPosition;
+                newPos.z = -1;
+                currItem.transform.localPosition = newPos; //so that it shows on top of the background
                 Global.centerSpriteInGO(currItem, currItemBG);
+                currItem.GetComponent<SpriteRenderer>().sprite = itemLoader.S0_SPRITE[itemList[n]]; //itemlist[n] returns itemCode
             }
         }
 
-        itemBG.SetActive(false);
-        itemMold.SetActive(false);
+        itemBG.SetActive(false); //because this was in game
+        //itemMold.SetActive(false);
     }
 
     public void openBackpackUI()

@@ -9,14 +9,15 @@ public class ItemLoader : MonoBehaviour
     private string[,] data; //double array that stores all info 
 
     int[] itemCode; 
-    string[] itemName;
-    string[] itemDescriptions;
-    float[] sizeScale, colliderScale;
-    string[] s0_anim, s1_anim, s2_anim; //path to animations
-    AnimationClip[] S0_ANIM, S1_ANIM, S2_ANIM;
-    int[] itemType, movement; //way of moving
+    public string[] itemName;
+    public string[] itemDescriptions;
+    public float[] sizeScale, colliderScale;
+    public string[] s0_anim, s1_anim, s2_anim; //path to animations
+    public AnimationClip[] S0_ANIM, S1_ANIM, S2_ANIM;
+    public Sprite[] S0_SPRITE; //for inanimate items, sprite instead of anim is used
+    public int[] itemType, movement; //way of moving
 
-    GameObject itemMold;
+    GameObject inGameItemMold, itemMold;
 
     public bool itemLoaderDone; //this will be set to true once EnemyLoader is ready for usage
 
@@ -37,47 +38,84 @@ public class ItemLoader : MonoBehaviour
 
     }
 
-    //this function should only be called by ItemSpawner, as it deals with base level data
+    /** this function should only be called by ItemSpawner, as it deals with base level data
+     * 
+     *  returns instance of instantiated item based on what type it is    
+     */
     public GameObject getItemInstance(int eCode)
     {
-        if (itemMold == null)
+        GameObject i = null;
+
+        switch (itemType[eCode])
         {
-            Debug.LogError("itemMold is null... Can't create item instance");
-            return null;
+            case 0: //inanimate
+                if (itemMold == null)
+                {
+                    Debug.LogError("itemMold is null... Can't create item instance");
+                    return null;
+                }
+                i = Instantiate(itemMold) as GameObject; //duplicate
+
+                SpriteRenderer sr = i.GetComponent<SpriteRenderer>();
+                sr.sprite = S0_SPRITE[eCode];
+
+                ItemBehav item = i.GetComponent<ItemBehav>();
+                item.itemName = itemName[eCode];
+                item.description = itemDescriptions[eCode];
+                item.setSizeScale(sizeScale[eCode]); //what we need is the setting of sizeScale variable here
+                item.setType(itemType[eCode]);
+                //TODO
+                
+                break;
+            case 1: //items that have an animator & will use animations
+                if (inGameItemMold == null)
+                {
+                    Debug.LogError("(in-game)itemMold is null... Can't create item instance");
+                    return null;
+                }
+
+                i = Instantiate(inGameItemMold) as GameObject; //duplicate
+                Animator animator = i.GetComponent<Animator>();
+
+                AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+
+                if (S0_ANIM[eCode] != null)
+                    animatorOverrideController["State0anim"] = S0_ANIM[eCode];
+
+                if (S1_ANIM[eCode] != null)
+                    animatorOverrideController["State1anim"] = S1_ANIM[eCode];
+
+                if (S2_ANIM[eCode] != null)
+                    animatorOverrideController["State2anim"] = S2_ANIM[eCode];
+
+                animator.runtimeAnimatorController = animatorOverrideController;
+                animator.Update(0.0f);
+
+                ItemBehav itemG = i.GetComponent<ItemBehav>();
+                itemG.itemName = itemName[eCode];
+                itemG.setSizeScale(sizeScale[eCode]);
+                itemG.setColliderScale(colliderScale[eCode]);
+                itemG.setType(itemType[eCode]);
+                //TODO movement
+
+                break;
+            default:
+                Debug.LogError("can't find itemType: " + itemType[eCode]);
+                break;
         }
 
-        GameObject i = Instantiate(itemMold) as GameObject; //duplicate
-        Animator animator = i.GetComponent<Animator>();
 
-        AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
 
-        if (S0_ANIM[eCode] != null)
-            animatorOverrideController["State0anim"] = S0_ANIM[eCode];
-
-        if (S1_ANIM[eCode] != null)
-            animatorOverrideController["State1anim"] = S1_ANIM[eCode];
-
-        if (S2_ANIM[eCode] != null)
-            animatorOverrideController["State2anim"] = S2_ANIM[eCode];
-
-        animator.runtimeAnimatorController = animatorOverrideController;
-        animator.Update(0.0f);
-
-        ItemBehav item = i.GetComponent<ItemBehav>();
-        item.itemName = itemName[eCode];
-        item.description = itemDescriptions[eCode];
-        item.setSizeScale(sizeScale[eCode]);
-        item.setColliderScale(colliderScale[eCode]);
-        item.type = itemType[eCode];
-
-        i.GetComponent<EnemyMover>().enemyType = movement[eCode];
 
         return i;
     }
 
     void loadItemMold()
     {
-        itemMold = Resources.Load("IngameItemMold") as GameObject;
+        inGameItemMold = Resources.Load("IngameItemMold") as GameObject;
+        if (inGameItemMold == null) Debug.LogError("load in-game-ItemMold failed");
+
+        itemMold = Resources.Load("ItemMold") as GameObject;
         if (itemMold == null) Debug.LogError("load ItemMold failed");
     }
 
@@ -92,6 +130,7 @@ public class ItemLoader : MonoBehaviour
         sizeScale = new float[numRows - 1]; colliderScale = new float[numRows - 1];
         s0_anim = new string[numRows - 1]; s1_anim = new string[numRows - 1]; s2_anim = new string[numRows - 1];
         S0_ANIM = new AnimationClip[numRows - 1]; S1_ANIM = new AnimationClip[numRows - 1]; S2_ANIM = new AnimationClip[numRows - 1];
+        S0_SPRITE = new Sprite[numRows - 1];
         itemType = new int[numRows - 1];  movement = new int[numRows - 1];
 
         //skip row 0 because those are all descriptors
@@ -109,9 +148,9 @@ public class ItemLoader : MonoBehaviour
             int.TryParse(data[9, r], out movement[r - 1]);
         }
 
-        loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM);
+        loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM, S0_SPRITE);
         yield return new WaitUntil(() => {
-            return (S0_ANIM[S0_ANIM.Length - 1] != null);
+            return (S0_ANIM[S0_ANIM.Length - 1] != null || S0_SPRITE[S0_SPRITE.Length - 1] != null);
         }); //anim loaded, theoretically everything all set
 
         itemLoaderDone = true;
@@ -123,7 +162,7 @@ public class ItemLoader : MonoBehaviour
         data = d;
     }
 
-    private void loadAnimationClips(AnimationClip[] s0, AnimationClip[] s1, AnimationClip[] s2)
+    private void loadAnimationClips(AnimationClip[] s0, AnimationClip[] s1, AnimationClip[] s2, Sprite[] spr0)
     {
 
         //load the animation clips into the arrays
@@ -172,6 +211,18 @@ public class ItemLoader : MonoBehaviour
                     {
                         s2[iCode] = tmpAnim2;
                     }
+                }
+            }
+            else
+            {
+                Sprite tmpSpr0 = Resources.Load<Sprite>("Sprites/" + s0_anim[iCode]);
+                if (tmpSpr0 == null)
+                {
+                    Debug.LogError("Sprite 0 NOT found: "+s0_anim[iCode]);
+                }
+                else
+                {
+                    spr0[iCode] = tmpSpr0;
                 }
             }
         }

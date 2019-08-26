@@ -4,7 +4,7 @@ using System.Collections;
 /**
  * was originally potion behavior, but will be modified into a general item behavior class.
  * 
- * Note: this class is for game-items (mostly animated?), not for actual items (sprite, description, etc)
+ * Note: this class is for all items. In-game items will need additional mover scripts to move. 
  */
 public class ItemBehav : MonoBehaviour {
 
@@ -14,7 +14,7 @@ public class ItemBehav : MonoBehaviour {
 		public GameObject explosion;
 		public GameObject absorption;
 		private int size;
-        public int type; //0 backpack item, 1 in-game
+        private int type; //0 backpack item, 1 in-game
 
 		public float sizeScale;
         public float colliderScale;
@@ -25,15 +25,19 @@ public class ItemBehav : MonoBehaviour {
 		void Start () {
 		setColor (Color.white.r, Color.white.g, Color.white.b);
 		size = 1;
-			setSize(size);
+        setSize(size);
 
 		curingPotency = (int)Random.Range (3, 7.99f);
 			audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
-		}
+
+        if(type != 0)
+        randomizeRotateVelocity(); // case 0 for type will be set through setter
+
+        }
 
 		// Update is called once per frame
 		void Update () {
-		transform.Rotate (new Vector3 (0,0,1));
+
 		}
 
 		void OnTriggerEnter(Collider other){
@@ -52,9 +56,9 @@ public class ItemBehav : MonoBehaviour {
 
 		}
 
-	public int getCuringPotency(){
+        public int getCuringPotency(){
 		return curingPotency;
-	}
+	    }
 
 		public void getsAbsorbed(){
 			GameObject vfx = Instantiate 
@@ -92,7 +96,7 @@ public class ItemBehav : MonoBehaviour {
 
 		public void changeScale(Vector3 vector){
 			transform.localScale = vector;
-		}
+    }
 
     public void setSizeScale(float sScale)
     {
@@ -103,6 +107,7 @@ public class ItemBehav : MonoBehaviour {
             transform.localScale = new Vector3(sizeScale * Global.scaleRatio,
                 sizeScale * Global.scaleRatio, sizeScale * Global.scaleRatio);
         }
+
     }
 
     public void setColliderScale(float cScale)
@@ -115,6 +120,25 @@ public class ItemBehav : MonoBehaviour {
             scaledPoints[p] = np;
         }
         GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
+    }
+
+    public void randomizeRotateVelocity()
+    {
+        gameObject.GetComponent<Rigidbody2D>().AddTorque(Random.Range(30f, 35f)); //TODO this is arbitrary
+    }
+
+    public void setType(int t)
+    {
+        type = t;
+        if(t == 0)
+        {
+            gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0f;
+        }
+    }
+
+    public int getType()
+    {
+        return type;
     }
 
 }
