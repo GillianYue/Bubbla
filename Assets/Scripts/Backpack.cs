@@ -77,6 +77,7 @@ public class Backpack : MonoBehaviour
             int row = n / 4; int col = n % 4;
             currItemBG.GetComponent<RectTransform>().offsetMax = new Vector2(100 * (col + 1), -(100 * row + 20));
             currItemBG.GetComponent<RectTransform>().offsetMin = new Vector2(100 * col + 20, -100 * (row + 1));
+            currItemBG.GetComponent<identifier>().setID("itemBG" + n);
 
             if (n < numItems)
             {
