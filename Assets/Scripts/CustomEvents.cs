@@ -69,6 +69,9 @@ public class CustomEvents : MonoBehaviour {
             case 1:
                 genEnemy(done, prms);
                 break;
+            case 2:
+                genItem(done, prms);
+                break;
             case 3:
                 genPaintball(done, prms);
                 break;
@@ -152,53 +155,52 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
-    /**TODO
+    /**TODO haven't tested out yet, need check
      * event #2
      * 
-     * creating a item, non-living-things
+     * creating an in-game item, or other non-living-things
      * 
      * param 0: item code indicating which item we want to create
-     * optional param 1: pos X, will use enemySpawner.spawnValues.x if param is ""
-     * optional param 2: pos Y, will use enemySpawner.spawnValues.y if param is ""
-     * optional param 3: pos Z, will use enemySpawner.spawnValues.z if param is ""
-     * optional param 4: an identifier id for the enemy, will not assign identifier if param is ""
+     * optional param 1: pos X,Y,Z, will use paintballSpawner.spawnValues if param is ""
+     * optional param 2: size
+     * optional param 3: id
+     * optional param 4: additional param TODO
      */
     public void genItem(bool[] done, string[] prms)
     {
-        int enemyCode;
-        int.TryParse(prms[0], out enemyCode);
+        int itemCode;
+        int.TryParse(prms[0], out itemCode);
 
         float x, y, z;
         if (!prms[1].Equals(""))
         {
-            float.TryParse(prms[1], out x);
+            string[] res = prms[1].Split(',');
+            float.TryParse(res[0], out x);
+            float.TryParse(res[1], out y);
+            float.TryParse(res[2], out z);
         }
         else
         {
-            x = eSpawner.spawnValues.x;
-        }
-        if (!prms[2].Equals(""))
-        {
-            float.TryParse(prms[2], out y);
-        }
-        else
-        {
-            y = eSpawner.spawnValues.y;
-        }
-        if (!prms[3].Equals(""))
-        {
-            float.TryParse(prms[3], out z);
-        }
-        else
-        {
-            z = eSpawner.spawnValues.z;
+            x = pSpawner.spawnValues.x;
+            y = pSpawner.spawnValues.y;
+            z = pSpawner.spawnValues.z;
         }
 
-        GameObject e = eSpawner.genMonster(x, y, z, enemyCode);
-        if (!prms[4].Equals(""))
+
+        GameObject i = pSpawner.genItem(itemCode, x, y, z);
+
+        int size;
+        if (!prms[2].Equals(""))
         {
-            setIdentifier(e, prms[4]);
+            int.TryParse(prms[3], out size);
+            i.GetComponent<ItemBehav>().setSize(size);
         }
+
+        if (!prms[3].Equals(""))
+        {
+            setIdentifier(i, prms[3]);
+        }
+
         done[0] = true;
     }
 

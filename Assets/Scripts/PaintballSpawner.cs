@@ -14,6 +14,7 @@ public class PaintballSpawner : MonoBehaviour
     public Vector3 spawnValues;
     public GameObject Ballz;
     public bool pbSpawnSwitch; //when start flip to true, elsewhere will set it to false to end pb Spawn
+    public ItemLoader itemLoader; 
 
     // Start is called before the first frame update
     void Start()
@@ -60,7 +61,7 @@ public class PaintballSpawner : MonoBehaviour
             }
             else
             {//5% chance to generate potion
-                genItem(Random.Range(spawnValues.x - spawnRangeWidth,
+                genItem(2, Random.Range(spawnValues.x - spawnRangeWidth,
                 spawnValues.x + spawnRangeWidth),
             spawnValues.y, spawnValues.z);
             }
@@ -97,15 +98,16 @@ public class PaintballSpawner : MonoBehaviour
         return pb;
     }
 
-
-    public void genItem(float x, float y, float z)
+    // creates an item based off of code that behaves like a paintball
+    public GameObject genItem(int itemCode, float x, float y, float z)
     {
-        GameObject pt = potion;
+        GameObject item = itemLoader.getItemInstance(itemCode); //already instantiated
 
         Vector3 spawnPosition = new Vector3(x, y, z);
-        pt = Instantiate(pt, spawnPosition, pt.transform.rotation)
-            as GameObject;
-        pt.transform.SetParent(Ballz.transform);
+        item.GetComponent<RectTransform>().position = spawnPosition;
+        item.transform.SetParent(Ballz.transform);
+
+        return item;
     }
 
 }
