@@ -226,11 +226,24 @@ public class Global : MonoBehaviour
     }
 
     /*
- * resizes sprite of a gameobj to the rect transform of this gameobj completely based on rect dimensions
- */
+    * resizes sprite of a gameobj to the rect transform of this gameobj completely based on rect dimensions
+    */
     public static void resizeSpriteToRectXY(GameObject obj)
     {
         Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
+        var ratioX = obj.GetComponent<RectTransform>().rect.width / sSize.x;
+        var ratioY = obj.GetComponent<RectTransform>().rect.height / sSize.y;
+        Vector3 scale = new Vector3(ratioX, ratioY, 1);
+        obj.GetComponent<RectTransform>().localScale = scale;
+    }
+
+    /**
+     * overload method of above;   
+     * There are times when the sprite isn't from SpriteRenderer, in which case the sprite will be provided in param
+     */    
+    public static void resizeSpriteToRectXY(GameObject obj, Sprite spr)
+    {
+        Vector3 sSize = spr.bounds.size;
         var ratioX = obj.GetComponent<RectTransform>().rect.width / sSize.x;
         var ratioY = obj.GetComponent<RectTransform>().rect.height / sSize.y;
         Vector3 scale = new Vector3(ratioX, ratioY, 1);

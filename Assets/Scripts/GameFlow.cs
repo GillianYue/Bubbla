@@ -37,9 +37,12 @@ public class GameFlow : MonoBehaviour {
     private string openTag, endTag; //those two variables are used for dialogue tag processing
 
     void Start() {
-        enemyLoader = loader.GetComponent<EnemyLoader>();
-        characterLoader = loader.GetComponent<CharacterLoader>();
-        itemLoader = loader.GetComponent<ItemLoader>();
+        if (loader != null)
+        {
+            enemyLoader = loader.GetComponent<EnemyLoader>();
+            characterLoader = loader.GetComponent<CharacterLoader>();
+            itemLoader = loader.GetComponent<ItemLoader>();
+        }
 
         loadDone = new bool[1];
         StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData));

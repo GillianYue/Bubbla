@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Backpack : MonoBehaviour
 {
-    public GameObject backpack, itemSelected;
+    public GameObject backpack, itemSelected, spriteMask;
     private ItemSelect itemSelect; //script to select item, interact with item select btns, etc. Found on itemSelected GO
     public GameControl gameControl;
     public int numGrids, numItems;
@@ -29,17 +29,20 @@ public class Backpack : MonoBehaviour
 
         itemSelect = itemSelected.GetComponent<ItemSelect>();
 
+        Sprite spr = spriteMask.GetComponent<SpriteMask>().sprite;
+        Global.resizeSpriteToRectXY(spriteMask, spr); //resize itemsMask's spriteMask to its own rect transform
+
         loadItemMold();
 
         //for testing purposes, arbitrarily put in 
-        numGrids = 7; numItems = 2;
+        numGrids = 12; numItems = 2;
         itemList = new int[numItems];
         itemCount = new int[numItems];
 
         itemList[0] = 0; itemList[1] = 1;
         itemCount[0] = 1; itemCount[1] = 5;
 
-        //loadInItems();
+        //loadInItems(); eventually oughta switch back to this instead of the below line
         StartCoroutine(waitTilDone());
     }
 
@@ -67,8 +70,15 @@ public class Backpack : MonoBehaviour
     public void loadInItems()
     {
 
+        if (numItems > 8) numGrids = 4 * (int)Mathf.Ceil(numItems / 4.0f);
+
         itemBG.SetActive(true);
         itemMold.SetActive(true);
+
+        GameObject items = itemBG.transform.parent.gameObject; RectTransform itmRT = items.GetComponent<RectTransform>();
+        Global.setRectTransform(items, itmRT.rect.width,
+            (numGrids / 4) * 100 + 20); //so that items' rect always fits perfectly the grids that are created
+        itmRT.pivot = new Vector2(0, 1); //center properly
 
         //first create needed num of itemBG 
         for (int n = 0; n < numGrids; n++)
