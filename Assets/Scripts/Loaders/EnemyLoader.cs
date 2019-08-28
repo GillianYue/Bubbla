@@ -15,6 +15,7 @@ public class EnemyLoader : MonoBehaviour
     string[] s0_anim, s1_anim, s2_anim; //path to animations
     AnimationClip[] S0_ANIM, S1_ANIM, S2_ANIM;
     int[] movement;
+    int[] moveSpeed;
 
     GameObject enemyMold;
 
@@ -70,7 +71,9 @@ public class EnemyLoader : MonoBehaviour
         eScript.setSizeScale(sizeScale[eCode]);
         eScript.setColliderScale(colliderScale[eCode]);
 
-        e.GetComponent<EnemyMover>().enemyType = movement[eCode];
+        EnemyMover mover = e.GetComponent<EnemyMover>();
+        mover.enemyType = movement[eCode];
+        mover.setSpeed(moveSpeed[eCode]);
 
         return e;
     }
@@ -92,7 +95,7 @@ public class EnemyLoader : MonoBehaviour
         sizeScale = new float[numRows-1]; colliderScale = new float[numRows-1];
         s0_anim = new string[numRows-1]; s1_anim = new string[numRows-1]; s2_anim = new string[numRows-1];
         S0_ANIM = new AnimationClip[numRows-1];  S1_ANIM = new AnimationClip[numRows-1]; S2_ANIM = new AnimationClip[numRows-1];
-        movement = new int[numRows-1];
+        movement = new int[numRows-1]; moveSpeed = new int[numRows - 1];
 
         //skip row 0 because those are all descriptors
         for(int r = 1; r < numRows; r++) //-1 because title row doesn't count
@@ -106,6 +109,7 @@ public class EnemyLoader : MonoBehaviour
             s1_anim[r - 1] = data[7, r];
             s2_anim[r - 1] = data[8, r];
             int.TryParse(data[9, r], out movement[r - 1]);
+            int.TryParse(data[10, r], out moveSpeed[r - 1]);
         }
 
         loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM);

@@ -357,6 +357,7 @@ public class CustomEvents : MonoBehaviour {
     {
         GameObject target = findByIdentifier(prms[0]);
 
+        if (target != null) { 
         int active;
         int.TryParse(prms[1], out active);
 
@@ -409,8 +410,10 @@ public class CustomEvents : MonoBehaviour {
                 spr.color = new Color(orig.r, orig.g, orig.b, origA);
             }
         }
+        }
 
         done[0] = true;
+
     }
 
     /**

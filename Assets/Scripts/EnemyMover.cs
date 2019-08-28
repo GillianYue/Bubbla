@@ -20,7 +20,7 @@ public class EnemyMover : MonoBehaviour {
 
 		switch(enemyType){
 		case 1: //crab
-			StartCoroutine (movePause (8, 2f));
+			StartCoroutine (movePause (8, speed));
 			break;
 		case 2: 
 		//	StartCoroutine (screenSpan ());
@@ -31,9 +31,17 @@ public class EnemyMover : MonoBehaviour {
 		}
 	}
 
+    public void setSpeed(float spd)
+    {
+        speed = spd;
+        rb = GetComponent<Rigidbody2D>();
+        rb.velocity = direction * spd;
+    }
+
 	void Update(){
 		
 	}
+
 
 	IEnumerator movePause (int turns, float speed){
 
