@@ -1,6 +1,7 @@
 MODE,NAME(DLG); WAVE_TYPE(GAME),TEXT(DLG); ENEMY_TYPE(GAME),SPRITE_STATE(DLG); STD_COL(GAME),DISP_SPD(DLG); MX_D(GAME),VOICE_NO,ANIM_SPD,SPECIAL,SPE_PARAM_1,SPE_PARAM_2,SPE_PARAM3
 GAME,99,7,ps,0,,,,,,
 ,99,6,bgFixed,0,,,,,,
+,99,8,3,0,,,,,,
 DLG,BUNNY,"Agent 7846, can you hear me?",0,1,,,,,,
 ,BUNNY,Your GPS location has successfully been sent to me.,0,1,,,2,1,1,4
 ,BUNNY,You are currently in the <i>Sea of Miracle</i>.,0,1,,,2,1,0,5
@@ -35,6 +36,7 @@ DLG,BUNNY,And on the lower right corner here is your <color=#5EC634>life</color>
 ,BUNNY,Shoot bullets at the enemies to clear your path.,0,1,,,,,,
 GAME,99,99,0,,,,,,,
 DLG,BUNNY,"Great, you're getting the hang of it! I'll leave the rest to you, agent!",1,1,,,,,,
+GAME,99,8,3,0,,,,,,
 GAME,"1,2,3,4,1,2,4,4,3,1","0,1,1,0,0,1,0,0,1,0","132,230,217",100,,,,,,
 ,99,6,bgFixed,1,0,,,,,
 ,"2,2,3,4,3,2,1,1,1,3","1,1,1,0,1,1,0,0,0,1","255,255,57",100,,,,,,
@@ -58,4 +60,5 @@ DLG,???,How dare you trespass into MY territory...,0,0.9,,,1,,,
 ,BUNNY,*gasp* Who is that?,6,1,,,,,,
 ,???,Hmph...,0,0.8,,,1,,,
 ,CAPTAIN BUNS,"It is I, the Great, Magnificent, One and Only, Captain Buns!!!",2,1,,,,,,
-,CAPTAIN BUNS,AHAHAHAHAHHAHAHAHHAHAHHAHAHAHHAHAHAHHAHAHHAHAH,2,1,,,,,,
+,CAPTAIN BUNS,AHAHAHAHAHHAHAHAHHAHAHHAHAHAHHAHAHAHHAHAHHAHAHA,2,1,,,,,,
+,CAPTAIN BUNS,Prepare to pay the price for entering here!,2,1,,,,,,

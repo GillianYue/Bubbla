@@ -422,12 +422,13 @@ public class CustomEvents : MonoBehaviour {
      * param 0: index of which boolean to set (hard-coded in script, here)
      *      - 0: setting GameControl.ckTouch
      *      - 1: gameFlow.canMovePointer
-     *      - 2: bgMover.scrollin (IDed via id -- param 2)    
+     *      - 2: bgMover.scrollin (IDed via id -- param 2)   
+     *      - 3: backpack.backpackBtnActive    
      * 
      * param 1: to true (1) or false (0)    
      *     
      * optional param 2: info param depending on index in param 0
-     *      - param 0 is 2: id of the GO that has a BGmover script    
+     *      - 0: for param 0_2; id of the GO that has a BGmover script    
      *          
      */
      public void setScriptBoolean(bool[] done, string[] prms)
@@ -456,6 +457,9 @@ public class CustomEvents : MonoBehaviour {
                 {
                     bg.GetComponent<BGMover>().resumeBGScroll();
                 }
+                break;
+            case 3:
+                gameControl.backpack.backpackBtnActive = (b == 1) ? true : false;
                 break;
             default:
                 break;

@@ -50,21 +50,21 @@ public class PaintballSpawner : MonoBehaviour
         yield return new WaitForSeconds(startWait);
         while (!esDone[0])
         {
-            if (Random.Range(0, 99.99f) > 5)
-            {
+            //if (Random.Range(0, 99.99f) > 5)
+            //{
 
                 genPaintball(Random.Range(spawnValues.x - spawnRangeWidth,
                         spawnValues.x + spawnRangeWidth),
                     spawnValues.y, spawnValues.z);
                 yield return new WaitForSeconds(pbSpawnWait);
 
-            }
-            else
-            {//5% chance to generate potion
-                genItem(2, Random.Range(spawnValues.x - spawnRangeWidth,
-                spawnValues.x + spawnRangeWidth),
-            spawnValues.y, spawnValues.z);
-            }
+            //}
+            //else
+            //{//5% chance to generate potion
+            //    genItem(2, Random.Range(spawnValues.x - spawnRangeWidth,
+            //    spawnValues.x + spawnRangeWidth),
+            //spawnValues.y, spawnValues.z);
+            //}
         }
     }
 

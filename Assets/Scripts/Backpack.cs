@@ -13,6 +13,7 @@ public class Backpack : MonoBehaviour
     public GameObject itemBG; //initial bg to duplicate
     private GameObject itemMold; //sprite to put in front of itemBG
     private ItemLoader itemLoader;
+    public bool backpackBtnActive = true;
 
     // Start is called before the first frame update
     void Start()
@@ -109,13 +110,16 @@ public class Backpack : MonoBehaviour
 
     public void openBackpackUI()
     {
-        gameControl.ckTouch = false; //to stop checking on game progress
-        gameControl.pauseGame();
+        if (backpackBtnActive)
+        {
+            gameControl.ckTouch = false; //to stop checking on game progress
+            gameControl.pauseGame();
 
             if (backpack != null)
-        {
-            backpack.SetActive(true);
+            {
+                backpack.SetActive(true);
 
+            }
         }
     }
 

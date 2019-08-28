@@ -45,6 +45,7 @@ public class GameControl : MonoBehaviour {
     public BGMover[] backgrounds;
 
     public GameObject fixedBG;
+    public Backpack backpack;
 
     private float pressTime=-1;
     public bool ckTouch = true; //if false, won't check for user's touch input in GAME
