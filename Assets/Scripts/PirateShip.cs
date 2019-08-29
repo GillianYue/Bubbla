@@ -41,10 +41,10 @@ public class PirateShip : BossBehavior
                     d[0] = true;
                     break;
                 case 1:
-                    StartCoroutine(doForNumTimes(d, this, 4, 1.5f, Global.Do(() => fireCannonball(new bool[1]))));
+                    StartCoroutine(doForNumTimes(d, this, 4, 1.5f, () => fireCannonball(new bool[1])));
                     break;
                 case 2:
-                    StartCoroutine(doForNumTimes(d, this, 8, 2f, Global.Do(() => fireEnemy(new bool[1], enemy))));
+                    StartCoroutine(doForNumTimes(d, this, 8, 2f, () => fireEnemy(new bool[1], enemy)));
                     break;
             }
             yield return new WaitUntil(() => d[0]);

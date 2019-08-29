@@ -70,8 +70,7 @@ public abstract class BossBehavior : MonoBehaviour
      */
     public static GameObject shootProjectileAt(GameObject proj, Vector3 spawnPos, Vector3 dir, float spd, float angle)
     {
-        GameObject p = Instantiate(proj, spawnPos,
-               proj.transform.rotation) as GameObject;
+        GameObject p = Instantiate(proj, spawnPos, proj.transform.rotation) as GameObject;
 
        p.GetComponent<Rigidbody2D>().velocity =
     new Vector2(((dir.y > 0) ? 10 : -10) * Mathf.Sin(angle) * spd,
@@ -82,10 +81,8 @@ public abstract class BossBehavior : MonoBehaviour
 
     public static IEnumerator doForNumTimes(bool[] done, MonoBehaviour g, int n, float interval, IEnumerator action)
     {
-        Debug.Log("doForNumTimes!");
         for (int l = 0; l < n; l++)
         {
-            Debug.Log("fire!");
             g.StartCoroutine(action);
             yield return new WaitForSeconds(interval);
         }
@@ -94,10 +91,8 @@ public abstract class BossBehavior : MonoBehaviour
 
     public static IEnumerator doForNumTimes(bool[] done, MonoBehaviour g, int n, float interval, Action action)
     {
-        Debug.Log("doForNumTimes!");
         for (int l = 0; l < n; l++)
         {
-            Debug.Log("fire!");
             action();
             yield return new WaitForSeconds(interval);
         }
