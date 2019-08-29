@@ -37,19 +37,29 @@ public class L1 : LevelScript
 
     IEnumerator bossFight()
     {
+        if (ps == null)
+            ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();
+
         Debug.Log("starting boss fight");
         bool[] bossFightEnd = new bool[1];
 
-        StartCoroutine(gameControl.pSpawner.SpawnPaintballs(bossFightEnd)); //will end when boss fight ends
+       gameControl.pSpawner.StartSpawn(bossFightEnd); //will end when boss fight ends
 
+        //TODO enter BGM
+        yield return new WaitForSeconds(3f);
 
-        yield return new WaitForSeconds(5f);
+        StartCoroutine(ps.bossFight(bossFightEnd));
+        yield return new WaitUntil(() => bossFightEnd[0]);
+
+        Debug.Log("boss fight done");
+
     }
 
     void pirateShipFireCannon(bool[] done)
     {
-        if(ps == null)
-        ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();
+        if (ps == null)
+            ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();
+
         ps.fireCannonball(done);
     }
 

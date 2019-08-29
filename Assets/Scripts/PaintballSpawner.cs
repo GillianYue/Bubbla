@@ -44,7 +44,7 @@ public class PaintballSpawner : MonoBehaviour
 
     }
 
-    public IEnumerator SpawnPaintballs(bool[] esDone) //esDone is always specific to this one IEnumerator process
+    private IEnumerator SpawnPaintballs(bool[] esDone) //esDone is always specific to this one IEnumerator process
     {
 
         yield return new WaitForSeconds(startWait);

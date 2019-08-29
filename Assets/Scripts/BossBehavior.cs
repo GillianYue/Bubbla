@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /**
  * abstract base class for levelscripts, which contain custom functions for special events in each level
@@ -10,6 +11,7 @@ public abstract class BossBehavior : MonoBehaviour
 
     public int life = 1000;
     public int attack;
+    public int stage; //0
 
     public float sizeScale; //same as paintball, base scale to be multiplied with global
     public float colliderScale; //multiplied to the original generated polygon 2d collider shape to resize
@@ -64,6 +66,7 @@ public abstract class BossBehavior : MonoBehaviour
      * returns the instantiated projectile
      * 
      * make sure spawnPos is in world coordinates
+     * the projectile doesn't necessarily need a Projectile script attached, but a Rigidbody2D is a must    
      */
     public static GameObject shootProjectileAt(GameObject proj, Vector3 spawnPos, Vector3 dir, float spd, float angle)
     {
@@ -77,5 +80,27 @@ public abstract class BossBehavior : MonoBehaviour
         return p;
     }
 
+    public static IEnumerator doForNumTimes(bool[] done, MonoBehaviour g, int n, float interval, IEnumerator action)
+    {
+        Debug.Log("doForNumTimes!");
+        for (int l = 0; l < n; l++)
+        {
+            Debug.Log("fire!");
+            g.StartCoroutine(action);
+            yield return new WaitForSeconds(interval);
+        }
+        done[0] = true;
+    }
 
+    public static IEnumerator doForNumTimes(bool[] done, MonoBehaviour g, int n, float interval, Action action)
+    {
+        Debug.Log("doForNumTimes!");
+        for (int l = 0; l < n; l++)
+        {
+            Debug.Log("fire!");
+            action();
+            yield return new WaitForSeconds(interval);
+        }
+        done[0] = true;
+    }
 }
