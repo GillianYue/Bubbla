@@ -62,16 +62,16 @@ public class Player : MonoBehaviour
 		gameControl.updateLife (life);
 
 		if (Input.GetKeyDown (KeyCode.RightArrow)) {
-			transform.position += new Vector3 (1, 0, 0);
+			transform.position += new Vector3 (20, 0, 0);
 		}
 		if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-			transform.position += new Vector3 (-1, 0, 0); 
+			transform.position += new Vector3 (-20, 0, 0); 
 		}
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
-			transform.position += new Vector3 (0, 0, 1);
+			transform.position += new Vector3 (0, 20, 0);
 		}
 		if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			transform.position += new Vector3 (0, 0, -1); 
+			transform.position += new Vector3 (0, -20, 0); 
 		}
 
 

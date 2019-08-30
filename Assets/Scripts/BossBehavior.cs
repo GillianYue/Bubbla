@@ -61,16 +61,44 @@ public abstract class BossBehavior : MonoBehaviour
         GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
     }
 
+    public void damage(int damage, Color col)
+    {
+        life -= damage;
+        //audioz.enemyDamagedSE();
+        StartCoroutine(damageVFXboss(col));
+    }
+
+    IEnumerator damageVFXboss(Color col)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            //              //flip visibility on and off
+            GetComponent<SpriteRenderer>().enabled = !GetComponent<SpriteRenderer>().enabled;
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
 
     /**
      * returns the instantiated projectile
      * 
      * make sure spawnPos is in world coordinates
-     * the projectile doesn't necessarily need a Projectile script attached, but a Rigidbody2D is a must    
+     * the projectile doesn't necessarily need a Projectile script attached, but a Rigidbody2D is a must   
+     * 
+     * if inst is true, assumes GO proj is a mold, instantiates another copy of it;
+     * if inst is false, will not instantiate but use proj directly
      */
-    public static GameObject shootProjectileAt(GameObject proj, Vector3 spawnPos, Vector3 dir, float spd, float angle)
+    public static GameObject shootProjectileAt(bool inst, GameObject proj, Vector3 spawnPos, Vector3 dir, float spd, float angle)
     {
-        GameObject p = Instantiate(proj, spawnPos, proj.transform.rotation) as GameObject;
+        GameObject p;
+        if (inst)
+        {
+            p = Instantiate(proj, spawnPos, proj.transform.rotation) as GameObject;
+        }
+        else
+        {
+            p = proj;
+        }
 
        p.GetComponent<Rigidbody2D>().velocity =
     new Vector2(((dir.y > 0) ? 10 : -10) * Mathf.Sin(angle) * spd,

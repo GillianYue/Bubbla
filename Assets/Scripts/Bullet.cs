@@ -28,16 +28,21 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other){
-
-		//if bullet hits enemy, it bursts and damages enemy
-		if (other.GetComponent<Collider2D>().tag == "Enemy") {
+        string t = other.GetComponent<Collider2D>().tag;
+        //if bullet hits enemy, it bursts and damages enemy
+        if (t == "Enemy") {
 			if (explosion != null) {
 				Instantiate (explosion, transform.position, transform.rotation);
 				other.GetComponent<Enemy> ().damage (damage, 
 					gameObject.GetComponent<SpriteRenderer>().color);
 				Destroy (gameObject);
 			}
-		}
+		}else if(t == "Boss")
+        {
+            other.GetComponent<BossBehavior>().damage(damage,
+    gameObject.GetComponent<SpriteRenderer>().color);
+            Destroy(gameObject);
+        }
 
 	}
 }

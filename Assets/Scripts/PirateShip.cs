@@ -81,7 +81,7 @@ public class PirateShip : BossBehavior
 
         float dgAngle = -1 * (angle * Mathf.Rad2Deg); //convert from radian to dgr
 
-        GameObject cannonball = shootProjectileAt(projectile, gameObject.transform.position, direction, cannonSpeed, angle); //already instantiated
+        GameObject cannonball = shootProjectileAt(true, projectile, gameObject.transform.position, direction, cannonSpeed, angle); //already instantiated
         cannonball.transform.parent = transform;
 
         done[0] = true;
@@ -99,8 +99,7 @@ public class PirateShip : BossBehavior
         float dgAngle = -1 * (angle * Mathf.Rad2Deg); //convert from radian to dgr
 
         GameObject e = enemyLoader.getEnemyInstance(eCode);
-        shootProjectileAt(e, gameObject.transform.position, direction, enemyShootSpeed, angle); //already instantiated
-        e.transform.parent = transform;
+        shootProjectileAt(false, e, gameObject.transform.position, direction, enemyShootSpeed, angle); //already instantiated
 
         done[0] = true;
     }

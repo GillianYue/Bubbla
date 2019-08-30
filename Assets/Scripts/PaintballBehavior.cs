@@ -6,7 +6,7 @@ public class PaintballBehavior : MonoBehaviour {
 	//instantiated for each paintball
 	private int size;
 	private Color color;
-    public bool needGenCol = true, //that color isn't set externally, and that calling genColorWDist is needed
+    public bool needGenCol = true, //that color isn't set externally, and that calling genColorWDist is needed if false
     needSetSize = true;
 
     public float sizeScale;

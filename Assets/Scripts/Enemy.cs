@@ -49,27 +49,12 @@ public class Enemy : MonoBehaviour {
 	}
 
 	IEnumerator damageVFXenemy(Color col){
-//		if ( GetComponent<Animator> ().GetBool ("Whitened") == false) {
-//			Color orig = GetComponent<SpriteRenderer> ().color;
 			for (int i = 0; i < 2; i++) {
 //				//flip visibility on and off
 				GetComponent<SpriteRenderer> ().enabled = !GetComponent<SpriteRenderer> ().enabled;
-//
-//				if (i == 0) {
-//					GetComponent<Animator> ().SetBool ("Whitened", true);
-//					GetComponent<SpriteRenderer> ().color = col;
-//				} else {
-//					GetComponent<Animator> ().SetBool ("Whitened", false);
-//					GetComponent<SpriteRenderer> ().color = orig;
-//				}
+
 				yield return new WaitForSeconds (0.1f);
 			}
-//		} else {
-//			for (int i = 0; i < 2; i++) {
-//				//flip visibility on and off
-//				GetComponent<SpriteRenderer> ().enabled = !GetComponent<SpriteRenderer> ().enabled;
-//		}
-//	}
 }
 
     public void setSizeScale(float sScale)
