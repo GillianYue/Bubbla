@@ -11,6 +11,11 @@ public class L1 : LevelScript
         base.Start();
     }
 
+    new void gameOver(GameObject GameOverC)
+    {
+        
+    }
+
     public override IEnumerator levelScriptEvent(int code, bool[] done)
     {
         switch (code)

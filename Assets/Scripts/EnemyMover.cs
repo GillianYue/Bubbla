@@ -3,20 +3,20 @@ using System.Collections;
 
 public class EnemyMover : MonoBehaviour {
 
-	public float speed;
+	public float speed, accl = 0;
 	private Rigidbody2D rb;
 	public Vector3 direction;
 	public int enemyType;
 	//type 0 inanimate, 1 move-stop, 2 screen span, 3 track
 	public int scnRange; //half OffMeshLink world Screen width
 	public Camera cam;
-
+    public bool needVelo = true, needAccl = false; //sets velo on start if not already set
 
 
 	void Start() {
 		//Rigidbody
 		rb = GetComponent<Rigidbody2D> ();
-		rb.velocity = direction * speed;
+        if(needVelo) rb.velocity = direction * speed;
 
 		switch(enemyType){
 		case 1: //crab
@@ -31,6 +31,9 @@ public class EnemyMover : MonoBehaviour {
 		}
 	}
 
+    /**
+     * sets spd; assumes that direction is already in place
+     */
     public void setSpeed(float spd)
     {
         speed = spd;
@@ -38,9 +41,24 @@ public class EnemyMover : MonoBehaviour {
         rb.velocity = direction * spd;
     }
 
-	void Update(){
-		
-	}
+    public void setVelocity(Vector2 velo)
+    {
+        GetComponent<Rigidbody2D>().velocity = velo;
+        needVelo = false;
+    }
+
+    public void setAcceleration(float acc)
+    {
+        accl = acc;
+        needAccl = true;
+    }
+
+    void Update(){
+        //acceleration
+        if (needAccl)
+            GetComponent<Rigidbody2D>().velocity += new Vector2
+            (GetComponent<Rigidbody2D>().velocity.x * accl, GetComponent<Rigidbody2D>().velocity.y * accl);
+    }
 
 
 	IEnumerator movePause (int turns, float speed){

@@ -7,8 +7,8 @@ public class PirateShip : BossBehavior
 {
     private Player player;
     public GameObject projectile;
-    public float cannonSpeed; //velocity of shot cannonballs
-    public float enemyShootSpeed; //velocity of shot enemies
+    public float cannonSpeed; //velocity of shot cannonballs, NEED TO BE SET in EDITOR!!
+    public float enemyShootSpeed; //velocity of shot enemies, NEED TO BE SET in EDITOR!!
     public Text lifeText;
     private EnemyLoader enemyLoader;
 
@@ -41,10 +41,10 @@ public class PirateShip : BossBehavior
                     d[0] = true;
                     break;
                 case 1:
-                    StartCoroutine(doForNumTimes(d, this, 4, 1.5f, () => fireCannonball(new bool[1])));
+                    StartCoroutine(doForNumTimes(d, this, 4, 1.0f, () => fireCannonball(new bool[1])));
                     break;
                 case 2:
-                    StartCoroutine(doForNumTimes(d, this, 8, 2f, () => fireEnemy(new bool[1], enemy)));
+                    StartCoroutine(doForNumTimes(d, this, 8, 1.5f, () => fireEnemy(new bool[1], enemy)));
                     break;
             }
             yield return new WaitUntil(() => d[0]);

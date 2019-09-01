@@ -22,10 +22,16 @@ public abstract class LevelScript : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     public abstract IEnumerator levelScriptEvent(int code, bool[] done);
+
+    public void gameOver(GameObject GameOverC)
+    {
+        GameOverC.SetActive(true);
+        Time.timeScale = 0;
+    }
 
     public string[] makeParamString(string a, string b)
     {

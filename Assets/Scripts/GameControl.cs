@@ -39,6 +39,7 @@ public class GameControl : MonoBehaviour {
     public GameObject HeartVFX, aim;
     public GameObject player;
     public GameObject GameOverC;
+    public CustomEvents customEvents;
     public EnemySpawner eSpawner;
     public PaintballSpawner pSpawner;
     public GameFlow gFlow;
@@ -284,8 +285,7 @@ public class GameControl : MonoBehaviour {
     }
 
     public void gameOver(){
-        GameOverC.SetActive (true);
-        Time.timeScale = 0;
+        customEvents.levelScript.gameOver(GameOverC); //may differ based on levelscript
     }
 
     public void restart(){

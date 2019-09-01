@@ -2,6 +2,7 @@
 using System.Collections;
 
 public delegate void setterDelegate(string[,] data);
+public delegate void setterDelegateD(string[,] data, bool[] sd);
 
 public class LoadScene : MonoBehaviour {
 	//script specifically for loading screen
@@ -29,6 +30,21 @@ public class LoadScene : MonoBehaviour {
         string[,] data = CSVReader.SplitCsvGrid(csv.text);
         setter(data);
         while (!(data.Length > 0))
+        {
+            yield return null;
+        }
+        loadDone[0] = true;
+        //levelScript.setLevelCsvData(data);
+    }
+
+    /*
+     * overflow method for above; will wait till the entire setter function is done (checking for passed bool[])
+     */
+    public static IEnumerator processCSV(bool[] loadDone, TextAsset csv, setterDelegateD setter, bool[] setterDone)
+    {
+        string[,] data = CSVReader.SplitCsvGrid(csv.text);
+        setter(data, setterDone);
+        while (!(data.Length > 0 && setterDone[0]))
         {
             yield return null;
         }

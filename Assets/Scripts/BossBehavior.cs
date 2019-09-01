@@ -100,9 +100,16 @@ public abstract class BossBehavior : MonoBehaviour
             p = proj;
         }
 
-       p.GetComponent<Rigidbody2D>().velocity =
-    new Vector2(((dir.y > 0) ? 10 : -10) * Mathf.Sin(angle) * spd,
-    ((dir.y > 0) ? 10 : -10) * Mathf.Cos(angle) * spd);
+        if (proj.CompareTag("Enemy"))
+        {
+            p.GetComponent<EnemyMover>().setVelocity(new Vector2(((dir.y > 0) ? 10 : -10) * Mathf.Sin(angle) * spd,
+                 ((dir.y > 0) ? 10 : -10) * Mathf.Cos(angle) * spd));
+        }
+        else { 
+        p.GetComponent<Rigidbody2D>().velocity =
+                  new Vector2(((dir.y > 0) ? 10 : -10) * Mathf.Sin(angle) * spd,
+                 ((dir.y > 0) ? 10 : -10) * Mathf.Cos(angle) * spd);
+    }
 
         return p;
     }
