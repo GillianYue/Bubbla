@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
 	public GameControl gameControl;
 	private AudioSource[] fire, ouch;
 
+    public bool checkForUpdates = true; //updates life UI and checks for life if true
+
 	//those are relative to player, since Cannon(player's cannon) is a child of player
 	private Vector3 CannNormStart = new Vector3(1.36f, 14.89f, 3.33f), 
 	CannLShoot = new Vector3(-3.82f, 6.45f, 3.33f), 
@@ -55,26 +57,33 @@ public class Player : MonoBehaviour
 
 		lifeText.text = ("Life: " + life.ToString ());
 
-		if (life < 1) {
-			gameControl.gameOver();
-		}
+        if (checkForUpdates) {
+            if (life < 1)
+            {
+                gameControl.gameOver();
+            }
+            else
+            {
+                gameControl.updateLife(life);
 
-		gameControl.updateLife (life);
-
-		if (Input.GetKeyDown (KeyCode.RightArrow)) {
-			transform.position += new Vector3 (20, 0, 0);
-		}
-		if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-			transform.position += new Vector3 (-20, 0, 0); 
-		}
-		if (Input.GetKeyDown (KeyCode.UpArrow)) {
-			transform.position += new Vector3 (0, 20, 0);
-		}
-		if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			transform.position += new Vector3 (0, -20, 0); 
-		}
-
-
+                if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    transform.position += new Vector3(20, 0, 0);
+                }
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    transform.position += new Vector3(-20, 0, 0);
+                }
+                if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    transform.position += new Vector3(0, 20, 0);
+                }
+                if (Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    transform.position += new Vector3(0, -20, 0);
+                }
+            }
+        }
 
 	}
 

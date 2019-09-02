@@ -14,7 +14,8 @@ public class PaintballSpawner : MonoBehaviour
     public Vector3 spawnValues;
     public GameObject Ballz;
     public bool pbSpawnSwitch; //when start flip to true, elsewhere will set it to false to end pb Spawn
-    public ItemLoader itemLoader; 
+    public ItemLoader itemLoader;
+    public bool[] currProcessToggle; //setting bool[0] to true will stop current process, theoretically
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +42,21 @@ public class PaintballSpawner : MonoBehaviour
         //int[] m: types of monsters for each of the waves; the EXACT SAME SIZE as w[]
 
         StartCoroutine(SpawnPaintballs(esDone));
+        currProcessToggle = esDone;
 
+    }
+
+    public void stopSpawn()
+    {
+        currProcessToggle[0] = true;
+    }
+
+    public void destroyAllpb()
+    {
+        Transform c;
+       while((c = Ballz.transform.GetChild(0))!= null){
+            Destroy(c.gameObject);
+        }
     }
 
     private IEnumerator SpawnPaintballs(bool[] esDone) //esDone is always specific to this one IEnumerator process

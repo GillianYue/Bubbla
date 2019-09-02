@@ -6,11 +6,11 @@ public class EnemySpawner : MonoBehaviour {
     public float startWait, enemySpawnWait, waveSpawnWait;
     private float range;
     //range is worldspace width on screen/2 (+ and then -)
-    public GameObject enemiz;
     public GameObject[] enemies;
     public Vector3 spawnValues;
 
     public EnemyLoader enemyLoader;
+    public GameObject enemiez; //parent of all spawned enemies
 
     void Start()
     {
@@ -159,6 +159,7 @@ public class EnemySpawner : MonoBehaviour {
         Vector3 spawnPosition = new Vector3 (x, y, z);
         e.transform.position = spawnPosition;
 
+        e.transform.parent = enemiez.transform;
 
         return e;
     }

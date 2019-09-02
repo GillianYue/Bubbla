@@ -11,6 +11,7 @@ public class PirateShip : BossBehavior
     public float enemyShootSpeed; //velocity of shot enemies, NEED TO BE SET in EDITOR!!
     public Text lifeText;
     private EnemyLoader enemyLoader;
+    public bool[] bossFightStop; 
 
     new void Start()
     {
@@ -31,7 +32,7 @@ public class PirateShip : BossBehavior
     public IEnumerator bossFight(bool[] done)
     {
         int enemy = 0; int turns = 0; stage = 1;
-        while(life > 0)
+        while(life > 0 && (!bossFightStop[0]))
         {
             bool[] d = new bool[1]; //done checker for the local switch action
             switch (stage)

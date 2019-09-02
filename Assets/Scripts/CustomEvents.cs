@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-/**
+/*
  * this class is in charge of carrying out the custom events (indicated by a code of 99 in game mode)
  * whenever game flow gets to that command. Each event has a code number. With the params read in along
  * with the custom event code, special effects can be created. 
@@ -16,7 +16,7 @@ public class CustomEvents : MonoBehaviour {
     public LevelScript levelScript;
 
     //protected string[,] data;
-    /**
+    /*
      * identified is a List that keeps track of all existing GOs with an identifier script attached
      * to. This way, when we look for an identified GO (not tagged because Unity has an inflexible
      * tag system), we need only look inside this list. 
@@ -52,7 +52,7 @@ public class CustomEvents : MonoBehaviour {
     }
 
 
-    /**
+    /*
      * the method called by GameFlow when it sees 99 (customEvent) in GAME mode
      * 5 (for now) parameters are passed in as strings stored in string[] prms
      * 
@@ -93,6 +93,9 @@ public class CustomEvents : MonoBehaviour {
             case 11:
                 moveToInSecs(done, prms);
                 break;
+            case 12:
+                clearEnemies(done, prms);
+                break;
             case 99:
                 levelScriptEvent(done, prms);
                 break;
@@ -107,7 +110,7 @@ public class CustomEvents : MonoBehaviour {
         gameFlow.incrementPointer();
     }
 
-    /**
+    /*
      * event #1
      * 
      * param 0: enemy code indicating which enemy we want to generate
@@ -155,7 +158,7 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
-    /**TODO haven't tested out yet, need check
+    /* TODO haven't tested out yet, need check
      * event #2
      * 
      * creating an in-game item, or other non-living-things
@@ -205,7 +208,7 @@ public class CustomEvents : MonoBehaviour {
     }
 
 
-    /**
+    /*
      * event #3
      * 
      * create a paintball  
@@ -276,7 +279,7 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
-    /**
+    /*
      * event #5
      * 
      * param 0: time to wait and do nothing in seconds
@@ -290,7 +293,7 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
-    /**
+    /*
      * event #6
      * 
      * param 0: identifier of the gameObject
@@ -345,7 +348,7 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
-    /**
+    /*
      * event #7
      * 
      * param 0: identifier
@@ -361,30 +364,31 @@ public class CustomEvents : MonoBehaviour {
         int active;
         int.TryParse(prms[1], out active);
 
-        SpriteRenderer spr; int effect = -1; float origA = 1; Color orig = Color.black;
-        if ((spr = target.GetComponent<SpriteRenderer>()) != null)
-        {
-            //means this GO has a spriteRenderer, ok
-            orig = spr.color;
-            origA = orig.a;
 
-            if (!prms[2].Equals("")) //only parse effect when there is a spriteRenderer
-            {
-                int.TryParse(prms[2], out effect);
-            }
-
-            if (effect == 0)
-            {
-                if (active == 0)
+                SpriteRenderer spr; int effect = -1; float origA = 1; Color orig = Color.black;
+                if ((spr = target.GetComponent<SpriteRenderer>()) != null)
                 {
-                    for (float o = origA; o > 0.3f; o -= 0.15f) //fade out of sprite
+                    //means this GO has a spriteRenderer, ok
+                    orig = spr.color;
+                    origA = orig.a;
+                    
+                    if (prms.Length > 2 && !prms[2].Equals("")) //only parse effect when there is a spriteRenderer
                     {
-                        spr.color = new Color(orig.r, orig.g, orig.b, o);
-                        yield return new WaitForSeconds(0.2f);
+                        int.TryParse(prms[2], out effect);
                     }
-                }
-            }
-        } //this all wouldn't happen if a spriterenderer doesn't exist
+
+                    if (effect == 0)
+                    {
+                        if (active == 0)
+                        {
+                            for (float o = origA; o > 0.3f; o -= 0.15f) //fade out of sprite
+                            {
+                                spr.color = new Color(orig.r, orig.g, orig.b, o);
+                                yield return new WaitForSeconds(0.2f);
+                            }
+                        }
+                    }
+                } //this all wouldn't happen if a spriterenderer doesn't exist
 
 
         //normal procedure 
@@ -416,7 +420,7 @@ public class CustomEvents : MonoBehaviour {
 
     }
 
-    /**
+    /*
      * event #8
      * 
      * param 0: index of which boolean to set (hard-coded in script, here)
@@ -468,7 +472,7 @@ public class CustomEvents : MonoBehaviour {
         done[0] = true;
     }
 
-    /**
+    /*
      * event #10
      * 
      * param 0: GameObject identifier id
@@ -494,10 +498,10 @@ public class CustomEvents : MonoBehaviour {
         float spd;
         float.TryParse(prms[3], out spd);
 
-        StartCoroutine(Global.moveTo(target, x, y, spd, done));
+        StartCoroutine(Global.moveTo(target, x, y, spd, done)); //will set done[0] to true
     }
 
-    /**
+    /*
      * event #11
      * 
      * param 0: GameObject identifier id
@@ -518,16 +522,31 @@ public class CustomEvents : MonoBehaviour {
         float secs;
         float.TryParse(prms[3], out secs);
 
-        StartCoroutine(Global.moveToInSecs(target, x, y, secs, done));
+        StartCoroutine(Global.moveToInSecs(target, x, y, secs, done)); //will set done[0] to true
     }
 
-    /**
+    /*
+     * event #12
+     * 
+     *  destroys all enemies nested under "enemiez" GO
+     */
+    public void clearEnemies(bool[] done, string[] prms)
+    {
+
+            foreach (Transform child in eSpawner.enemiez.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        done[0] = true;
+    }
+
+    /*
      * event #99
      * 
      * param 0: index for event in levelScript
      * other params dependent to levelScript functions
      *
-     */    
+     */
     public void levelScriptEvent(bool[] done, string[] prms)
     {
         int index;
@@ -539,7 +558,7 @@ public class CustomEvents : MonoBehaviour {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~helper functions~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        /**
+        /*
          * attaches an identifier script to the go, sets id to given, and adds to local 
          * identified list        
          */

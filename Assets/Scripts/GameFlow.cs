@@ -20,7 +20,7 @@ public class GameFlow : MonoBehaviour {
     public GameObject character, dlgBox; //character is current character speaking
     public Image bgBox;
 
-    public enum Mode { DLG, GAME, END };
+    public enum Mode { DLG, GAME, SPECIAL, END };
     public Mode currMode;
 
     public Text animIndicator; //number to show which state the character is
@@ -34,6 +34,8 @@ public class GameFlow : MonoBehaviour {
     private CharacterLoader characterLoader;
     private ItemLoader itemLoader;
 
+    public ArrayList specialDLGstarts, specialDLGends; //arraylist of ints
+
     private string openTag, endTag; //those two variables are used for dialogue tag processing
 
     void Start() {
@@ -44,8 +46,11 @@ public class GameFlow : MonoBehaviour {
             itemLoader = loader.GetComponent<ItemLoader>();
         }
 
+        specialDLGstarts = new ArrayList(); specialDLGends = new ArrayList();
+
         loadDone = new bool[1];
-        StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData));
+        bool[] parseDone = new bool[1];
+        StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone));
 
         if(ArcadeClassic != null) NAME.font = ArcadeClassic;
 
@@ -69,9 +74,33 @@ public class GameFlow : MonoBehaviour {
         return lineDone;
     }
 
-    public void setData(string[,] d)
+    public void setData(string[,] d, bool[] parseDone)
     {
         data = d;
+        StartCoroutine(parseDLGcsvData(parseDone));
+    }
+
+    IEnumerator parseDLGcsvData(bool[] parseDone)
+    {
+        yield return new WaitUntil(() => (data != null));
+        int numRows = data.GetLength(1); bool toggle = false; 
+        for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
+        {
+               if(data[0, r].Equals("SPECIAL"))
+            {
+                if (!toggle)
+                {
+                    specialDLGstarts.Add(r + 1); //line after starting "SPECIAL"
+                }
+                else
+                {
+                    specialDLGends.Add(r - 1);
+                }
+                toggle = !toggle;
+            }
+        }
+
+        parseDone[0] = true;
     }
 
     /**
@@ -99,7 +128,7 @@ public class GameFlow : MonoBehaviour {
                 catch {} //supress error here
              
             }
-            print("Mode changed to " + currMode);
+            print("Mode changed to " + currMode + " at line "+pointer+": "+data[0,pointer]+" "+data[1,pointer]);
         }
 
         switch (currMode) {
@@ -280,6 +309,13 @@ public class GameFlow : MonoBehaviour {
                     em = System.Array.ConvertAll<string, int>(enemies, int.Parse);
                     gameControl.startEnemyWaves(wv, em);
                 }
+                break;
+
+            case Mode.SPECIAL: //if reaches here, means reaches end of SPECIAL, redirect to another line
+                int ln;
+                int.TryParse(data[1, pointer], out ln);
+                Debug.Log("according to special, switching to line " + ln + ": " + data[0, ln] + ", " + data[1, ln]);
+                if (ln != 0) setPointer(ln); else Debug.LogError("SPECIAL end didn't specify goto line number");
                 break;
 
             case Mode.END:
@@ -498,6 +534,14 @@ public class GameFlow : MonoBehaviour {
     public void setPointer(int p)
     {
         pointer = p;
+    }
+
+    public void setPointerToSpecial(int index)
+    {
+        int a = (int)specialDLGstarts[index];
+        Debug.Log("special, switching to line " + a + ": " + data[0, a] + ", " + data[1, a] + ", " + data[2, a]);
+        setPointer((int)specialDLGstarts[index]);
+
     }
 
     public int getPointer() {

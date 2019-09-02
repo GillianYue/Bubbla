@@ -5,15 +5,35 @@ using UnityEngine;
 public class L1 : LevelScript
 {
     public PirateShip ps;
+    public Player player;
 
     new void Start()
     {
         base.Start();
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
-    new void gameOver(GameObject GameOverC)
+    /*
+     * level 1 specific gameOver function; overrides base
+     */
+    public override void gameOver(GameObject GameOverC)
     {
-        
+        //fade in custom event
+        player.respawn();
+
+        string[] prms = makeParamString("noneed", "whatever"),
+        prms2 = makeParamString("ps", "0"); //setting ship inactive
+
+        customEvents.clearEnemies(new bool[1], prms);
+        StartCoroutine(customEvents.setGOActive(new bool[1], prms2));
+
+        gameControl.pSpawner.stopSpawn(); //will stop pSpawner
+        //gameControl.pSpawner.destroyAllpb();
+        //clear scene, revert back to beginning bg
+        Time.timeScale = 0; //might not be eventually needed
+        gameFlow.setPointerToSpecial(0); //SPECIAL 0
+
+        Time.timeScale = 1;
     }
 
     public override IEnumerator levelScriptEvent(int code, bool[] done)

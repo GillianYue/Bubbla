@@ -27,7 +27,7 @@ public abstract class LevelScript : MonoBehaviour
 
     public abstract IEnumerator levelScriptEvent(int code, bool[] done);
 
-    public void gameOver(GameObject GameOverC)
+    public virtual void gameOver(GameObject GameOverC)
     {
         GameOverC.SetActive(true);
         Time.timeScale = 0;
