@@ -18,18 +18,35 @@ public class L1 : LevelScript
      */
     public override void gameOver(GameObject GameOverC)
     {
+        StartCoroutine(GameOver());
+    }
+
+    IEnumerator GameOver()
+    {
+
         //fade in custom event
         player.respawn();
 
         gameControl.endGame(); //stop spawners and clears GOs on field
 
+        bool[] vfxDone = new bool[1];
+        string[] vfxPrms = makeParamString("0", "whatev");
+        StartCoroutine(customEvents.vfx(vfxDone, vfxPrms));
+
+        yield return new WaitUntil(() => vfxDone[0]); //will wait until vfx done
+        yield return new WaitForSeconds(2);
+
         string[] prms2 = makeParamString("ps", "0"); //setting ship inactive
         StartCoroutine(customEvents.setGOActive(new bool[1], prms2));
 
         //clear scene, revert back to beginning bg
-        gameFlow.setPointerToSpecial(0); //SPECIAL 0
 
-        Time.timeScale = 1;
+        bool[] vfxDone2 = new bool[1];
+        string[] vfxPrms2 = makeParamString("1", "whatev");
+        StartCoroutine(customEvents.vfx(vfxDone2, vfxPrms2));
+        yield return new WaitUntil(() => vfxDone2[0]); //will wait until vfx done
+
+        gameFlow.setPointerToSpecial(0); //SPECIAL 0
     }
 
     public override IEnumerator levelScriptEvent(int code, bool[] done)

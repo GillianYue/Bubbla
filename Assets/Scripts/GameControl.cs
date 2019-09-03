@@ -29,7 +29,7 @@ using UnityEngine.UI;
 public class GameControl : MonoBehaviour {
     //screen: 320x480
     //world to screen factor: 1:35.6
-    public GameObject mainCanvas;
+    public GameObject mainCanvas, vfxCanvas; //vfxCanvas has a sorting order of 99 since it should be above everything
     public Camera mainCamera;
     public GameObject Hs_Holder, Ballz; //ballz is the empty parent GO holding all paintballs
     //Hs_holder likewise for hearts
@@ -357,7 +357,9 @@ public class GameControl : MonoBehaviour {
         pSpawner.StopAllCoroutines(); //stop endCheck, stop any potential wave spawn processes
         eSpawner.StopAllCoroutines(); //stop endCheck and any enemySpawn
 
-        customEvents.clearEnemies(new bool[1], new string[1]);
+        string[] prms = new string[1];
+        prms[0] = "0";
+        customEvents.clearEnemiesOrPBs(new bool[1], prms);
         pSpawner.destroyAllpb();
     }
 

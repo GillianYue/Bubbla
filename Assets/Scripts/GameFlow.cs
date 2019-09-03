@@ -110,14 +110,11 @@ public class GameFlow : MonoBehaviour {
      */   
     public IEnumerator processCurrentLine() { //current being where the pointer is
 
-        Debug.Log("processing " + pointer);
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
             if (data[0, pointer].Equals("SPECIAL"))
             {
                 int ln;
                 int.TryParse(data[1, pointer], out ln);
-                Debug.Log("according to special, switching to line " + ln);
-                Debug.Log("" + ": " + data[0, ln] + ", " + data[1, ln]);
                 if (ln != 0) setPointer(ln); else Debug.LogError("SPECIAL end didn't specify goto line number");
                 yield break; //breaks out of the coroutine
             }
@@ -138,7 +135,7 @@ public class GameFlow : MonoBehaviour {
                 catch {} //supress error here
              
             }
-            print("Mode changed to " + currMode + " at line "+pointer+": "+data[0,pointer]+" "+data[1,pointer]);
+            print("Mode changed to " + currMode + " at line "+pointer);
         }
 
         switch (currMode) {

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -13,6 +14,7 @@ public class CustomEvents : MonoBehaviour {
     protected GameFlow gameFlow;
     protected EnemySpawner eSpawner;
     protected PaintballSpawner pSpawner;
+    protected GameObject vfxCanvas;
     public LevelScript levelScript;
 
     //protected string[,] data;
@@ -32,6 +34,7 @@ public class CustomEvents : MonoBehaviour {
         gameFlow = GC.GetComponent<GameFlow>();
         eSpawner = GC.GetComponent<EnemySpawner>();
         pSpawner = GC.GetComponent<PaintballSpawner>();
+        vfxCanvas = gameControl.vfxCanvas;
 
         identified = new List<identifier>();
         foreach ( identifier i in FindObjectsOfType<identifier>())
@@ -94,7 +97,10 @@ public class CustomEvents : MonoBehaviour {
                 moveToInSecs(done, prms);
                 break;
             case 12:
-                clearEnemies(done, prms);
+                clearEnemiesOrPBs(done, prms);
+                break;
+            case 20:
+                StartCoroutine(vfx(done, prms));
                 break;
             case 99:
                 levelScriptEvent(done, prms);
@@ -528,26 +534,88 @@ public class CustomEvents : MonoBehaviour {
     /*
      * event #12
      * 
-     *  destroys all enemies nested under "enemiez" GO
+     *  destroys all entries of designated GO group
+     * 
+     * param 0: -0 is both enemies & pbs
+     *          -1 only enemies
+     *          -2 only pbs    
      */
-    public void clearEnemies(bool[] done, string[] prms)
+    public void clearEnemiesOrPBs(bool[] done, string[] prms)
     {
+        int index;
+        int.TryParse(prms[0], out index);
 
-            foreach (Transform child in eSpawner.enemiez.transform)
-            {
-                Destroy(child.gameObject);
-            }
+        switch (index)
+        {
+            case 0:
+                pSpawner.destroyAllpb();
+                eSpawner.destroyAllEnemies();
+                break;
+            case 1:
+                eSpawner.destroyAllEnemies();
+                break;
+            case 2:
+                pSpawner.destroyAllpb();
+                break;
+        }
+
         done[0] = true;
     }
 
     /*
-     * event #99
+     * event #20
      * 
-     * param 0: index for event in levelScript
-     * other params dependent to levelScript functions
-     *
+     * IEnumerator for all sorts of visual effects
+     * 
+     * param 0: vfx index
+     *      -0: black fade out
+     *      -1: black fade in    
      */
-    public void levelScriptEvent(bool[] done, string[] prms)
+    public IEnumerator vfx(bool[] done, string[] prms)
+    {
+        int index;
+        int.TryParse(prms[0], out index);
+        Image img = vfxCanvas.GetComponent<Image>();
+
+        switch (index)
+        {
+            case 0: //fade out to black canvas; default fade out is 2 seconds in total
+                if (img != null)
+                {
+
+                   for (float o = 0; o <= 1; o += 0.025f) //fade out of sprite
+                   {
+                   img.color = new Color(0, 0, 0, o);
+                   yield return new WaitForSeconds(0.05f);
+                   }
+                   if(img.color.a < 1)  img.color = new Color(0, 0, 0, 1); //black
+                }
+                break;
+            case 1: //black canvas fading back into view, reverse process of case 0
+                if (img != null)
+                {
+
+                    for (float o = 1; o >= 0; o -= 0.025f) //fade out of sprite
+                    {
+                        img.color = new Color(0, 0, 0, o);
+                        yield return new WaitForSeconds(0.05f);
+                    }
+                    if (img.color.a > 0) img.color = new Color(0, 0, 0, 0); //black
+                }
+                break;
+
+        }
+        done[0] = true;
+    }
+
+        /*
+         * event #99
+         * 
+         * param 0: index for event in levelScript
+         * other params dependent to levelScript functions
+         *
+         */
+        public void levelScriptEvent(bool[] done, string[] prms)
     {
         int index;
         int.TryParse(prms[0], out index);

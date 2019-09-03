@@ -98,7 +98,6 @@ public class EnemySpawner : MonoBehaviour {
     {
         while (GameObject.FindWithTag("Enemy") != null)
         {
-            Debug.Log("end check for wave " + index + " still going on");
             yield return new WaitForSeconds(0.5f);
         }
         //done
@@ -166,5 +165,11 @@ public class EnemySpawner : MonoBehaviour {
         return e;
     }
         
-
+    public void destroyAllEnemies()
+    {
+        foreach (Transform child in enemiez.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 }
