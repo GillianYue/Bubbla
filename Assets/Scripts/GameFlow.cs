@@ -20,7 +20,7 @@ public class GameFlow : MonoBehaviour {
     public GameObject character, dlgBox; //character is current character speaking
     public Image bgBox;
 
-    public enum Mode { DLG, GAME, SPECIAL, END };
+    public enum Mode { DLG, GAME, END };
     public Mode currMode;
 
     public Text animIndicator; //number to show which state the character is
@@ -110,7 +110,17 @@ public class GameFlow : MonoBehaviour {
      */   
     public IEnumerator processCurrentLine() { //current being where the pointer is
 
+        Debug.Log("processing " + pointer);
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
+            if (data[0, pointer].Equals("SPECIAL"))
+            {
+                int ln;
+                int.TryParse(data[1, pointer], out ln);
+                Debug.Log("according to special, switching to line " + ln);
+                Debug.Log("" + ": " + data[0, ln] + ", " + data[1, ln]);
+                if (ln != 0) setPointer(ln); else Debug.LogError("SPECIAL end didn't specify goto line number");
+                yield break; //breaks out of the coroutine
+            }
             if (currMode == Mode.DLG) disableDialogueBox(); //if transitioning from dlg to others
                 currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////
             if (currMode == Mode.DLG) enableDialogueBox(); //if the new mode is actually dlg
@@ -189,7 +199,7 @@ public class GameFlow : MonoBehaviour {
                 }
 
                 setAnimBaseState(character, SpriteNum);
-                /**
+                /*
                  * the two params for special event could be int, could be int arrays, so to cover all 
                  * cases we create variables for all possibilities                
                  */
@@ -309,13 +319,6 @@ public class GameFlow : MonoBehaviour {
                     em = System.Array.ConvertAll<string, int>(enemies, int.Parse);
                     gameControl.startEnemyWaves(wv, em);
                 }
-                break;
-
-            case Mode.SPECIAL: //if reaches here, means reaches end of SPECIAL, redirect to another line
-                int ln;
-                int.TryParse(data[1, pointer], out ln);
-                Debug.Log("according to special, switching to line " + ln + ": " + data[0, ln] + ", " + data[1, ln]);
-                if (ln != 0) setPointer(ln); else Debug.LogError("SPECIAL end didn't specify goto line number");
                 break;
 
             case Mode.END:
@@ -539,7 +542,6 @@ public class GameFlow : MonoBehaviour {
     public void setPointerToSpecial(int index)
     {
         int a = (int)specialDLGstarts[index];
-        Debug.Log("special, switching to line " + a + ": " + data[0, a] + ", " + data[1, a] + ", " + data[2, a]);
         setPointer((int)specialDLGstarts[index]);
 
     }

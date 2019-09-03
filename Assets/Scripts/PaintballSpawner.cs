@@ -46,6 +46,9 @@ public class PaintballSpawner : MonoBehaviour
 
     }
 
+    /*
+     * theoretically works, but can just call pSpawner.StopAllCoroutines()
+     */
     public void stopSpawn()
     {
         currProcessToggle[0] = true;
@@ -54,8 +57,9 @@ public class PaintballSpawner : MonoBehaviour
     public void destroyAllpb()
     {
         Transform c;
-       while((c = Ballz.transform.GetChild(0))!= null){
-            Destroy(c.gameObject);
+        foreach (Transform child in Ballz.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 

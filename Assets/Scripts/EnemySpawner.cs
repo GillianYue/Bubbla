@@ -12,6 +12,8 @@ public class EnemySpawner : MonoBehaviour {
     public EnemyLoader enemyLoader;
     public GameObject enemiez; //parent of all spawned enemies
 
+    public int waveIndex = 0; 
+
     void Start()
     {
         StartCoroutine(setSpawnerValues());
@@ -26,8 +28,8 @@ public class EnemySpawner : MonoBehaviour {
         //int[] w: waves in this level
 
         //int[] m: types of monsters for each of the waves; the EXACT SAME SIZE as w[]
-        StartCoroutine (SpawnEnemyWaves (gf, w, m, esDone));
-
+        StartCoroutine (SpawnEnemyWaves (gf, w, m, esDone, waveIndex));
+        waveIndex++;
     }
 
     public IEnumerator setSpawnerValues()
@@ -46,7 +48,7 @@ public class EnemySpawner : MonoBehaviour {
     
     }
 
-    IEnumerator SpawnEnemyWaves(GameFlow gf, int[] waveTypes, int[] enemTypes, bool[] esDone)
+    IEnumerator SpawnEnemyWaves(GameFlow gf, int[] waveTypes, int[] enemTypes, bool[] esDone, int index)
     { //types of waves
         yield return new WaitForSeconds (startWait);
         //start wait time
@@ -84,7 +86,7 @@ public class EnemySpawner : MonoBehaviour {
              */            
             if(c == waveTypes.Length - 1)
             {
-                StartCoroutine(PerformEndCheck(gf, esDone));
+                StartCoroutine(PerformEndCheck(gf, esDone, index));
             }
                 yield return new WaitForSeconds (waveSpawnWait);
             }
@@ -92,11 +94,11 @@ public class EnemySpawner : MonoBehaviour {
 
     }
 
-    IEnumerator PerformEndCheck(GameFlow gf, bool[] esDone)
+    IEnumerator PerformEndCheck(GameFlow gf, bool[] esDone, int index)
     {
         while (GameObject.FindWithTag("Enemy") != null)
         {
-
+            Debug.Log("end check for wave " + index + " still going on");
             yield return new WaitForSeconds(0.5f);
         }
         //done

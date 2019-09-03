@@ -261,12 +261,13 @@ public class GameControl : MonoBehaviour {
         }
 
         int tempPT = -1; //temp pointer, is passive, updates as gFlow pointer updates
+        int gfP;
         do{//once code gets here, should be ready to start gameFlow
-            if(tempPT != gFlow.getPointer()){ //avoid redundant work; only rerender if changed
+            if(tempPT != (gfP = gFlow.getPointer())){ //avoid redundant work; only rerender if changed
+                tempPT = gfP;
                 StartCoroutine(gFlow.processCurrentLine());
-            tempPT = gFlow.getPointer(); 
             }
-            yield return new WaitForSeconds(0.2f); //essentially check dialogue status every one s
+            yield return new WaitForSeconds(0.1f); //essentially check dialogue status every one s
         }while(!gFlow.checkIfEnded()); //as long as there's still something to be done
             
     }
@@ -345,6 +346,19 @@ public class GameControl : MonoBehaviour {
         {
             m.resumeBGScroll();
         }
+    }
+
+    /*
+     * a function best called in customized GameOver()s, 
+     * it stops all spawner processes and clears existing enemies and pbs on field
+     */
+    public void endGame()
+    {
+        pSpawner.StopAllCoroutines(); //stop endCheck, stop any potential wave spawn processes
+        eSpawner.StopAllCoroutines(); //stop endCheck and any enemySpawn
+
+        customEvents.clearEnemies(new bool[1], new string[1]);
+        pSpawner.destroyAllpb();
     }
 
 }

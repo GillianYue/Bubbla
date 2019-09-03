@@ -21,16 +21,12 @@ public class L1 : LevelScript
         //fade in custom event
         player.respawn();
 
-        string[] prms = makeParamString("noneed", "whatever"),
-        prms2 = makeParamString("ps", "0"); //setting ship inactive
+        gameControl.endGame(); //stop spawners and clears GOs on field
 
-        customEvents.clearEnemies(new bool[1], prms);
+        string[] prms2 = makeParamString("ps", "0"); //setting ship inactive
         StartCoroutine(customEvents.setGOActive(new bool[1], prms2));
 
-        gameControl.pSpawner.stopSpawn(); //will stop pSpawner
-        //gameControl.pSpawner.destroyAllpb();
         //clear scene, revert back to beginning bg
-        Time.timeScale = 0; //might not be eventually needed
         gameFlow.setPointerToSpecial(0); //SPECIAL 0
 
         Time.timeScale = 1;

@@ -20,6 +20,7 @@ public class PirateShip : BossBehavior
         attack = 3; //cannonball damage
         player = gameControl.player.GetComponent<Player>();
         enemyLoader = gameFlow.loader.GetComponent<EnemyLoader>();
+        bossFightStop = new bool[1];
 
         projectile = Resources.Load("Projectile") as GameObject;
     }
