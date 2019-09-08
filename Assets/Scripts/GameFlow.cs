@@ -111,7 +111,12 @@ public class GameFlow : MonoBehaviour {
     public IEnumerator processCurrentLine() { //current being where the pointer is
 
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
-            if (data[0, pointer].Equals("SPECIAL"))
+            if (data[0, pointer].Equals("SPECIAL")) //this will only happen to the ending SPECIAL tags
+                /* customEvents is in charge of calling levelScript, which is 
+                 * in charge of using certain SPECIAL blocks (with specific index)
+                 * 
+                 * e.g. levelscript.levelScriptEvent(3) calls a coroutine which uses SPECIAL block 5 and SPECIAL block 6              
+                 */
             {
                 int ln;
                 int.TryParse(data[1, pointer], out ln);

@@ -215,6 +215,17 @@ public class Global : MonoBehaviour
     }
 
     /*
+    * resizes sprite of GO sprHolder to the rect transform of rectObj based on its x scale (ignoring y)
+    */
+    public static void resizeSpriteToRectX(GameObject sprHolder, GameObject rectObj)
+    {
+        Rect sSize = sprHolder.GetComponent<SpriteRenderer>().sprite.rect;
+        var ratio = rectObj.GetComponent<RectTransform>().rect.width / sSize.width;
+        Vector3 scale = new Vector3(ratio, ratio, 1);
+        sprHolder.GetComponent<RectTransform>().localScale = scale;
+    }
+
+    /*
  * resizes sprite of a gameobj to the rect transform of this gameobj based on its y scale (ignoring x)
  */
     public static void resizeSpriteToRectY(GameObject obj)

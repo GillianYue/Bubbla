@@ -1,18 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*
+ * this script is attached to the BG GOs in scene, which have backgrounds (each to its own) as children
+ * 
+ * BG GOs have transforms as opposed to RectTransforms
+ */
 public class BGMover : MonoBehaviour {
 
 	public float topY, bottomY, startY;
 	//starting Z coordinate and ending Z coordinate
 	public float scrollSpd;
 	private bool scrollin;
+    private GameObject background;
 
 	void Start(){
-        Global.resizeSpriteToRectX(gameObject);
-        Global.zeroX(gameObject);
-        GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, startY,
-    GetComponent<RectTransform>().localPosition.z);
+
+        background = transform.GetChild(0).gameObject;
+        RectTransform bgRT = background.GetComponent<RectTransform>();
+
+        //setting dimensions for child, background (the actual holder of sprite)
+        Global.resizeSpriteToRectX(background, transform.parent.gameObject); //parent is legit Canvas
+        Global.zeroX(background);
+
+        float magicalNumber = background.GetComponent<SpriteRenderer>().sprite.rect.height * bgRT.localScale.y - Global.MainCanvasHeight;
+        //setting limits to bg sprite scroll
+        bottomY = -(magicalNumber);
+
+        //initialize background starting position
+        bgRT.anchoredPosition = new Vector3(0f, magicalNumber/2, bgRT.localPosition.z);
     }
 
 	public void StartScrolling () {
@@ -23,16 +39,16 @@ public class BGMover : MonoBehaviour {
 	void Update () {
 
 		if (scrollin) {
-            Vector3 p = GetComponent<RectTransform>().localPosition;
+            Vector3 p = transform.localPosition;
 
             if (p.y <= bottomY)
             {
                 //if it goes beyond the lower threshold
-                GetComponent<RectTransform>().anchoredPosition = new Vector3(0, topY, p.z);
+                transform.localPosition = new Vector3(0, topY, p.z);
                 //reset
             }
 
-            GetComponent<RectTransform>().anchoredPosition3D -= new Vector3 (0, scrollSpd, 0);
+            transform.localPosition -= new Vector3 (0, scrollSpd, 0);
 			//negative is UP, so
 
 		}
