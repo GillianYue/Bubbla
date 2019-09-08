@@ -61,4 +61,14 @@ public class BGMover : MonoBehaviour {
 	public void resumeBGScroll(){
 		scrollin = true;
 	}
+
+    public void jumpToPos(float pos)
+    {
+        transform.localPosition = new Vector3(0, pos, transform.localPosition.z);
+    }
+
+    public void revertToStartingPos()
+    {
+        transform.localPosition = new Vector3(0, 0, transform.localPosition.z);
+    }
 }

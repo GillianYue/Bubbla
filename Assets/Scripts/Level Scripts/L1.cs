@@ -29,6 +29,11 @@ public class L1 : LevelScript
 
         gameControl.endGame(); //stop spawners and clears GOs on field
 
+        string[] pauseMover = makeParamString("2", "0", "bg");
+        customEvents.setScriptBoolean(new bool[1], pauseMover);
+
+        customEvents.findByIdentifier("bg").GetComponent<BGMover>().revertToStartingPos();
+
         bool[] vfxDone = new bool[1];
         string[] vfxPrms = makeParamString("0", "whatev");
         StartCoroutine(customEvents.vfx(vfxDone, vfxPrms));
