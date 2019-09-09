@@ -16,6 +16,7 @@ public class PirateShip : BossBehavior
     new void Start()
     {
         base.Start();
+        maxLife = 50;
         life = 50;
         attack = 3; //cannonball damage
         player = gameControl.player.GetComponent<Player>();
@@ -25,8 +26,9 @@ public class PirateShip : BossBehavior
         projectile = Resources.Load("Projectile") as GameObject;
     }
 
-    void Update()
+    new void Update()
     {
+        base.Update();
         lifeText.text = "boss life: " + life;
     }
 

@@ -9,7 +9,7 @@ using System;
 public abstract class BossBehavior : MonoBehaviour
 {
 
-    public int life = 1000;
+    public int life = 1000, maxLife = 1000;
     public int attack;
     public int stage; //0
 
@@ -19,6 +19,9 @@ public abstract class BossBehavior : MonoBehaviour
     protected GameControl gameControl;
     protected GameFlow gameFlow;
     protected CustomEvents customEvents;
+
+    public GameObject lifeBar; //the one with image attached
+    protected RectTransform lifeRT;
 
     public void Start()
     {
@@ -30,13 +33,35 @@ public abstract class BossBehavior : MonoBehaviour
         if (sizeScale > 0) setSizeScale(sizeScale);
         if (colliderScale > 0) setColliderScale(colliderScale);
 
+        lifeBar = GameObject.FindWithTag("BossLife");
+
+        StartCoroutine(Global.WaitUntilThenDo(setLifeRT, (lifeBar != null)));
+           
     }
 
-    void Update()
+    public void Update()
     {
-        
+        setLifeBar();
     }
 
+    public void setLifeBar()
+    {
+        float percentage = (float)life / (float)maxLife;
+
+        //if(!(percentage >= 0 && percentage <= 1))
+        //{
+        //    Debug.LogError("percentage life error: " + percentage);
+        //}
+
+        if(lifeRT != null)
+        lifeRT.localScale = new Vector3(percentage, 1, 1);
+    }
+
+    //is called on start once lifeBar GO is found and ready, should be only called once
+    public void setLifeRT()
+    {
+        lifeRT = lifeBar.GetComponent<RectTransform>();
+    }
 
     public void setSizeScale(float sScale)
     {

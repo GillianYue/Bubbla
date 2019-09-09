@@ -441,9 +441,20 @@ public class Global : MonoBehaviour
         action();
     }
 
+    public static IEnumerator WaitUntilThenDo(Action action, bool condition)
+    {
+        yield return new WaitUntil(() => condition);
+        action();
+    }
+
     public static IEnumerator WaitForSeconds(float time)
     {
         yield return new WaitForSeconds(time);
+    }
+
+    public static IEnumerator WaitUntil(bool condition)
+    {
+        yield return new WaitUntil(() => condition);
     }
 
     public static IEnumerator Do(Action action)
