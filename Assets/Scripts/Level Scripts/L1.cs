@@ -28,6 +28,8 @@ public class L1 : LevelScript
         player.respawn();
 
         gameControl.endGame(); //stop spawners and clears GOs on field
+        ps.hideLifeBar();
+        ps.resetStats(); 
 
         string[] pauseMover = makeParamString("2", "0", "bg");
         customEvents.setScriptBoolean(new bool[1], pauseMover);
@@ -82,6 +84,8 @@ public class L1 : LevelScript
     {
         if (ps == null)
             ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();
+
+        ps.showLifeBar();
 
         Debug.Log("starting boss fight");
         bool[] bossFightEnd = new bool[1];

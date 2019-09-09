@@ -21,7 +21,9 @@ public abstract class BossBehavior : MonoBehaviour
     protected CustomEvents customEvents;
 
     public GameObject lifeBar; //the one with image attached
+    public GameObject lifeContainer; //parent of lifeBar
     protected RectTransform lifeRT;
+    public bool lifeBarActive;
 
     public void Start()
     {
@@ -44,23 +46,47 @@ public abstract class BossBehavior : MonoBehaviour
         setLifeBar();
     }
 
+    //might need to be overridden
+    public void resetStats()
+    {
+        maxLife = life;
+        stage = 0;
+    }
+
     public void setLifeBar()
     {
-        float percentage = (float)life / (float)maxLife;
+        if (lifeBarActive) //if inactive, unnecessary to do the calculation + update
+        {
+            float percentage = (float)life / (float)maxLife;
 
-        //if(!(percentage >= 0 && percentage <= 1))
-        //{
-        //    Debug.LogError("percentage life error: " + percentage);
-        //}
+            //if(!(percentage >= 0 && percentage <= 1))
+            //{
+            //    Debug.LogError("percentage life error: " + percentage);
+            //}
 
-        if(lifeRT != null)
-        lifeRT.localScale = new Vector3(percentage, 1, 1);
+            if (lifeRT != null)
+                lifeRT.localScale = new Vector3(percentage, 1, 1);
+        }
+    }
+
+    public void showLifeBar()
+    {
+        lifeBarActive = true;
+        lifeContainer.SetActive(true);
+    }
+
+    public void hideLifeBar()
+    {
+        lifeBarActive = false;
+        lifeContainer.SetActive(false);
     }
 
     //is called on start once lifeBar GO is found and ready, should be only called once
     public void setLifeRT()
     {
+        lifeContainer = lifeBar.transform.parent.parent.gameObject; //parent is mask, container is grandparent
         lifeRT = lifeBar.GetComponent<RectTransform>();
+        hideLifeBar(); //usually lifeBar for boss isn't needed on start
     }
 
     public void setSizeScale(float sScale)
@@ -93,6 +119,7 @@ public abstract class BossBehavior : MonoBehaviour
         StartCoroutine(damageVFXboss(col));
     }
 
+    //can be overridden by children
     IEnumerator damageVFXboss(Color col)
     {
         for (int i = 0; i < 2; i++)
