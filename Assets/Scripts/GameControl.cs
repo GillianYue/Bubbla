@@ -55,6 +55,7 @@ public class GameControl : MonoBehaviour {
     void Start () {
         
         GameOverC.SetActive (false);
+        vfxCanvas.SetActive(false); //to prevent blocking of buttons
         //player.GetComponent<Player> ().enabled = false;
         //gadgets are GOs like life container that are needed in game play but not in DLG mode
         foreach (GameObject g in gadgets) {
@@ -333,15 +334,25 @@ public class GameControl : MonoBehaviour {
     public void pauseGame()
     {
         Time.timeScale = 0.0f; //stop gameplay
+        stopAllbgMovers();
+    }
+
+    public void resumeGame()
+    {
+        Time.timeScale = 1.0f; //resume gameplay
+        resumeAllbgMovers();
+    }
+
+    public void stopAllbgMovers()
+    {
         foreach (BGMover m in backgrounds)
         {
             m.stopBGScroll();
         }
     }
 
-    public void resumeGame()
+    public void resumeAllbgMovers()
     {
-        Time.timeScale = 1.0f; //resume gameplay
         foreach (BGMover m in backgrounds)
         {
             m.resumeBGScroll();

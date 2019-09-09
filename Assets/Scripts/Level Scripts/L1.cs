@@ -24,12 +24,12 @@ public class L1 : LevelScript
     IEnumerator GameOver()
     {
 
-        //fade in custom event
-        player.respawn();
-
         gameControl.endGame(); //stop spawners and clears GOs on field
+        ps.StopAllCoroutines();
         ps.hideLifeBar();
-        ps.resetStats(); 
+        ps.resetStats();
+
+        player.respawn();
 
         string[] pauseMover = makeParamString("2", "0", "bg");
         customEvents.setScriptBoolean(new bool[1], pauseMover);
@@ -37,8 +37,8 @@ public class L1 : LevelScript
         customEvents.findByIdentifier("bg").GetComponent<BGMover>().revertToStartingPos();
 
         bool[] vfxDone = new bool[1];
-        string[] vfxPrms = makeParamString("0", "whatev");
-        StartCoroutine(customEvents.vfx(vfxDone, vfxPrms));
+        string[] vfxPrms = makeParamString("0", "1");
+        StartCoroutine(customEvents.vfx(vfxDone, vfxPrms)); //fade in
 
         yield return new WaitUntil(() => vfxDone[0]); //will wait until vfx done
         yield return new WaitForSeconds(2);
@@ -49,7 +49,7 @@ public class L1 : LevelScript
         //clear scene, revert back to beginning bg
 
         bool[] vfxDone2 = new bool[1];
-        string[] vfxPrms2 = makeParamString("1", "whatev");
+        string[] vfxPrms2 = makeParamString("1", "0"); //second param is for not leaving active
         StartCoroutine(customEvents.vfx(vfxDone2, vfxPrms2));
         yield return new WaitUntil(() => vfxDone2[0]); //will wait until vfx done
 

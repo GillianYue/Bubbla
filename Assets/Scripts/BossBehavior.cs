@@ -49,7 +49,7 @@ public abstract class BossBehavior : MonoBehaviour
     //might need to be overridden
     public void resetStats()
     {
-        maxLife = life;
+        life = maxLife;
         stage = 0;
     }
 

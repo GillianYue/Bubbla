@@ -430,10 +430,10 @@ public class CustomEvents : MonoBehaviour {
      * event #8
      * 
      * param 0: index of which boolean to set (hard-coded in script, here)
-     *      - 0: setting GameControl.ckTouch
+     *      - 0: setting GameControl.ckTouch //can still click on buttons and dialogues, just no in-game touch check
      *      - 1: gameFlow.canMovePointer
      *      - 2: bgMover.scrollin (IDed via id -- param 2)   
-     *      - 3: backpack.backpackBtnActive    
+     *      - 3: buttons: backpack.backpackBtnActive && TODO setting button active & more
      * 
      * param 1: to true (1) or false (0)    
      *     
@@ -570,12 +570,20 @@ public class CustomEvents : MonoBehaviour {
      * param 0: vfx index
      *      -0: black fade out
      *      -1: black fade in    
+     * param 1: whether to leave vfxCanvas active afterwards
+     *      -0: false (set to inactive)
+     *      -1: true (leave as active)    
      */
     public IEnumerator vfx(bool[] done, string[] prms)
     {
+        vfxCanvas.SetActive(true);
+
         int index;
         int.TryParse(prms[0], out index);
         Image img = vfxCanvas.GetComponent<Image>();
+
+        int leaveActive;
+        int.TryParse(prms[1], out leaveActive);
 
         switch (index)
         {
@@ -605,6 +613,10 @@ public class CustomEvents : MonoBehaviour {
                 break;
 
         }
+
+        if(leaveActive == 0)
+        vfxCanvas.SetActive(false);
+
         done[0] = true;
     }
 

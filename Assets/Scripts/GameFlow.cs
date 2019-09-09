@@ -124,8 +124,11 @@ public class GameFlow : MonoBehaviour {
                 yield break; //breaks out of the coroutine
             }
             if (currMode == Mode.DLG) disableDialogueBox(); //if transitioning from dlg to others
-                currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////
-            if (currMode == Mode.DLG) enableDialogueBox(); //if the new mode is actually dlg
+                currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////the actual changing of mode
+            if (currMode == Mode.DLG) { enableDialogueBox();
+                gameControl.stopAllbgMovers();
+            } //if the new mode is actually dlg
+
             if (currMode != Mode.GAME)
             {
                 try
@@ -195,10 +198,7 @@ public class GameFlow : MonoBehaviour {
                 int special;
                 int.TryParse(data[7, pointer], out special);
 
-                if (special != 1) 
-                { //1 is changing sprite in the middle of talking
                     setBoolParam(character, 0, true); //talking is param 0
-                }
 
                 setAnimBaseState(character, SpriteNum);
                 /*
