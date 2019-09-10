@@ -205,8 +205,8 @@ public class GameFlow : MonoBehaviour {
                  * the two params for special event could be int, could be int arrays, so to cover all 
                  * cases we create variables for all possibilities                
                  */
-                int[] PARAM1, PARAM2, PARAM3;
-                PARAM1 = new int[1]; PARAM2 = new int[1]; PARAM3 = new int[1];
+                ArrayList PARAM1, PARAM2, PARAM3;
+                PARAM1 = new ArrayList(); PARAM2 = new ArrayList(); PARAM3 = new ArrayList();
                 if (special != 0) //if there is special, parse
                 {
                     parseDLGspecialParams(PARAM1, PARAM2, PARAM3);
@@ -214,11 +214,11 @@ public class GameFlow : MonoBehaviour {
                 //end parsing special param, start adding chars 
 
                 int wordCount = 1; int[] paramPointer = new int[3]; //paramPointer[2] would be pointer for special #2
-                if(special == 3)
+                if(special == 3) //special 3 disables users from clicking to proceed, will auto proceed after certain seconds
                 {
                     canMovePointer = false;
                     //chains a WaitForSecond with <what should be done afterwards>
-                    StartCoroutine(Global.Chain(this, Global.WaitForSeconds(PARAM1[0]), Global.Do(() =>
+                    StartCoroutine(Global.Chain(this, Global.WaitForSeconds((float)PARAM1[0]), Global.Do(() =>
                     {
                         canMovePointer = true;
                         incrementPointer();
@@ -252,22 +252,21 @@ public class GameFlow : MonoBehaviour {
                         switch (special)
                         {
                             case 1:
-                                if(n == PARAM1[0])
+                                if (n == (int)PARAM1[paramPointer[1]])
                                 {
-                                    setAnimBaseState(character, PARAM2[paramPointer[1]]);
-
-                                    if (paramPointer[1] < PARAM1.Length - 1)
+                                    setAnimBaseState(character, (int)PARAM2[paramPointer[1]]);
+                                    if (paramPointer[1] < PARAM1.Count - 1)
                                     {
                                         paramPointer[1]++;
                                     }
                                 }
                                 break;
                             case 2:
-                                if(wordCount == PARAM3[paramPointer[2]])
+                                if(wordCount == (int)PARAM3[paramPointer[2]])
                                 {
-                                    setBoolParam(character, PARAM1[paramPointer[2]],
-                                        (PARAM2[paramPointer[2]] == 1));
-                                    if (paramPointer[2] < PARAM3.Length - 1)
+                                    setBoolParam(character, (int)PARAM1[paramPointer[2]],
+                                        ((int)PARAM2[paramPointer[2]] == 1));
+                                    if (paramPointer[2] < PARAM3.Count - 1)
                                     {
                                         paramPointer[2]++;
                                     }
@@ -464,56 +463,68 @@ public class GameFlow : MonoBehaviour {
         return size;
     }
 
-    private void parseDLGspecialParams(int[] PARAM1, int[] PARAM2, int[] PARAM3)
+    private void parseDLGspecialParams(ArrayList PARAM1, ArrayList PARAM2, ArrayList PARAM3)
     {
 
             if (data[8, pointer].Contains(","))
             {
                 string[] parsed = data[8, pointer].Split(',');
-                PARAM1 = new int[parsed.Length];
                 int c = 0;
+
                 foreach (string num in parsed)
                 {
-                    int.TryParse(num, out PARAM1[c]);
+                int res;
+                int.TryParse(num, out res);
+                PARAM1.Add(res);
                     c++;
                 }
             }
             else
             {
-                int.TryParse(data[8, pointer], out PARAM1[0]);
-            }
+            int res;
+            int.TryParse(data[8, pointer], out res);
+            PARAM1.Add(res);
+        }
 
             if (data[9, pointer].Contains(","))
             {
                 string[] parsed = data[9, pointer].Split(',');
-                PARAM2 = new int[parsed.Length];
                 int c = 0;
                 foreach (string num in parsed)
                 {
-                    int.TryParse(num, out PARAM2[c]);
-                    c++;
+                int res;
+                int.TryParse(num, out res);
+                PARAM2.Add(res);
+                c++;
                 }
             }
             else
             {
-                int.TryParse(data[9, pointer], out PARAM2[0]);
-            }
+            int res;
+            int.TryParse(data[9, pointer], out res);
+            PARAM2.Add(res);
+        }
 
         if (data[10, pointer].Contains(","))
         {
             string[] parsed = data[10, pointer].Split(',');
-            PARAM3 = new int[parsed.Length];
+
             int c = 0;
             foreach (string num in parsed)
             {
-                int.TryParse(num, out PARAM3[c]);
+                int res;
+                int.TryParse(num, out res);
+                PARAM3.Add(res);
                 c++;
             }
         }
         else
         {
-            int.TryParse(data[10, pointer], out PARAM3[0]);
+            int res;
+            int.TryParse(data[10, pointer], out res);
+            PARAM3.Add(res);
         }
+
 
     }
 
