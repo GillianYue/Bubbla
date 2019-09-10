@@ -213,7 +213,7 @@ public class GameFlow : MonoBehaviour {
                 }
                 //end parsing special param, start adding chars 
 
-                int wordCount = 1; int[] paramPointer = new int[3]; //paramPointer[2] would be pointer for special #2
+                int wordCount = 1; int[] paramPointer = new int[4]; //paramPointer[2] would be pointer for special #2
                 if(special == 3) //special 3 disables users from clicking to proceed, will auto proceed after certain seconds
                 {
                     canMovePointer = false;
@@ -251,6 +251,11 @@ public class GameFlow : MonoBehaviour {
 
                         switch (special)
                         {
+                        /*
+                         * mode 1, the changing of sprites of the speaking character
+                         *  -param 1: indices of char count to change sprite
+                         *  -param 2: number for State variable of the character (will assign sprite accordingly)
+                         */
                             case 1:
                                 if (n == (int)PARAM1[paramPointer[1]])
                                 {
@@ -261,6 +266,13 @@ public class GameFlow : MonoBehaviour {
                                     }
                                 }
                                 break;
+                            /*
+                             * mode 2, the changing of motion states of the character (Talking, Typing, Blinking, etc.)
+                             * -param 1: "which" state(s) to be set (will add float to anim State accordingly, e.g. Typing --> State += 0.05) 
+                             * the same state can appear for multiple times (e.g. 0, 1, 0 will set, for example, Talking, Typing and Talking in order)
+                             * -param 2: true/false boolean(s) to set those state(s), where 0 is false and 1 is true
+                             * -param 3: word count indices at which the state(s) are to be set
+                             */
                             case 2:
                                 if(wordCount == (int)PARAM3[paramPointer[2]])
                                 {
@@ -269,6 +281,21 @@ public class GameFlow : MonoBehaviour {
                                     if (paramPointer[2] < PARAM3.Count - 1)
                                     {
                                         paramPointer[2]++;
+                                    }
+                                }
+                                break;
+                            /*
+                             * mode 4, character speaking speed change in dialogue
+                             * -param 1: indices of char count to change dialogue speed
+                             * -param 2: spd(s) to change into
+                             */
+                            case 4:
+                                if (n == (int)PARAM1[paramPointer[4]])
+                                {
+                                    disp_spd = (float)PARAM2[paramPointer[4]];
+                                    if (paramPointer[4] < PARAM1.Count - 1)
+                                    {
+                                        paramPointer[4]++;
                                     }
                                 }
                                 break;
