@@ -99,6 +99,7 @@ public class L1 : LevelScript
         yield return new WaitUntil(() => bossFightEnd[0]);
 
         Debug.Log("boss fight done");
+        gameFlow.incrementPointer();
 
     }
 

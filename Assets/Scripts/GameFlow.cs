@@ -161,7 +161,7 @@ public class GameFlow : MonoBehaviour {
                     if(index == -1) //not found, check for special param instructing which Animator to use
                     {
                         if (Invasion2000 != null) NAME.font = Invasion2000;
-                        int.TryParse(data[7, pointer], out index); //if success, assign animator accordingly
+                        int.TryParse(data[5, pointer], out index); //if success, assign animator accordingly
                     }
                     else
                     {
