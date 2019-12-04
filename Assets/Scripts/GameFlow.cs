@@ -18,6 +18,7 @@ public class GameFlow : MonoBehaviour {
     public Text NAME, DIALOGUE;
     public Font ArcadeClassic, Invasion2000;
     public GameObject character, dlgBox; //character is current character speaking
+    public AudioSource cVoiceSource;
     public Image bgBox;
 
     public enum Mode { DLG, GAME, END };
@@ -53,6 +54,8 @@ public class GameFlow : MonoBehaviour {
         StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone));
 
         if(ArcadeClassic != null) NAME.font = ArcadeClassic;
+
+        cVoiceSource = character.GetComponent<AudioSource>(); //audioSource for the voice blips
 
     }
 
@@ -151,6 +154,7 @@ public class GameFlow : MonoBehaviour {
 
                 //sprite fixes size of background square
                 Global.resizeSpriteToDLG(character, character.transform.parent.gameObject);
+                AudioClip cVoiceClip = null;
 
                 lineDone = false; //dialogue is shown one char at a time
                 NAME.text = data[1, pointer];
@@ -158,6 +162,7 @@ public class GameFlow : MonoBehaviour {
                 if (!prevChaName.Equals(NAME.text)) //if equal, no need to change animator
                 {
                     int index = characterLoader.getIndex(NAME.text);
+
                     if(index == -1) //not found, check for special param instructing which Animator to use
                     {
                         if (Invasion2000 != null) NAME.font = Invasion2000;
@@ -176,6 +181,8 @@ public class GameFlow : MonoBehaviour {
                     {
                         character.GetComponent<Animator>().runtimeAnimatorController =
                         characterLoader.getAnimatorByIndex(index);
+                        cVoiceClip = characterLoader.getVoiceByIndex(index);
+                        cVoiceSource.clip = cVoiceClip;
                         Color c = bgBox.color;
                         c = characterLoader.getColorByIndex(index);
                         bgBox.color = new Color(c.r / 255.0f, c.g / 255.0f, c.b / 255.0f);
@@ -225,6 +232,8 @@ public class GameFlow : MonoBehaviour {
                     })));
                 }
 
+
+
                 for (int s = 0; s < store.Length; s++) {
                     for (int n = 0; n < store[s].Length; n++) {
                         //tagging is for tags in rich text, not a part of the special effects system
@@ -238,6 +247,12 @@ public class GameFlow : MonoBehaviour {
                         }
 
                         DIALOGUE.text += store[s][n]; //the actual adding of the char
+                        //Sound effect play
+                        if(cVoiceSource.clip)
+                        {
+                            cVoiceSource.Play();
+
+                        }
 
                         if(store[s][n] == ' ') //new word
                         {

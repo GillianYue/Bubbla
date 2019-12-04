@@ -12,8 +12,9 @@ public class CharacterLoader : MonoBehaviour
     int[] characterCode; 
     ArrayList cName;
     string[] bool1Name, bool2Name;
-    string[] cAnimatorName;
+    string[] pathName; //animators, voices will have the same local path (e.g. CaptainBuns) for files
     RuntimeAnimatorController[] cAnimators;
+    AudioClip[] voiceClips;
     public Color[] bgColor; 
 
     GameObject cMold;
@@ -64,8 +65,9 @@ public class CharacterLoader : MonoBehaviour
         characterCode = new int[numRows - 1]; //num rows, int[] is for the entire column
         cName = new ArrayList();
         bool1Name = new string[numRows - 1]; bool2Name = new string[numRows - 1];
-        cAnimatorName = new string[numRows - 1];
+        pathName = new string[numRows - 1]; 
         cAnimators = new RuntimeAnimatorController[numRows - 1];
+        voiceClips = new AudioClip[numRows - 1];
         bgColor = new Color[numRows - 1];
 
         //skip row 0 because those are all descriptors
@@ -74,7 +76,7 @@ public class CharacterLoader : MonoBehaviour
             cName.Add(data[1, r]); //r-1 is for such that cName[cCode] matches that with the data
             bool1Name[r - 1] = data[2, r];
             bool2Name[r - 1] = data[3, r];
-            cAnimatorName[r - 1] = data[4, r];
+            pathName[r - 1] = data[4, r]; //col 4 is file path;
             int R, G, B;
             int.TryParse(data[5, r], out R);
             int.TryParse(data[6, r], out G);
@@ -83,9 +85,10 @@ public class CharacterLoader : MonoBehaviour
         }
 
         loadAnimators(cAnimators);
+        loadVoices(voiceClips);
         yield return new WaitUntil(() =>
         {
-            return (cAnimators[cAnimatorName.Length - 1] != null);
+            return (cAnimators[pathName.Length - 1] != null);
         }); //anim loaded, theoretically everything all set
 
         characterLoaderDone = true;
@@ -103,9 +106,9 @@ public class CharacterLoader : MonoBehaviour
         //load the animation clips into the arrays
         for (int cCode = 0; cCode < cAnim.GetLength(0); cCode++)
         {
-            if (!cAnimatorName[cCode].Equals(""))
+            if (!pathName[cCode].Equals(""))
             {
-                var amt = Resources.Load("Animator/" + cAnimatorName[cCode]) as RuntimeAnimatorController;
+                var amt = Resources.Load("Animator/" + pathName[cCode]) as RuntimeAnimatorController;
 
                 if (amt == null)
                 {
@@ -120,18 +123,30 @@ public class CharacterLoader : MonoBehaviour
 
     }
 
+    private void loadVoices(AudioClip[] voices)
+    {
+
+        for (int cCode = 0; cCode < voices.GetLength(0); cCode++)
+        {
+
+                var v = Resources.Load("Voices/" + pathName[cCode]) as AudioClip;
+
+                if (v == null)
+                {
+                    Debug.LogError("Voice for c" + cCode + " NOT found");
+                }
+                else
+                {
+                    voices[cCode] = v;
+                }
+        }
+
+    }
+
     public RuntimeAnimatorController getAnimatorByName(string name)
     {
         int index = cName.IndexOf(name);
-        if (index != -1)
-        {
-            return cAnimators[index];
-        }
-        else
-        {
-            Debug.LogError("no animator for character " + name + " found");
-            return null;
-        }
+        return getAnimatorByIndex(index);
     }
 
     public RuntimeAnimatorController getAnimatorByIndex(int index)
@@ -143,6 +158,25 @@ public class CharacterLoader : MonoBehaviour
         else
         {
             Debug.LogError("no animator for character " + index + " found");
+            return null;
+        }
+    }
+
+    public AudioClip getVoiceByName(string name)
+    {
+        int index = cName.IndexOf(name);
+        return getVoiceByIndex(index);
+    }
+
+    public AudioClip getVoiceByIndex(int index)
+    {
+        if (index != -1)
+        {
+            return voiceClips[index];
+        }
+        else
+        {
+            Debug.LogError("no voice for character " + index + " found");
             return null;
         }
     }
