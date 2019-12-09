@@ -15,7 +15,9 @@ public class Player : MonoBehaviour
 	public float bulletSpeed;
     private float bulletWeaponDist = 3;
 	private int life;
-	public GameControl gameControl;
+
+    [Inject(InjectFrom.Anywhere)]
+    public GameControl gameControl;
 	private AudioSource[] fire, ouch;
 
     public bool checkForUpdates = true; //updates life UI and checks for life if true

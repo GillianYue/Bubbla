@@ -10,10 +10,18 @@ using System.Collections.Generic;
  */
 public class CustomEvents : MonoBehaviour {
 
-    protected GameControl gameControl;
-    protected GameFlow gameFlow;
-    protected EnemySpawner eSpawner;
-    protected PaintballSpawner pSpawner;
+    [Inject(InjectFrom.Anywhere)]
+    public GameControl gameControl;
+
+    [Inject(InjectFrom.Anywhere)]
+    public GameFlow gameFlow;
+
+    [Inject(InjectFrom.Anywhere)]
+    public EnemySpawner eSpawner;
+
+    [Inject(InjectFrom.Anywhere)]
+    public PaintballSpawner pSpawner;
+
     protected GameObject vfxCanvas;
     public LevelScript levelScript;
 
@@ -29,11 +37,7 @@ public class CustomEvents : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        GameObject GC = GameObject.FindWithTag("GameController");
-        gameControl = GC.GetComponent<GameControl>();
-        gameFlow = GC.GetComponent<GameFlow>();
-        eSpawner = GC.GetComponent<EnemySpawner>();
-        pSpawner = GC.GetComponent<PaintballSpawner>();
+
         vfxCanvas = gameControl.vfxCanvas;
 
         identified = new List<identifier>();

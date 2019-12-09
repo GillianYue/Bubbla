@@ -5,12 +5,16 @@ using UnityEngine.UI;
 
 public class PirateShip : BossBehavior
 {
-    private Player player;
+    [Inject(InjectFrom.Anywhere)]
+    public Player player;
     public GameObject projectile;
     public float cannonSpeed; //velocity of shot cannonballs, NEED TO BE SET in EDITOR!!
     public float enemyShootSpeed; //velocity of shot enemies, NEED TO BE SET in EDITOR!!
     public Text lifeText;
-    private EnemyLoader enemyLoader;
+
+    [Inject(InjectFrom.Anywhere)]
+    public EnemyLoader enemyLoader;
+
     public bool[] bossFightStop; 
 
     new void Start()
@@ -19,8 +23,8 @@ public class PirateShip : BossBehavior
         maxLife = 50;
         life = 50;
         attack = 3; //cannonball damage
-        player = gameControl.player.GetComponent<Player>();
-        enemyLoader = gameFlow.loader.GetComponent<EnemyLoader>();
+        //player = gameControl.player.GetComponent<Player>();
+        //enemyLoader = gameFlow.loader.GetComponent<EnemyLoader>();
         bossFightStop = new bool[1];
 
         projectile = Resources.Load("Projectile") as GameObject;

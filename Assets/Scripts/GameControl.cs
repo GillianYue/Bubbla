@@ -39,13 +39,20 @@ public class GameControl : MonoBehaviour {
     public GameObject HeartVFX, aim;
     public GameObject player;
     public GameObject GameOverC;
+
+    [Inject(InjectFrom.Anywhere)]
     public CustomEvents customEvents;
+    [Inject(InjectFrom.Anywhere)]
     public EnemySpawner eSpawner;
+    [Inject(InjectFrom.Anywhere)]
     public PaintballSpawner pSpawner;
+    [Inject(InjectFrom.Anywhere)]
     public GameFlow gFlow;
+
     public BGMover[] backgrounds;
 
     public GameObject fixedBG;
+    [Inject(InjectFrom.Anywhere)]
     public Backpack backpack;
 
     private float pressTime=-1;

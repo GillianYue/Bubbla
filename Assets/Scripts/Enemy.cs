@@ -5,7 +5,10 @@ public class Enemy : MonoBehaviour {
 	
 	int life = 1000;
 	int attack;
-	public AudioStorage audioz;
+
+    [Inject(InjectFrom.Anywhere)]
+    public AudioStorage audioz;
+
     public float sizeScale; //same as paintball, base scale to be multiplied with global
     public float colliderScale; //multiplied to the original generated polygon 2d collider shape to resize
 

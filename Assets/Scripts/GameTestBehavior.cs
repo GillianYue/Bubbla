@@ -5,7 +5,10 @@ using UnityEngine;
 public class GameTestBehavior : MonoBehaviour
 {
     public int startLine; //which line for levelDLG to start
+
+    [Inject(InjectFrom.Anywhere)]
     public GameFlow gf;
+
     public bool test;
     public int speedUpRate;
 

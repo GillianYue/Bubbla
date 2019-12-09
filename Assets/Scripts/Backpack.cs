@@ -5,30 +5,26 @@ using UnityEngine;
 public class Backpack : MonoBehaviour
 {
     public GameObject backpack, itemSelected, spriteMask;
-    private ItemSelect itemSelect; //script to select item, interact with item select btns, etc. Found on itemSelected GO
+
+    [Inject(InjectFrom.Anywhere)]
+    public ItemSelect itemSelect; //script to select item, interact with item select btns, etc. Found on itemSelected GO
+    [Inject(InjectFrom.Anywhere)]
     public GameControl gameControl;
+
     public int numGrids, numItems;
     public int[] itemList; //array indicating items belonging to a user via itemIndex
     public int[] itemCount; //corresponds to the above array indicating num of item owned of that itemIndex
     public GameObject itemBG; //initial bg to duplicate
     private GameObject itemMold; //sprite to put in front of itemBG
-    private ItemLoader itemLoader;
+
+    [Inject(InjectFrom.Anywhere)]
+    public ItemLoader itemLoader;
+
     public bool backpackBtnActive = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        GameObject loader = GameObject.FindWithTag("Loader");
-        if(loader != null)
-        {
-            itemLoader = loader.GetComponent<ItemLoader>();
-        }
-        else
-        {
-            Debug.LogError("loader GO not found!");
-        }
-
-        itemSelect = itemSelected.GetComponent<ItemSelect>();
 
         Sprite spr = spriteMask.GetComponent<SpriteMask>().sprite;
         Global.resizeSpriteToRectXY(spriteMask, spr); //resize itemsMask's spriteMask to its own rect transform

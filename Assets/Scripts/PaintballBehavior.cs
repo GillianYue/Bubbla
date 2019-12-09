@@ -21,7 +21,8 @@ public class PaintballBehavior : MonoBehaviour {
 	public static float mxD; //distance on 3D RGBcube to the given "standard" color
 	public static Color standard; //a set base color w given range (above) to determine color for this pb
 
-	private AudioStorage audioz;
+    [Inject(InjectFrom.Anywhere)]
+    private AudioStorage audioz;
 
 	/**
 	 * this static method takes the parameter of a float between 0 and 442, and sets the 
@@ -68,7 +69,6 @@ public class PaintballBehavior : MonoBehaviour {
 
         randomizeRotateVelocity ();
 
-		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
 	}
 	
 	// Update is called once per frame

@@ -9,6 +9,7 @@ public class EnemySpawner : MonoBehaviour {
     public GameObject[] enemies;
     public Vector3 spawnValues;
 
+    [Inject(InjectFrom.Anywhere)]
     public EnemyLoader enemyLoader;
     public GameObject enemiez; //parent of all spawned enemies
 

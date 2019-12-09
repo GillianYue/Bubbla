@@ -14,7 +14,10 @@ public class PaintballSpawner : MonoBehaviour
     public Vector3 spawnValues;
     public GameObject Ballz;
     public bool pbSpawnSwitch; //when start flip to true, elsewhere will set it to false to end pb Spawn
+
+    [Inject(InjectFrom.Anywhere)]
     public ItemLoader itemLoader;
+
     public bool[] currProcessToggle; //setting bool[0] to true will stop current process, theoretically
 
     // Start is called before the first frame update

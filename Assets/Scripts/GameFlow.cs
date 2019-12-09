@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class GameFlow : MonoBehaviour {
 
+    [Inject(InjectFrom.Anywhere)]
     public GameControl gameControl;
+    [Inject(InjectFrom.Anywhere)]
     public CustomEvents customEvents;
 
     //row 0 are names of the categories
@@ -30,22 +32,26 @@ public class GameFlow : MonoBehaviour {
 
     public TextAsset DlgCsv; //dialogue file for a specific level
     private string[,] data; //double array that stores all info of this level
-    public GameObject loader;
-    private EnemyLoader enemyLoader;
-    private CharacterLoader characterLoader;
-    private ItemLoader itemLoader;
+
+    //public GameObject loader;
+    [Inject(InjectFrom.Anywhere)]
+    public EnemyLoader enemyLoader;
+    [Inject(InjectFrom.Anywhere)]
+    public CharacterLoader characterLoader;
+    [Inject(InjectFrom.Anywhere)]
+    public ItemLoader itemLoader;
 
     public ArrayList specialDLGstarts, specialDLGends; //arraylist of ints
 
     private string openTag, endTag; //those two variables are used for dialogue tag processing
 
     void Start() {
-        if (loader != null)
-        {
-            enemyLoader = loader.GetComponent<EnemyLoader>();
-            characterLoader = loader.GetComponent<CharacterLoader>();
-            itemLoader = loader.GetComponent<ItemLoader>();
-        }
+        //if (loader != null)
+        //{
+        //    enemyLoader = loader.GetComponent<EnemyLoader>();
+        //    characterLoader = loader.GetComponent<CharacterLoader>();
+        //    itemLoader = loader.GetComponent<ItemLoader>();
+        //}
 
         specialDLGstarts = new ArrayList(); specialDLGends = new ArrayList();
 

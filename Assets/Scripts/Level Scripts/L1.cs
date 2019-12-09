@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class L1 : LevelScript
 {
+    [Inject(InjectFrom.Anywhere)] //might not find it on start, double check
     public PirateShip ps;
+    [Inject(InjectFrom.Anywhere)]
     public Player player;
 
     new void Start()
     {
         base.Start();
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     /*
