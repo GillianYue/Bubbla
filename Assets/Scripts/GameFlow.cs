@@ -247,6 +247,7 @@ public class GameFlow : MonoBehaviour {
                         }
 
                         DIALOGUE.text += store[s][n]; //the actual adding of the char
+
                         //Sound effect play
                         if(cVoiceSource.clip && (n%2 == 0))
                         {
@@ -319,7 +320,19 @@ public class GameFlow : MonoBehaviour {
                         }
 
                         if (!skipping) {
-                            yield return new WaitForSeconds(- 1.0333f * disp_spd + 1f);
+                            if (store[s][n].Equals(','))
+                            {
+                                //for break in between (half) sentences, give a longer wait time
+                                yield return new WaitForSeconds(0.2f);
+                            }else if (store[s][n].Equals('.'))
+                            {
+                                yield return new WaitForSeconds(0.4f);
+                            }
+                            else
+                            {
+                                Debug.Log("return " + (-1.0333f * disp_spd + 1.07f));
+                                yield return new WaitForSeconds(-1.0333f * disp_spd + 1.07f);
+                            }
                         }
                     }
                     if (!(s == (store.Length - 1))) {

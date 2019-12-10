@@ -21,7 +21,6 @@ public class PaintballBehavior : MonoBehaviour {
 	public static float mxD; //distance on 3D RGBcube to the given "standard" color
 	public static Color standard; //a set base color w given range (above) to determine color for this pb
 
-    [Inject(InjectFrom.Anywhere)]
     public AudioStorage audioz;
 
 	/**
@@ -35,14 +34,16 @@ public class PaintballBehavior : MonoBehaviour {
 
 	void Start () {
 
-		//based on the 3D RGB cube, generate colors close to given color within a 
-		//certain 3D distance based on distance formula between two 3D points
+        //based on the 3D RGB cube, generate colors close to given color within a 
+        //certain 3D distance based on distance formula between two 3D points
 
-//		mxD = (200.0f / 255.0f); 
-//		//max distance possible: full color ranges: 441.6729 (from black corner to white corner)
-//		standard = Color.cyan; //a set "base" color
+        //		mxD = (200.0f / 255.0f); 
+        //		//max distance possible: full color ranges: 441.6729 (from black corner to white corner)
+        //		standard = Color.cyan; //a set "base" color
 
-		if(needGenCol) setColor (genColorWDist(mxD, standard));
+        audioz = GameObject.FindWithTag("AudioStorage").GetComponent<AudioStorage>();
+
+        if (needGenCol) setColor (genColorWDist(mxD, standard));
 		randomizeSpriteKind ();
 
         setSizeScale(1.8f);
