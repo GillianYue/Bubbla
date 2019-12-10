@@ -46,12 +46,6 @@ public class GameFlow : MonoBehaviour {
     private string openTag, endTag; //those two variables are used for dialogue tag processing
 
     void Start() {
-        //if (loader != null)
-        //{
-        //    enemyLoader = loader.GetComponent<EnemyLoader>();
-        //    characterLoader = loader.GetComponent<CharacterLoader>();
-        //    itemLoader = loader.GetComponent<ItemLoader>();
-        //}
 
         specialDLGstarts = new ArrayList(); specialDLGends = new ArrayList();
 
@@ -254,7 +248,7 @@ public class GameFlow : MonoBehaviour {
 
                         DIALOGUE.text += store[s][n]; //the actual adding of the char
                         //Sound effect play
-                        if(cVoiceSource.clip)
+                        if(cVoiceSource.clip && (n%2 == 0))
                         {
                             cVoiceSource.Play();
 
@@ -325,7 +319,7 @@ public class GameFlow : MonoBehaviour {
                         }
 
                         if (!skipping) {
-                            yield return new WaitForSeconds(- 1.0333f * disp_spd + 1.1f);
+                            yield return new WaitForSeconds(- 1.0333f * disp_spd + 1f);
                         }
                     }
                     if (!(s == (store.Length - 1))) {

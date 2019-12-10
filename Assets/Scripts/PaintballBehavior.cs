@@ -22,7 +22,7 @@ public class PaintballBehavior : MonoBehaviour {
 	public static Color standard; //a set base color w given range (above) to determine color for this pb
 
     [Inject(InjectFrom.Anywhere)]
-    private AudioStorage audioz;
+    public AudioStorage audioz;
 
 	/**
 	 * this static method takes the parameter of a float between 0 and 442, and sets the 
