@@ -206,7 +206,7 @@ using UnityEngine.Purchasing;
 			{
 				Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
 				// The consumable item has been successfully purchased, add 100 coins to the player's in-game score.
-				ScoreManager.score += 100;
+				// ScoreManager.score += 100;
 			}
 			// Or ... a non-consumable product has been purchased by this user.
 			else if (String.Equals(args.purchasedProduct.definition.id, kProductIDNonConsumable, StringComparison.Ordinal))
