@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System;
-using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 /**
  * contains some essential global functions that are commonly used
@@ -33,6 +35,10 @@ public class Global : MonoBehaviour
     */
 
         public static Camera mainCamera;
+
+    public static Dictionary<string, int> intVariables = new Dictionary<string, int>();
+    public static Dictionary<string, bool> boolVariables = new Dictionary<string, bool>();
+    public static Dictionary<string, string> stringVariables = new Dictionary<string, string>();
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~CONSTANTS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -478,6 +484,13 @@ public class Global : MonoBehaviour
             field.SetValue(copy, field.GetValue(original));
         }
         return copy;
+    }
+
+    public static void clearDictionaries()
+    {
+        intVariables = new Dictionary<string, int>();
+        boolVariables = new Dictionary<string, bool>();
+        stringVariables = new Dictionary<string, string>();
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~Code Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -27,7 +27,7 @@ public class CharacterLoader : MonoBehaviour
         loadDone = new bool[1];
 
         loadCharacterMold(); //ready the mold prefab(s)
-        StartCoroutine(LoadScene.processCSV(loadDone, characterCsv, setData)); //processCSV will call setData
+        StartCoroutine(LoadScene.processCSV(loadDone, characterCsv, setData, false)); //processCSV will call setData
         StartCoroutine(parseCharacterData()); //data will be parsed into local type arrays for speedy data retrieval
 
     }

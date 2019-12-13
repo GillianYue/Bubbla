@@ -27,7 +27,7 @@ public class ItemLoader : MonoBehaviour
         loadDone = new bool[1];
 
         loadItemMold(); //ready the mold prefab(s)
-        StartCoroutine(LoadScene.processCSV(loadDone, itemCsv, setData)); //processCSV will call setData
+        StartCoroutine(LoadScene.processCSV(loadDone, itemCsv, setData, false)); //processCSV will call setData
         StartCoroutine(parseItemData()); //data will be parsed into local type arrays for speedy data retrieval
 
     }

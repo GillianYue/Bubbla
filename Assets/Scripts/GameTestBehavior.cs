@@ -17,7 +17,7 @@ public class GameTestBehavior : MonoBehaviour
     {
         if (test)
         {
-            gf.setPointer(startLine);
+            gf.setPointer(startLine); //for testing I'm putting in what line I'm seeing in the csv file
         }
     }
 

@@ -12,7 +12,7 @@ public class GameFlow : MonoBehaviour {
     public CustomEvents customEvents;
 
     //row 0 are names of the categories
-    private int pointer = 1; //indicates which line of script the game is at
+    private int pointer = 2; //indicates which line of script the game is at; starting at 2 b/c of format
     private bool lineDone = true, pointerCheck = true, skipping = false;
     private bool[] loadDone;  //this bool is only for the level progress file, not everything
     public bool canSkip, canMovePointer = true; //canMovePointer MUST be set to true on start
@@ -51,7 +51,7 @@ public class GameFlow : MonoBehaviour {
 
         loadDone = new bool[1];
         bool[] parseDone = new bool[1];
-        StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone));
+        StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone, true));
 
         if(ArcadeClassic != null) NAME.font = ArcadeClassic;
 
@@ -123,7 +123,7 @@ public class GameFlow : MonoBehaviour {
             {
                 int ln;
                 int.TryParse(data[1, pointer], out ln);
-                if (ln != 0) setPointer(ln); else Debug.LogError("SPECIAL end didn't specify goto line number");
+                if (ln != 0) setPointer(ln); else Debug.LogError("SPECIAL block end didn't specify goto line number");
                 yield break; //breaks out of the coroutine
             }
             if (currMode == Mode.DLG) disableDialogueBox(); //if transitioning from dlg to others

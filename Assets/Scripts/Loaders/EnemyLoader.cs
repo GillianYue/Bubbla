@@ -27,7 +27,7 @@ public class EnemyLoader : MonoBehaviour
         loadDone = new bool[1];
 
         loadEnemyMold(); //ready the mold prefab(s)
-        StartCoroutine(LoadScene.processCSV(loadDone, enemyCsv, setData)); //processCSV will call setData
+        StartCoroutine(LoadScene.processCSV(loadDone, enemyCsv, setData, false)); //processCSV will call setData
         StartCoroutine(parseEnemyData()); //data will be parsed into local type arrays for speedy data retrieval
 
     }

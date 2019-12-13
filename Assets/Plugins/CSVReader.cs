@@ -33,7 +33,7 @@ public class CSVReader : MonoBehaviour
 	}
 
 	// splits a CSV file into a 2D string array
-	static public string[,] SplitCsvGrid(string csvText)
+	static public string[,] SplitCsvGrid(string csvText, bool matchLineWithExcel)
 	{
 		string[] lines = csvText.Split('\n'); 
 
@@ -43,15 +43,19 @@ public class CSVReader : MonoBehaviour
 			width = Mathf.Max(width, firstRow.Length); 
 
 		// creates new 2D string grid to output to
-		string[,] outputGrid = new string[width, lines.Length]; 
+		string[,] outputGrid = new string[width, matchLineWithExcel? lines.Length+1 : lines.Length];
+        outputGrid[0, 0] = ""; // row 0 in data has no data, and exists for the sake of consistency between Excel and pointer values";
+
 		for (int r = 0; r < lines.Length; r++)
 		{
 			string[] row = SplitCsvLine( lines[r] ); 
 			for (int c = 0; c < row.Length; c++) 
 			{
-				outputGrid[c,r] = row[c]; 
-
-			}
+                if(matchLineWithExcel)
+				outputGrid[c,r+1] = row[c]; //the splitCSV result will have different row nums than the output, see above
+                else
+                outputGrid[c, r] = row[c];
+            }
 		}
 
 		return outputGrid; 

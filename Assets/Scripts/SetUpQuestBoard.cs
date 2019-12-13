@@ -43,7 +43,7 @@ public class SetUpQuestBoard : MonoBehaviour {
 	}
 
 	IEnumerator processCSV(){ //TODO move this to loading, as opposed to in game
-		questData = CSVReader.SplitCsvGrid (questCsv.text); 
+		questData = CSVReader.SplitCsvGrid (questCsv.text, false); 
 		while (!(questData.Length > 0)) {
 			yield return null;
 		}

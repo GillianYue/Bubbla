@@ -8,7 +8,8 @@ using System.Collections.Generic;
  * whenever game flow gets to that command. Each event has a code number. With the params read in along
  * with the custom event code, special effects can be created. 
  */
-public class CustomEvents : MonoBehaviour {
+public class CustomEvents : MonoBehaviour
+{
 
     [Inject(InjectFrom.Anywhere)]
     public GameControl gameControl;
@@ -35,22 +36,24 @@ public class CustomEvents : MonoBehaviour {
      */
     public List<identifier> identified;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
 
         vfxCanvas = gameControl.vfxCanvas;
 
         identified = new List<identifier>();
-        foreach ( identifier i in FindObjectsOfType<identifier>())
+        foreach (identifier i in FindObjectsOfType<identifier>())
         {
             identified.Add(i);
         }
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
 
     public void customEvent(int index, string[] prms)
@@ -66,7 +69,8 @@ public class CustomEvents : MonoBehaviour {
      * contains a switch statement for different custom events
      * the custom events all use the params parsed and the done bool array instantiated at the start
      */
-    IEnumerator CustomEvent(int index, string[] prms) {
+    IEnumerator CustomEvent(int index, string[] prms)
+    {
 
         bool[] done = new bool[1];
         done[0] = false;
@@ -106,6 +110,12 @@ public class CustomEvents : MonoBehaviour {
             case 20:
                 StartCoroutine(vfx(done, prms));
                 break;
+            case 30:
+                variable(done, prms);
+                break;
+            case 31:
+                conditionalSwitch(done, prms);
+                break;
             case 99:
                 levelScriptEvent(done, prms);
                 break;
@@ -117,6 +127,7 @@ public class CustomEvents : MonoBehaviour {
         yield return new WaitUntil(() => done[0]);
 
         //move on to the next command, we only need to update the csv pointer in game flow
+        if(index != 31) //conditional switch modifies the pointer already, should not have an additional increment
         gameFlow.incrementPointer();
     }
 
@@ -232,7 +243,7 @@ public class CustomEvents : MonoBehaviour {
      */
     public void genPaintball(bool[] done, string[] prms)
     {
-        int r,g,b;
+        int r, g, b;
 
         float x, y, z;
         if (!prms[1].Equals(""))
@@ -248,7 +259,7 @@ public class CustomEvents : MonoBehaviour {
             y = pSpawner.spawnValues.y;
             z = pSpawner.spawnValues.z;
         }
-     
+
 
         GameObject p;
 
@@ -281,7 +292,7 @@ public class CustomEvents : MonoBehaviour {
 
         int enemyMoverActive;
         int.TryParse(prms[4], out enemyMoverActive);
-        if(enemyMoverActive == 0)
+        if (enemyMoverActive == 0)
         {
             p.GetComponent<EnemyMover>().enabled = false;
             p.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
@@ -309,7 +320,7 @@ public class CustomEvents : MonoBehaviour {
      * param 0: identifier of the gameObject
      * param 1: the integer to set "State" to
      * optional param 2: index of transition effects
-     *      - 0: fade in (fade out of prev bg, change "State", fade in)
+     *      - 0: fade in (fade out of prev bg, change "State", fade in); this is used for in-between bg transitions
      *     
      */
     public IEnumerator changeAnimState(bool[] done, string[] prms)
@@ -370,60 +381,61 @@ public class CustomEvents : MonoBehaviour {
     {
         GameObject target = findByIdentifier(prms[0]);
 
-        if (target != null) { 
-        int active;
-        int.TryParse(prms[1], out active);
+        if (target != null)
+        {
+            int active;
+            int.TryParse(prms[1], out active);
 
 
-                SpriteRenderer spr; int effect = -1; float origA = 1; Color orig = Color.black;
-                if ((spr = target.GetComponent<SpriteRenderer>()) != null)
+            SpriteRenderer spr; int effect = -1; float origA = 1; Color orig = Color.black;
+            if ((spr = target.GetComponent<SpriteRenderer>()) != null)
+            {
+                //means this GO has a spriteRenderer, ok
+                orig = spr.color;
+                origA = orig.a;
+
+                if (prms.Length > 2 && !prms[2].Equals("")) //only parse effect when there is a spriteRenderer
                 {
-                    //means this GO has a spriteRenderer, ok
-                    orig = spr.color;
-                    origA = orig.a;
-                    
-                    if (prms.Length > 2 && !prms[2].Equals("")) //only parse effect when there is a spriteRenderer
-                    {
-                        int.TryParse(prms[2], out effect);
-                    }
+                    int.TryParse(prms[2], out effect);
+                }
 
-                    if (effect == 0)
+                if (effect == 0)
+                {
+                    if (active == 0)
                     {
-                        if (active == 0)
+                        for (float o = origA; o > 0.3f; o -= 0.15f) //fade out of sprite
                         {
-                            for (float o = origA; o > 0.3f; o -= 0.15f) //fade out of sprite
-                            {
-                                spr.color = new Color(orig.r, orig.g, orig.b, o);
-                                yield return new WaitForSeconds(0.2f);
-                            }
+                            spr.color = new Color(orig.r, orig.g, orig.b, o);
+                            yield return new WaitForSeconds(0.2f);
                         }
                     }
-                } //this all wouldn't happen if a spriterenderer doesn't exist
+                }
+            } //this all wouldn't happen if a spriterenderer doesn't exist
 
 
-        //normal procedure 
-        if (active == 0)
-        {
-            target.SetActive(false);
-        }
-        else if (active == 1)
-        {
-            target.SetActive(true);
-        }
-
-        //continue from prev spr effect; fade in only happens after GO is set to active
-        if (effect == 0)
-        {
-            for (float o = 0; o <= origA; o += 0.15f) //fade in of sprite
+            //normal procedure 
+            if (active == 0)
             {
-                spr.color = new Color(orig.r, orig.g, orig.b, o);
-                yield return new WaitForSeconds(0.2f);
+                target.SetActive(false);
             }
-            if (Mathf.Abs(spr.color.a - origA) > 0.001f) //if unequal
+            else if (active == 1)
             {
-                spr.color = new Color(orig.r, orig.g, orig.b, origA);
+                target.SetActive(true);
             }
-        }
+
+            //continue from prev spr effect; fade in only happens after GO is set to active
+            if (effect == 0)
+            {
+                for (float o = 0; o <= origA; o += 0.15f) //fade in of sprite
+                {
+                    spr.color = new Color(orig.r, orig.g, orig.b, o);
+                    yield return new WaitForSeconds(0.2f);
+                }
+                if (Mathf.Abs(spr.color.a - origA) > 0.001f) //if unequal
+                {
+                    spr.color = new Color(orig.r, orig.g, orig.b, origA);
+                }
+            }
         }
 
         done[0] = true;
@@ -442,10 +454,10 @@ public class CustomEvents : MonoBehaviour {
      * param 1: to true (1) or false (0)    
      *     
      * optional param 2: info param depending on index in param 0
-     *      - 0: for param 0_2; id of the GO that has a BGmover script    
+     *      - for param 0_2: id of the GO that has a BGmover script    
      *          
      */
-     public void setScriptBoolean(bool[] done, string[] prms)
+    public void setScriptBoolean(bool[] done, string[] prms)
     {
         int index;
         int.TryParse(prms[0], out index);
@@ -467,7 +479,8 @@ public class CustomEvents : MonoBehaviour {
                 if (b == 0)
                 {
                     bg.GetComponent<BGMover>().stopBGScroll();
-                }else if (b == 1)
+                }
+                else if (b == 1)
                 {
                     bg.GetComponent<BGMover>().resumeBGScroll();
                 }
@@ -595,12 +608,12 @@ public class CustomEvents : MonoBehaviour {
                 if (img != null)
                 {
 
-                   for (float o = 0; o <= 1; o += 0.025f) //fade out of sprite
-                   {
-                   img.color = new Color(0, 0, 0, o);
-                   yield return new WaitForSeconds(0.05f);
-                   }
-                   if(img.color.a < 1)  img.color = new Color(0, 0, 0, 1); //black
+                    for (float o = 0; o <= 1; o += 0.025f) //fade out of sprite
+                    {
+                        img.color = new Color(0, 0, 0, o);
+                        yield return new WaitForSeconds(0.05f);
+                    }
+                    if (img.color.a < 1) img.color = new Color(0, 0, 0, 1); //black
                 }
                 break;
             case 1: //black canvas fading back into view, reverse process of case 0
@@ -618,20 +631,223 @@ public class CustomEvents : MonoBehaviour {
 
         }
 
-        if(leaveActive == 0)
-        vfxCanvas.SetActive(false);
+        if (leaveActive == 0)
+            vfxCanvas.SetActive(false);
 
         done[0] = true;
     }
 
-        /*
-         * event #99
-         * 
-         * param 0: index for event in levelScript
-         * other params dependent to levelScript functions
-         *
-         */
-        public void levelScriptEvent(bool[] done, string[] prms)
+
+    /*
+    * event #30
+    * 
+    * to create a new or modify an old variable with a string name (linked in code via a dictionary)
+     * 
+     * param 0: variable type
+     *      -0: bool
+     *      -1: integer
+     *      -2: string
+     * param 1: string to identify this variable
+     * param 2: starting value of this variable (type will be converted accordingly) OR value to be mod into
+     * 
+     */
+
+    public void variable(bool[] done, string[] prms)
+    {
+        int varType;
+        int.TryParse(prms[0], out varType);
+
+        string varName = prms[1];
+   
+
+        switch (varType)
+        {
+            case 0:
+                bool b;
+                bool.TryParse(prms[2], out b);
+                if (Global.boolVariables.ContainsKey(varName))
+                    Global.boolVariables[varName] = b;
+                else
+                    Global.boolVariables.Add(varName, b);
+                break;
+            case 1:
+                int i;
+                int.TryParse(prms[2], out i);
+                if (Global.intVariables.ContainsKey(varName))
+                    Global.intVariables[varName] = i;
+                else
+                    Global.intVariables.Add(varName, i);
+                break;
+            case 2:
+                if (Global.stringVariables.ContainsKey(varName))
+                    Global.stringVariables[varName] = prms[2];
+                else
+                    Global.stringVariables.Add(varName, prms[2]);
+                break;
+            default:
+                Debug.Log("unclear variable type for custom event 30");
+                break;
+        }
+
+
+        done[0] = true;
+    }
+
+
+    /*
+     * event #31
+     * 
+     * conditional switch that changes the line pointer in GFlow according to conditions
+     * 
+     * param 0: variable type
+     *      -0: bool
+     *      -1: integer
+     *      -2: string
+     * param 1: string to identify this variable
+     * param 2: comparison type
+     *      -0: exact value comparison
+     *      -1: range comparison (only for integers, e.g. values 2,5,7 with lines 11,12,13 will operated under ranges
+     *      2-5, 5-7 and 7+, which means a value of 4 of the variable will set the pointer to 11)
+     * param 3: the values of each case, separated by comma
+     * param 4: the point-to line number for each case, separated by comma
+     * 
+     */
+
+        public void conditionalSwitch(bool[] done, string[] prms)
+    {
+        int varType;
+        int.TryParse(prms[0], out varType);
+
+        string varName = prms[1];
+
+        int comparisonType;
+        int.TryParse(prms[2], out comparisonType);
+
+        string[] linez = prms[4].Split(',');
+        int[] lines = new int[linez.Length];
+        for(int n=0; n<linez.Length; n++)
+        {
+            int.TryParse(linez[n], out lines[n]);
+        }
+
+        string[] values = prms[3].Split(',');
+
+        int goToLine = -1;
+
+        if(comparisonType == 0)
+        {
+            switch (varType)
+            {
+                case 0:
+                    if (!Global.boolVariables.ContainsKey(varName))
+                    {
+                        Debug.Log("variable with name " + varName + " not found");
+                        break;
+                    }
+                    bool bValue = Global.boolVariables[varName];
+
+                    bool[] bools = new bool[values.Length];
+                    for(int b=0; b<values.Length; b++)
+                    {
+                        bool.TryParse(values[b], out bools[b]);
+                        if(bValue == bools[b])
+                        {
+                            //match
+                            goToLine = lines[b];
+                            break;
+                        }
+                    }
+                    break;
+                case 1:
+                    if (!Global.intVariables.ContainsKey(varName))
+                    {
+                        Debug.Log("variable with name " + varName + " not found");
+                        break;
+                    }
+                    int iValue = Global.intVariables[varName];
+
+                    int[] ints = new int[values.Length];
+                    for(int i=0; i<values.Length; i++)
+                    {
+                        int.TryParse(values[i], out ints[i]);
+                        if (iValue == ints[i])
+                        {
+                            //match
+                            goToLine = lines[i];
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                    if (!Global.stringVariables.ContainsKey(varName))
+                    {
+                        Debug.Log("variable with name " + varName + " not found");
+                        break;
+                    }
+                    string sValue = Global.stringVariables[varName];
+
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        if (sValue.Equals(values[i]))
+                        {
+                            //match
+                            goToLine = lines[i];
+                            break;
+                        }
+                    }
+                    break;
+                default:
+                    Debug.Log("unclear variable type for conditional switch");
+                    break;
+
+            }//end switch statement
+
+        }else if(comparisonType == 1) //def int; ranges
+        {
+            if (!Global.intVariables.ContainsKey(varName))
+            {
+                Debug.Log("variable with name " + varName + " not found");
+            }
+            int iValue = Global.intVariables[varName];
+
+            int[] ints = new int[values.Length];
+            for (int i = 0; i < values.Length; i++)
+            {
+                int.TryParse(values[i], out ints[i]);
+                if (i>0 && (iValue < ints[i] && iValue >= ints[i-1]) ) //check if value is within previous range
+                {
+                    //match
+                    goToLine = lines[i-1];
+                    break;
+                }
+            }
+            if(iValue > ints[values.Length - 1]) //value bigger than the ranges, go to the last assigned line 
+            {
+                goToLine = lines[values.Length - 1];
+            }
+        }
+
+        if(goToLine == -1)
+        {
+            Debug.Log("conditional switch failed to match with any case");
+        }
+        else
+        {
+            gameFlow.setPointer(goToLine);
+        }
+
+
+        done[0] = true;
+    }
+
+    /*
+     * event #99
+     * 
+     * param 0: index for event in levelScript
+     * other params dependent to levelScript functions
+     *
+     */
+    public void levelScriptEvent(bool[] done, string[] prms)
     {
         int index;
         int.TryParse(prms[0], out index);
@@ -640,12 +856,13 @@ public class CustomEvents : MonoBehaviour {
 
     }
 
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~helper functions~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        /*
-         * attaches an identifier script to the go, sets id to given, and adds to local 
-         * identified list        
-         */
+    /*
+     * attaches an identifier script to the go, sets id to given, and adds to local 
+     * identified list        
+     */
     private void setIdentifier(GameObject go, string id)
     {
         identifier i = go.AddComponent<identifier>();

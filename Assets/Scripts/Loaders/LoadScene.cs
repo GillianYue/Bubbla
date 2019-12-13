@@ -25,9 +25,9 @@ public class LoadScene : MonoBehaviour {
 	}
 
 
-    public static IEnumerator processCSV(bool[] loadDone, TextAsset csv, setterDelegate setter)
+    public static IEnumerator processCSV(bool[] loadDone, TextAsset csv, setterDelegate setter, bool matchLineWithExcel)
     {
-        string[,] data = CSVReader.SplitCsvGrid(csv.text);
+        string[,] data = CSVReader.SplitCsvGrid(csv.text, matchLineWithExcel);
         setter(data);
         while (!(data.Length > 0))
         {
@@ -40,9 +40,9 @@ public class LoadScene : MonoBehaviour {
     /*
      * overflow method for above; will wait till the entire setter function is done (checking for passed bool[])
      */
-    public static IEnumerator processCSV(bool[] loadDone, TextAsset csv, setterDelegateD setter, bool[] setterDone)
+    public static IEnumerator processCSV(bool[] loadDone, TextAsset csv, setterDelegateD setter, bool[] setterDone, bool matchLineWithExcel)
     {
-        string[,] data = CSVReader.SplitCsvGrid(csv.text);
+        string[,] data = CSVReader.SplitCsvGrid(csv.text, matchLineWithExcel);
         setter(data, setterDone);
         while (!(data.Length > 0 && setterDone[0]))
         {
