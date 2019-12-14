@@ -16,6 +16,7 @@ public class GameFlow : MonoBehaviour {
     private bool lineDone = true, pointerCheck = true, skipping = false;
     private bool[] loadDone;  //this bool is only for the level progress file, not everything
     public bool canSkip, canMovePointer = true; //canMovePointer MUST be set to true on start
+    private int specialGoToLine = -1; //if set to anything other than -1, click in DLG will go to this line rather than increment
 
     public Text NAME, DIALOGUE;
     public Font ArcadeClassic, Invasion2000;
@@ -40,6 +41,9 @@ public class GameFlow : MonoBehaviour {
     public CharacterLoader characterLoader;
     [Inject(InjectFrom.Anywhere)]
     public ItemLoader itemLoader;
+
+    [Inject(InjectFrom.Anywhere)]
+    public DlgOptions dlgOptions;
 
     public ArrayList specialDLGstarts, specialDLGends; //arraylist of ints
 
@@ -221,6 +225,7 @@ public class GameFlow : MonoBehaviour {
                 //end parsing special param, start adding chars 
 
                 int wordCount = 1; int[] paramPointer = new int[4]; //paramPointer[2] would be pointer for special #2
+
                 if(special == 3) //special 3 disables users from clicking to proceed, will auto proceed after certain seconds
                 {
                     canMovePointer = false;
@@ -230,6 +235,9 @@ public class GameFlow : MonoBehaviour {
                         canMovePointer = true;
                         incrementPointer();
                     })));
+                }else if(special == 6)
+                {
+                    specialGoToLine = (int)PARAM1[0];
                 }
 
 
@@ -300,6 +308,10 @@ public class GameFlow : MonoBehaviour {
                                     }
                                 }
                                 break;
+                            //mode 3 disables users from clicking to proceed, will auto proceed after certain seconds
+                            case 3:
+                                //called once above previous to the double for loop
+                                break;
                             /*
                              * mode 4, character speaking speed change in dialogue
                              * -param 1: indices of char count to change dialogue speed
@@ -314,6 +326,21 @@ public class GameFlow : MonoBehaviour {
                                         paramPointer[4]++;
                                     }
                                 }
+                                break;
+                            /*
+                                * mode 5, opens up option prompt for user to choose after character finishes talking
+                                * -param 1: texts of choices, separated by comma
+                                * -param 2: lines to point to after selecting those choices
+                                */
+                            case 5:
+                                //happens after the entire dialogue is displayed, so isn't called repetitively here
+                                break;
+                            /*
+                             * mode 6, directs pointer to provided line other than increment by 1
+                                * -param 1: line to point to
+                                */
+                            case 6:
+                                //needs only happen once, is invoked up above
                                 break;
                             default:
                                 break;
@@ -339,6 +366,21 @@ public class GameFlow : MonoBehaviour {
                         DIALOGUE.text = ""; //reset and print the second section
                     }
                 }
+
+                if(special == 5){//only happens after entirety of text is up
+
+                    canMovePointer = false;
+                    int[] lines = new int[PARAM2.Count];
+                    string[] messages = new string[PARAM1.Count];
+                    for (int i = 0; i < PARAM2.Count; i++)
+                    {
+                        lines[i] = (int)PARAM2[i];
+                        messages[i] = (string)PARAM1[i];
+                    }
+
+                    dlgOptions.showOptions(PARAM1.Count, messages, lines);
+                }
+
                 //character.GetComponent<Animator>().SetBool("Talking", false);
                 setBoolParam(character, 0, false); //talking is param 0
                 lineDone = true;
@@ -529,8 +571,10 @@ public class GameFlow : MonoBehaviour {
                 foreach (string num in parsed)
                 {
                 int res;
-                int.TryParse(num, out res);
-                PARAM1.Add(res);
+                if (int.TryParse(num, out res))
+                    PARAM1.Add(res);
+                else
+                    PARAM1.Add(num);
                     c++;
                 }
             }
@@ -548,8 +592,10 @@ public class GameFlow : MonoBehaviour {
                 foreach (string num in parsed)
                 {
                 int res;
-                int.TryParse(num, out res);
+                if (int.TryParse(num, out res))
                 PARAM2.Add(res);
+                else
+                    PARAM2.Add(num);
                 c++;
                 }
             }
@@ -568,8 +614,10 @@ public class GameFlow : MonoBehaviour {
             foreach (string num in parsed)
             {
                 int res;
-                int.TryParse(num, out res);
-                PARAM3.Add(res);
+                if (int.TryParse(num, out res))
+                    PARAM3.Add(res);
+                else
+                    PARAM3.Add(num);
                 c++;
             }
         }
@@ -590,7 +638,15 @@ public class GameFlow : MonoBehaviour {
     public IEnumerator movePointer() {
         if (canMovePointer && lineDone && pointerCheck) {
             pointerCheck = false;
-            pointer++;
+            if (specialGoToLine == -1)
+            { //normally increment
+                pointer++;
+            }
+            else
+            {
+                pointer = specialGoToLine;
+                specialGoToLine = -1; //reset
+            }
             yield return new WaitForSeconds(0.2f);
             pointerCheck = true;
         }
