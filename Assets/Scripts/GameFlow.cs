@@ -24,7 +24,7 @@ public class GameFlow : MonoBehaviour {
     public AudioSource cVoiceSource;
     public Image bgBox;
 
-    public enum Mode { DLG, GAME, END };
+    public enum Mode { DLG, GAME, IVS, END };
     public Mode currMode;
 
     public Text animIndicator; //number to show which state the character is
@@ -33,6 +33,8 @@ public class GameFlow : MonoBehaviour {
 
     public TextAsset DlgCsv; //dialogue file for a specific level
     private string[,] data; //double array that stores all info of this level
+
+    public IEnumerator processLineInstance;
 
     //public GameObject loader;
     [Inject(InjectFrom.Anywhere)]
@@ -110,12 +112,23 @@ public class GameFlow : MonoBehaviour {
         parseDone[0] = true;
     }
 
+    public void processCurrentLine()
+    {
+        if (processLineInstance != null)
+        {
+            StopCoroutine(processLineInstance);
+        }
+
+        processLineInstance = processCurrentLineCoroutine();
+        StartCoroutine(processLineInstance);
+    }
+
     /**
      * this function is called in GameControl. Thus, GameFlow is not in charge of 
      * calling process itself, only updates the pointer. When GameControl sees a change
      * in pointer, this function is invoked.    
      */   
-    public IEnumerator processCurrentLine() { //current being where the pointer is
+    private IEnumerator processCurrentLineCoroutine() { //current being where the pointer is
 
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
             if (data[0, pointer].Equals("SPECIAL")) //this will only happen to the ending SPECIAL tags
@@ -391,15 +404,15 @@ public class GameFlow : MonoBehaviour {
                 Global.scaleRatio = (int)GameObject.FindWithTag("Player").transform.localScale.x;
                 if (data[1, pointer].Equals("99")) {
                     //special customized event
-                    int index;
-                    int.TryParse(data[2, pointer], out index);
+                    int indexCE;
+                    int.TryParse(data[2, pointer], out indexCE);
                     //for now we assume there's at most 5 parameters to a custom event
                     string[] parameters = new string[5];
                     for (int p = 0; p < 5; p++)
                     {
                         parameters[p] = data[p+3, pointer];
                     }
-                    customEvents.customEvent(index, parameters);
+                    customEvents.customEvent(indexCE, parameters);
                 } else {
                     string[] waves = data[1, pointer].Split(',');
                     string[] enemies = data[2, pointer].Split(',');
@@ -418,13 +431,106 @@ public class GameFlow : MonoBehaviour {
                     gameControl.startEnemyWaves(wv, em);
                 }
                 break;
+            case Mode.IVS:
+                int indexIVS = -1;
+                int.TryParse(data[1, pointer], out indexIVS);
+                switch(indexIVS)
+                {
+                    case 0: //setup; the current version of code requires all setup be done in one line b/c assignment of string[]
+                        string[] IDs = data[2, pointer].Split(',');
+                        string[] linez = data[3, pointer].Split(',');
+                        int[] lines = new int[linez.Length];
+
+                        GameObject[] ivsGOs = new GameObject[linez.Length];
+                        for(int l=0; l<linez.Length; l++)
+                        {
+                            int.TryParse(linez[l], out lines[l]);
+                            ivsGOs[l] = customEvents.findByIdentifier(IDs[l]); //getting the ivs gameobject by id
+                            ivsInteractable ivs = ivsGOs[l].AddComponent<ivsInteractable>();
+                            ivs.setindexInArray(l);
+                            ivs.setIvsGoToLine(lines[l]);
+                        }
+
+                        gameControl.ivsInteractables = ivsGOs;
+                        break;
+                    case 1: //conditional looping for investigate
+                        //NOTE: only break after condition is fulfilled, pointer will increment outside the switch statement
+                        int varType;
+                        int.TryParse(data[2, pointer], out varType);
+
+                        string varName = data[3, pointer];
+
+                        string varValueS = data[4, pointer]; int goalValueI=-10000; bool goalValueB=false; string goalValueS=null;
+
+                        switch (varType)
+                        {
+                            case 0:
+                                bool.TryParse(varValueS, out goalValueB);
+                                break;
+                            case 1:
+                                int.TryParse(varValueS, out goalValueI);
+                                break;
+                            case 2:
+                                goalValueS = varValueS;
+                                break;
+                        }
+
+                        yield return new WaitUntil(() => { //loops until condition meets
+                            switch (varType)
+                            {
+                                case 0:
+                                    if (!Global.boolVariables.ContainsKey(varName))
+                                    {
+                                        //var not created yet
+                                        return false;
+                                    }
+                                    bool bValue = Global.boolVariables[varName];
+
+                                    return (bValue == goalValueB);
+
+                                case 1:
+                                    if (!Global.intVariables.ContainsKey(varName))
+                                    {
+                                        //var not created yet
+                                        return false;
+                                    }
+                                    int iValue = Global.intVariables[varName];
+                                    return (iValue == goalValueI);
+
+                                case 2:
+                                    if (!Global.stringVariables.ContainsKey(varName))
+                                    {
+                                        //var not created yet
+                                        return false;
+                                    }
+                                    string sValue = Global.stringVariables[varName];
+                                    return (sValue.Equals(goalValueS));
+
+                                default:
+                                    Debug.Log("unclear variable type for ivs");
+                                    return false;
+                                    break;
+
+                            }//end switch statement
+                        });
+
+                        break;
+                    default:
+                        Debug.Log("error in IVS: " + data[1, pointer] + " not a valid number");
+                        break;
+                }
+                incrementPointer(); //this is b/c gameControl can not increment pointer in IVS mode, has to happen here
+
+                break;
 
             case Mode.END:
                 print("level ended!");
                 break;
 
             default: break;
-        }
+        }//end switch
+
+        processLineInstance = null; //resetting the reference now that it's done
     }
 
     public IEnumerator displayTitleDLG() { //ONLY applies to the special csv file of title

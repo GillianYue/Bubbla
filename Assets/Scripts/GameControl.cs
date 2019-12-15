@@ -34,7 +34,7 @@ public class GameControl : MonoBehaviour {
     public GameObject Hs_Holder, Ballz; //ballz is the empty parent GO holding all paintballs
     //Hs_holder likewise for hearts
 
-    public GameObject[] hearts, gadgets, icons; //gadgets being hearts_container, bulletGauge, etc.
+    public GameObject[] hearts, gadgets, icons, ivsInteractables; //gadgets being hearts_container, bulletGauge, etc.
     //icons being interactive UI that if pressed, should avoid any gameplay logic being carried out
     public GameObject HeartVFX, aim;
     public GameObject player;
@@ -255,8 +255,29 @@ public class GameControl : MonoBehaviour {
                 player.GetComponent<Animator> ().SetBool ("aiming", false);
             }
             break;
+            case GameFlow.Mode.IVS:
+                if (Input.GetMouseButtonDown(0))
+                {
+                    foreach (GameObject i in ivsInteractables)
+                    {
+                        Vector2 go = Global.WorldToScreen(i.transform.position); //screen
 
-        default:
+                        if (Global.touching(new Vector2(Input.mousePosition.x,
+                            Input.mousePosition.y), //screen 
+                      go, //screen
+                i.GetComponent<SpriteRenderer>().sprite.rect.width * Global.WTSfactor.x * i.transform.localScale.x,
+                i.GetComponent<SpriteRenderer>().sprite.rect.height * Global.WTSfactor.y * i.transform.localScale.y
+                ))
+                        {
+                            //if code reaches here, means that one sprite is clicked, get the ivs-related script & call function
+                            ivsInteractable ivs = i.GetComponent<ivsInteractable>();
+                            gFlow.setPointer(ivs.getIvsGoToLine());
+                            return;
+                        }
+                    }//end foreach
+                }
+                break;
+            default:
             break;
 
         }//end switch
@@ -273,7 +294,7 @@ public class GameControl : MonoBehaviour {
         do{//once code gets here, should be ready to start gameFlow
             if(tempPT != (gfP = gFlow.getPointer())){ //avoid redundant work; only rerender if changed
                 tempPT = gfP;
-                StartCoroutine(gFlow.processCurrentLine());
+                gFlow.processCurrentLine();
             }
             yield return new WaitForSeconds(0.1f); //essentially check dialogue status every one s
         }while(!gFlow.checkIfEnded()); //as long as there's still something to be done

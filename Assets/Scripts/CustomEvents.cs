@@ -643,52 +643,63 @@ public class CustomEvents : MonoBehaviour
     * 
     * to create a new or modify an old variable with a string name (linked in code via a dictionary)
      * 
-     * param 0: variable type
+     * param 0: variable type(s), separated by comma
      *      -0: bool
      *      -1: integer
      *      -2: string
-     * param 1: string to identify this variable
-     * param 2: starting value of this variable (type will be converted accordingly) OR value to be mod into
+     * param 1: string(s) to identify this variable, separated by comma
+     * param 2: starting value(s) of this variable (type will be converted accordingly) OR value(s) to be mod into,
+     * separated by comma
      * 
      */
 
     public void variable(bool[] done, string[] prms)
     {
-        int varType;
-        int.TryParse(prms[0], out varType);
 
-        string varName = prms[1];
-   
-
-        switch (varType)
+        string[] varTypez = prms[0].Split(',');
+        int[] varTypes = new int[varTypez.Length];
+        for (int t = 0; t < varTypez.Length; t++)
         {
-            case 0:
-                bool b;
-                bool.TryParse(prms[2], out b);
-                if (Global.boolVariables.ContainsKey(varName))
-                    Global.boolVariables[varName] = b;
-                else
-                    Global.boolVariables.Add(varName, b);
-                break;
-            case 1:
-                int i;
-                int.TryParse(prms[2], out i);
-                if (Global.intVariables.ContainsKey(varName))
-                    Global.intVariables[varName] = i;
-                else
-                    Global.intVariables.Add(varName, i);
-                break;
-            case 2:
-                if (Global.stringVariables.ContainsKey(varName))
-                    Global.stringVariables[varName] = prms[2];
-                else
-                    Global.stringVariables.Add(varName, prms[2]);
-                break;
-            default:
-                Debug.Log("unclear variable type for custom event 30");
-                break;
+            int.TryParse(varTypez[t], out varTypes[t]);
         }
 
+        string[] varNames = prms[1].Split(',');
+
+        string[] varValues = prms[2].Split(',');
+
+        for (int t = 0; t < varTypes.Length; t++)
+        {
+            
+            switch (varTypes[t])
+            {
+                case 0:
+                    bool b;
+                    bool.TryParse(varValues[t], out b);
+                    if (Global.boolVariables.ContainsKey(varNames[t]))
+                        Global.boolVariables[varNames[t]] = b;
+                    else
+                        Global.boolVariables.Add(varNames[t], b);
+                    break;
+                case 1:
+                    int i;
+                    int.TryParse(varValues[t], out i);
+                    if (Global.intVariables.ContainsKey(varNames[t]))
+                        Global.intVariables[varNames[t]] = i;
+                    else
+                        Global.intVariables.Add(varNames[t], i);
+                    break;
+                case 2:
+                    if (Global.stringVariables.ContainsKey(varNames[t]))
+                        Global.stringVariables[varNames[t]] = varValues[t];
+                    else
+                        Global.stringVariables.Add(varNames[t], varValues[t]);
+                    break;
+                default:
+                    Debug.Log("unclear variable type for custom event 30");
+                    break;
+            }
+
+        }
 
         done[0] = true;
     }
@@ -834,6 +845,7 @@ public class CustomEvents : MonoBehaviour
         else
         {
             gameFlow.setPointer(goToLine);
+            Debug.Log("conditional switch setting pointer to " + goToLine);
         }
 
 
