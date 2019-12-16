@@ -10,6 +10,8 @@ public class GameFlow : MonoBehaviour {
     public GameControl gameControl;
     [Inject(InjectFrom.Anywhere)]
     public CustomEvents customEvents;
+    [Inject(InjectFrom.Anywhere)]
+    public Player player;
 
     //row 0 are names of the categories
     private int pointer = 2; //indicates which line of script the game is at; starting at 2 b/c of format
@@ -148,6 +150,14 @@ public class GameFlow : MonoBehaviour {
             if (currMode == Mode.DLG) { enableDialogueBox();
                 gameControl.stopAllbgMovers();
             } //if the new mode is actually dlg
+            else if(currMode == Mode.IVS)
+            {
+                player.setNavigationMode(false);
+            }
+            else if (currMode == Mode.GAME)
+            {
+                player.setNavigationMode(true);
+            }
 
             if (currMode != Mode.GAME)
             {

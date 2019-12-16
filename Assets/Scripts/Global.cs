@@ -98,6 +98,13 @@ public class Global : MonoBehaviour
         return d;
     }
 
+    //returns distance between two Vector2s
+    public static float findVectorDist(Vector2 v1, Vector2 v2)
+    {
+        float d = Mathf.Sqrt(Mathf.Pow((v1.x - v2.x), 2) + Mathf.Pow((v1.y - v2.y), 2));
+        return d;
+    }
+
 
     public static Vector2 ScreenToWorld(Vector2 mousePos)
     {
@@ -107,7 +114,7 @@ public class Global : MonoBehaviour
 
     public static Vector3 ScreenToWorld(Vector2 mousePos, float z)
     {
-        return mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, z)); ;
+        return mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, z)); 
     }
 
     public static Vector2 WorldToScreen(Vector3 pos)
@@ -122,6 +129,21 @@ public class Global : MonoBehaviour
         e.transform.position.Set(x, y, e.transform.position.z);
     }
 
+    public static void nudgeTowards(GameObject e, int x, int y, float spd)
+    {
+        float xDist = x - e.transform.position.x;
+        float yDist = y - e.transform.position.y;
+        float ratio = xDist / yDist;
+        if (Math.Abs(xDist) < 3 && Math.Abs(xDist) < 3) spd = 0.5f; //avoid shaky movement near destination
+        float dy = ((yDist > 0) ? 1 : -1) * (float)Math.Sqrt((Math.Pow(spd,2) / (Math.Pow(ratio,2) + 1)));
+        float dx = ((xDist > 0) ? 1 : -1) * (float)Math.Sqrt(Math.Pow(spd, 2) - Math.Pow(dy, 2));
+
+      //  Debug.Log("nudge dx " + dx + " dy " + dy+" yDist "+yDist+" xDist "+xDist+" mouseX "+x+" mouseY "+y);
+
+        e.transform.position += new Vector3(dx, dy, 0);
+    }
+
+//might be faulty, if future bug directs me here, check this function
     public static IEnumerator moveTo(GameObject e, int x, int y, float spd, bool[] done)
     {
         float hyp = Mathf.Sqrt(Mathf.Pow(x - e.transform.position.x, 2) +

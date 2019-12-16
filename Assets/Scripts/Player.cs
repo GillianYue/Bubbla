@@ -5,7 +5,11 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour
 {
-	public static List<Color> bulletGauge;
+
+    public enum Mode { ACCL, TOUCH };
+    public Mode navigationMode;
+
+    public static List<Color> bulletGauge;
 	public Text lifeText;
 	public GameObject PaintSpriteObj, BulletGaugeObj, BulletObj, BulletCont; /* bullet container*/
 	public List<GameObject> PaintSprites;
@@ -66,8 +70,21 @@ public class Player : MonoBehaviour
             }
             else
             {
+                if(navigationMode == Mode.ACCL)
+                {
+                    transform.Translate(Input.acceleration.x, 0, 0);
+                }
+                else if(navigationMode == Mode.TOUCH)
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        StartCoroutine(nudgeWhilePressed());
+                    }
+                }
                 gameControl.updateLife(life);
 
+
+                ////////// just for testing purposes
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
                     transform.position += new Vector3(20, 0, 0);
@@ -84,11 +101,27 @@ public class Player : MonoBehaviour
                 {
                     transform.position += new Vector3(0, -20, 0);
                 }
+                //////////
+
             }
         }
 
 	}
 
+    public IEnumerator nudgeWhilePressed()
+    {
+        yield return new WaitUntil(() =>
+        {
+            Vector2 mouseInWorld = Global.ScreenToWorld(Input.mousePosition);
+            Global.nudgeTowards(gameObject, (int)mouseInWorld.x, (int)mouseInWorld.y, 5);
+            if (Input.GetMouseButtonUp(0))
+            {
+                return true;
+            }
+            else
+                return false;
+        });
+    }
 
 	public void endShootStatus(){
 		GetComponent<Animator> ().SetBool ("Shoot", false);
@@ -309,6 +342,18 @@ new Quaternion(0,0,0,0)) as GameObject);
 	public int getMaxLife(){
 		return maxLife;
 	}
+
+    public void setNavigationMode(bool useAccelerometer)
+    {
+        if (useAccelerometer)
+        {
+            navigationMode = Mode.ACCL;
+        }
+        else
+        {
+            navigationMode = Mode.TOUCH;
+        }
+    }
 
 
 }
