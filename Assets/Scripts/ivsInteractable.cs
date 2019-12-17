@@ -18,7 +18,7 @@ public class ivsInteractable : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        interactableDist = 120;
+        interactableDist = 150;
     }
 
     // Update is called once per frame

@@ -719,15 +719,23 @@ public class CustomEvents : MonoBehaviour
      *      -0: exact value comparison
      *      -1: range comparison (only for integers, e.g. values 2,5,7 with lines 11,12,13 will operated under ranges
      *      2-5, 5-7 and 7+, which means a value of 4 of the variable will set the pointer to 11)
+     *      -2: multiple variable fitting (checks for one case for multiple variables, that is, whether they are all
+     *      equal to the values provided in param 3. Param 4 will contain two lines, the first is for if all fit, the
+     *      second for otherwise --e.g. a,b,c varNames, 0,0,1 varTypes, true, false, 3 varValues, 11,13 lines. If a==true,
+     *      b==false and c==3, will point to line 11, otherwise point to 13.
      * param 3: the values of each case, separated by comma
      * param 4: the point-to line number for each case, separated by comma
      * 
      */
 
-        public void conditionalSwitch(bool[] done, string[] prms)
+    public void conditionalSwitch(bool[] done, string[] prms)
     {
-        int varType;
-        int.TryParse(prms[0], out varType);
+        string[] varTypez = prms[0].Split(',');
+        int[] varTypes = new int[varTypez.Length];
+        for (int t = 0; t < varTypez.Length; t++)
+        {
+            int.TryParse(varTypez[t], out varTypes[t]);
+        }
 
         string varName = prms[1];
 
@@ -745,9 +753,9 @@ public class CustomEvents : MonoBehaviour
 
         int goToLine = -1;
 
-        if(comparisonType == 0)
+        if (comparisonType == 0)
         {
-            switch (varType)
+            switch (varTypes[0])
             {
                 case 0:
                     if (!Global.boolVariables.ContainsKey(varName))
@@ -758,10 +766,10 @@ public class CustomEvents : MonoBehaviour
                     bool bValue = Global.boolVariables[varName];
 
                     bool[] bools = new bool[values.Length];
-                    for(int b=0; b<values.Length; b++)
+                    for (int b = 0; b < values.Length; b++)
                     {
                         bool.TryParse(values[b], out bools[b]);
-                        if(bValue == bools[b])
+                        if (bValue == bools[b])
                         {
                             //match
                             goToLine = lines[b];
@@ -778,7 +786,7 @@ public class CustomEvents : MonoBehaviour
                     int iValue = Global.intVariables[varName];
 
                     int[] ints = new int[values.Length];
-                    for(int i=0; i<values.Length; i++)
+                    for (int i = 0; i < values.Length; i++)
                     {
                         int.TryParse(values[i], out ints[i]);
                         if (iValue == ints[i])
@@ -813,7 +821,8 @@ public class CustomEvents : MonoBehaviour
 
             }//end switch statement
 
-        }else if(comparisonType == 1) //def int; ranges
+        }
+        else if (comparisonType == 1) //def int; ranges
         {
             if (!Global.intVariables.ContainsKey(varName))
             {
@@ -825,20 +834,68 @@ public class CustomEvents : MonoBehaviour
             for (int i = 0; i < values.Length; i++)
             {
                 int.TryParse(values[i], out ints[i]);
-                if (i>0 && (iValue < ints[i] && iValue >= ints[i-1]) ) //check if value is within previous range
+                if (i > 0 && (iValue < ints[i] && iValue >= ints[i - 1])) //check if value is within previous range
                 {
                     //match
-                    goToLine = lines[i-1];
+                    goToLine = lines[i - 1];
                     break;
                 }
             }
-            if(iValue > ints[values.Length - 1]) //value bigger than the ranges, go to the last assigned line 
+            if (iValue > ints[values.Length - 1]) //value bigger than the ranges, go to the last assigned line 
             {
                 goToLine = lines[values.Length - 1];
             }
         }
+        else if (comparisonType == 2) //multi-variables
+        {
+            bool ok = true;
 
-        if(goToLine == -1)
+            string[] varNames = varName.Split(',');
+            for (int v = 0; v < varNames.Length; v++)
+            {
+                switch (varTypes[v]) {
+                    case 0:
+                        if (!Global.boolVariables.ContainsKey(varNames[v]))
+                        {
+                            Debug.Log("variable with name " + varNames[v] + " not found");
+                        }
+
+                        bool bValue = Global.boolVariables[varNames[v]];
+                        bool b;
+                        bool.TryParse(values[0], out b);
+                        if (b != bValue) ok = false;
+                        break;
+
+                    case 1:
+                if (!Global.intVariables.ContainsKey(varNames[v]))
+                {
+                    Debug.Log("variable with name " + varNames[v] + " not found");
+                }
+
+                        int iValue = Global.intVariables[varNames[v]];
+                        int i;
+                        int.TryParse(values[0], out i);
+                        if (i != iValue) ok = false;
+
+                        break;
+                    case 2:
+                        if (!Global.stringVariables.ContainsKey(varNames[v]))
+                        {
+                            Debug.Log("variable with name " + varNames[v] + " not found");
+                        }
+
+                        string sValue = Global.stringVariables[varNames[v]];
+                        string s = values[0];
+                        if (!s.Equals(sValue)) ok = false;
+
+                        break;
+                }//end switch
+            }
+
+            goToLine = lines[(ok ? 0 : 1)];
+        }
+
+            if (goToLine == -1)
         {
             Debug.Log("conditional switch failed to match with any case");
         }
