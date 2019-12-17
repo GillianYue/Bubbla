@@ -271,10 +271,15 @@ public class GameControl : MonoBehaviour {
                         {
                             //if code reaches here, means that one sprite is clicked, get the ivs-related script & call function
                             ivsInteractable ivs = i.GetComponent<ivsInteractable>();
-                            gFlow.setPointer(ivs.getIvsGoToLine());
+                            if (ivs.closeEnough(player))
+                            {
+                               // player.GetComponent<Player>().setNavigationMode(Player.Mode.FREEZE);
+                                gFlow.setPointer(ivs.getIvsGoToLine());
+                            }
                             return;
                         }
                     }//end foreach
+                    player.GetComponent<Player>().nudge(); //start the moving coroutine only when not clicking on an ivs obj
                 }
                 break;
             default:

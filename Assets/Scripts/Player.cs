@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour
 {
 
-    public enum Mode { ACCL, TOUCH };
+    public enum Mode { ACCL, TOUCH, FREEZE };
     public Mode navigationMode;
 
     public static List<Color> bulletGauge;
@@ -58,8 +58,6 @@ public class Player : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-        //Debug.Log("player on screen: " + Global.WorldToScreen
-            //(GetComponent<RectTransform>().position));
 
 		lifeText.text = ("Life: " + life.ToString ());
 
@@ -76,10 +74,7 @@ public class Player : MonoBehaviour
                 }
                 else if(navigationMode == Mode.TOUCH)
                 {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        StartCoroutine(nudgeWhilePressed());
-                    }
+                    //GameControl will send touch along if it's valid, nudge() will be called
                 }
                 gameControl.updateLife(life);
 
@@ -108,7 +103,13 @@ public class Player : MonoBehaviour
 
 	}
 
-    public IEnumerator nudgeWhilePressed()
+    public void nudge()
+    {
+        if(navigationMode == Mode.TOUCH)
+        StartCoroutine(nudgeWhilePressed()); //once this process starts, it checks for complete (mouse up) on it own
+    }
+
+    private IEnumerator nudgeWhilePressed()
     {
         yield return new WaitUntil(() =>
         {
@@ -343,16 +344,9 @@ new Quaternion(0,0,0,0)) as GameObject);
 		return maxLife;
 	}
 
-    public void setNavigationMode(bool useAccelerometer)
+    public void setNavigationMode(Mode mode)
     {
-        if (useAccelerometer)
-        {
-            navigationMode = Mode.ACCL;
-        }
-        else
-        {
-            navigationMode = Mode.TOUCH;
-        }
+            navigationMode = mode;
     }
 
 

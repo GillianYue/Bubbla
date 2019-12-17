@@ -152,11 +152,11 @@ public class GameFlow : MonoBehaviour {
             } //if the new mode is actually dlg
             else if(currMode == Mode.IVS)
             {
-                player.setNavigationMode(false);
+                player.setNavigationMode(Player.Mode.TOUCH);
             }
             else if (currMode == Mode.GAME)
             {
-                player.setNavigationMode(true);
+                player.setNavigationMode(Player.Mode.ACCL);
             }
 
             if (currMode != Mode.GAME)
@@ -380,7 +380,6 @@ public class GameFlow : MonoBehaviour {
                             }
                             else
                             {
-                                Debug.Log("return " + (-1.0333f * disp_spd + 1.07f));
                                 yield return new WaitForSeconds(-1.0333f * disp_spd + 1.07f);
                             }
                         }
