@@ -40,6 +40,9 @@ public class GameControl : MonoBehaviour {
     public GameObject player;
     public GameObject GameOverC;
 
+    public BGMover[] backgrounds;
+    public GameObject fixedBG;
+
     [Inject(InjectFrom.Anywhere)]
     public CustomEvents customEvents;
     [Inject(InjectFrom.Anywhere)]
@@ -47,16 +50,20 @@ public class GameControl : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public PaintballSpawner pSpawner;
     [Inject(InjectFrom.Anywhere)]
+
     public GameFlow gFlow;
+    [Inject(InjectFrom.Anywhere)]
+    public Dialogue dialogue;
 
-    public BGMover[] backgrounds;
+    [Inject(InjectFrom.Anywhere)]
+    public LoadScene loadScene;
 
-    public GameObject fixedBG;
     [Inject(InjectFrom.Anywhere)]
     public Backpack backpack;
 
     private float pressTime=-1;
-    public bool ckTouch = true; //if false, won't check for user's touch input in GAME
+    public bool ckTouch = true, //if false, won't check for user's touch input in GAME
+        linearFlow; //if true, uses script GameFlow
 
     // Use this for initialization
     void Start () {
@@ -96,10 +103,10 @@ public class GameControl : MonoBehaviour {
         //mouseclick
             if (Input.GetMouseButtonDown (0)) {
 
-                    if (gFlow.checkCurrentLineDone ()) {//time to move pointer and print new line
+                    if (dialogue.checkCurrentLineDone ()) {//time to move pointer and print new line
                         StartCoroutine (gFlow.movePointer ()); //move to next line in script
-                    } else if (gFlow.Skippable ()) { //skip time
-                        gFlow.skipDLG ();
+                    } else if (dialogue.Skippable ()) { //skip time
+                        dialogue.skipDLG ();
                     }
                     return; //if so, no need to proceed
             }
@@ -290,7 +297,7 @@ public class GameControl : MonoBehaviour {
     }
 
     IEnumerator StartGame(){ 
-        while (!gFlow.checkLoadDone()) {//wait till csv's loaded
+        while (!loadScene.checkLoadDone()) {//wait till csv's loaded
             yield return null;
         }
 

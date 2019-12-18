@@ -4,20 +4,44 @@ using System.Collections;
 public delegate void setterDelegate(string[,] data);
 public delegate void setterDelegateD(string[,] data, bool[] sd);
 
+//script in charge of all loading-related functionalities
 public class LoadScene : MonoBehaviour {
-	//script specifically for loading screen
-	private int scn_to_load;
+
+
+    [Inject(InjectFrom.Anywhere)]
+    public EnemyLoader enemyLoader;
+    [Inject(InjectFrom.Anywhere)]
+    public CharacterLoader characterLoader;
+    [Inject(InjectFrom.Anywhere)]
+    public ItemLoader itemLoader;
+
+
+    [Inject(InjectFrom.Anywhere)]
+    public GameFlow gameFlow;
+
+    private int scn_to_load;
 
 	void Start () {
 		scn_to_load = Global.Scene_To_Load;
-		StartCoroutine (load ());
+		//loadScene();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	}
 
-	IEnumerator load(){
+    public bool checkLoadDone()
+    { //check if all loaders are ready for game
+        return (gameFlow.checkGameFlowLoadDone() && enemyLoader.enemyLoaderDone
+            && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
+    }
+
+    public void loadScene()
+    {
+        StartCoroutine(load());
+    }
+
+	private IEnumerator load(){
 		
 		//play loading animation and other good stuff
 		yield return new WaitForSeconds (3);

@@ -4,12 +4,18 @@ using System.Collections;
 
 public class TitleBGanim : MonoBehaviour {
 
-	public Sprite[] tt0To14;
+    [Inject(InjectFrom.Anywhere)]
+    public GameFlow gameFlow;
+
+    [Inject(InjectFrom.Anywhere)]
+    public Dialogue dialogue;
+
+    public Sprite[] tt0To14;
 	//RGB of this background: r68 g135 b152
 	public GameObject UIBar1, UIBar2;
 	public Text[] texts;
-	public GameFlow dlg;
-	public GameObject clock;
+
+    public GameObject clock;
 	public float startAnimWait = 0.08f; //speed of how fast it loads
     private GameObject canvas;
     private int numRows;
@@ -69,11 +75,11 @@ public class TitleBGanim : MonoBehaviour {
 
 	IEnumerator startTitleScreenAnim(){
       
-		while (!dlg.checkTitleLoadDone()) {//wait till csv's loaded
+		while (!dialogue.checkTitleLoadDone()) {//wait till csv's loaded
             yield return null;
 		}
         //gameFlow dlg has access to the csv containing scripts of dialogue
-		StartCoroutine (dlg.displayTitleDLG());
+		StartCoroutine (dialogue.displayTitleDLG(new string[1,1])); //TODO fix
 
 		Vector3 v1 = UIBar1.GetComponent<RectTransform> ().localScale;
 		Vector3 v2 = UIBar2.GetComponent<RectTransform> ().localScale;
