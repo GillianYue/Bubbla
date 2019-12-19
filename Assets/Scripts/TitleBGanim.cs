@@ -20,7 +20,18 @@ public class TitleBGanim : MonoBehaviour {
     private GameObject canvas;
     private int numRows;
 
-	void Start () {
+    private bool[] loadDone;  //for title csv load
+    public TextAsset DlgCsv; //dialogue file for a specific level
+    private string[,] data; //double array that stores all info of this level
+
+    public ArrayList specialDLGstarts, specialDLGends; //arraylist of ints
+
+    void Start () {
+
+        loadDone = new bool[1];
+        bool[] parseDone = new bool[1];
+        StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone, false));
+
         canvas = GameObject.FindGameObjectWithTag("Canvas");
         //total sum of heights
         var sh = canvas.GetComponent<RectTransform>().rect.height * 
@@ -49,7 +60,7 @@ public class TitleBGanim : MonoBehaviour {
         for (int r = 1; r <= numRows; r++)
         {
             GameObject n = Instantiate(transform.GetChild(0).gameObject);
-            n.transform.parent = transform;
+            n.transform.SetParent(transform);
             var sr = transform.GetChild(r).GetComponent<SpriteRenderer>();
             width = sr.sprite.bounds.size.x;
             screenWidth = canvas.GetComponent<RectTransform>().rect.width;
@@ -73,13 +84,48 @@ public class TitleBGanim : MonoBehaviour {
 	
 	}
 
-	IEnumerator startTitleScreenAnim(){
+    public bool checkTitleLoadDone()
+    { //check if title loaders are ready for game
+        return (loadDone[0]);
+    }
+
+    // set data for title screen
+    public void setData(string[,] d, bool[] parseDone)
+    {
+        data = d;
+        StartCoroutine(parseDLGcsvData(parseDone));
+    }
+
+    IEnumerator parseDLGcsvData(bool[] parseDone)
+    {
+        yield return new WaitUntil(() => (data != null));
+        int nRows = data.GetLength(1); bool toggle = false;
+        for (int r = 1; r < nRows; r++) //-1 because title row doesn't count
+        {
+            if (data[0, r].Equals("SPECIAL"))
+            {
+                if (!toggle)
+                {
+                    specialDLGstarts.Add(r + 1); //line after starting "SPECIAL"
+                }
+                else
+                {
+                    specialDLGends.Add(r - 1);
+                }
+                toggle = !toggle;
+            }
+        }
+
+        parseDone[0] = true;
+    }
+
+    IEnumerator startTitleScreenAnim(){
       
-		while (!dialogue.checkTitleLoadDone()) {//wait till csv's loaded
+		while (!checkTitleLoadDone()) {//wait till csv's loaded
             yield return null;
 		}
         //gameFlow dlg has access to the csv containing scripts of dialogue
-		StartCoroutine (dialogue.displayTitleDLG(new string[1,1])); //TODO fix
+		StartCoroutine (dialogue.displayTitleDLG(data)); 
 
 		Vector3 v1 = UIBar1.GetComponent<RectTransform> ().localScale;
 		Vector3 v2 = UIBar2.GetComponent<RectTransform> ().localScale;

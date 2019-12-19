@@ -48,14 +48,14 @@ public class Dialogue : MonoBehaviour
         
     }
 
-    public void displayOneLine(string name, string content, string sprite_state, string display_spd, string not_found_param,
+    public void displayOneLine(string c_name, string content, string sprite_state, string display_spd, string not_found_param,
 		string special_index, string param_1, string param_2, string param_3)
 	{
-		StartCoroutine(oneLine(name, content, sprite_state, display_spd, not_found_param, special_index, param_1, param_2,
+		StartCoroutine(oneLine(c_name, content, sprite_state, display_spd, not_found_param, special_index, param_1, param_2,
             param_3));
 	}
 
-    private IEnumerator oneLine(string name, string content, string sprite_state, string display_spd, string not_found_param,
+    private IEnumerator oneLine(string c_name, string content, string sprite_state, string display_spd, string not_found_param,
         string special_index, string param_1, string param_2, string param_3)
 	{
 
@@ -64,7 +64,7 @@ public class Dialogue : MonoBehaviour
 		AudioClip cVoiceClip = null;
 
 		lineDone = false; //dialogue is shown one char at a time
-		NAME.text = name;
+		NAME.text = c_name;
 
 		if (!prevChaName.Equals(NAME.text)) //if equal, no need to change animator
 		{
@@ -109,17 +109,18 @@ public class Dialogue : MonoBehaviour
 		Canvas.ForceUpdateCanvases();
 		DIALOGUE.text = "";
 
-		int special;
-		int.TryParse(special_index, out special);
 
 		setBoolParam(character, 0, true); //talking is param 0
 
 		setAnimBaseState(character, SpriteNum);
-		/*
+
+        int special;
+        int.TryParse(special_index, out special);
+        /*
 		 * the two params for special event could be int, could be int arrays, so to cover all 
 		 * cases we create variables for all possibilities                
 		 */
-		ArrayList PARAM1, PARAM2, PARAM3;
+        ArrayList PARAM1, PARAM2, PARAM3;
 		PARAM1 = new ArrayList(); PARAM2 = new ArrayList(); PARAM3 = new ArrayList();
 		if (special != 0) //if there is special, parse
 		{
@@ -549,11 +550,6 @@ public class Dialogue : MonoBehaviour
 
 
 	//** TITLE
-
-	public bool checkTitleLoadDone()
-	{ //check if title loaders are ready for game
-		return (loadDone[0]);
-	}
 
 	public IEnumerator displayTitleDLG(string[,] data) //TODO need to refactor
 	{ //ONLY applies to the special csv file of title
