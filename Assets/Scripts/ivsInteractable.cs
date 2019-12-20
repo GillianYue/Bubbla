@@ -2,18 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ivsInteractable : MonoBehaviour
+public class ivsInteractable : interactable
 {
     private int myGoToLine = -1;
     private int indexInArray = -1;
 
-    private int interactableDist; //default
-
-    public ivsInteractable(int arrayIndex, int goToLine)
-    {
-        indexInArray = arrayIndex;
-        myGoToLine = goToLine;
-    }
+    //private int interactableDist; //from parent
 
     // Start is called before the first frame update
     void Start()
@@ -25,16 +19,6 @@ public class ivsInteractable : MonoBehaviour
     void Update()
     {
         
-    }
-
-    //determines if the other GO (usually player) is close enough to this particular ivs interactable
-    public bool closeEnough(GameObject other)
-    {
-        //-1: always interactable; dist<interactableDist = close enough
-        float dist = Global.findVectorDist(transform.position, other.transform.position);
-
-        return ( dist <= interactableDist);
-
     }
 
     public void setindexInArray(int index)
@@ -57,8 +41,4 @@ public class ivsInteractable : MonoBehaviour
         return myGoToLine;
     }
 
-    public void setInteractableDist(int dist)
-    {
-        interactableDist = dist;
-    }
 }

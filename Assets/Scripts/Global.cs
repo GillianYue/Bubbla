@@ -138,9 +138,11 @@ public class Global : MonoBehaviour
         float dy = ((yDist > 0) ? 1 : -1) * (float)Math.Sqrt((Math.Pow(spd,2) / (Math.Pow(ratio,2) + 1)));
         float dx = ((xDist > 0) ? 1 : -1) * (float)Math.Sqrt(Math.Pow(spd, 2) - Math.Pow(dy, 2));
 
-      //  Debug.Log("nudge dx " + dx + " dy " + dy+" yDist "+yDist+" xDist "+xDist+" mouseX "+x+" mouseY "+y);
+        //  Debug.Log("nudge dx " + dx + " dy " + dy+" yDist "+yDist+" xDist "+xDist+" mouseX "+x+" mouseY "+y);
 
-        e.transform.position += new Vector3(dx, dy, 0);
+         e.transform.position += new Vector3(dx, dy, 0);
+
+        // e.GetComponent<Rigidbody2D>().AddForce(new Vector2(dx,dy));
     }
 
 //might be faulty, if future bug directs me here, check this function

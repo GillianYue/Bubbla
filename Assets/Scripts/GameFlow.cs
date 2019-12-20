@@ -211,7 +211,7 @@ public class GameFlow : MonoBehaviour {
                             ivs.setIvsGoToLine(lines[l]);
                         }
 
-                        gameControl.ivsInteractables = ivsGOs;
+                        gameControl.interactables = ivsGOs;
                         break;
                     case 1: //conditional looping for investigate
                         //NOTE: only break after condition is fulfilled, pointer will increment outside the switch statement

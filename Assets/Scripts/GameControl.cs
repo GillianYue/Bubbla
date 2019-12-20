@@ -34,7 +34,7 @@ public class GameControl : MonoBehaviour {
     public GameObject Hs_Holder, Ballz; //ballz is the empty parent GO holding all paintballs
     //Hs_holder likewise for hearts
 
-    public GameObject[] hearts, gadgets, icons, ivsInteractables; //gadgets being hearts_container, bulletGauge, etc.
+    public GameObject[] hearts, gadgets, icons, interactables; //gadgets being hearts_container, bulletGauge, etc.
     //icons being interactive UI that if pressed, should avoid any gameplay logic being carried out
     public GameObject HeartVFX, aim;
     public GameObject player;
@@ -98,201 +98,262 @@ public class GameControl : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-        switch(gFlow.currMode){
-        case GameFlow.Mode.DLG:
-        //mouseclick
-            if (Input.GetMouseButtonDown (0)) {
+        if (linearFlow)
+        {
+            switch (gFlow.currMode)
+            {
+                case GameFlow.Mode.DLG:
+                    //mouseclick
+                    if (Input.GetMouseButtonDown(0))
+                    {
 
-                    if (dialogue.checkCurrentLineDone ()) {//time to move pointer and print new line
-                        StartCoroutine (gFlow.movePointer ()); //move to next line in script
-                    } else if (dialogue.Skippable ()) { //skip time
-                        dialogue.skipDLG ();
+                        if (dialogue.checkCurrentLineDone())
+                        {//time to move pointer and print new line
+                            StartCoroutine(gFlow.movePointer()); //move to next line in script
+                        }
+                        else if (dialogue.Skippable())
+                        { //skip time
+                            dialogue.skipDLG();
+                        }
+                        return; //if so, no need to proceed
                     }
-                    return; //if so, no need to proceed
-            }
-            break;
+                    break;
 
-        case GameFlow.Mode.GAME:
-                if(ckTouch)
-            if (Input.GetMouseButtonDown (0)) {
-                foreach (Transform child in Ballz.transform) {//
-                    Vector2 item = Global.WorldToScreen(child.GetComponent<
-                        RectTransform>().position); //screen
-
-                        //checks if clicking on any paintball
-                        if (child.CompareTag("Paintball") &&
-                           Global.touching(new Vector2(Input.mousePosition.x,
-                               Input.mousePosition.y), //screen 
-                               item, //screen
-                                     //gets the radius of paintball on screen
-                               child.GetComponent<SpriteRenderer>().sprite.rect.width * 
-                               Global.WTSfactor.x * child.transform.localScale.x,
-                               child.GetComponent<SpriteRenderer>().sprite.rect.height *
-                               Global.WTSfactor.y * child.transform.localScale.y
-                               )) {
-                            /**if yes, terminate the method early so that
-                        bullet wouldn't be launched; the interaction with
-                        paintball will be handled by PaintballSpawner
-                        **/
-
-                        //checking if bulletgauge is full (the process takes in paint automatically)
-                        if (player.GetComponent<Player> ().addPaint 
-                        (child.GetComponentInParent<PaintballBehavior> ().getColor ())) {
-                            //generates effect
-                            child.GetComponentInParent<PaintballBehavior> ().getsAbsorbed ();
-                        } 
-                        return;
-                    } else if (child.CompareTag ("Potion") &&
-                              Global.touching (new Vector2(Input.mousePosition.x,
-                               Input.mousePosition.y), //screen 
-                               item, //screen
-                                     //gets the radius of paintball on screen
-                               child.GetComponent<SpriteRenderer>().sprite.rect.width *
-                               Global.WTSfactor.x * child.transform.localScale.x,
-                               child.GetComponent<SpriteRenderer>().sprite.rect.height *
-                               Global.WTSfactor.y * child.transform.localScale.y)) {
-
-                        child.GetComponent<ItemBehav> ().getsAbsorbed ();
-                        player.GetComponent<Player> ().cure 
-                    (child.GetComponent<ItemBehav> ().getCuringPotency ());
-
-                        return;
-                    }
-                }//end check paintballs
-
-                foreach (GameObject i in icons)
+                case GameFlow.Mode.GAME:
+                    if (ckTouch)
+                        if (Input.GetMouseButtonDown(0))
                         {
-                            Vector2 icon = Global.WorldToScreen(i.GetComponent<
-                            RectTransform>().position); //screen
+                            foreach (Transform child in Ballz.transform)
+                            {//
+                                Vector2 item = Global.WorldToScreen(child.GetComponent<
+                                    RectTransform>().position); //screen
+
+                                //checks if clicking on any paintball
+                                if (child.CompareTag("Paintball") &&
+                                   Global.touching(new Vector2(Input.mousePosition.x,
+                                       Input.mousePosition.y), //screen 
+                                       item, //screen
+                                             //gets the radius of paintball on screen
+                                       child.GetComponent<SpriteRenderer>().sprite.rect.width *
+                                       Global.WTSfactor.x * child.transform.localScale.x,
+                                       child.GetComponent<SpriteRenderer>().sprite.rect.height *
+                                       Global.WTSfactor.y * child.transform.localScale.y
+                                       ))
+                                {
+                                    /**if yes, terminate the method early so that
+                                bullet wouldn't be launched; the interaction with
+                                paintball will be handled by PaintballSpawner
+                                **/
+
+                                    //checking if bulletgauge is full (the process takes in paint automatically)
+                                    if (player.GetComponent<Player>().addPaint
+                                    (child.GetComponentInParent<PaintballBehavior>().getColor()))
+                                    {
+                                        //generates effect
+                                        child.GetComponentInParent<PaintballBehavior>().getsAbsorbed();
+                                    }
+                                    return;
+                                }
+                                else if (child.CompareTag("Potion") &&
+                                        Global.touching(new Vector2(Input.mousePosition.x,
+                                         Input.mousePosition.y), //screen 
+                                         item, //screen
+                                               //gets the radius of paintball on screen
+                                         child.GetComponent<SpriteRenderer>().sprite.rect.width *
+                                         Global.WTSfactor.x * child.transform.localScale.x,
+                                         child.GetComponent<SpriteRenderer>().sprite.rect.height *
+                                         Global.WTSfactor.y * child.transform.localScale.y))
+                                {
+
+                                    child.GetComponent<ItemBehav>().getsAbsorbed();
+                                    player.GetComponent<Player>().cure
+                                (child.GetComponent<ItemBehav>().getCuringPotency());
+
+                                    return;
+                                }
+                            }//end check paintballs
+
+                            foreach (GameObject i in icons)
+                            {
+                                Vector2 icon = Global.WorldToScreen(i.GetComponent<
+                                RectTransform>().position); //screen
+
+                                if (Global.touching(new Vector2(Input.mousePosition.x,
+                                    Input.mousePosition.y), //screen 
+                              icon, //screen
+                        i.GetComponent<Image>().sprite.rect.width * Global.WTSfactor.x * i.transform.localScale.x,
+                        i.GetComponent<Image>().sprite.rect.height * Global.WTSfactor.y * i.transform.localScale.y
+                        ))
+                                {
+                                    //if code reaches here, means that one icon is pressed
+                                    return; //prevent aim from being created
+                                }
+                            }
+
+                            //if code reaches here, treat as starting to press down, as opposed to a light tap on
+                            //paintball/potion
+                            GameObject a = aim; //GO with the aiming sprite
+
+                            a = Instantiate(a, Global.ScreenToWorld(Input.mousePosition,
+                            5),
+                            player.transform.rotation) as GameObject;
+                            a.transform.SetParent(player.transform);
+
+                            a.GetComponent<Animator>().SetBool("Focused", false);
+
+                            pressTime = Time.time;
+                        }
+
+                    if (pressTime != -1)
+                    { //if is currently pressing
+                        Vector2 mouseWorld = Global.ScreenToWorld(Input.mousePosition);
+
+                        Transform aimy = player.transform.Find("Aim(Clone)");
+                        if (aimy != null)
+                        {
+                            aimy.position = new Vector3(
+                                mouseWorld.x, mouseWorld.y, aimy.position.z); //put aim at pressed position
+
+                            if ((Time.time - pressTime) > 0.7 &&
+                               !aimy.GetComponent<Animator>().GetBool("Focused"))
+                            {
+                                aimy.GetComponent<Animator>().SetBool("Focused", true);
+                            }
+                        }
+                        //start pointin cannon
+                        Vector3 mouse = Input.mousePosition;
+                        Vector3 direction = mouse -
+                                           Camera.main.WorldToScreenPoint(player.transform.position);
+                        float tan = direction.x / direction.y;
+                        float angle = Mathf.Atan(tan);
+                        //*************THE ANGLE IS HERE*************
+
+                        float dgAngle = -1 * (angle * Mathf.Rad2Deg); //convert from radian to dgr
+                        dgAngle += 45; //to account for the original angle of cannon the sprite
+                        if (direction.y < 0)
+                        {
+                            dgAngle += 180;
+                        }
+                        if (direction.x < 0)
+                        {
+                            player.GetComponent<Animator>().SetBool("left", true);
+                        }
+                        else
+                        {
+                            player.GetComponent<Animator>().SetBool("left", false);
+                        }
+                        //even if no bullet, cannon points to the clicked direction
+                        Vector3 temp = player.transform.Find("Cannon").localEulerAngles;
+                        temp.z = dgAngle;
+                        player.transform.Find("Cannon").localEulerAngles = temp;
+                        //end pointin cannon
+                        player.GetComponent<Animator>().SetBool("aiming", true);
+
+
+                        if (Input.GetMouseButtonUp(0))
+                        { //release
+
+                            if (aimy != null)
+                                Destroy(aimy.gameObject);
+
+                            float pressedLength = (Time.time - pressTime);
+                            pressTime = -1; //set to -1 so that we know it's not pressing
+
+                            //if code reaches here, it shows that empty space was clicked, SHOOT BULLET
+
+                            if (pressedLength < 0.7)
+                            {
+                                //normal shooting
+
+                                //the launchBullet function will check if there's bullet
+                                player.GetComponent<Player>().launchBullet(direction, angle);
+
+
+                            }
+                            else if (pressedLength < 1.5)
+                            {
+                                //second stage
+                                player.GetComponent<Player>().launch2Bullets(direction, angle);
+
+                            }
+                            else
+                            {
+                                //triple combo shoot
+                            }
+
+                        }//end release
+                    }
+                    else
+                    {//end pressing
+                        player.GetComponent<Animator>().SetBool("aiming", false);
+                    }
+                    break;
+                case GameFlow.Mode.IVS: //assumes existence of gameFlow and linearity
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        foreach (GameObject i in interactables)
+                        {
+                            Vector2 go = Global.WorldToScreen(i.transform.position); //screen
 
                             if (Global.touching(new Vector2(Input.mousePosition.x,
                                 Input.mousePosition.y), //screen 
-                          icon, //screen
-                    i.GetComponent<Image>().sprite.rect.width * Global.WTSfactor.x * i.transform.localScale.x,
-                    i.GetComponent<Image>().sprite.rect.height * Global.WTSfactor.y * i.transform.localScale.y
+                          go, //screen
+                    i.GetComponent<SpriteRenderer>().sprite.rect.width * Global.WTSfactor.x * i.transform.localScale.x,
+                    i.GetComponent<SpriteRenderer>().sprite.rect.height * Global.WTSfactor.y * i.transform.localScale.y
                     ))
                             {
-                                //if code reaches here, means that one icon is pressed
-                                return; //prevent aim from being created
+                                //if code reaches here, means that one sprite is clicked, get the ivs-related script & call function
+                                ivsInteractable ivs = i.GetComponent<ivsInteractable>();
+                                if (ivs.closeEnough(player))
+                                {
+                                    // player.GetComponent<Player>().setNavigationMode(Player.Mode.FREEZE);
+                                    gFlow.setPointer(ivs.getIvsGoToLine());
+                                }
+                                return;
                             }
-                        }
-
-                //if code reaches here, treat as starting to press down, as opposed to a light tap on
-                //paintball/potion
-                GameObject a = aim; //GO with the aiming sprite
-
-                    a = Instantiate (a, Global.ScreenToWorld(Input.mousePosition,
-                    5), 
-                    player.transform.rotation) as GameObject;
-                    a.transform.SetParent(player.transform);
-
-                    a.GetComponent<Animator> ().SetBool ("Focused", false);
-
-                pressTime = Time.time;
-            }
-
-            if (pressTime != -1) { //if is currently pressing
-                Vector2 mouseWorld = Global.ScreenToWorld (Input.mousePosition);
-
-                Transform aimy = player.transform.Find ("Aim(Clone)");
-                    if (aimy != null)
-                    {
-                        aimy.position = new Vector3(
-                            mouseWorld.x, mouseWorld.y, aimy.position.z); //put aim at pressed position
-
-                        if ((Time.time - pressTime) > 0.7 &&
-                           !aimy.GetComponent<Animator>().GetBool("Focused"))
-                        {
-                            aimy.GetComponent<Animator>().SetBool("Focused", true);
-                        }
+                        }//end foreach
+                        player.GetComponent<Player>().nudge(); //start the moving coroutine only when not clicking on an ivs obj
                     }
-                //start pointin cannon
-                Vector3 mouse = Input.mousePosition;
-                Vector3 direction = mouse -
-                                   Camera.main.WorldToScreenPoint (player.transform.position);
-                float tan = direction.x / direction.y;
-                float angle = Mathf.Atan (tan); 
-                //*************THE ANGLE IS HERE*************
+                    break;
+                default:
+                    break;
 
-                float dgAngle = -1 * (angle * Mathf.Rad2Deg); //convert from radian to dgr
-                dgAngle += 45; //to account for the original angle of cannon the sprite
-                if (direction.y < 0) {
-                    dgAngle += 180;
-                }
-                if (direction.x < 0) {
-                    player.GetComponent<Animator> ().SetBool ("left", true);
-                } else {
-                    player.GetComponent<Animator> ().SetBool ("left", false);
-                }
-                //even if no bullet, cannon points to the clicked direction
-                Vector3 temp = player.transform.Find ("Cannon").localEulerAngles;
-                temp.z = dgAngle;
-                player.transform.Find ("Cannon").localEulerAngles = temp;
-                //end pointin cannon
-                player.GetComponent<Animator> ().SetBool ("aiming", true);
-
-
-                if (Input.GetMouseButtonUp (0)) { //release
-                
-                    if(aimy != null)
-                    Destroy (aimy.gameObject);
-                
-                    float pressedLength = (Time.time - pressTime);
-                    pressTime = -1; //set to -1 so that we know it's not pressing
-
-                    //if code reaches here, it shows that empty space was clicked, SHOOT BULLET
-
-                    if (pressedLength < 0.7) {
-                        //normal shooting
-
-                        //the launchBullet function will check if there's bullet
-                        player.GetComponent<Player> ().launchBullet (direction, angle);
-
-
-                    } else if (pressedLength < 1.5) {
-                        //second stage
-                        player.GetComponent<Player> ().launch2Bullets (direction, angle);
-
-                    } else {
-                        //triple combo shoot
-                    }
-                    
-                }//end release
-            } else {//end pressing
-                player.GetComponent<Animator> ().SetBool ("aiming", false);
-            }
-            break;
-            case GameFlow.Mode.IVS:
+            }//end switch for gameFlow state
+        }
+        else
+        {
+                    //    case Mode.ROAM: //assumes non-linearity //TODO right now it thinks we're in travel scene by default
                 if (Input.GetMouseButtonDown(0))
+            {
+                foreach (GameObject i in interactables)
                 {
-                    foreach (GameObject i in ivsInteractables)
+                    Vector2 go = Global.WorldToScreen(i.transform.position); //screen
+
+                    if (Global.touching(new Vector2(Input.mousePosition.x,
+                        Input.mousePosition.y), //screen 
+                  go, //screen
+            i.GetComponent<SpriteRenderer>().sprite.rect.width * Global.WTSfactor.x * i.transform.localScale.x,
+            i.GetComponent<SpriteRenderer>().sprite.rect.height * Global.WTSfactor.y * i.transform.localScale.y
+            ))
                     {
-                        Vector2 go = Global.WorldToScreen(i.transform.position); //screen
-
-                        if (Global.touching(new Vector2(Input.mousePosition.x,
-                            Input.mousePosition.y), //screen 
-                      go, //screen
-                i.GetComponent<SpriteRenderer>().sprite.rect.width * Global.WTSfactor.x * i.transform.localScale.x,
-                i.GetComponent<SpriteRenderer>().sprite.rect.height * Global.WTSfactor.y * i.transform.localScale.y
-                ))
+                        //if code reaches here, means that one sprite is clicked, get the ivs-related script & call function
+                        interactable itr = i.GetComponent<interactable>();
+                        if (itr.closeEnough(player))
                         {
-                            //if code reaches here, means that one sprite is clicked, get the ivs-related script & call function
-                            ivsInteractable ivs = i.GetComponent<ivsInteractable>();
-                            if (ivs.closeEnough(player))
-                            {
-                               // player.GetComponent<Player>().setNavigationMode(Player.Mode.FREEZE);
-                                gFlow.setPointer(ivs.getIvsGoToLine());
-                            }
-                            return;
+                            // player.GetComponent<Player>().setNavigationMode(Player.Mode.FREEZE);
+                            //gFlow.setPointer(ivs.getIvsGoToLine());
+                            //TODO
+                            Debug.Log("interacting with GO");
+                            //non-linear way of displaying message
                         }
-                    }//end foreach
-                    player.GetComponent<Player>().nudge(); //start the moving coroutine only when not clicking on an ivs obj
-                }
-                break;
-            default:
-            break;
+                        return;
+                    }
+                }//end foreach
+                player.GetComponent<Player>().nudge(); //start the moving coroutine only when not clicking on an ivs obj
+            }
 
-        }//end switch
+
+        }
 
     }
 
