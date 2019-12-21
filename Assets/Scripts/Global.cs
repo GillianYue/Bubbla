@@ -131,18 +131,49 @@ public class Global : MonoBehaviour
 
     public static void nudgeTowards(GameObject e, int x, int y, float spd)
     {
+        Rigidbody2D rb = e.GetComponent<Rigidbody2D>();
+
         float xDist = x - e.transform.position.x;
         float yDist = y - e.transform.position.y;
         float ratio = xDist / yDist;
-        if (Math.Abs(xDist) < 3 && Math.Abs(xDist) < 3) spd = 0.5f; //avoid shaky movement near destination
-        float dy = ((yDist > 0) ? 1 : -1) * (float)Math.Sqrt((Math.Pow(spd,2) / (Math.Pow(ratio,2) + 1)));
-        float dx = ((xDist > 0) ? 1 : -1) * (float)Math.Sqrt(Math.Pow(spd, 2) - Math.Pow(dy, 2));
+        if (Math.Abs(xDist) > 1 && Math.Abs(xDist) > 1)
+        {
+            float dy = ((yDist > 0) ? 1 : -1) * (float)Math.Sqrt((Math.Pow(spd, 2) / (Math.Pow(ratio, 2) + 1)));
+            float dx = ((xDist > 0) ? 1 : -1) * (float)Math.Sqrt(Math.Pow(spd, 2) - Math.Pow(dy, 2));
 
-        //  Debug.Log("nudge dx " + dx + " dy " + dy+" yDist "+yDist+" xDist "+xDist+" mouseX "+x+" mouseY "+y);
+            Vector3 deltaPos = new Vector3(dx * 100, dy * 100, 0) * Time.deltaTime;
+            double r = Math.Sqrt(Math.Pow(deltaPos.x, 2) + Math.Pow(deltaPos.y, 2));
 
-         e.transform.position += new Vector3(dx, dy, 0);
+            RaycastHit2D[] hits = new RaycastHit2D[5];
+            ///////collision checking with raycast
+            e.GetComponent<CapsuleCollider2D>().Raycast(new Vector2(dx, dy), hits);
 
-        // e.GetComponent<Rigidbody2D>().AddForce(new Vector2(dx,dy));
+            if(hits[0].collider != null)
+            {
+                float halfSprite = e.GetComponent<SpriteRenderer>().sprite.rect.width * // edge of sprite, not center of sprite counts
+                    WTSfactor.x * e.transform.localScale.x / 2;
+                if ((hits[0].distance - halfSprite) < r) //can not go as much as usual b/c of collider
+                {
+                    deltaPos = deltaPos.normalized * (hits[0].distance - halfSprite - 0.1f); //this is so that player never goes into objs
+                }
+            }
+            //////end raycast check
+
+            Vector3 newPos = e.transform.position + deltaPos;
+
+            float xDistNew = x - newPos.x; float yDistNew = y - newPos.y;
+
+        if ((xDistNew / xDist < 0) || (yDistNew / yDist < 0))
+        //projected newPos went over mouse input point, the target direction has changed; don't go as far, only as much as needed
+        {
+            rb.MovePosition(new Vector2(x, y));
+        }
+        else
+        {
+            rb.MovePosition(newPos);
+        }
+
+        } //close enough
     }
 
 //might be faulty, if future bug directs me here, check this function

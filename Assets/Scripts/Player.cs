@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
 	public List<GameObject> PaintSprites;
 	public int bulletGaugeCapacity;
 	public int maxLife;
+    public Rigidbody2D playerRB;
 
 	public float bulletSpeed;
     private float bulletWeaponDist = 3;
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour
 	private AudioSource[] fire, ouch;
 
     public bool checkForUpdates = true; //updates life UI and checks for life if true
+
 
 	//those are relative to player, since Cannon(player's cannon) is a child of player
 	private Vector3 CannNormStart = new Vector3(1.36f, 14.89f, 3.33f), 
@@ -51,7 +53,7 @@ public class Player : MonoBehaviour
 				ouch.SetValue (GetComponents<AudioSource> ()[i+5], i);
 			}
 
-
+        playerRB = GetComponent<Rigidbody2D>();
 
 	}
 	
@@ -112,12 +114,13 @@ public class Player : MonoBehaviour
 
     private IEnumerator nudgeWhilePressed()
     {
-        yield return new WaitUntil(() =>
+        yield return new WaitUntil(() => //delegate called after each Update()
         {
             Vector2 mouseInWorld = Global.ScreenToWorld(Input.mousePosition);
             Global.nudgeTowards(gameObject, (int)mouseInWorld.x, (int)mouseInWorld.y, 5);
             if (Input.GetMouseButtonUp(0))
             {
+                // playerRB.velocity = Vector2.zero;
                 return true;
             }
             else
