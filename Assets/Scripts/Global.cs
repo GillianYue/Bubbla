@@ -136,7 +136,7 @@ public class Global : MonoBehaviour
         float xDist = x - e.transform.position.x;
         float yDist = y - e.transform.position.y;
         float ratio = xDist / yDist;
-        if (Math.Abs(xDist) > 1 && Math.Abs(xDist) > 1)
+        if (Math.Abs(xDist) > 1 && Math.Abs(yDist) > 1)
         {
             float dy = ((yDist > 0) ? 1 : -1) * (float)Math.Sqrt((Math.Pow(spd, 2) / (Math.Pow(ratio, 2) + 1)));
             float dx = ((xDist > 0) ? 1 : -1) * (float)Math.Sqrt(Math.Pow(spd, 2) - Math.Pow(dy, 2));
@@ -146,12 +146,11 @@ public class Global : MonoBehaviour
 
             RaycastHit2D[] hits = new RaycastHit2D[5];
             ///////collision checking with raycast
-            e.GetComponent<CapsuleCollider2D>().Raycast(new Vector2(dx, dy), hits);
+            e.GetComponent<Collider2D>().Raycast(new Vector2(dx, dy), hits);
 
             if(hits[0].collider != null)
             {
-                float halfSprite = e.GetComponent<SpriteRenderer>().sprite.rect.height * // edge of sprite, not center of sprite counts
-                    WTSfactor.x * e.transform.localScale.x / 2;
+                float halfSprite = e.GetComponent<Collider2D>().bounds.extents.y; // edge of sprite, not center of sprite counts
                 if ((hits[0].distance - halfSprite) < r) //can not go as much as usual b/c of collider
                 {
                     deltaPos = deltaPos.normalized * (hits[0].distance - halfSprite - 0.07f); //this is so that player never goes into objs
@@ -166,7 +165,7 @@ public class Global : MonoBehaviour
         if ((xDistNew / xDist < 0) || (yDistNew / yDist < 0))
         //projected newPos went over mouse input point, the target direction has changed; don't go as far, only as much as needed
         {
-            rb.MovePosition(new Vector2(x, y));
+            rb.MovePosition(new Vector2(x, y)); //not for collision
         }
         else
         {

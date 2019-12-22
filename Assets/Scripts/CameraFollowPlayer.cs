@@ -42,10 +42,10 @@ public class CameraFollowPlayer : MonoBehaviour
 
         ///////collision checking with raycast
 
-        playerCollider.Raycast(Vector2.up, upHits, Global.MainCanvasHeight * 2, edge_layer_mask);
-        playerCollider.Raycast(Vector2.down, downHits, Global.MainCanvasHeight * 2, edge_layer_mask);
-        playerCollider.Raycast(Vector2.left, leftHits, Global.MainCanvasHeight * 2, edge_layer_mask);
-        playerCollider.Raycast(Vector2.right, rightHits, Global.MainCanvasHeight * 2, edge_layer_mask);
+        playerCollider.Raycast(Vector2.up, upHits, Global.MainCanvasHeight, edge_layer_mask);
+        playerCollider.Raycast(Vector2.down, downHits, Global.MainCanvasHeight, edge_layer_mask);
+        playerCollider.Raycast(Vector2.left, leftHits, Global.MainCanvasHeight, edge_layer_mask);
+        playerCollider.Raycast(Vector2.right, rightHits, Global.MainCanvasHeight, edge_layer_mask);
 
         /**
          * NOTE: distance will only display properly when the maxDistance of Raycast is long enough
