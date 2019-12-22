@@ -150,11 +150,11 @@ public class Global : MonoBehaviour
 
             if(hits[0].collider != null)
             {
-                float halfSprite = e.GetComponent<SpriteRenderer>().sprite.rect.width * // edge of sprite, not center of sprite counts
+                float halfSprite = e.GetComponent<SpriteRenderer>().sprite.rect.height * // edge of sprite, not center of sprite counts
                     WTSfactor.x * e.transform.localScale.x / 2;
                 if ((hits[0].distance - halfSprite) < r) //can not go as much as usual b/c of collider
                 {
-                    deltaPos = deltaPos.normalized * (hits[0].distance - halfSprite - 0.1f); //this is so that player never goes into objs
+                    deltaPos = deltaPos.normalized * (hits[0].distance - halfSprite - 0.07f); //this is so that player never goes into objs
                 }
             }
             //////end raycast check
@@ -171,6 +171,7 @@ public class Global : MonoBehaviour
         else
         {
             rb.MovePosition(newPos);
+               
         }
 
         } //close enough

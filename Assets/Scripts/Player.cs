@@ -120,7 +120,6 @@ public class Player : MonoBehaviour
             Global.nudgeTowards(gameObject, (int)mouseInWorld.x, (int)mouseInWorld.y, 5);
             if (Input.GetMouseButtonUp(0))
             {
-                // playerRB.velocity = Vector2.zero;
                 return true;
             }
             else
