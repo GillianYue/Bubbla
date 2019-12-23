@@ -44,6 +44,7 @@ public class CSVReader : MonoBehaviour
 
 		// creates new 2D string grid to output to
 		string[,] outputGrid = new string[width, matchLineWithExcel? lines.Length+1 : lines.Length];
+
         outputGrid[0, 0] = ""; // row 0 in data has no data, and exists for the sake of consistency between Excel and pointer values";
 
 		for (int r = 0; r < lines.Length; r++)

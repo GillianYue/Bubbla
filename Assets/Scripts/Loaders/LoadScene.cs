@@ -18,6 +18,8 @@ public class LoadScene : MonoBehaviour {
 
     [Inject(InjectFrom.Anywhere)]
     public GameFlow gameFlow;
+    [Inject(InjectFrom.Anywhere)]
+    public TravelSceneManager travelSceneManager;
 
     private int scn_to_load;
 
@@ -30,10 +32,18 @@ public class LoadScene : MonoBehaviour {
 	void Update () {
 	}
 
-    public bool checkLoadDone()
+    public bool checkLoadDone(bool linearFlow)
     { //check if all loaders are ready for game
-        return (gameFlow.checkGameFlowLoadDone() && enemyLoader.enemyLoaderDone
-            && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
+        if (linearFlow)
+        {
+            return (gameFlow.checkGameFlowLoadDone() && enemyLoader.enemyLoaderDone
+                && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
+        }
+        else
+        {
+            return (travelSceneManager.travelLoadDone() && enemyLoader.enemyLoaderDone
+                && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
+        }
     }
 
     public void loadScene()

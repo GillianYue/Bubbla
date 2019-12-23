@@ -358,7 +358,7 @@ public class GameControl : MonoBehaviour {
     }
 
     IEnumerator StartGame(){ 
-        while (!loadScene.checkLoadDone()) {//wait till csv's loaded
+        while (!loadScene.checkLoadDone(linearFlow)) {//wait till csv's loaded
             yield return null;
         }
 

@@ -11,7 +11,7 @@ public class CameraFollowPlayer : MonoBehaviour
     public GameObject moveAlong; //parent of group of GOs that should move along with the camera
     public GameObject Boundary;
 
-    public int startCameraZ = 700;
+    public int startCameraZ = -700;
     private int spaceBeyond = 50; //some space beyond edge of background will show for a more natural look
 
     private CapsuleCollider2D playerCollider;
