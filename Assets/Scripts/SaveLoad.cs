@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections;
 
 public class SaveLoad : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class SaveLoad : MonoBehaviour
         
     }
 
-    public void Save()
+    public void SavePlayerInfo()
     {
         BinaryFormatter bf = new BinaryFormatter();
         Debug.Log("persistentDataPath: " + Application.persistentDataPath);
@@ -31,7 +32,7 @@ public class SaveLoad : MonoBehaviour
         file.Close();
     }
 
-    public void Load()
+    public PlayerData LoadPlayerInfo()
     {
         if(File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
         {
@@ -41,16 +42,39 @@ public class SaveLoad : MonoBehaviour
             file.Close();
 
             Debug.Log("loaded. rankPoints: " + data.rankPoints + " coins: " + data.coins);
+            return data;
+        }
+        else
+        {
+            Debug.Log("file not found in LoadPlayerInfo()");
+            return null;
         }
     }
+
+    //TODO S/L for quests
 
 
 }
 
 [Serializable]
-class PlayerData
+public class PlayerData
 {
     public float rankPoints;
     public float coins;
+
+}
+
+/// <summary>
+/// player's quests status
+///
+/// - should store all past completed quests (those quests will be inactive and not checked in compareQuests())
+/// - current ongoing quests
+/// - should store quest objects (quest is a class in QuestLoader)
+/// 
+/// </summary>
+[Serializable]
+public class QuestStatusData
+{
+    public ArrayList pastQuests, ongoingQuests; //TODO there's more
 
 }
