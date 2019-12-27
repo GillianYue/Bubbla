@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.IO;
 
 public class QuestLoader : MonoBehaviour
 {
@@ -82,15 +84,16 @@ public class QuestLoader : MonoBehaviour
 }
 
 // class for one single quest
+[Serializable]
 public class Quest
 {
     public int index, scene_to_load; //the official index of the quest
     public string type, description, message, specifics, long_message;
-    public Color message_color;
-    public Vector2 location; //coordinate on map; convertable between location name (string) and location coordinates
+    public SerializableColor message_color; 
+    public SerializableVector2 location; //coordinate on map; convertable between location name (string) and location coordinates
 
     public Quest(int INDEX, string TYPE, string DESCRIPTION, string MSG, int SCENE_TO_LOAD, string SPECIFICS, string LONG_MSG,
-        Color MSG_COLOR, Vector2 LOCATION)
+        Color MSG_COLOR, Vector2 LOCATION) //need not be serializable in params b/c of implicit operator casting
     {
         index = INDEX;
         type = TYPE; description = DESCRIPTION; message = MSG; scene_to_load = SCENE_TO_LOAD;

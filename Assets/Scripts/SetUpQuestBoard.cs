@@ -9,11 +9,15 @@ public class SetUpQuestBoard : MonoBehaviour {
 
     [Inject(InjectFrom.Anywhere)]
     public QuestLoader questLoader;
+    [Inject(InjectFrom.Anywhere)]
+    public SaveLoad saveLoad;
+
+    public QuestStatusData currentQuestStatus;
 
     public GameObject questGO; //the game object that can visualize quests
 
     private float questHeight;
-    private ArrayList ongoingQuests;
+    private ArrayList ongoingQuests, pastQuests;
 
 
     // Use this for initialization
@@ -38,18 +42,24 @@ public class SetUpQuestBoard : MonoBehaviour {
     /// <returns></returns>
     private IEnumerator compareQuests()
     {
-        yield return new WaitUntil(() => questLoader.questLoadDone()); //so that the quest roster is ready to be compared
+        QuestStatusData questStatus;
+        questStatus = saveLoad.LoadQuestStatus();
+        yield return new WaitUntil(() => questLoader.questLoadDone() && questStatus != null);
+        //so that the quest roster is ready to be compared
 
         //TODO this and that
-        ongoingQuests = new ArrayList(); //store quests here
+        ongoingQuests = questStatus.ongoingQuests; //store quests here
+        pastQuests = questStatus.pastQuests; //in case it's a first time
+
+        currentQuestStatus = questStatus; //this instance is modified as game progresses, and will be taken to use for saving
 
         ///////only for testing purposes, delete later
         ///
-        ongoingQuests.Add(questLoader.getQuest(1));
-        ongoingQuests.Add(questLoader.getQuest(2));
-        ongoingQuests.Add(questLoader.getQuest(3));
-        ongoingQuests.Add(questLoader.getQuest(4));
-        ongoingQuests.Add(questLoader.getQuest(5));
+        //ongoingQuests.Add(questLoader.getQuest(1));
+        //ongoingQuests.Add(questLoader.getQuest(2));
+        //ongoingQuests.Add(questLoader.getQuest(3));
+        //ongoingQuests.Add(questLoader.getQuest(4));
+        //ongoingQuests.Add(questLoader.getQuest(5));
 
         ////
 
@@ -58,11 +68,6 @@ public class SetUpQuestBoard : MonoBehaviour {
 
     private void setup()
     {
-
-        //while (!saveLoad.questLoadDone)
-        //{
-        //    yield return null;             ///wait for loading of player's quest progress
-        //}
 
         questHeight = Mathf.Abs(questGO.GetComponent<RectTransform>().rect.height);
         var qbHeight = GetComponent<RectTransform>().rect.height;

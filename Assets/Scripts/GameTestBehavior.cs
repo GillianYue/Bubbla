@@ -8,6 +8,11 @@ public class GameTestBehavior : MonoBehaviour
 
     [Inject(InjectFrom.Anywhere)]
     public GameFlow gf;
+    [Inject(InjectFrom.Anywhere)]
+    public SaveLoad saveLoad;
+
+    [Inject(InjectFrom.Anywhere)]
+    public SetUpQuestBoard qb;
 
     public bool test;
     public int speedUpRate;
@@ -39,6 +44,11 @@ public class GameTestBehavior : MonoBehaviour
             if (Input.GetKeyUp("space")) //release to go back to normal time
             {
                 Time.timeScale = 1.0f;
+            }
+
+            if (Input.GetKeyDown(KeyCode.S)) //save
+            {
+                saveLoad.SaveQuestStatus(qb.currentQuestStatus);
             }
         }
 

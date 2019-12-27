@@ -21,7 +21,7 @@ public class SaveLoad : MonoBehaviour
     public void SavePlayerInfo()
     {
         BinaryFormatter bf = new BinaryFormatter();
-        Debug.Log("persistentDataPath: " + Application.persistentDataPath);
+      //  Debug.Log("persistentDataPath: " + Application.persistentDataPath);
         FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
 
         PlayerData playerData = new PlayerData();
@@ -46,12 +46,39 @@ public class SaveLoad : MonoBehaviour
         }
         else
         {
-            Debug.Log("file not found in LoadPlayerInfo()");
-            return null;
+            Debug.Log("file not found in LoadPlayerInfo(), returning new instance");
+            return new PlayerData();
         }
     }
 
-    //TODO S/L for quests
+    public void SaveQuestStatus(QuestStatusData data)
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+       // Debug.Log("persistentDataPath: " + Application.persistentDataPath);
+        FileStream file = File.Create(Application.persistentDataPath + "/questStatus.dat");
+
+        bf.Serialize(file, data);
+        file.Close();
+    }
+
+    public QuestStatusData LoadQuestStatus()
+    {
+       // Debug.Log("persistentDataPath: " + Application.persistentDataPath);
+        if (File.Exists(Application.persistentDataPath + "/questStatus.dat"))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/questStatus.dat", FileMode.Open);
+            QuestStatusData data = (QuestStatusData)bf.Deserialize(file);
+            file.Close();
+
+            return data;
+        }
+        else
+        {
+            Debug.Log("file not found in LoadQuestStatus(), returning new instance");
+            return new QuestStatusData();
+        }
+    }
 
 
 }
@@ -76,5 +103,10 @@ public class PlayerData
 public class QuestStatusData
 {
     public ArrayList pastQuests, ongoingQuests; //TODO there's more
+
+    public QuestStatusData()
+    {
+        pastQuests = new ArrayList(); ongoingQuests = new ArrayList();
+    }
 
 }
