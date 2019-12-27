@@ -269,7 +269,6 @@ public class GameFlow : MonoBehaviour {
                                 default:
                                     Debug.Log("unclear variable type for ivs");
                                     return false;
-                                    break;
 
                             }//end switch statement
                         });

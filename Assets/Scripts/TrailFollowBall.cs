@@ -11,8 +11,8 @@ public class TrailFollowBall : MonoBehaviour {
 	void Start () {
 		dbt.enabled = false;
 		smokeTrail = gameObject.transform.GetChild (0).gameObject.GetComponent<ParticleSystem> ();
-		smokeTrail.startColor = 
-			myBullet.gameObject.GetComponent<SpriteRenderer>().color;
+        smokeTrail.startColor = 
+            myBullet.gameObject.GetComponent<SpriteRenderer>().color;
 
 		//print (gameObject.transform.GetChild (0).gameObject.GetComponent<TrailRenderer> ().material.color);
 	}

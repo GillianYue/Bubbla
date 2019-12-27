@@ -17,7 +17,7 @@ public class SetUpQuestBoard : MonoBehaviour {
     public GameObject questGO; //the game object that can visualize quests
 
     private float questHeight;
-    private ArrayList ongoingQuests, pastQuests;
+    private ArrayList ongoingQuests, availableQuests, pastQuests;
 
 
     // Use this for initialization
@@ -50,16 +50,17 @@ public class SetUpQuestBoard : MonoBehaviour {
         //TODO this and that
         ongoingQuests = questStatus.ongoingQuests; //store quests here
         pastQuests = questStatus.pastQuests; //in case it's a first time
+        availableQuests = questStatus.availableQuests;
 
         currentQuestStatus = questStatus; //this instance is modified as game progresses, and will be taken to use for saving
 
         ///////only for testing purposes, delete later
         ///
-        //ongoingQuests.Add(questLoader.getQuest(1));
-        //ongoingQuests.Add(questLoader.getQuest(2));
-        //ongoingQuests.Add(questLoader.getQuest(3));
-        //ongoingQuests.Add(questLoader.getQuest(4));
-        //ongoingQuests.Add(questLoader.getQuest(5));
+        availableQuests.Add(questLoader.getQuest(1));
+        availableQuests.Add(questLoader.getQuest(2));
+        availableQuests.Add(questLoader.getQuest(3));
+        availableQuests.Add(questLoader.getQuest(4));
+        availableQuests.Add(questLoader.getQuest(5));
 
         ////
 
@@ -73,7 +74,7 @@ public class SetUpQuestBoard : MonoBehaviour {
         var qbHeight = GetComponent<RectTransform>().rect.height;
 
 
-        float heightNeeded = ongoingQuests.Count * questHeight; //numOfQuests needed to be gen is not gna be from questLoader,
+        float heightNeeded = availableQuests.Count * questHeight; //numOfQuests needed to be gen is not gna be from questLoader,
         //but result from the compare function
         if (heightNeeded > qbHeight)
         {
@@ -86,13 +87,13 @@ public class SetUpQuestBoard : MonoBehaviour {
 
         }//if scroll bar doesn't need to be stretched (numQuest<4), don't stretch qb rect
 
-        genQuests(ongoingQuests.Count); //gen quests after setup 
+        genQuests(availableQuests.Count); //gen quests after setup 
     }
 
 	private void genQuests(int numOfQuests){
 
 		for (int i = 0; i < numOfQuests; i++) {
-			genSingleQuest (i, (Quest)ongoingQuests[i]); //gives quest the row to refer to in string[,] data
+			genSingleQuest (i, (Quest)availableQuests[i]); //gives quest the row to refer to in string[,] data
 		}
 	}
 

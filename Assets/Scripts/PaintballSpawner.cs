@@ -59,7 +59,6 @@ public class PaintballSpawner : MonoBehaviour
 
     public void destroyAllpb()
     {
-        Transform c;
         foreach (Transform child in Ballz.transform)
         {
             Destroy(child.gameObject);

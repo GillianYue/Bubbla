@@ -102,11 +102,12 @@ public class PlayerData
 [Serializable]
 public class QuestStatusData
 {
-    public ArrayList pastQuests, ongoingQuests; //TODO there's more
+    public ArrayList pastQuests, availableQuests, ongoingQuests; //TODO there's more
 
     public QuestStatusData()
     {
-        pastQuests = new ArrayList(); ongoingQuests = new ArrayList();
+        pastQuests = new ArrayList(); availableQuests = new ArrayList();
+        ongoingQuests = new ArrayList();
     }
 
 }
