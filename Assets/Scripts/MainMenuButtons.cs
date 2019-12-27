@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class MainMenuButtons : MonoBehaviour
 {
+
+    [Inject(InjectFrom.Anywhere)]
+    public Backpack backpack;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +23,7 @@ public class MainMenuButtons : MonoBehaviour
 
     public void openBackpack()
     {
-
+        backpack.openBackpackUI(true); //fullscreen
     }
 
     public void openSettings()

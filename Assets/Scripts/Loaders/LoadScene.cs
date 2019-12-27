@@ -32,17 +32,21 @@ public class LoadScene : MonoBehaviour {
 	void Update () {
 	}
 
-    public bool checkLoadDone(bool linearFlow)
+    public bool checkLoadDone(bool linearFlow, bool inTitleScene) //TODO messy conditioning
     { //check if all loaders are ready for game
         if (linearFlow)
         {
             return (gameFlow.checkGameFlowLoadDone() && enemyLoader.enemyLoaderDone
                 && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
         }
-        else
+        else if (!inTitleScene)
         {
             return (travelSceneManager.travelLoadDone() && enemyLoader.enemyLoaderDone
                 && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
+        }
+        else
+        {
+            return itemLoader.itemLoaderDone;
         }
     }
 

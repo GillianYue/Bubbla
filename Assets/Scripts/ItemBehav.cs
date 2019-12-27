@@ -28,7 +28,11 @@ public class ItemBehav : MonoBehaviour {
         setSize(size);
 
 		curingPotency = (int)Random.Range (3, 7.99f);
-			audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
+
+        GameObject audioStorage = GameObject.FindWithTag("AudioStorage");
+
+            if (audioStorage)
+            audioz = audioStorage.GetComponent<AudioStorage>();
 
         if(type != 0)
         randomizeRotateVelocity(); // case 0 for type will be set through setter

@@ -40,7 +40,7 @@ public class CustomEvents : MonoBehaviour
     void Start()
     {
 
-        vfxCanvas = gameControl.vfxCanvas;
+        vfxCanvas = (gameControl.vfxCanvas) ? gameControl.vfxCanvas : null;
 
         identified = new List<identifier>();
         foreach (identifier i in FindObjectsOfType<identifier>())

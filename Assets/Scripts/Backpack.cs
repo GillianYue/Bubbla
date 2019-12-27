@@ -20,7 +20,8 @@ public class Backpack : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public ItemLoader itemLoader;
 
-    public bool backpackBtnActive = true;
+    public bool backpackBtnActive = true,
+        fullScreenMode; //if checked, affects num item listed in one row & size scale of displayed item image
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +41,8 @@ public class Backpack : MonoBehaviour
         itemCount[0] = 1; itemCount[1] = 5;
 
         //loadInItems(); eventually oughta switch back to this instead of the below line
-        StartCoroutine(waitTilDone());
+
+        StartCoroutine(Global.Chain(this, waitTilDone(), Global.Do(() => closeBackpackUI())));
     }
 
     // Update is called once per frame
@@ -56,7 +58,9 @@ public class Backpack : MonoBehaviour
     IEnumerator waitTilDone()
     {
         yield return new WaitUntil(() => itemLoader.itemLoaderDone);
-        loadInItems();
+        bool[] loadItemsDone = new bool[1];
+        loadInItems(loadItemsDone);
+        yield return new WaitUntil(() => loadItemsDone[0]);
     }
 
     /**
@@ -64,24 +68,28 @@ public class Backpack : MonoBehaviour
      * 
      * assumes itemLoader is ready, and that itemList/Count is ready (the latter achieved via loadUserData or something
      */
-    public void loadInItems()
+    public void loadInItems(bool[] done)
     {
+        int nc = (fullScreenMode) ? 5 : 4; //num of items in one row; can fit 4 for width of 420, 5 for width of 520
 
-        if (numItems > 8) numGrids = 4 * (int)Mathf.Ceil(numItems / 4.0f);
+        if (numItems > nc*2) numGrids = nc * (int)Mathf.Ceil(numItems / nc);
 
         itemBG.SetActive(true);
         itemMold.SetActive(true);
 
         GameObject items = itemBG.transform.parent.gameObject; RectTransform itmRT = items.GetComponent<RectTransform>();
-        Global.setRectTransform(items, itmRT.rect.width,
-            (numGrids / 4) * 100 + 20); //so that items' rect always fits perfectly the grids that are created
+
+
+            Global.setRectTransform(items, itmRT.rect.width,
+                (numGrids / nc) * 100 + 20); //so that items' rect always fits perfectly the grids that are created
+
         itmRT.pivot = new Vector2(0, 1); //center properly
 
         //first create needed num of itemBG 
         for (int n = 0; n < numGrids; n++)
         {
             GameObject currItemBG = Instantiate(itemBG, itemBG.transform.parent);
-            int row = n / 4; int col = n % 4;
+            int row = n / nc; int col = n % nc;
             currItemBG.GetComponent<RectTransform>().offsetMax = new Vector2(100 * (col + 1), -(100 * row + 20));
             currItemBG.GetComponent<RectTransform>().offsetMin = new Vector2(100 * col + 20, -100 * (row + 1));
             currItemBG.GetComponent<identifier>().setID("itemBG" + n);
@@ -102,10 +110,14 @@ public class Backpack : MonoBehaviour
 
         itemBG.SetActive(false); //because this was in game
         //itemMold.SetActive(false);
+
+        done[0] = true;
     }
 
-    public void openBackpackUI()
+    public void openBackpackUI(bool fullScreen)
     {
+        fullScreenMode = fullScreen;
+
         if (backpackBtnActive)
         {
             gameControl.ckTouch = false; //to stop checking on game progress
@@ -126,10 +138,13 @@ public class Backpack : MonoBehaviour
 
         Time.timeScale = 1.0f; //resume gameplay
 
-        Transform aimy = gameControl.player.transform.Find("Aim(Clone)");
-        if (aimy != null)
+        if (gameControl.player) //if player exists --> which could be false if in title scene backpack view
         {
-            Destroy(aimy.gameObject);
+            Transform aimy = gameControl.player.transform.Find("Aim(Clone)");
+            if (aimy != null)
+            {
+                Destroy(aimy.gameObject);
+            }
         }
 
         //might eventually play an animation (UI screen folding or something) here before setting to inactive

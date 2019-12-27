@@ -56,11 +56,11 @@ public class SetUpQuestBoard : MonoBehaviour {
 
         ///////only for testing purposes, delete later
         ///
-        availableQuests.Add(questLoader.getQuest(1));
-        availableQuests.Add(questLoader.getQuest(2));
-        availableQuests.Add(questLoader.getQuest(3));
-        availableQuests.Add(questLoader.getQuest(4));
-        availableQuests.Add(questLoader.getQuest(5));
+        //availableQuests.Add(questLoader.getQuest(1));
+        //availableQuests.Add(questLoader.getQuest(2));
+        //availableQuests.Add(questLoader.getQuest(3));
+        //availableQuests.Add(questLoader.getQuest(4));
+        //availableQuests.Add(questLoader.getQuest(5));
 
         ////
 

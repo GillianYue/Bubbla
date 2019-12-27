@@ -30,6 +30,8 @@ public class SaveLoad : MonoBehaviour
 
         bf.Serialize(file, playerData);
         file.Close();
+
+        Debug.Log("player info saved to playerInfo.dat");
     }
 
     public PlayerData LoadPlayerInfo()
@@ -59,6 +61,8 @@ public class SaveLoad : MonoBehaviour
 
         bf.Serialize(file, data);
         file.Close();
+
+        Debug.Log("quest saved to questStatus.dat");
     }
 
     public QuestStatusData LoadQuestStatus()

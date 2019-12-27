@@ -63,13 +63,13 @@ public class GameControl : MonoBehaviour {
 
     private float pressTime=-1;
     public bool ckTouch = true, //if false, won't check for user's touch input in GAME
-        linearFlow; //if true, uses script GameFlow
+        linearFlow, inTitleScene; //if true, uses script GameFlow //TODO super messy, urgent
 
     // Use this for initialization
     void Start () {
         
-        GameOverC.SetActive (false);
-        vfxCanvas.SetActive(false); //to prevent blocking of buttons
+        if(GameOverC) GameOverC.SetActive (false);
+        if(vfxCanvas) vfxCanvas.SetActive(false); //to prevent blocking of buttons
         //player.GetComponent<Player> ().enabled = false;
         //gadgets are GOs like life container that are needed in game play but not in DLG mode
         foreach (GameObject g in gadgets) {
@@ -79,7 +79,7 @@ public class GameControl : MonoBehaviour {
         StartCoroutine (StartGame());
 
         //correct sizing for the backgrounds of this level, fixed or non-fixed
-        Global.resizeSpriteToRectX(fixedBG);
+        if(fixedBG) Global.resizeSpriteToRectX(fixedBG);
 
         //setting mask to the right dimension
         GameObject BGMask = GameObject.FindWithTag("BGMask");
@@ -320,7 +320,7 @@ public class GameControl : MonoBehaviour {
 
             }//end switch for gameFlow state
         }
-        else
+        else if(!inTitleScene)
         {
                     //    case Mode.ROAM: //assumes non-linearity //TODO right now it thinks we're in travel scene by default
                 if (Input.GetMouseButtonDown(0))
@@ -354,24 +354,32 @@ public class GameControl : MonoBehaviour {
 
 
         }
+        else
+        {
+            //in title scene
+        }
 
     }
 
     IEnumerator StartGame(){ 
-        while (!loadScene.checkLoadDone(linearFlow)) {//wait till csv's loaded
+        while (!loadScene.checkLoadDone(linearFlow, inTitleScene)) {//wait till csv's loaded //TODO 
             yield return null;
         }
 
-        int tempPT = -1; //temp pointer, is passive, updates as gFlow pointer updates
-        int gfP;
-        do{//once code gets here, should be ready to start gameFlow
-            if(tempPT != (gfP = gFlow.getPointer())){ //avoid redundant work; only rerender if changed
-                tempPT = gfP;
-                gFlow.processCurrentLine();
-            }
-            yield return new WaitForSeconds(0.1f); //essentially check dialogue status every one s
-        }while(!gFlow.checkIfEnded()); //as long as there's still something to be done
-            
+        if (linearFlow)
+        {
+            int tempPT = -1; //temp pointer, is passive, updates as gFlow pointer updates
+            int gfP;
+            do
+            {//once code gets here, should be ready to start gameFlow
+                if (tempPT != (gfP = gFlow.getPointer()))
+                { //avoid redundant work; only rerender if changed
+                    tempPT = gfP;
+                    gFlow.processCurrentLine();
+                }
+                yield return new WaitForSeconds(0.1f); //essentially check dialogue status every one s
+            } while (!gFlow.checkIfEnded()); //as long as there's still something to be done
+        }
     }
         
     public void startEnemyWaves(int[] w, int[] e){

@@ -11,6 +11,9 @@ public class ItemSelect : MonoBehaviour
     GameObject selectedItem;
     private GameObject prevSelected;
 
+    [Inject(InjectFrom.Anywhere)]
+    public Backpack backpack;
+
     void Start()
     {
         selectedItem = transform.Find("ItemMold").gameObject;
@@ -59,7 +62,7 @@ public class ItemSelect : MonoBehaviour
             itemName.text = itemBehav.itemName;
             itemDescription.text = itemBehav.description;
             float s = item.GetComponent<ItemBehav>().sizeScale;
-            selectedItem.GetComponent<RectTransform>().localScale = new Vector3(s, s, s);
+            selectedItem.GetComponent<RectTransform>().localScale = new Vector3(s, s, s) * (backpack.fullScreenMode? 2:1);
             selectedItem.GetComponent<SpriteRenderer>().sprite = item.GetComponent<SpriteRenderer>().sprite;
         }
         else { //empty bg

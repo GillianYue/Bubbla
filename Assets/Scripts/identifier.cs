@@ -5,11 +5,11 @@ using UnityEngine;
 public class identifier : MonoBehaviour
 {
     public string id;
-    CustomEvents ce;
+    [Inject(InjectFrom.Anywhere)]
+    public CustomEvents ce;
 
     void Start()
     {
-        ce = GameObject.FindWithTag("CustomEvent").GetComponent<CustomEvents>();
     }
 
     public void setID(string ID)
