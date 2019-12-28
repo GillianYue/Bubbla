@@ -134,7 +134,7 @@ public class Dialogue : MonoBehaviour
 		{
 			gameFlow.canMovePointer = false;
 			//chains a WaitForSecond with <what should be done afterwards>
-			StartCoroutine(Global.Chain(this, Global.WaitForSeconds((float)PARAM1[0]), Global.Do(() =>
+			StartCoroutine(Global.Chain(this, Global.WaitForSeconds((int)PARAM1[0]), Global.Do(() =>
 			{
 				gameFlow.canMovePointer = true;
 				gameFlow.incrementPointer();
@@ -201,7 +201,8 @@ public class Dialogue : MonoBehaviour
 					/*
 					 * mode 2, the changing of motion states of the character (Talking, Typing, Blinking, etc.)
 					 * -param 1: "which" state(s) to be set (will add float to anim State accordingly, e.g. Typing --> State += 0.05) 
-					 * the same state can appear for multiple times (e.g. 0, 1, 0 will set, for example, Talking, Typing and Talking in order)
+					 * the same state can appear for multiple times (e.g. 0, 1, 0 will set, for example, Talking, Typing and Talking in order);
+                     * NOTE: this needs to match the number of items in param2/3; in other words, even "1,1" is necessary
 					 * -param 2: true/false boolean(s) to set those state(s), where 0 is false and 1 is true
 					 * -param 3: word count indices at which the state(s) are to be set
 					 */

@@ -62,8 +62,7 @@ public class GameControl : MonoBehaviour {
     public Backpack backpack;
 
     private float pressTime=-1;
-    public bool ckTouch = true, //if false, won't check for user's touch input in GAME
-        linearFlow, inTitleScene; //if true, uses script GameFlow //TODO super messy, urgent
+    public bool ckTouch = true;
     public enum Mode { QUEST, GAME, TRAVEL }; //scene type
     public Mode sceneType;
 
@@ -325,7 +324,7 @@ public class GameControl : MonoBehaviour {
         }
         else if(sceneType == Mode.TRAVEL)
         {
-                    //    case Mode.ROAM: //assumes non-linearity //TODO right now it thinks we're in travel scene by default
+
                 if (Input.GetMouseButtonDown(0))
             {
                 foreach (GameObject i in interactables)

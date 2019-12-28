@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
                 {
                     //GameControl will send touch along if it's valid, nudge() will be called
                 }
-                if(gameControl.linearFlow) //TODO iffy way of dealing with this here
+                if(gameControl.sceneType == GameControl.Mode.GAME) //TODO iffy way of dealing with this here
                 gameControl.updateLife(life);
 
 
