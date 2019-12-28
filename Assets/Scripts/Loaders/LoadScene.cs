@@ -32,21 +32,25 @@ public class LoadScene : MonoBehaviour {
 	void Update () {
 	}
 
-    public bool checkLoadDone(bool linearFlow, bool inTitleScene) //TODO messy conditioning
+    public bool checkLoadDone(GameControl.Mode sceneMode) //TODO messy conditioning
     { //check if all loaders are ready for game
-        if (linearFlow)
+        if (sceneMode == GameControl.Mode.GAME)
         {
             return (gameFlow.checkGameFlowLoadDone() && enemyLoader.enemyLoaderDone
                 && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
         }
-        else if (!inTitleScene)
+        else if (sceneMode == GameControl.Mode.TRAVEL)
         {
             return (travelSceneManager.travelLoadDone() && enemyLoader.enemyLoaderDone
                 && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
         }
-        else
+        else if (sceneMode == GameControl.Mode.QUEST)
         {
             return itemLoader.itemLoaderDone;
+        }
+        else
+        {
+            return true;
         }
     }
 

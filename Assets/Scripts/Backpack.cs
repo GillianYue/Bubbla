@@ -126,7 +126,7 @@ public class Backpack : MonoBehaviour
             if (backpack != null)
             {
                 backpack.SetActive(true);
-
+                backpack.transform.position = new Vector3(0, 0, -30);
             }
         }
     }

@@ -64,13 +64,16 @@ public class GameControl : MonoBehaviour {
     private float pressTime=-1;
     public bool ckTouch = true, //if false, won't check for user's touch input in GAME
         linearFlow, inTitleScene; //if true, uses script GameFlow //TODO super messy, urgent
+    public enum Mode { QUEST, GAME, TRAVEL }; //scene type
+    public Mode sceneType;
 
     // Use this for initialization
     void Start () {
         
-        if(GameOverC) GameOverC.SetActive (false);
+        if(sceneType == Mode.GAME && GameOverC) GameOverC.SetActive (false);
         if(vfxCanvas) vfxCanvas.SetActive(false); //to prevent blocking of buttons
         //player.GetComponent<Player> ().enabled = false;
+
         //gadgets are GOs like life container that are needed in game play but not in DLG mode
         foreach (GameObject g in gadgets) {
             g.SetActive (false);
@@ -98,7 +101,7 @@ public class GameControl : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-        if (linearFlow)
+        if (sceneType == Mode.GAME) 
         {
             switch (gFlow.currMode)
             {
@@ -320,7 +323,7 @@ public class GameControl : MonoBehaviour {
 
             }//end switch for gameFlow state
         }
-        else if(!inTitleScene)
+        else if(sceneType == Mode.TRAVEL)
         {
                     //    case Mode.ROAM: //assumes non-linearity //TODO right now it thinks we're in travel scene by default
                 if (Input.GetMouseButtonDown(0))
@@ -354,19 +357,21 @@ public class GameControl : MonoBehaviour {
 
 
         }
-        else
+        else if (sceneType == Mode.QUEST)
         {
             //in title scene
+
+
         }
 
     }
 
     IEnumerator StartGame(){ 
-        while (!loadScene.checkLoadDone(linearFlow, inTitleScene)) {//wait till csv's loaded //TODO 
+        while (!loadScene.checkLoadDone(sceneType)) {//wait till csv's loaded //TODO 
             yield return null;
         }
 
-        if (linearFlow)
+        if (sceneType == Mode.GAME)
         {
             int tempPT = -1; //temp pointer, is passive, updates as gFlow pointer updates
             int gfP;
