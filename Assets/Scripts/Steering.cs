@@ -10,11 +10,13 @@ public class Steering : MonoBehaviour
     public int precisionRadius = 10; //how close to the target the obj has to be to qualify "getting there"
     public float max_velocity = 1, velocity, mass = 1;
     public bool smooth; //if true, will not instantly change velocity, but will steer towards ideal velocity
-    public Vector2 currForce;
+    public Vector2 currForce, target;
+
+    public GameObject markingPrefab;
 
     private Vector2 pathFollowing() {
 
-        Vector2 target = new Vector2();
+        target = new Vector2();
  
         if (path != null) {
             ArrayList nodes = path.getNodes();
@@ -26,7 +28,7 @@ public class Steering : MonoBehaviour
                 currentNode += 1;
  
                 if (currentNode >= nodes.Count) {
-                    currentNode = nodes.Count - 1;
+                    currentNode = 0; //restart
                 }
             }
         }
@@ -39,11 +41,11 @@ public class Steering : MonoBehaviour
     ///
     /// this function returns normalized force needed to "seek" the target * max_velocity
     /// </summary>
-    /// <param name="target"></param>
+    /// <param name="t"></param>
     /// <returns></returns>
-    private Vector2 seek(Vector2 target)
+    private Vector2 seek(Vector2 t)
     {
-        return Vector3.Normalize(target - (Vector2)transform.position) * max_velocity;
+        return Vector3.Normalize(t - (Vector2)transform.position) * max_velocity;
     }
 
 
@@ -60,8 +62,11 @@ public class Steering : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             if (path == null) path = new SteerPath();
-            path.addNode(Input.mousePosition);
-            
+            Vector3 mouse = Global.ScreenToWorld(Input.mousePosition);
+            path.addNode(mouse);
+            GameObject marking = Instantiate(markingPrefab);
+            marking.transform.position = mouse;
+
         }
 
         if (path != null)
@@ -74,7 +79,7 @@ public class Steering : MonoBehaviour
                 Vector2 steering = seekForce - currForce; //"currForce" is actually the force in previous run
                                                           //maybe some truncating of the steering force / limit w max force variable here
                 steering /= 5; //arbitrary; TODO
-                currForce = Vector3.Normalize(seekForce + steering) * max_velocity; //so that overall the velo is the same
+                currForce = Vector3.Normalize(currForce + steering) * max_velocity; //so that overall the velo is the same
             }
             else
                 currForce = seekForce;
