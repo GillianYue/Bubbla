@@ -10,6 +10,8 @@ public class Backpack : MonoBehaviour
     public ItemSelect itemSelect; //script to select item, interact with item select btns, etc. Found on itemSelected GO
     [Inject(InjectFrom.Anywhere)]
     public GameControl gameControl;
+    [Inject(InjectFrom.Anywhere)]
+    public Dialogue dialogue;
 
     public int numGrids, numItems;
     public int[] itemList; //array indicating items belonging to a user via itemIndex
@@ -152,7 +154,7 @@ public class Backpack : MonoBehaviour
         if (backpack != null)
         {
             backpack.SetActive(false);
-
+            dialogue.gameObject.SetActive(true);
         }
     }
 

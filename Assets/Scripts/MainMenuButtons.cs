@@ -8,6 +8,10 @@ public class MainMenuButtons : MonoBehaviour
 
     [Inject(InjectFrom.Anywhere)]
     public Backpack backpack;
+    [Inject(InjectFrom.Anywhere)]
+    public Dialogue dialogue;
+    [Inject(InjectFrom.Anywhere)]
+    public Outing outing;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +28,7 @@ public class MainMenuButtons : MonoBehaviour
     public void openBackpack()
     {
         backpack.openBackpackUI(true); //fullscreen
+        dialogue.gameObject.SetActive(false);
     }
 
     public void openSettings()
@@ -33,7 +38,8 @@ public class MainMenuButtons : MonoBehaviour
 
     public void openGoOutMenu()
     {
-
+        outing.openMapUI();
+        dialogue.gameObject.SetActive(false);
     }
 
     public void openPurchaseMenu()
