@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     public GameControl gameControl;
 	private AudioSource[] fire, ouch;
 
-    public bool checkForUpdates = true; //updates life UI and checks for life if true
+    public bool checkForUpdates = true, invincible; //updates life UI and checks for life if true
 
 
 	//those are relative to player, since Cannon(player's cannon) is a child of player
@@ -263,7 +263,10 @@ public class Player : MonoBehaviour
 	}
 
 	public void damage(int damage){
-		life -= damage;
+        if (!invincible)
+        {
+            life -= damage;
+        }
 		StartCoroutine (damageVFX ());
 		ouch [(int)(Random.Range (0, ouch.Length - 0.01f))].Play ();
 	}

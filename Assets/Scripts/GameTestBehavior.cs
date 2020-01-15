@@ -10,11 +10,13 @@ public class GameTestBehavior : MonoBehaviour
     public GameFlow gf;
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
+    [Inject(InjectFrom.Anywhere)]
+    public Player player;
 
     [Inject(InjectFrom.Anywhere)]
     public SetUpQuestBoard qb;
 
-    public bool test;
+    public bool test, invincible;
     public int speedUpRate;
 
     // Start is called before the first frame update
@@ -24,6 +26,8 @@ public class GameTestBehavior : MonoBehaviour
         {
             gf.setPointer(startLine); //for testing I'm putting in what line I'm seeing in the csv file
         }
+
+        if (invincible) player.invincible = true;
     }
 
     // Update is called once per frame
