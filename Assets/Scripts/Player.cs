@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour
 {
 
+	//Mode in which player's position is updated. ACCL refers to in-game movement, while touch refers to clicking on screen and play would move towards that direction in some velocity; freeze is self explanatory
     public enum Mode { ACCL, TOUCH, FREEZE };
     public Mode navigationMode;
 

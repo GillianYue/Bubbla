@@ -12,12 +12,16 @@ public class CameraFitScreen : MonoBehaviour
 
         //getting resolution of phone: see below commented line
         Vector2 gameViewSize = UnityEditor.Handles.GetMainGameViewSize();
+/*        Debug.Log("gameView size: " + gameViewSize);*/
+
         float gvRatio = (float)gameViewSize.y / (float)gameViewSize.x;
 
         GameObject canv = GameObject.FindGameObjectWithTag("Canvas");
         GetComponent<Camera>().orthographicSize = (gvRatio * Global.MainCanvasWidth / 2)
             /canv.transform.localScale.y;
         Global.setGlobalConstants(GetComponent<Camera>());
+
+/*        Debug.Log("main canvas width: " + Global.MainCanvasWidth + " canv local scales: " + canv.transform.localScale);*/
 
 
         Vector2 cPos = canv.GetComponent<RectTransform>().localPosition;

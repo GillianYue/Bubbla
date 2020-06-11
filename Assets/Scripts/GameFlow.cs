@@ -25,6 +25,7 @@ public class GameFlow : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public ItemLoader itemLoader;
 
+    //IVS stands for investigate
     public enum Mode { DLG, GAME, IVS, END };
     public Mode currMode;
 
