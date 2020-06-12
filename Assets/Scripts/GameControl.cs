@@ -49,8 +49,8 @@ public class GameControl : MonoBehaviour {
     public EnemySpawner eSpawner;
     [Inject(InjectFrom.Anywhere)]
     public PaintballSpawner pSpawner;
-    [Inject(InjectFrom.Anywhere)]
 
+    [Inject(InjectFrom.Anywhere)]
     public GameFlow gFlow;
     [Inject(InjectFrom.Anywhere)]
     public Dialogue dialogue;
