@@ -12,11 +12,13 @@ public class Player : MonoBehaviour
 
     public static List<Color> bulletGauge;
 	public Text lifeText;
-	public GameObject PaintSpriteObj, BulletGaugeObj, BulletObj, BulletCont; /* bullet container*/
+	public GameObject PaintSpriteObj, BulletGaugeObj, BulletCont; /* bullet container*/
+	public GameObject[] BulletObj;
 	public List<GameObject> PaintSprites;
 	public int bulletGaugeCapacity;
 	public int maxLife;
     public Rigidbody2D playerRB;
+	public bool canShoot = true; //bool for firing at a rate
 
 	public float bulletSpeed;
     private float bulletWeaponDist = 3;
@@ -107,6 +109,30 @@ public class Player : MonoBehaviour
 
 	}
 
+    public void fireAtRate(Vector3 pos)
+    {
+		if (canShoot) StartCoroutine(FireRate());
+    }
+
+	IEnumerator FireRate()
+	{
+
+		canShoot = false;
+		launchBullet(new Vector3(0, 1), 0, 0, true);
+		yield return new WaitForSeconds(0.2f);
+		canShoot = true;
+	}
+
+	/*
+     * Instantaneously move to location on screen, used by gameControl in game mode to move player wherever pressed
+     */
+	public void moveTo(float mouseX, float mouseY)
+    {
+		Rigidbody2D rb = GetComponent<Rigidbody2D>();
+		Vector3 to = Global.mainCamera.ScreenToWorldPoint(new Vector3(mouseX, mouseY, 5)); //TODO that 5
+		rb.MovePosition(to);
+	}
+
     public void nudge()
     {
         if(navigationMode == Mode.TOUCH)
@@ -179,9 +205,9 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	//shoooot paint; this is called in GameControl's update; just one single shot
-	public void launchBullet(Vector3 direction, float angle){
-		//FIRST, play the animation, NO MATTER if a bullet is actually shot
+	//shoot paint; this is called in GameControl's update; just one single shot
+	public void launchBullet(Vector3 direction, float angle, int bulletType, bool infinite){
+		//play the animation regardless of if a bullet is actually shot
 		Animator anim = GetComponent<Animator> ();
 		anim.SetTrigger ("shoot");
 		if (anim.GetBool ("Shoot") == true) {
@@ -191,17 +217,17 @@ public class Player : MonoBehaviour
 		anim.SetBool ("Shoot", true);
 
 		//actual shooting
-		if (bulletGauge.Count > 0) {
+		if (infinite || bulletGauge.Count > 0) {
 			Vector3 pos = transform.GetComponent<RectTransform>().position;
-			pos.x += (direction.y>0 ? bulletWeaponDist:-bulletWeaponDist) * //TODO the 32 looks fishy here
-				Mathf.Sin (angle) * (32 * Global.STWfactor.x);
-			pos.y += (direction.y>0 ? bulletWeaponDist : -bulletWeaponDist) *
-				Mathf.Cos (angle) * (32 * Global.STWfactor.y);
-            pos.z = 5;
+			pos.x += (direction.y > 0 ? bulletWeaponDist : -bulletWeaponDist) * //TODO the 32 looks fishy here
+				Mathf.Sin(angle) * (32 * Global.STWfactor.x);
+			pos.y += (direction.y > 0 ? bulletWeaponDist : -bulletWeaponDist) *
+				Mathf.Cos(angle) * (32 * Global.STWfactor.y);
+			pos.z = 5;
 			//from cannon's position plus a little bit of delta x and y to find the firing pos
 
-			GameObject bullet = Instantiate (BulletObj, pos,
-				                   BulletObj.transform.rotation) as GameObject;
+			GameObject bullet = Instantiate(BulletObj[bulletType], pos,
+				                   BulletObj[bulletType].transform.rotation) as GameObject;
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
 			bullet.GetComponent<Rigidbody2D> ().
@@ -218,9 +244,9 @@ public class Player : MonoBehaviour
 	}
 
 	//this happens when pressed for extended amount of time; prereq is that bullets have sim color
-	public void launch2Bullets(Vector3 direction, float angle){
+	public void launch2Bullets(Vector3 direction, float angle, int bulletType, bool infinite){
 		if (bulletGauge.Count <= 1) {
-			launchBullet (direction, angle);
+			launchBullet (direction, angle, 0, infinite);
 		}else{
 		//FIRST, play the animation for shooting two at the same time, NO MATTER
 		Animator anim = GetComponent<Animator> ();
@@ -242,8 +268,8 @@ public class Player : MonoBehaviour
 				Mathf.Cos (angle) * (32 * Global.STWfactor.y);
 			//from cannon's position plus a little bit of delta x and y to find the firing pos
 
-			GameObject bullet = Instantiate (BulletObj, pos,
-				BulletObj.transform.rotation) as GameObject;
+			GameObject bullet = Instantiate (BulletObj[bulletType], pos,
+				BulletObj[bulletType].transform.rotation) as GameObject;
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
 			bullet.GetComponent<Rigidbody2D> ().
