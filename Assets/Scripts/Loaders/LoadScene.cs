@@ -69,7 +69,7 @@ public class LoadScene : MonoBehaviour {
 
     public static IEnumerator processCSV(bool[] loadDone, TextAsset csv, setterDelegate setter, bool matchLineWithExcel)
     {
-        string[,] data = CSVReader.SplitCsvGrid(csv.text, matchLineWithExcel);
+        string[,] data = CSVReader.SplitCsvGrid(csv.text, matchLineWithExcel); 
         setter(data);
         while (!(data.Length > 0))
         {

@@ -35,6 +35,8 @@ public class CSVReader : MonoBehaviour
 	// splits a CSV file into a 2D string array
 	static public string[,] SplitCsvGrid(string csvText, bool matchLineWithExcel)
 	{
+		//Debug.Log("before parse: " + csvText);
+
 		string[] lines = csvText.Split('\n'); 
 
 		// finds the max width of row

@@ -228,6 +228,8 @@ public class Player : MonoBehaviour
 
 			GameObject bullet = Instantiate(BulletObj[bulletType], pos,
 				                   BulletObj[bulletType].transform.rotation) as GameObject;
+
+			Debug.Log("shooting one bullet up: dir" + direction + " angle " + angle + " bulletType " + bulletType);
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
 			bullet.GetComponent<Rigidbody2D> ().
