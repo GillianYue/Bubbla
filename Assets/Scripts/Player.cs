@@ -28,7 +28,9 @@ public class Player : MonoBehaviour
     public GameControl gameControl;
 	private AudioSource[] fire, ouch;
 
-    public bool checkForUpdates = true, invincible; //updates life UI and checks for life if true
+	private Animator anim;
+
+	public bool checkForUpdates = true, invincible; //updates life UI and checks for life if true
 
 
 	//those are relative to player, since Cannon(player's cannon) is a child of player
@@ -57,6 +59,8 @@ public class Player : MonoBehaviour
 			}
 
         playerRB = GetComponent<Rigidbody2D>();
+
+		anim = GetComponent<Animator>();
 
 	}
 	
@@ -114,13 +118,15 @@ public class Player : MonoBehaviour
 		if (canShoot) StartCoroutine(FireRate());
     }
 
+
 	IEnumerator FireRate()
 	{
-
+		anim.SetBool("aiming", true);
 		canShoot = false;
 		launchBullet(new Vector3(0, 1), 0, 0, true);
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.05f);
 		canShoot = true;
+		anim.SetBool("aiming", false);
 	}
 
 	/*
@@ -207,14 +213,17 @@ public class Player : MonoBehaviour
 
 	//shoot paint; this is called in GameControl's update; just one single shot
 	public void launchBullet(Vector3 direction, float angle, int bulletType, bool infinite){
-		//play the animation regardless of if a bullet is actually shot
-		Animator anim = GetComponent<Animator> ();
-		anim.SetTrigger ("shoot");
-		if (anim.GetBool ("Shoot") == true) {
-			//reset the animation clip if multiple shots are happening
-			anim.Play ("B_ShootLeft", -1, 0f);
+		if (!infinite)
+		{
+			//play the animation regardless of if a bullet is actually shot
+			anim.SetTrigger("shoot");
+			if (anim.GetBool("Shoot") == true)
+			{
+				//reset the animation clip if multiple shots are happening
+				anim.Play("B_ShootLeft", -1, 0f);
+			}
+			anim.SetBool("Shoot", true);
 		}
-		anim.SetBool ("Shoot", true);
 
 		//actual shooting
 		if (infinite || bulletGauge.Count > 0) {
@@ -229,18 +238,22 @@ public class Player : MonoBehaviour
 			GameObject bullet = Instantiate(BulletObj[bulletType], pos,
 				                   BulletObj[bulletType].transform.rotation) as GameObject;
 
-			Debug.Log("shooting one bullet up: dir" + direction + " angle " + angle + " bulletType " + bulletType);
-			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
+			//Debug.Log("shooting one bullet up: dir" + direction + " angle " + angle + " bulletType " + bulletType);
+			if(!infinite) fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
 			bullet.GetComponent<Rigidbody2D> ().
 			velocity = new Vector2 (((direction.y>0)? 10:-10) * Mathf.Sin(angle)*bulletSpeed,
 				((direction.y>0)? 10:-10) * Mathf.Cos(angle)*bulletSpeed);
 
-			bullet.GetComponent<SpriteRenderer> ().color 
-			= bulletGauge [bulletGauge.Count - 1];
+			if (bulletGauge.Count > 0)
+			{
+				bullet.GetComponent<SpriteRenderer>().color = bulletGauge[bulletGauge.Count - 1];
+				removePaint();
+			}
+
 			bullet.transform.Rotate (new Vector3(0,0,
 				((direction.y>0)? -1:1) * Mathf.Rad2Deg*angle));
-			removePaint ();
+
 		}
 		//is interrupted, aiming animation can still transition back to normal
 	}
