@@ -25,6 +25,7 @@ public abstract class BossBehavior : MonoBehaviour
     protected RectTransform lifeRT;
     public bool lifeBarActive;
 
+
     public void Start()
     {
         customEvents = gameObject.GetComponent<CustomEvents>();
@@ -166,7 +167,38 @@ public abstract class BossBehavior : MonoBehaviour
         return p;
     }
 
-    public static IEnumerator doForNumTimes(bool[] done, MonoBehaviour g, int n, float interval, IEnumerator action)
+    /*
+     * NEED TEST
+     * range for startAngle and endAngle is 0-360 (unit circle), with endAngle always greater or equal to startAngle
+     */
+    public static ArrayList shootGroupProjectiles(GameObject prefab, Vector3 spawnPos, float startAngle, float endAngle, int num_pellets, float spd)
+    {
+        ArrayList pellets = new ArrayList();
+
+        float incre = (endAngle - startAngle) / num_pellets;
+        float currAngle = startAngle;
+        for(int n=0; n<num_pellets; n++)
+        {
+            pellets.Add(
+            shootProjectileAt(true, prefab, spawnPos, new Vector3((currAngle >= 90 && currAngle <= 270) ? -1 : 1, 0), spd, currAngle));
+            
+            currAngle += startAngle;
+        }
+        return pellets;
+    }
+
+    /*
+     * NEED TEST
+     * overload method that instead of taking starting and ending angles, only takes the starting angle and the increment angle
+     */
+    public static ArrayList shootGroupProjectiles(float startAngle, float incre, int num_pellets, GameObject prefab, Vector3 spawnPos, float spd)
+    {
+        float endAngle = startAngle + incre * num_pellets;
+        return shootGroupProjectiles(prefab, spawnPos, startAngle, endAngle, num_pellets, spd);
+    }
+
+
+        public static IEnumerator doForNumTimes(bool[] done, MonoBehaviour g, int n, float interval, IEnumerator action)
     {
         for (int l = 0; l < n; l++)
         {

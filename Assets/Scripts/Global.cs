@@ -129,6 +129,9 @@ public class Global : MonoBehaviour
         e.transform.position.Set(x, y, e.transform.position.z);
     }
 
+    /*
+     * moves a GO with Rigidbody2D towards a target destination while checking for raycast collisions
+     */
     public static void nudgeTowards(GameObject e, int x, int y, float spd)
     {
         Rigidbody2D rb = e.GetComponent<Rigidbody2D>();
@@ -176,7 +179,9 @@ public class Global : MonoBehaviour
         } //close enough
     }
 
-//might be faulty, if future bug directs me here, check this function
+   /*
+    * moves any GO towards target destination (one call to the IEnumerator)
+    */
     public static IEnumerator moveTo(GameObject e, int x, int y, float spd, bool[] done)
     {
         float hyp = Mathf.Sqrt(Mathf.Pow(x - e.transform.position.x, 2) +
