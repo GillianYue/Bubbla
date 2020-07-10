@@ -22,6 +22,8 @@ public class PaintballBehavior : MonoBehaviour {
 	public static Color standard; //a set base color w given range (above) to determine color for this pb
 
     public AudioStorage audioz;
+	public GameObject myVFX;
+	
 
 	/**
 	 * this static method takes the parameter of a float between 0 and 442, and sets the 
@@ -79,15 +81,21 @@ public class PaintballBehavior : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other){
 
 		//if paintball hit player, it bursts
-		if (other.GetComponent<Collider2D>().tag == "Player"
-			|| other.GetComponent<Collider2D>().tag == "Bullet") {
+		if (other.GetComponent<Collider2D>().tag == "Player" ) {
 			if (explosion != null) {
-		GameObject vfx = Instantiate 
-					(explosion, transform.position, transform.rotation) as GameObject;
-                vfx.transform.localScale = new Vector3(getScale(), getScale(), getScale());
+		myVFX = Instantiate (explosion, transform.position, transform.rotation) as GameObject;
+				myVFX.transform.localScale = new Vector3(getScale(), getScale(), getScale());
                 audioz.paintballExplosionSE ();
-				vfx.GetComponent<SpriteRenderer> ().color = color;
+				myVFX.GetComponent<SpriteRenderer> ().color = color;
 				Destroy (gameObject);
+			}
+		}else if(other.GetComponent<Collider2D>().tag == "Bullet")
+        {
+			if (!myVFX)
+			{
+				myVFX = Instantiate
+				(explosion, transform.position, transform.rotation) as GameObject;
+				myVFX.transform.localScale = new Vector3(getScale(), getScale(), getScale());
 			}
 		}
 

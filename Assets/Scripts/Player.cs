@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
 	public bool canShoot = true; //bool for firing at a rate
 
 	public float bulletSpeed;
-    private float bulletWeaponDist = 3;
+    private float bulletWeaponDist = 2;
 	private int life;
 
     [Inject(InjectFrom.Anywhere)]
@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
 		anim.SetBool("aiming", true);
 		canShoot = false;
 		launchBullet(new Vector3(0, 1), 0, 0, true);
-		yield return new WaitForSeconds(0.05f);
+		yield return new WaitForSeconds(0.1f);
 		canShoot = true;
 		anim.SetBool("aiming", false);
 	}
