@@ -64,6 +64,7 @@ public class Global : MonoBehaviour
 
     /**
      * checks if a 2-d touch is hitting a 2D obj of certain width and height
+     * NOTE: for this to properly work, it's assumed that itemPos is the center of the sprite, not the border corners
      */
     public static bool touching(Vector2 touch, Vector2 itemPos,
         double itemwidth, double itemheight){

@@ -153,6 +153,9 @@ public class GameControl : MonoBehaviour {
 
                          if (Input.GetMouseButton(0)) //if held
                         {
+                            if (p.selectGauge(new Vector2(Input.mousePosition.x,
+                                    Input.mousePosition.y))) return; //do not check for attack logic
+
                             p.moveTo(Input.mousePosition.x, Input.mousePosition.y);
                             p.fireAtRate(Input.mousePosition);
 

@@ -89,7 +89,7 @@ public class PaintballBehavior : MonoBehaviour {
 				myVFX.transform.localScale = new Vector3(getScale(), getScale(), getScale());
                 audioz.paintballExplosionSE ();
 				myVFX.GetComponent<SpriteRenderer> ().color = color;
-				other.GetComponent<Player>().addPaint(color);
+				other.GetComponent<Player>().addPaint(color, size*20);
 				Destroy (gameObject);
 			}
 		}else if(other.GetComponent<Collider2D>().tag == "Bullet")

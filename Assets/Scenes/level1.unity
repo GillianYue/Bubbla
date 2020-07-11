@@ -157,6 +157,36 @@ RectTransform:
   m_AnchoredPosition: {x: -319.96005, y: -563.1031}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &511241804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 511241805}
+  m_Layer: 0
+  m_Name: Center
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &511241805
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 511241804}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 13.1, y: 24.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2120156292}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &560237447 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000011539382752, guid: 041a31d4a306f4c4a9d953bd6288e686,
@@ -436,6 +466,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 041a31d4a306f4c4a9d953bd6288e686, type: 3}
+--- !u!1 &1035735781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1035735782}
+  m_Layer: 0
+  m_Name: Base
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1035735782
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035735781}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.08, y: 5.13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2120156292}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1072028089 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 8402688727678898856, guid: 252d421c0e5c64bc1939c8c2ad6b1203,
@@ -1741,6 +1801,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87213ba1a06144b07a3598e867a252b7, type: 3}
+--- !u!224 &2120156292 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8735462036280478862, guid: 85a748d810cac4d939596b46881e6030,
+    type: 3}
+  m_PrefabInstance: {fileID: 30884624158158622}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1000014017385807 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6791361293291787608, guid: 7ab6b4c7834834b36a4f01e96b14893b,
@@ -1800,6 +1866,22 @@ PrefabInstance:
       propertyPath: BulletObj.Array.data[1]
       value: 
       objectReference: {fileID: 1000011723493658, guid: c65e427909fe54d069edccb14438a098,
+        type: 3}
+    - target: {fileID: 8695075754546943830, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: BulletContBase
+      value: 
+      objectReference: {fileID: 1035735781}
+    - target: {fileID: 8695075754546943830, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: BulletContCenter
+      value: 
+      objectReference: {fileID: 511241804}
+    - target: {fileID: 8695075754546943830, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: palletSelectedVFXPrefab
+      value: 
+      objectReference: {fileID: 736500567975021120, guid: 2a9d4d9f878055046a308a529c88374f,
         type: 3}
     - target: {fileID: 8736454631539633698, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}

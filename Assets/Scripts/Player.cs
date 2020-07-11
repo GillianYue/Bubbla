@@ -12,13 +12,18 @@ public class Player : MonoBehaviour
 
     public static List<Color> bulletGauge;
 	public Text lifeText;
-	public GameObject PaintSpriteObj, BulletGaugeObj, BulletCont; /* bullet container*/
+	public GameObject PaintSpriteObj, BulletGaugeObj, BulletCont, BulletContCenter, BulletContBase; /* bullet container; base marks the top left corner of container for touch checking*/
 	public GameObject[] BulletObj;
 	public List<GameObject> PaintSprites;
-	public int bulletGaugeCapacity, bulletGaugeSelected = -1; //-1 == unselected; 0-2 corresponding to the slots
+	public int bulletGaugeCapacity; // *number* of pbs allowed in the container
+	public int bulletGaugeSelected = -1; //-1 == unselected; 0-2 corresponding to the slots
+	public int[] bulletGaugeLimits, bulletGaugeContent; //upper bounds for gauge, and their current holding count
+
 	public int maxLife;
     public Rigidbody2D playerRB;
-	public bool canShoot = true; //bool for firing at a rate
+	public bool canShoot = true, canSelect = true; //bool for firing at a rate
+	public GameObject palletSelectedVFXPrefab;
+	private GameObject palletSelectedVFX;
 
 	public float bulletSpeed;
     private float bulletWeaponDist = 2;
@@ -46,6 +51,9 @@ public class Player : MonoBehaviour
 		life = maxLife;
 		bulletGauge = new List<Color> ();
 		PaintSprites = new List<GameObject> ();
+
+		bulletGaugeLimits = new int[bulletGaugeCapacity];
+		bulletGaugeContent = new int[bulletGaugeCapacity];
 
 		fire = new AudioSource[5];
 		ouch = new AudioSource[3];
@@ -200,18 +208,88 @@ public class Player : MonoBehaviour
 		cann.localPosition = temp;
 	}
 
-	public void selectBulletSlot(int index)
+	public bool selectGauge(Vector2 touchPos) //touchPos is screen
     {
-		if (bulletGaugeSelected == index) bulletGaugeSelected = -1;
-		else bulletGaugeSelected = index;
+
+
+			RectTransform r = BulletCont.GetComponent<RectTransform>();
+			float sc_x = r.localScale.x, sc_y = r.localScale.y;
+			float w = r.rect.width * sc_x;
+			float h = r.rect.height * sc_y;
+			Vector2 p = Global.WorldToScreen(BulletContCenter.transform.position);
+			Vector2 b = Global.WorldToScreen(BulletContBase.transform.position);
+			int index = -1;
+
+			bool hit = Global.touching(touchPos, p, w, h);
+
+		if (canSelect)
+		{
+			canSelect = false;
+
+			if (hit)
+			{
+
+				if (touchPos.y >= b.y + h / 3 * 2)
+				{
+					index = 2;
+				}
+				else if (touchPos.y >= b.y + h / 3)
+				{
+					index = 1;
+				}
+				else
+				{
+					index = 0;
+				}
+
+				selectBulletSlot(index);
+			}
+
+			StartCoroutine(Global.Chain(this, Global.WaitForSeconds(0.2f), Global.Do(() =>
+			{
+				canSelect = true;
+			}))
+			);
+
+        }
+		return hit;
+
+	}
+	private void selectBulletSlot(int index)
+    {
+		if (bulletGaugeSelected == index) { 
+			bulletGaugeSelected = -1;
+			if (palletSelectedVFX) Destroy(palletSelectedVFX);
+		}
+		else
+		{
+			if (bulletGauge.Count - 1 >= index)
+			{
+				bulletGaugeSelected = index;
+				if (palletSelectedVFX) Destroy(palletSelectedVFX);
+				palletSelectedVFX = Instantiate
+			(palletSelectedVFXPrefab, PaintSprites[index].transform.position + new Vector3(0,2), PaintSprites[index].transform.rotation) as GameObject;
+			}
+
+		}
     }
 
-	public bool addPaint(Color c){
+	public bool addPaint(Color c, int capacity){
 		if (bulletGauge.Count < bulletGaugeCapacity) {
 			bulletGauge.Add (c);
+			int index = bulletGauge.Count - 1;
+
+/*			if (bulletGaugeContent[index]+capacity <= bulletGaugeLimits[index])
+            {*/
+				bulletGaugeContent[index] = capacity;
+			Debug.Log("gauge " + index + " capacity is " + bulletGaugeContent[index]);
+ //           }
+			
 			addPaintSprite (c);
 			return true;
 		} else {
+			//TODO: check if one of the bullets is the color of pb, and add to remainder of gauge space
+
 			print ("bulletGauge full");
 			return false;
 		}
