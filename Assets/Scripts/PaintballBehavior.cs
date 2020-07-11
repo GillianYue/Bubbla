@@ -23,6 +23,7 @@ public class PaintballBehavior : MonoBehaviour {
 
     public AudioStorage audioz;
 	public GameObject myVFX;
+	public float VFXtimer;
 	
 
 	/**
@@ -83,10 +84,12 @@ public class PaintballBehavior : MonoBehaviour {
 		//if paintball hit player, it bursts
 		if (other.GetComponent<Collider2D>().tag == "Player" ) {
 			if (explosion != null) {
+				//TODO: absorption vfx
 		myVFX = Instantiate (explosion, transform.position, transform.rotation) as GameObject;
 				myVFX.transform.localScale = new Vector3(getScale(), getScale(), getScale());
                 audioz.paintballExplosionSE ();
 				myVFX.GetComponent<SpriteRenderer> ().color = color;
+				other.GetComponent<Player>().addPaint(color);
 				Destroy (gameObject);
 			}
 		}else if(other.GetComponent<Collider2D>().tag == "Bullet")

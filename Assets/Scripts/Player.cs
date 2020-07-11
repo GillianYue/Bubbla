@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
 	public GameObject PaintSpriteObj, BulletGaugeObj, BulletCont; /* bullet container*/
 	public GameObject[] BulletObj;
 	public List<GameObject> PaintSprites;
-	public int bulletGaugeCapacity;
+	public int bulletGaugeCapacity, bulletGaugeSelected = -1; //-1 == unselected; 0-2 corresponding to the slots
 	public int maxLife;
     public Rigidbody2D playerRB;
 	public bool canShoot = true; //bool for firing at a rate
@@ -200,6 +200,12 @@ public class Player : MonoBehaviour
 		cann.localPosition = temp;
 	}
 
+	public void selectBulletSlot(int index)
+    {
+		if (bulletGaugeSelected == index) bulletGaugeSelected = -1;
+		else bulletGaugeSelected = index;
+    }
+
 	public bool addPaint(Color c){
 		if (bulletGauge.Count < bulletGaugeCapacity) {
 			bulletGauge.Add (c);
@@ -226,7 +232,19 @@ public class Player : MonoBehaviour
 		}
 
 		//actual shooting
-		if (infinite || bulletGauge.Count > 0) {
+		if (infinite) {
+			if(bulletGaugeSelected != -1)
+            {
+				//apply special effects to attack; subtracting from the gauge of that pb
+
+/*				if (bulletGauge.Count > 0)   //if gauge runs out, remove this pb
+				{
+                //    bullet.GetComponent<SpriteRenderer>().color = bulletGauge[bulletGauge.Count - 1]; 
+                    removePaint();
+				}*/
+			}
+
+			//normal attack
 			Vector3 pos = transform.GetComponent<RectTransform>().position;
 			pos.x += (direction.y > 0 ? bulletWeaponDist : -bulletWeaponDist) * //TODO the 32 looks fishy here
 				Mathf.Sin(angle) * (32 * Global.STWfactor.x);
@@ -245,11 +263,6 @@ public class Player : MonoBehaviour
 			velocity = new Vector2 (((direction.y>0)? 10:-10) * Mathf.Sin(angle)*bulletSpeed,
 				((direction.y>0)? 10:-10) * Mathf.Cos(angle)*bulletSpeed);
 
-			if (bulletGauge.Count > 0)
-			{
-				bullet.GetComponent<SpriteRenderer>().color = bulletGauge[bulletGauge.Count - 1];
-				removePaint();
-			}
 
 			bullet.transform.Rotate (new Vector3(0,0,
 				((direction.y>0)? -1:1) * Mathf.Rad2Deg*angle));
