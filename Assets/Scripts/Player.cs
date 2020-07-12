@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 public class Player : MonoBehaviour
 {
@@ -13,11 +14,15 @@ public class Player : MonoBehaviour
     public static List<Color> bulletGauge;
 	public Text lifeText;
 	public GameObject PaintSpriteObj, BulletGaugeObj, BulletCont, BulletContCenter, BulletContBase; /* bullet container; base marks the top left corner of container for touch checking*/
-	public GameObject[] BulletObj;
+	public GameObject[] BulletObj, bulletGaugeMasks, bulletGaugePivotObjs; //pivots are children of obj "Pivots" in scene to help locate the top center of masks
+	private Vector3[] bulletGaugeMaskPivots;
+	public float bulletGaugeMaskMaxScaleY;
+
 	public List<GameObject> PaintSprites;
 	public int bulletGaugeCapacity; // *number* of pbs allowed in the container
 	public int bulletGaugeSelected = -1; //-1 == unselected; 0-2 corresponding to the slots
 	public int[] bulletGaugeLimits, bulletGaugeContent; //upper bounds for gauge, and their current holding count
+	//NOTE: for now, bulletGaugeLimits is an array of 60s, meaning that all slots have the same capacity
 
 	public int maxLife;
     public Rigidbody2D playerRB;
@@ -53,6 +58,11 @@ public class Player : MonoBehaviour
 		PaintSprites = new List<GameObject> ();
 
 		bulletGaugeLimits = new int[bulletGaugeCapacity];
+		bulletGaugeMaskPivots = new Vector3[bulletGaugeCapacity]; //for now, should be three
+		for(int i = 0; i < bulletGaugeCapacity; i++)
+        {
+			bulletGaugeLimits[i] = 60;
+        }
 		bulletGaugeContent = new int[bulletGaugeCapacity];
 
 		fire = new AudioSource[5];
@@ -69,6 +79,21 @@ public class Player : MonoBehaviour
         playerRB = GetComponent<Rigidbody2D>();
 
 		anim = GetComponent<Animator>();
+
+		bulletGaugeMaskMaxScaleY = bulletGaugeMasks[0].transform.localScale.y;
+
+		foreach(GameObject m in bulletGaugeMasks)
+        {
+			RectTransform r = m.GetComponent<RectTransform>();
+			r.localScale = new Vector3(r.localScale.x, 0.0001f, r.localScale.z);
+        }
+
+		int count = 0;
+		foreach (GameObject p in bulletGaugePivotObjs)
+		{
+			bulletGaugeMaskPivots[count] = p.transform.position;
+			count++;
+		}
 
 	}
 	
@@ -279,11 +304,7 @@ public class Player : MonoBehaviour
 			bulletGauge.Add (c);
 			int index = bulletGauge.Count - 1;
 
-/*			if (bulletGaugeContent[index]+capacity <= bulletGaugeLimits[index])
-            {*/
-				bulletGaugeContent[index] = capacity;
-			Debug.Log("gauge " + index + " capacity is " + bulletGaugeContent[index]);
- //           }
+			setGaugeCapacity(index, capacity);
 			
 			addPaintSprite (c);
 			return true;
@@ -311,16 +332,6 @@ public class Player : MonoBehaviour
 
 		//actual shooting
 		if (infinite) {
-			if(bulletGaugeSelected != -1)
-            {
-				//apply special effects to attack; subtracting from the gauge of that pb
-
-/*				if (bulletGauge.Count > 0)   //if gauge runs out, remove this pb
-				{
-                //    bullet.GetComponent<SpriteRenderer>().color = bulletGauge[bulletGauge.Count - 1]; 
-                    removePaint();
-				}*/
-			}
 
 			//normal attack
 			Vector3 pos = transform.GetComponent<RectTransform>().position;
@@ -345,11 +356,33 @@ public class Player : MonoBehaviour
 			bullet.transform.Rotate (new Vector3(0,0,
 				((direction.y>0)? -1:1) * Mathf.Rad2Deg*angle));
 
+			//apply additional effects
+			if (bulletGaugeSelected != -1)
+			{
+				//applying special effects to attack; subtracting from the gauge of that pb
+
+				bullet.GetComponent<SpriteRenderer>().color = bulletGauge[bulletGaugeSelected];
+
+				decrementGaugeCapacity(bulletGaugeSelected, 1);
+
+				if(bulletGaugeContent[bulletGaugeSelected] <= 0) //exhaust
+                {
+					removePaint(bulletGaugeSelected);
+                }
+
+				/*				if (bulletGauge.Count > 0)   //if gauge runs out, remove this pb
+								{
+				
+									removePaint();
+								}*/
+			}
+
 		}
 		//is interrupted, aiming animation can still transition back to normal
 	}
 
 	//this happens when pressed for extended amount of time; prereq is that bullets have sim color
+	//TODO revise
 	public void launch2Bullets(Vector3 direction, float angle, int bulletType, bool infinite){
 		if (bulletGauge.Count <= 1) {
 			launchBullet (direction, angle, 0, infinite);
@@ -436,7 +469,13 @@ public class Player : MonoBehaviour
 			//removes both the color in list and the sprite
 			bulletGauge.RemoveAt(bulletGauge.Count-1);
 			removePaintSprite();
+	}
 
+	private void removePaint(int index)
+	{
+		//removes both the color in list and the sprite
+		bulletGauge.RemoveAt(index);
+		removePaintSprite(index);
 	}
 
 	private void addPaintSprite(Color c){
@@ -487,6 +526,43 @@ new Quaternion(0,0,0,0)) as GameObject);
     {
             navigationMode = mode;
     }
+
+	//always call this method to update gauge capacity, as it updates the mask to show the right amount of paint accordingly
+	public void setGaugeCapacity(int index, int capacity)
+    {
+		bulletGaugeContent[index] = capacity;
+		refreshGaugeMask(index);
+
+	}
+
+	public void decrementGaugeCapacity(int index, int amount)
+    {
+		if (bulletGaugeContent[index] >= amount) bulletGaugeContent[index] -= amount;
+		else bulletGaugeContent[index] = 0;
+
+		refreshGaugeMask(index);
+	}
+
+	public void incrementGaugeCapacity(int index, int amount)
+	{
+		if (bulletGaugeContent[index] + amount <= bulletGaugeLimits[index]) bulletGaugeContent[index] += amount;
+		else bulletGaugeContent[index] = bulletGaugeLimits[index];
+
+		refreshGaugeMask(index);
+	}
+
+	private void refreshGaugeMask(int index)
+    {
+		Vector3 s = bulletGaugeMasks[index].transform.localScale;
+		//the float conversion of content and limit below is important; else it will get 0 results for anything other than 1
+		Vector3 newScale = new Vector3(s.x, (1 - (float)bulletGaugeContent[index] / (float)bulletGaugeLimits[index]) * bulletGaugeMaskMaxScaleY, s.z);
+
+//        Global.ScaleAround(bulletGaugeMasks[index], bulletGaugeMaskPivots[index], newScale);
+
+        bulletGaugeMasks[index].transform.localScale = newScale;
+        Debug.Log("setting mask " + index + "'s localScale to " + newScale +" gauge current capacity: "+ bulletGaugeContent[index]+" limit: "+ bulletGaugeLimits[index]+
+			" maxScaleY: "+ bulletGaugeMaskMaxScaleY);
+	}
 
 
 }
