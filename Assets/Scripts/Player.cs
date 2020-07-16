@@ -155,7 +155,6 @@ public class Player : MonoBehaviour
 		{
 			StartCoroutine(FireRate());
 
-/*			*/
 		}
     }
 
@@ -255,12 +254,12 @@ public class Player : MonoBehaviour
 	public bool selectGauge(Vector2 touchPos) //touchPos is screen
     {
 
-		RectTransform r = borderRect;
+			RectTransform r = borderRect;
 			float sc_x = r.localScale.x, sc_y = r.localScale.y;
 			float w = r.rect.width * sc_x;
 			float h = r.rect.height * sc_y;
 			Vector2 p = Global.WorldToScreen(BulletContCenter.transform.position);
-			Vector2 b = Global.WorldToScreen(BulletContBase.transform.position);
+
 			int index = -1;
 
 			bool hit = Global.touching(touchPos, p, w, h);
@@ -272,18 +271,7 @@ public class Player : MonoBehaviour
 			if (hit)
 			{
 
-				if (touchPos.y >= b.y + h / 3 * 2)
-				{
-					index = 2;
-				}
-				else if (touchPos.y >= b.y + h / 3)
-				{
-					index = 1;
-				}
-				else
-				{
-					index = 0;
-				}
+				index = whichGauge(touchPos);
 
 				selectBulletSlot(index);
 			}
@@ -296,8 +284,32 @@ public class Player : MonoBehaviour
 
         }
 		return hit;
-
 	}
+
+	public int whichGauge(Vector2 touchPos)
+    {
+		Vector2 b = Global.WorldToScreen(BulletContBase.transform.position);
+		float h = borderRect.rect.height * borderRect.localScale.y;
+
+		int index = -1;
+
+		if (touchPos.y >= b.y + h / bulletGaugeCapacity * 2)
+		{
+			index = 2;
+		}
+		else if (touchPos.y >= b.y + h / bulletGaugeCapacity)
+		{
+			index = 1;
+		}
+		else
+		{
+			index = 0;
+		}
+
+
+		return index;
+	}
+
 	private void selectBulletSlot(int index)
     {
 		if (bulletGaugeSelected == index) {
@@ -391,7 +403,6 @@ public class Player : MonoBehaviour
 				if(bulletGaugeContent[bulletGaugeSelected] <= 0) //exhaust
                 {
 					removePaint(bulletGaugeSelected);
-					deselectBulletSlot();
 				}
 
 			}
@@ -489,13 +500,15 @@ public class Player : MonoBehaviour
 			//removes both the color in list and the sprite
 			bulletGauge.RemoveAt(bulletGauge.Count-1);
 			removePaintSprite();
+		deselectBulletSlot();
 	}
 
-	private void removePaint(int index)
+	public void removePaint(int index)
 	{
 		//removes both the color in list and the sprite
 		bulletGauge.RemoveAt(index);
 		removePaintSprite(index);
+		deselectBulletSlot();
 
 		if(index != bulletGaugeCapacity - 1) //means not removing the topmost pb
         {
@@ -620,5 +633,8 @@ public class Player : MonoBehaviour
 		yield return new WaitForSeconds(0.1f);
 		canMove = true;
     }
+
+
+	// -----------------------------------------------------END HELPER FUNCTIONS--------------------------------------------------
 }
 
