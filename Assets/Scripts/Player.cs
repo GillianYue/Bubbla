@@ -14,8 +14,8 @@ public class Player : MonoBehaviour
     public static List<Color> bulletGauge;
 	public Text lifeText;
 	public GameObject PaintSpriteObj, BulletGaugeObj, BulletCont, BulletContCenter, BulletContBase; /* bullet container; base marks the top left corner of container for touch checking*/
-	public GameObject[] BulletObj, bulletGaugeMasks, bulletGaugePivotObjs; //pivots are children of obj "Pivots" in scene to help locate the top center of masks
-	private Vector3[] bulletGaugeMaskPivots;
+	public GameObject[] BulletObj, bulletGaugeMasks; //pivots are children of obj "Pivots" in scene to help locate the top center of masks
+	public RectTransform borderRect; //used to check for clicked bullet index
 	public float bulletGaugeMaskMaxScaleY;
 
 	public List<GameObject> PaintSprites;
@@ -58,7 +58,9 @@ public class Player : MonoBehaviour
 		PaintSprites = new List<GameObject> ();
 
 		bulletGaugeLimits = new int[bulletGaugeCapacity];
-		bulletGaugeMaskPivots = new Vector3[bulletGaugeCapacity]; //for now, should be three
+
+
+
 		for(int i = 0; i < bulletGaugeCapacity; i++)
         {
 			bulletGaugeLimits[i] = 60;
@@ -84,16 +86,9 @@ public class Player : MonoBehaviour
 
 		foreach(GameObject m in bulletGaugeMasks)
         {
-			RectTransform r = m.GetComponent<RectTransform>();
-			r.localScale = new Vector3(r.localScale.x, 0.0001f, r.localScale.z);
+			m.transform.localScale = new Vector3(m.transform.localScale.x, 0.0001f, m.transform.localScale.z);
         }
 
-		int count = 0;
-		foreach (GameObject p in bulletGaugePivotObjs)
-		{
-			bulletGaugeMaskPivots[count] = p.transform.position;
-			count++;
-		}
 
 	}
 	
@@ -237,7 +232,7 @@ public class Player : MonoBehaviour
     {
 
 
-			RectTransform r = BulletCont.GetComponent<RectTransform>();
+		RectTransform r = borderRect;
 			float sc_x = r.localScale.x, sc_y = r.localScale.y;
 			float w = r.rect.width * sc_x;
 			float h = r.rect.height * sc_y;
@@ -245,6 +240,7 @@ public class Player : MonoBehaviour
 			Vector2 b = Global.WorldToScreen(BulletContBase.transform.position);
 			int index = -1;
 
+		Debug.Log("checking for " + p + " at " + touchPos + " with width " + w + " and height " + h);
 			bool hit = Global.touching(touchPos, p, w, h);
 
 		if (canSelect)
@@ -282,9 +278,8 @@ public class Player : MonoBehaviour
 	}
 	private void selectBulletSlot(int index)
     {
-		if (bulletGaugeSelected == index) { 
-			bulletGaugeSelected = -1;
-			if (palletSelectedVFX) Destroy(palletSelectedVFX);
+		if (bulletGaugeSelected == index) {
+			deselectBulletSlot();
 		}
 		else
 		{
@@ -298,6 +293,12 @@ public class Player : MonoBehaviour
 
 		}
     }
+
+	private void deselectBulletSlot()
+    {
+		bulletGaugeSelected = -1;
+		if (palletSelectedVFX) Destroy(palletSelectedVFX);
+	}
 
 	public bool addPaint(Color c, int capacity){
 		if (bulletGauge.Count < bulletGaugeCapacity) {
@@ -368,7 +369,8 @@ public class Player : MonoBehaviour
 				if(bulletGaugeContent[bulletGaugeSelected] <= 0) //exhaust
                 {
 					removePaint(bulletGaugeSelected);
-                }
+					deselectBulletSlot();
+				}
 
 				/*				if (bulletGauge.Count > 0)   //if gauge runs out, remove this pb
 								{
@@ -538,7 +540,10 @@ new Quaternion(0,0,0,0)) as GameObject);
 	public void decrementGaugeCapacity(int index, int amount)
     {
 		if (bulletGaugeContent[index] >= amount) bulletGaugeContent[index] -= amount;
-		else bulletGaugeContent[index] = 0;
+		else
+		{
+			bulletGaugeContent[index] = 0;
+		}
 
 		refreshGaugeMask(index);
 	}
@@ -560,8 +565,7 @@ new Quaternion(0,0,0,0)) as GameObject);
 //        Global.ScaleAround(bulletGaugeMasks[index], bulletGaugeMaskPivots[index], newScale);
 
         bulletGaugeMasks[index].transform.localScale = newScale;
-        Debug.Log("setting mask " + index + "'s localScale to " + newScale +" gauge current capacity: "+ bulletGaugeContent[index]+" limit: "+ bulletGaugeLimits[index]+
-			" maxScaleY: "+ bulletGaugeMaskMaxScaleY);
+
 	}
 
 
