@@ -26,9 +26,12 @@ public class Player : MonoBehaviour
 
 	public int maxLife;
     public Rigidbody2D playerRB;
-	public bool canShoot = true, canSelect = true; //bool for firing at a rate
+	public bool canShoot = true, //bool for firing at a rate
+		canSelect = true, 
+		canMove = true; //toggled by UI bulletGauge select
 	public GameObject palletSelectedVFXPrefab;
 	private GameObject palletSelectedVFX;
+	private Vector3[] slotPositions; //world locations to place the paint sprites; initialized on start
 
 	public float bulletSpeed;
     private float bulletWeaponDist = 2;
@@ -57,6 +60,7 @@ public class Player : MonoBehaviour
 		bulletGauge = new List<Color> ();
 		PaintSprites = new List<GameObject> ();
 
+		slotPositions = new Vector3[bulletGaugeCapacity];
 		bulletGaugeLimits = new int[bulletGaugeCapacity];
 
 
@@ -64,7 +68,10 @@ public class Player : MonoBehaviour
 		for(int i = 0; i < bulletGaugeCapacity; i++)
         {
 			bulletGaugeLimits[i] = 60;
-        }
+			slotPositions[i] = new Vector3(12.8f,
+					//to ensure pbSprite appears BELOW cannon img
+					(i == 2 || i == 1) ? ((i == 2) ? 39.0f : 25.0f) : 10.5f, 0.01f);
+		}
 		bulletGaugeContent = new int[bulletGaugeCapacity];
 
 		fire = new AudioSource[5];
@@ -89,6 +96,7 @@ public class Player : MonoBehaviour
 			m.transform.localScale = new Vector3(m.transform.localScale.x, 0.0001f, m.transform.localScale.z);
         }
 
+		
 
 	}
 	
@@ -143,29 +151,45 @@ public class Player : MonoBehaviour
 
     public void fireAtRate(Vector3 pos)
     {
-		if (canShoot) StartCoroutine(FireRate());
+		if (canShoot && canMove)
+		{
+			StartCoroutine(FireRate());
+
+/*			*/
+		}
     }
 
-
+	//handles animation and shoots bullets at proper rate
 	IEnumerator FireRate()
 	{
-		anim.SetBool("aiming", true);
+		setShootAnimation(true);
+
 		canShoot = false;
+
 		launchBullet(new Vector3(0, 1), 0, 0, true);
+
 		yield return new WaitForSeconds(0.1f);
 		canShoot = true;
-		anim.SetBool("aiming", false);
+
+		setShootAnimation(false);
 	}
 
 	/*
      * Instantaneously move to location on screen, used by gameControl in game mode to move player wherever pressed
      */
 	public void moveTo(float mouseX, float mouseY)
-    {
+	{
+		if (canMove) { 
 		Rigidbody2D rb = GetComponent<Rigidbody2D>();
 		Vector3 to = Global.mainCamera.ScreenToWorldPoint(new Vector3(mouseX, mouseY, 5)); //TODO that 5
 		rb.MovePosition(to);
+		}
 	}
+
+	public void freezeMoveToBriefly()
+    {
+		StartCoroutine(shortPauseOnMoveTo());
+    }
 
     public void nudge()
     {
@@ -231,7 +255,6 @@ public class Player : MonoBehaviour
 	public bool selectGauge(Vector2 touchPos) //touchPos is screen
     {
 
-
 		RectTransform r = borderRect;
 			float sc_x = r.localScale.x, sc_y = r.localScale.y;
 			float w = r.rect.width * sc_x;
@@ -240,7 +263,6 @@ public class Player : MonoBehaviour
 			Vector2 b = Global.WorldToScreen(BulletContBase.transform.position);
 			int index = -1;
 
-		Debug.Log("checking for " + p + " at " + touchPos + " with width " + w + " and height " + h);
 			bool hit = Global.touching(touchPos, p, w, h);
 
 		if (canSelect)
@@ -305,7 +327,7 @@ public class Player : MonoBehaviour
 			bulletGauge.Add (c);
 			int index = bulletGauge.Count - 1;
 
-			setGaugeCapacity(index, capacity);
+			setGaugeContent(index, capacity);
 			
 			addPaintSprite (c);
 			return true;
@@ -372,11 +394,6 @@ public class Player : MonoBehaviour
 					deselectBulletSlot();
 				}
 
-				/*				if (bulletGauge.Count > 0)   //if gauge runs out, remove this pb
-								{
-				
-									removePaint();
-								}*/
 			}
 
 		}
@@ -384,7 +401,7 @@ public class Player : MonoBehaviour
 	}
 
 	//this happens when pressed for extended amount of time; prereq is that bullets have sim color
-	//TODO revise
+	//TODO revise; esp the removePaint() part without parameter
 	public void launch2Bullets(Vector3 direction, float angle, int bulletType, bool infinite){
 		if (bulletGauge.Count <= 1) {
 			launchBullet (direction, angle, 0, infinite);
@@ -467,6 +484,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	//removes topmost pb
 	private void removePaint(){
 			//removes both the color in list and the sprite
 			bulletGauge.RemoveAt(bulletGauge.Count-1);
@@ -478,47 +496,20 @@ public class Player : MonoBehaviour
 		//removes both the color in list and the sprite
 		bulletGauge.RemoveAt(index);
 		removePaintSprite(index);
+
+		if(index != bulletGaugeCapacity - 1) //means not removing the topmost pb
+        {
+			//repositioning
+			for(int i=index; i<bulletGauge.Count; i++)
+            {
+				PaintSprites[i].transform.localPosition = slotPositions[i];
+				setGaugeContent(i, bulletGaugeContent[i + 1]);
+				setGaugeContent(i + 1, 0);
+			}
+        }
 	}
 
-	private void addPaintSprite(Color c){
-		if (PaintSprites.Count < bulletGaugeCapacity) {
-			
-			GameObject ps = PaintSpriteObj;
-			PaintSprites.Add (Instantiate (ps,
-			new Vector3(0,0,0),
-new Quaternion(0,0,0,0)) as GameObject);
-			
-			PaintSprites[PaintSprites.Count-1].transform.parent 
-			= BulletCont.transform; //bulletContainer
-            PaintSprites[PaintSprites.Count - 1].transform.localPosition =
-                new Vector3(12.8f,
-                    //to ensure pbSprite appears BELOW cannon img
-                    (bulletGauge.Count == 3 || bulletGauge.Count == 2) ?
-                    ((bulletGauge.Count == 3) ? 39.0f : 25.0f) : 10.5f,
-                   0.01f);
 
-            PaintSprites[PaintSprites.Count-1].GetComponent
-			<Renderer> ().materials [0].color = c;
-
-		} else {
-			print ("bulletGauge sprite full");
-		}
-	}
-
-	private void removePaintSprite(int whichOne){
-		if (PaintSprites.Count > whichOne) {
-			Destroy(PaintSprites[whichOne]);
-			PaintSprites.RemoveAt (whichOne);
-		} else {
-			print ("removePaintSprite out of index");
-		}
-	}
-
-	//default: removes the last one
-	private void removePaintSprite(){
-		Destroy(PaintSprites[PaintSprites.Count - 1]);
-		PaintSprites.RemoveAt (PaintSprites.Count - 1);
-	}
 
 	public int getMaxLife(){
 		return maxLife;
@@ -529,8 +520,8 @@ new Quaternion(0,0,0,0)) as GameObject);
             navigationMode = mode;
     }
 
-	//always call this method to update gauge capacity, as it updates the mask to show the right amount of paint accordingly
-	public void setGaugeCapacity(int index, int capacity)
+	//always call this method to update gauge content, as it updates the mask to show the right amount of paint accordingly
+	public void setGaugeContent(int index, int capacity)
     {
 		bulletGaugeContent[index] = capacity;
 		refreshGaugeMask(index);
@@ -556,18 +547,78 @@ new Quaternion(0,0,0,0)) as GameObject);
 		refreshGaugeMask(index);
 	}
 
+
+	public void setShootAnimation(bool to)
+    {
+		anim.SetBool("aiming", to);
+		Vector3 temp = transform.Find("Cannon").localEulerAngles;
+		temp.z = to? 45 : 0;
+		transform.Find("Cannon").localEulerAngles = temp;
+	}
+
+
+	// -----------------------------------------------------HELPER FUNCTIONS--------------------------------------------------
+
+
+	//makes sure that the mask height is in sync with the actual amount of gauge left
 	private void refreshGaugeMask(int index)
     {
 		Vector3 s = bulletGaugeMasks[index].transform.localScale;
 		//the float conversion of content and limit below is important; else it will get 0 results for anything other than 1
 		Vector3 newScale = new Vector3(s.x, (1 - (float)bulletGaugeContent[index] / (float)bulletGaugeLimits[index]) * bulletGaugeMaskMaxScaleY, s.z);
 
-//        Global.ScaleAround(bulletGaugeMasks[index], bulletGaugeMaskPivots[index], newScale);
-
         bulletGaugeMasks[index].transform.localScale = newScale;
 
 	}
 
+	private void addPaintSprite(Color c)
+	{
+		if (PaintSprites.Count < bulletGaugeCapacity)
+		{
 
+			GameObject ps = PaintSpriteObj;
+			PaintSprites.Add(Instantiate(ps, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject);
+
+			PaintSprites[PaintSprites.Count - 1].transform.parent = BulletCont.transform; //bulletContainer
+
+			int index = bulletGauge.Count - 1; //spot to add to
+
+			PaintSprites[PaintSprites.Count - 1].transform.localPosition = slotPositions[index];
+
+			PaintSprites[PaintSprites.Count - 1].GetComponent<Renderer>().materials[0].color = c;
+
+		}
+		else
+		{
+			print("bulletGauge sprite full");
+		}
+	}
+
+	private void removePaintSprite(int whichOne)
+	{
+		if (PaintSprites.Count > whichOne)
+		{
+			Destroy(PaintSprites[whichOne]);
+			PaintSprites.RemoveAt(whichOne);
+		}
+		else
+		{
+			print("removePaintSprite out of index");
+		}
+	}
+
+	//default: removes the last one
+	private void removePaintSprite()
+	{
+		Destroy(PaintSprites[PaintSprites.Count - 1]);
+		PaintSprites.RemoveAt(PaintSprites.Count - 1);
+	}
+
+	private IEnumerator shortPauseOnMoveTo()
+    {
+		canMove = false;
+		yield return new WaitForSeconds(0.1f);
+		canMove = true;
+    }
 }
 

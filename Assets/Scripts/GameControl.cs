@@ -132,6 +132,13 @@ public class GameControl : MonoBehaviour {
                     {
                         if (Input.GetMouseButtonDown(0)) //on first press/click
                         {
+
+                            if (p.selectGauge(new Vector2(Input.mousePosition.x, Input.mousePosition.y)))
+                            {
+                                p.freezeMoveToBriefly();
+                                return; //do not check for attack logic
+                            }
+
                             foreach (GameObject i in icons) //check for UI trigger
                             {
                                 Vector2 icon = Global.WorldToScreen(i.GetComponent<
@@ -151,10 +158,9 @@ public class GameControl : MonoBehaviour {
 
                         }//end first press check
 
-                         if (Input.GetMouseButton(0)) //if held
-                        {
-                            if (p.selectGauge(new Vector2(Input.mousePosition.x,
-                                    Input.mousePosition.y))) return; //do not check for attack logic
+                        if (Input.GetMouseButton(0)) //if held
+                            {
+
 
                             p.moveTo(Input.mousePosition.x, Input.mousePosition.y);
                             p.fireAtRate(Input.mousePosition);
@@ -165,12 +171,7 @@ public class GameControl : MonoBehaviour {
                             }
                             else
                             {
-                                //shoot at the same time
-                                Vector3 temp = player.transform.Find("Cannon").localEulerAngles;
-                                temp.z = 45;
-                                player.transform.Find("Cannon").localEulerAngles = temp;
-                                //end pointin cannon
-                                player.GetComponent<Animator>().SetBool("aiming", true);
+
                             }
 
 
