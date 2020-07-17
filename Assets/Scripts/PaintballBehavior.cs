@@ -142,8 +142,6 @@ public class PaintballBehavior : MonoBehaviour {
 		myColor = cm;
 		color = colorDict[cm];
 
-		Debug.Log("trying to set color to " + cm + " to " + color);
-
 		GetComponent<SpriteRenderer> ().color = color;
 	}
 

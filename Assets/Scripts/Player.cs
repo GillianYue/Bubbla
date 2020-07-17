@@ -335,17 +335,32 @@ public class Player : MonoBehaviour
 	}
 
 	public bool addPaint(Color c, int capacity){
-		if (bulletGauge.Count < bulletGaugeCapacity) {
-			bulletGauge.Add (c);
-			int index = bulletGauge.Count - 1;
+		//first check for space within slots that are already occupied
+		int remainder = capacity; //indicates extra amount that might/not be added as a new slot of the same color
 
-			setGaugeContent(index, capacity);
-			
-			addPaintSprite (c);
+		if(bulletGauge.Count != 0)
+        {
+			for(int index=0; index<bulletGauge.Count; index++)
+            {
+                if (c.Equals(bulletGauge[index]))
+                {
+					remainder = incrementGaugeCapacity(index, remainder);
+					if(remainder == 0) break;
+                }
+            }
+        }
+
+		if (bulletGauge.Count < bulletGaugeCapacity) {
+			if (remainder != 0)
+			{
+				bulletGauge.Add(c); //means no same color found/no space left --> definitely needs a new slot --> and there is a new slot
+				int index = bulletGauge.Count - 1;
+
+				setGaugeContent(index, remainder);
+				addPaintSprite(c);
+			}
 			return true;
 		} else {
-			//TODO: check if one of the bullets is the color of pb, and add to remainder of gauge space
-
 			print ("bulletGauge full");
 			return false;
 		}
@@ -552,12 +567,24 @@ public class Player : MonoBehaviour
 		refreshGaugeMask(index);
 	}
 
-	public void incrementGaugeCapacity(int index, int amount)
+	/// <summary>
+	///  increments content of a slot with given index; will satisfy maximum constraints. 
+	/// </summary>
+	/// <param name="index"></param>
+	/// <param name="amount"></param>
+	/// <returns>the extra amount that was not added to the slot content due to maximum constraint </returns>
+	public int incrementGaugeCapacity(int index, int amount)
 	{
+		int remainder = 0;
 		if (bulletGaugeContent[index] + amount <= bulletGaugeLimits[index]) bulletGaugeContent[index] += amount;
-		else bulletGaugeContent[index] = bulletGaugeLimits[index];
+		else
+		{
+			remainder = bulletGaugeContent[index] + amount - bulletGaugeLimits[index];
+			bulletGaugeContent[index] = bulletGaugeLimits[index];
+		}
 
 		refreshGaugeMask(index);
+		return remainder;
 	}
 
 
