@@ -34,9 +34,9 @@ public class PaintballBehavior : MonoBehaviour {
 	/// </summary>
 	public static Dictionary<ColorMode, Color> colorDict = new Dictionary<ColorMode, Color>()
 		{
-			{ ColorMode.RED, new Color(246, 80, 82) },
-			{ ColorMode.BLUE, new Color(16, 161, 246) },
-			{ ColorMode.YELLOW, new Color(246, 121, 16) },
+			{ ColorMode.RED, new Color(246 / 255.0f, 80/ 255.0f, 82/ 255.0f) },
+			{ ColorMode.BLUE, new Color(16/ 255.0f, 161/ 255.0f, 246/ 255.0f) },
+			{ ColorMode.YELLOW, new Color(246/ 255.0f, 121/ 255.0f, 16/ 255.0f) },
 			{ ColorMode.NON, new Color(0,0,0) },
 		};
 	public ColorMode myColor;
@@ -141,6 +141,8 @@ public class PaintballBehavior : MonoBehaviour {
         needGenCol = false; //since it's already done
 		myColor = cm;
 		color = colorDict[cm];
+
+		Debug.Log("trying to set color to " + cm + " to " + color);
 
 		GetComponent<SpriteRenderer> ().color = color;
 	}
