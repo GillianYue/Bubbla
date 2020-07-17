@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 /**
  * script for csv file based game levels, linear flow following a pointer variable
@@ -73,7 +74,7 @@ public class GameFlow : MonoBehaviour {
     IEnumerator parseDLGcsvData(bool[] parseDone)
     {
         yield return new WaitUntil(() => (data != null));
-        int numRows = data.GetLength(1); bool toggle = false; 
+        int numRows = data.GetLength(1); bool toggle = false;
         for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
         {
                if(data[0, r].Equals("SPECIAL"))
@@ -152,7 +153,7 @@ public class GameFlow : MonoBehaviour {
                 catch {} //supress error here
              
             }
-            print("Mode changed to " + currMode + " at line "+pointer);
+//            print("Mode changed to " + currMode + " at line "+pointer);
         }
 
         switch (currMode) {
@@ -162,7 +163,7 @@ public class GameFlow : MonoBehaviour {
                 break;
 
             case Mode.GAME:
-                Global.scaleRatio = (int)GameObject.FindWithTag("Player").transform.localScale.x;
+                Global.scaleRatio = (int) GameObject.FindWithTag("Player").transform.localScale.x;
                 if (data[1, pointer].Equals("99")) {
                     //special customized event
                     int indexCE;
@@ -177,15 +178,19 @@ public class GameFlow : MonoBehaviour {
                 } else {
                     string[] waves = data[1, pointer].Split(',');
                     string[] enemies = data[2, pointer].Split(',');
-                    string[] rgb = data[3, pointer].Split(',');
-                    float mx_D;
-                    float.TryParse(data[4, pointer], out mx_D);
-                    int r, g, b;
-                    int.TryParse(rgb[0], out r);
-                    int.TryParse(rgb[1], out g);
-                    int.TryParse(rgb[2], out b);
-                    PaintballBehavior.standard = new Color(r, g, b); 
-                    PaintballBehavior.setMaxD(mx_D);
+                    string[] colorModes = data[3, pointer].Split(',');
+                    string[] colorModeWeights = data[4, pointer].Split(',');
+
+                    List<(PaintballBehavior.ColorMode, float)> tempList = new List<(PaintballBehavior.ColorMode, float)>();
+                    for(int i=0; i < colorModes.Length; i++)
+                    {
+                        string cm = colorModes[i], cw = colorModeWeights[i];
+                        Enum.TryParse(cm, true, out PaintballBehavior.ColorMode col);
+                        float.TryParse(cw, out float colW);
+                        tempList.Add((col, colW));
+                    }
+                    PaintballBehavior.standards = tempList;
+
                     int[] wv, em;
                     wv = System.Array.ConvertAll<string, int>(waves, int.Parse);
                     em = System.Array.ConvertAll<string, int>(enemies, int.Parse);

@@ -147,7 +147,6 @@ public class GameControl : MonoBehaviour {
                                 if (touchCooler > 0 && touchCount == 1)
                                 {
                                     //Has double tapped
-                                    Debug.Log("double tapped!");
                                     p.removePaint(p.whichGauge(Input.mousePosition));
                                 }
                                 else

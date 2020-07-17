@@ -218,7 +218,7 @@ public class ItemLoader : MonoBehaviour
                 Sprite tmpSpr0 = Resources.Load<Sprite>("Sprites/" + s0_anim[iCode]);
                 if (tmpSpr0 == null)
                 {
-                    Debug.LogError("Sprite 0 NOT found: "+s0_anim[iCode]);
+                    Debug.LogError("Sprite 0 NOT found: "+ iCode);
                 }
                 else
                 {
