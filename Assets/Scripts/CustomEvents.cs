@@ -244,7 +244,6 @@ public class CustomEvents : MonoBehaviour
      */
     public void genPaintball(bool[] done, string[] prms)
     {
-        int r, g, b;
 
         float x, y, z;
         if (!prms[1].Equals(""))
