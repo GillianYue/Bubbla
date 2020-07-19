@@ -56,8 +56,10 @@ public abstract class BossBehavior : MonoBehaviour
 
     public IEnumerator idleHover()
     {
-        while(currMode == bossMode.IDLE) //each while loop is one route 
+        Debug.Log("idle hovering; "+currMode);
+        while(currMode.Equals(bossMode.IDLE)) //each while loop is one route 
         {
+            Debug.Log("inside");
             float spd = getCalcValue(movementSpd), range = getCalcValue(movementRange),
                 hoverTime = getCalcValue(hoverDuration), secondNoise = getCalcValue(secondLayerNoise);
             float angle = UnityEngine.Random.Range(0.0f, Mathf.PI * 2); //random angle with no limit on direction
@@ -66,8 +68,9 @@ public abstract class BossBehavior : MonoBehaviour
             Ray ray = new Ray(transform.position, dir);
             Vector3 destination = ray.GetPoint(range); //goal is to get to destination with generated spd and noise, then stay there for hoverTime
 
+            Debug.Log("gen values " + spd + " " + range + " " + hoverTime + " " + secondNoise + " " + dir + " " + destination);
             bool[] moveDone = { false };
-            Global.moveTo(this.gameObject, (int)(destination.x), (int)(destination.y), spd, moveDone);
+            StartCoroutine(Global.moveTo(this.gameObject, (int)(destination.x), (int)(destination.y), spd, moveDone));
             yield return new WaitUntil(() => moveDone[0]);
             Debug.Log("waiting on hover");
             yield return new WaitForSeconds(hoverTime);

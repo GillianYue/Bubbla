@@ -493,6 +493,33 @@ RectTransform:
   m_AnchoredPosition: {x: -239.88799, y: -442}
   m_SizeDelta: {x: 14.4, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &468974672 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8736454631539633698, guid: 85a748d810cac4d939596b46881e6030,
+    type: 3}
+  m_PrefabInstance: {fileID: 30884624158158622}
+  m_PrefabAsset: {fileID: 0}
+--- !u!50 &468974679
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468974672}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 2
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &511241804
 GameObject:
   m_ObjectHideFlags: 0
@@ -2469,7 +2496,7 @@ PrefabInstance:
     - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
       propertyPath: movementSpd.x
-      value: 1
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
@@ -2479,7 +2506,7 @@ PrefabInstance:
     - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
       propertyPath: movementRange.x
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
@@ -2489,7 +2516,7 @@ PrefabInstance:
     - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
       propertyPath: hoverDuration.x
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
@@ -2505,6 +2532,21 @@ PrefabInstance:
         type: 3}
       propertyPath: secondLayerNoise.y
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8736454631539633701, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8736454631539633701, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8736454631539633703, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8736454632448245976, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
