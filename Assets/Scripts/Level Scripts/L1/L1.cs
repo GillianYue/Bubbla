@@ -96,7 +96,9 @@ public class L1 : LevelScript
         //TODO enter BGM
         yield return new WaitForSeconds(3f);
 
-        StartCoroutine(ps.bossFight(bossFightEnd));
+        //StartCoroutine(ps.bossFight(bossFightEnd));
+
+        StartCoroutine(ps.idleHover());
         yield return new WaitUntil(() => bossFightEnd[0]);
 
         Debug.Log("boss fight done");
