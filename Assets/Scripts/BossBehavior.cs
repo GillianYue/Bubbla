@@ -31,7 +31,13 @@ public abstract class BossBehavior : MonoBehaviour
     /// the second float in the tuple is erraticity of that attribute which ranges from 0 to 1
     /// to expose in the editor, is typed Vector2 instead of (float, float)
     /// </summary>
-    public Vector2 movementSpd, movementRange, hoverDuration, secondLayerNoise; 
+    public Vector2 movementSpd, movementRange, hoverDuration, secondLayerNoise;
+    /// <summary>
+    /// hoverBounds defines the borders outside of which boss will not hover to
+    /// The way it works: say we have (x:200, y:300), it would mean that the boss's activity is limited within
+    /// +300 to -300 vertically, and +200 and -200 horizontally
+    /// </summary>
+    public Vector2 hoverBounds; 
 
     public void Start()
     {
@@ -62,11 +68,16 @@ public abstract class BossBehavior : MonoBehaviour
             Debug.Log("inside");
             float spd = getCalcValue(movementSpd), range = getCalcValue(movementRange),
                 hoverTime = getCalcValue(hoverDuration), secondNoise = getCalcValue(secondLayerNoise);
-            float angle = UnityEngine.Random.Range(0.0f, Mathf.PI * 2); //random angle with no limit on direction
-            Vector3 dir = new Vector3(Mathf.Cos(angle), Mathf.Sin(-angle), 0f);
 
-            Ray ray = new Ray(transform.position, dir);
-            Vector3 destination = ray.GetPoint(range); //goal is to get to destination with generated spd and noise, then stay there for hoverTime
+            Vector3 destination, dir;
+            do {
+                Debug.Log("generating values");
+                float angle = UnityEngine.Random.Range(0.0f, Mathf.PI * 2); //random angle with no limit on direction
+                dir = new Vector3(Mathf.Cos(angle), Mathf.Sin(-angle), 0f);
+
+                Ray ray = new Ray(transform.position, dir);
+                destination = ray.GetPoint(range); //goal is to get to destination with generated spd and noise, then stay there for hoverTime
+            } while ((Mathf.Abs(destination.x) > hoverBounds.x) || (Mathf.Abs(destination.y) > hoverBounds.y )); //keep randomize destination until satisfies constraints
 
             Debug.Log("gen values " + spd + " " + range + " " + hoverTime + " " + secondNoise + " " + dir + " " + destination);
             bool[] moveDone = { false };

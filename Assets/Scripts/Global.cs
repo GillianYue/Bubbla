@@ -99,7 +99,12 @@ public class Global : MonoBehaviour
         return d;
     }
 
-    //returns distance between two Vector2s
+    /// <summary>
+    /// returns the distance between two points
+    /// </summary>
+    /// <param name="v1"></param>
+    /// <param name="v2"></param>
+    /// <returns></returns>
     public static float findVectorDist(Vector2 v1, Vector2 v2)
     {
         float d = Mathf.Sqrt(Mathf.Pow((v1.x - v2.x), 2) + Mathf.Pow((v1.y - v2.y), 2));
@@ -188,19 +193,20 @@ public class Global : MonoBehaviour
         float hyp = Mathf.Sqrt(Mathf.Pow(x - e.transform.position.x, 2) +  Mathf.Pow(y - e.transform.position.y, 2));
         float dx = spd * x / hyp * (x > e.transform.position.x ? 1 : -1); //amount of x changed each little move
         float dy = spd * y / hyp * (y > e.transform.position.y ? 1 : -1);
-        Vector2 dir = new Vector2((dx > 0) ? 1 : -1, (dy > 0) ? 1 : -1);
 
-        e.GetComponent<Rigidbody2D>().velocity = new Vector2(dx, dy);
+        Vector2 temp = new Vector2(x - e.transform.position.x, y - e.transform.position.y);
+        temp = temp.normalized * spd;
+        Vector2 dir = new Vector2((dx > 0) ? 1 : -1, (dy > 0) ? 1 : -1),
+            dest = new Vector2(x, y);
+
+        e.GetComponent<Rigidbody2D>().velocity = temp;
         Debug.Log("setting velo to " + e.GetComponent<Rigidbody2D>().velocity + " and pos" + e.transform.position);
         /**
          * messy looking check here, but basically makes sure it keeps moving until it gets to target
          */
-        while ((e.transform.position.x) * dir.x <= x * dir.x &&
-            (e.transform.position.y) * dir.y <= y * dir.y)
+        while (findVectorDist(new Vector2(e.transform.position.x, e.transform.position.y), dest)>3)
         {
-            //e.transform.position += new Vector3(dx, dy, 0);
-           // Debug.Log("not done yet, velo " + e.GetComponent<Rigidbody2D>().velocity + " and pos" + e.transform.position);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
         }
         Debug.Log("move done; supposedly " + x + " " + y + " and now at " + e.transform.position);
         e.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
