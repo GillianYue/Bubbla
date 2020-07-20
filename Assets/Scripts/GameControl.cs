@@ -67,6 +67,8 @@ public class GameControl : MonoBehaviour {
 
     private float pressTime=-1;
     public bool ckTouch = true;
+    private float touchCooler = 0.5f; //half a second before reset; used for checking for fast double tap
+    private int touchCount = 0; 
     public enum Mode { QUEST, GAME, TRAVEL }; //scene type
     public Mode sceneType;
 
@@ -130,8 +132,33 @@ public class GameControl : MonoBehaviour {
                 case GameFlow.Mode.GAME:
                     if (ckTouch)
                     {
-                        if (Input.GetMouseButtonDown(0)) //on first press/click
+                        if (touchCooler > 0) { touchCooler -= 1 * Time.deltaTime; }
+                        else { 
+                            touchCount = 0; //reset 
+                        }
+
+                    if (Input.GetMouseButtonDown(0)) //on first press/click
                         {
+
+                            if (p.selectGauge(new Vector2(Input.mousePosition.x, Input.mousePosition.y)))
+                            {
+                                p.freezeMoveToBriefly();
+
+                                if (touchCooler > 0 && touchCount == 1)
+                                {
+                                    //Has double tapped
+                                    p.removePaint(p.whichGauge(Input.mousePosition));
+                                }
+                                else
+                                {
+                                    touchCooler = 0.3f;
+                                    touchCount += 1;
+                                }
+
+
+                                return; //do not check for attack logic
+                            }
+
                             foreach (GameObject i in icons) //check for UI trigger
                             {
                                 Vector2 icon = Global.WorldToScreen(i.GetComponent<
@@ -151,8 +178,10 @@ public class GameControl : MonoBehaviour {
 
                         }//end first press check
 
-                         if (Input.GetMouseButton(0)) //if held
-                        {
+                        if (Input.GetMouseButton(0)) //if held
+                            {
+
+
                             p.moveTo(Input.mousePosition.x, Input.mousePosition.y);
                             p.fireAtRate(Input.mousePosition);
 
@@ -162,12 +191,7 @@ public class GameControl : MonoBehaviour {
                             }
                             else
                             {
-                                //shoot at the same time
-                                Vector3 temp = player.transform.Find("Cannon").localEulerAngles;
-                                temp.z = 45;
-                                player.transform.Find("Cannon").localEulerAngles = temp;
-                                //end pointin cannon
-                                player.GetComponent<Animator>().SetBool("aiming", true);
+
                             }
 
 

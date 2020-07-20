@@ -48,7 +48,7 @@ public class BGMover : MonoBehaviour {
                 //reset
             }
 
-            transform.localPosition -= new Vector3 (0, scrollSpd, 0);
+            transform.localPosition -= new Vector3 (0, scrollSpd * Time.deltaTime * 100, 0);
 			//negative is UP, so
 
 		}

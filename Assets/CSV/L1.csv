@@ -1,121 +1,1 @@
-MODE,NAME(DLG); WAVE_TYPE(GAME),TEXT(DLG); ENEMY_TYPE(GAME),SPRITE_STATE(DLG); STD_COL(GAME),DISP_SPD(DLG); MX_D(GAME),VOICE_NO,ANIM_SPD,SPECIAL,SPE_PARAM_1,SPE_PARAM_2,SPE_PARAM3,Note
-GAME,99,7,ps,0,,,,,,,//hide boss
-,99,6,bgFixed,0,,,,,,,//bg view 0
-,99,8,3,0,,,,,,,//backpack button inactive
-DLG,BUNNY,"Agent 7846, can you hear me?",0,1,,,,,,,
-,BUNNY,Your GPS location has successfully been sent to me.,0,1,,,2,1,1,4,
-,BUNNY,You are currently in the <i>Sea of Miracle</i>.,0,1,,,2,1,0,5,
-,BUNNY,The mission this time is to explore and see if this place is safe for our trading ships.,0,1,,,,,,,
-,BUNNY,We don't have much data on this region. It could be quite a difficult adventure!,0,1,,,,,,,
-,BUNNY,Eh.,2,1,,,,,,,
-,BUNNY,"You know, I heard rumors about there being pirates around here...",2,0.95,,,,,,,
-,BUNNY,Maybe you should've brought an eye patch with you.,2,1,,,,,,,
-,BUNNY,"But hey, I trust you!",1,1,,,,,,,
-,BUNNY,Good luck!,1,1,,,,,,,
-GAME,99,1,0,,,,tutorial,,,,//gen Enemy with tag
-,99,5,2,,,,,,,,//wait for 2 seconds
-,99,10,tutorial,0,200,180,,,,,//move go to pos
-DLG,BUNNY,"Look, it's an enemy! Hurry, agent, attack!",0,1,,,,,,,
-,BUNNY,...,0,0.4,,,2,0,0,1,
-,BUNNY,......,2,0.4,,,2,0,0,1,
-,BUNNY,Don't tell me...You forgot how to do it?,2,1,,,,,,,
-,BUNNY,"You are so forgetful! Well, I guess I'll have to teach you how it works then!",1,1,,,,,,,
-,BUNNY,"When you see an enemy, don't let them get close to you! Either dodge or attack.",0,1,,,,,,,
-GAME,99,3,"200,100,100","-220,660,0",ball,2,0,,,,//gen pb
-,99,8,0,0,,,,,,,//disable in-game touch check
-,99,11,ball,-220,250,3,,,,,//move pb to pos
-DLG,BUNNY,"Sometimes, <color=#dc6464>energy pellets</color> like this one would pop up. ",0,1,,,,,,,
-,BUNNY,Tap on it to absorb it into your weapon.,0,1,,,,,,,
-GAME,99,8,0,1,,,,,,,//enable touch check again
-,99,99,1,,,,,,,,//pb tutorial
-DLG,BUNNY,Your weapon is loaded. See how there is a bullet over there?,0,1,,,,,,,
-,BUNNY,The <color=#5EC634>bullet gauge</color> shows the number of bullets loaded in your weapon. ,0,1,,,,,,,
-GAME,99,7,life,1,,,,,,,//enable life bar
-DLG,BUNNY,And on the lower right corner here is your <color=#5EC634>life</color> ! ,1,1,,,,,,,
-,BUNNY,Make sure it never gets to the point it's empty!,0,1,,,,,,,
-,BUNNY,"Now, tap again to shoot the bullet!",0,1,,,,,,,
-,BUNNY,Shoot bullets at the enemies to clear your path.,0,1,,,,,,,
-GAME,99,99,0,,,,,,,,//tutorial mini loop logic
-DLG,BUNNY,"Great, you're getting the hang of it! I'll leave the rest to you, agent!",1,1,,,,,,,
-GAME,99,8,3,1,,,,,,,//enable backpack
-GAME,"1,2,3,4,1,2,4,4,3,1","0,1,1,0,0,1,0,0,1,0","132,230,217",100,,,,,,,//wave
-,99,6,bgFixed,1,0,,,,,,//bg view 1 with fade-in transition
-DLG,BUNNY,"My, it's noon already. ",0,1,,,,,,,
-,BUNNY,"So agent, what do you think?",0,1,,,,,,,
-,BUNNY,"So far, a few enemies have appeared, but I don't see any serious threat. ",0,1,,,,,,,
-,BUNNY,Who knows? We just might be able to wrap this one up really soon!,0,1,,,1,11,1,,
-,BUNNY,I'll keep track of the temperature and your location. Let's keep going!,1,1,,,,,,,
-GAME,"2,2,3,4,3,2,1,1,1,3","1,1,1,0,1,1,0,0,0,1","255,255,57",100,,,,,,,//wave 2
-,99,6,bgFixed,2,0,,,,,,//bg view 2
-GAME,"1,2,3,4,1,2,4,4,3,1","0,1,1,0,0,1,0,0,1,0","255,130,48",100,,,,,,,//wave 3
-,99,5,3,,,,,,,,
-,99,8,2,0,bg,,,,,,
-,99,8,3,0,,,,,,,
-,99,8,0,0,,,,,,,
-DLG,BUNNY,"Wait! Agent, do you see something over there?",5,1,,,,,,,
-,BUNNY,......,0,0.8,,,2,0,0,1,
-,BUNNY,What is that?,0,1,,,,,,,
-GAME,99,5,3,,,,,,,,
-,99,7,ps,1,0,,,,,,
-,99,5,3,,,,,,,,
-DLG,BUNNY,That's... It's a ship?,0,1,,,,,,,
-GAME,99,99,2,,,,,,,,//boss attack vfx
-GAME,99,11,player,-100,-440,0.8,,,,,
-DLG,BUNNY,Agent! Watch out!,6,1,,,3,2,,,
-GAME,99,5,3,,,,,,,,
-GAME,99,11,player,0,-440,3,,,,,
-DLG,???,How dare you trespass into MY territory...,1,0.9,1,,2,0,0,1,"//note that (data[5, pointer] is for assignment of animator for ??? sprites"
-,BUNNY,*gasp* Who is that?,6,1,,,,,,,
-,???,Hmph...,1,0.8,1,,2,0,0,1,
-,CAPTAIN BUNS,"It is I, the Great, Magnificent, One and Only, Captain Buns!!!",2,1,,,,,,,
-,CAPTAIN BUNS,AHAHAHAHAHHAHAHAHHAHAHHAHAHAHHAHAHAHHAHAHHAHAHA,2,1,,,,,,,
-,BUNNY,*whisper* Agent...do you see him? I'm having trouble locating him on the screen.,2,1,,,,,,,
-,CAPTAIN BUNS,Prepare to pay the price...for setting foot in this place!,2,1,,,,,,,
-GAME,99,8,0,1,,,,,,,
-,99,8,3,1,,,,,,,
-GAME,99,99,3,,,,,,,,//boss fight
-,99,5,1,,,,,,,,
-DLG,CAPTAIN BUNS,Ack! W-wait! Don't destroy my ship!,2,1,,,,,,,
-,CAPTAIN BUNS,"Who could've imagined...?! Me, the great Captain Buns, lost to the likes of you?!!",3,1,,,,,,,
-,BUNNY,"Captain, listen. We are not here to destroy your ship. ",15,1,,,,,,,
-,CAPTAIN BUNS,You!  ...what?,2,0.9,,,1,8,0,,
-,BUNNY,"You see, we are merely here to inve... explore! ",0,1,,,,,,,
-,,,,,,,,,,,
-GAME,99,1,1,99,99,,npc1,,,,
-GAME,99,1,0,199,199,,npc2,,,,
-,99,1,1,299,99,,npc3,,,,
-,99,10,npc1,100,100,100,,,,,
-,99,10,npc2,200,200,100,,,,,
-,99,10,npc3,300,100,100,,,,,
-,99,5,0.5,,,,,,,,
-,99,30,"0,0,0","npc1,npc2,npc3","FALSE,false,false",,,,,,
-IVS,0,"npc1,npc2,npc3","108,101,103",,,,,,,,
-IVS,1,0,ivsDone,TRUE,,,,,,,
-DLG,BUNNY,And now you're outside of IVS mode. ,0,1,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-GAME,99,30,0,npc1,TRUE,,,,,,
-DLG,BUNNY,You're talking to npc 1.,0,1,,,6,93,,,
-GAME,99,30,0,npc2,TRUE,,,,,,
-DLG,CAPTAIN BUNS,"THAT""S NPC 2",2,1,,,6,93,,,
-GAME,99,30,0,npc3,TRUE,,,,,,
-DLG,CAPTAIN BUNS,npc 3!!!,3,1,,,6,93,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-GAME,99,31,"0,0","npc2,npc3",2,"true,true","110,99",,,,
-,,,,,,,,,,,
-GAME,99,30,0,ivsDone,TRUE,,,,,,
-DLG,BUNNY,"Good job, you've talked to all three of them!",0,1,,,6,93,,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-SPECIAL,0,(if the player faints in game),,,,,,,,,
-GAME,99,6,bgFixed,0,,,,,,,
-DLG,BUNNY,"Agent, are you alright? You suddenly fainted...",6,1,,,,,,,
-,BUNNY,You've been out cold for an entire day. I was so worried!,0,1,,,,,,,
-,BUNNY,I've recovered your life for you. ,0,1,,,2,"1,1","1,0","2,5",
-,BUNNY,"You know, normally I'm not supposed to do this...",13,1,,,,,,,
-,BUNNY,"Now, go on and try again!",0,1,,,,,,,
-SPECIAL,40,end of SPECIAL 0,,,,,,,,,
+MODE,NAME(DLG); WAVE_TYPE(GAME),TEXT(DLG); ENEMY_TYPE(GAME),SPRITE_STATE(DLG); STD_COL(GAME),DISP_SPD(DLG); MX_D(GAME),VOICE_NO,ANIM_SPD,SPECIAL,SPE_PARAM_1,SPE_PARAM_2,SPE_PARAM3,NoteGAME,99,7,ps,0,,,,,,,//hide boss,99,6,bgFixed,0,,,,,,,//bg view 0,99,8,3,0,,,,,,,//backpack button inactiveDLG,BUNNY,"Agent 7846, can you hear me?",0,1,,,,,,,,BUNNY,Your GPS location has successfully been sent to me.,0,1,,,2,1,1,4,,BUNNY,You are currently in the <i>Sea of Miracle</i>.,0,1,,,2,1,0,5,,BUNNY,The mission this time is to explore and see if this place is safe for our trading ships.,0,1,,,,,,,,BUNNY,We don't have much data on this region. It could be quite a difficult adventure!,0,1,,,,,,,,BUNNY,Eh.,2,1,,,,,,,,BUNNY,"You know, I heard rumors about there being pirates around here...",2,0.95,,,,,,,,BUNNY,Maybe you should've brought an eye patch with you.,2,1,,,,,,,,BUNNY,"But hey, I trust you!",1,1,,,,,,,,BUNNY,Good luck!,1,1,,,,,,,GAME,99,8,0,0,,,,,,,//disable in-game touch check,99,1,0,,,,tutorial,,,,//gen Enemy with tag,99,5,2,,,,,,,,//wait for 2 seconds,99,10,tutorial,0,200,180,,,,,//move go to pos with spdGAME,99,8,0,1,,,,,,,//enable touch check againDLG,BUNNY,"Look, it's an enemy! Hurry, agent, attack!",0,1,,,,,,,,BUNNY,...,0,0.4,,,2,0,0,1,,BUNNY,......,2,0.4,,,2,0,0,1,,BUNNY,Don't tell me...You forgot how to do it?,2,1,,,,,,,,BUNNY,"You are so forgetful! Well, I guess I'll have to teach you how it works then!",1,1,,,,,,,,BUNNY,"When you see an enemy, don't let them get close to you! Either dodge or attack.",0,1,,,,,,,GAME,99,3,RED,"-220,660,0",ball,2,0,,,,//gen pb,99,8,0,0,,,,,,,//disable in-game touch check,99,11,ball,-220,250,3,,,,,//move pb to posDLG,BUNNY,"Sometimes, <color=#dc6464>energy pellets</color> like this one would pop up. ",0,1,,,,,,,,BUNNY,Tap on it to absorb it into your weapon.,0,1,,,,,,,GAME,99,8,0,1,,,,,,,//enable touch check again,99,99,1,,,,,,,,//pb tutorialDLG,BUNNY,Your weapon is loaded. See how there is a bullet over there?,0,1,,,,,,,,BUNNY,The <color=#5EC634>bullet gauge</color> shows the number of bullets loaded in your weapon. ,0,1,,,,,,,GAME,99,7,life,1,,,,,,,//enable life barDLG,BUNNY,And on the lower right corner here is your <color=#5EC634>life</color> ! ,1,1,,,,,,,,BUNNY,Make sure it never gets to the point it's empty!,0,1,,,,,,,,BUNNY,"Now, tap again to shoot the bullet!",0,1,,,,,,,,BUNNY,Shoot bullets at the enemies to clear your path.,0,1,,,,,,,GAME,99,99,0,,,,,,,,//tutorial mini loop logicDLG,BUNNY,"Great, you're getting the hang of it! I'll leave the rest to you, agent!",1,1,,,,,,,GAME,99,8,3,1,,,,,,,//enable backpackGAME,"1,2,3,4,1,2,4,4,3,1","0,1,1,0,0,1,0,0,1,0","RED,BLUE","0.5,1",,,,,,,//wave,99,6,bgFixed,1,0,,,,,,//bg view 1 with fade-in transitionDLG,BUNNY,"My, it's noon already. ",0,1,,,,,,,,BUNNY,"So agent, what do you think?",0,1,,,,,,,,BUNNY,"So far, a few enemies have appeared, but I don't see any serious threat. ",0,1,,,,,,,,BUNNY,Who knows? We just might be able to wrap this one up really soon!,0,1,,,1,11,1,,,BUNNY,I'll keep track of the temperature and your location. Let's keep going!,1,1,,,,,,,GAME,"2,2,3,4,3,2,1,1,1,3","1,1,1,0,1,1,0,0,0,1","BLUE,YELLOW","0.2,1",,,,,,,//wave 2,99,6,bgFixed,2,0,,,,,,//bg view 2GAME,"1,2,3,4,1,2,4,4,3,1","0,1,1,0,0,1,0,0,1,0","RED,BLUE,YELLOW","0.1,0.9,1",,,,,,,//wave 3,99,5,3,,,,,,,,,99,8,2,0,bg,,,,,,,99,8,3,0,,,,,,,,99,8,0,0,,,,,,,DLG,BUNNY,"Wait! Agent, do you see something over there?",5,1,,,,,,,,BUNNY,......,0,0.8,,,2,0,0,1,,BUNNY,What is that?,0,1,,,,,,,GAME,99,5,3,,,,,,,,//wait for three sec,99,7,ps,1,0,,,,,,//set pirate ship active,99,5,3,,,,,,,,//wait for three secDLG,BUNNY,That's... It's a ship?,0,1,,,,,,,GAME,99,99,2,,,,,,,,//boss attack vfxGAME,99,11,player,-100,-440,0.8,,,,,//player dodgeDLG,BUNNY,Agent! Watch out!,6,1,,,3,2,,,GAME,99,5,3,,,,,,,,//wait for three secGAME,99,11,player,0,-440,3,,,,,//player get backDLG,???,How dare you trespass into MY territory...,1,0.9,1,,2,0,0,1,"//note that (data[5, pointer] is for assignment of animator for ??? sprites",BUNNY,*gasp* Who is that?,6,1,,,,,,,,???,Hmph...,1,0.8,1,,2,0,0,1,,CAPTAIN BUNS,"It is I, the Great, Magnificent, One and Only, Captain Buns!!!",2,1,,,,,,,,CAPTAIN BUNS,AHAHAHAHAHHAHAHAHHAHAHHAHAHAHHAHAHAHHAHAHHAHAHA,2,1,,,,,,,,BUNNY,*whisper* Agent...do you see him? I'm having trouble locating him on the screen.,2,1,,,,,,,,CAPTAIN BUNS,Prepare to pay the price...for setting foot in this place!,2,1,,,,,,,GAME,99,8,0,1,,,,,,,//enable touch check,99,8,3,1,,,,,,,//enable backpackGAME,99,99,3,,,,,,,,//boss fight,99,5,1,,,,,,,,//waitDLG,CAPTAIN BUNS,Ack! W-wait! Don't destroy my ship!,2,1,,,,,,,,CAPTAIN BUNS,"Who could've imagined...?! Me, the great Captain Buns, lost to the likes of you?!!",3,1,,,,,,,,BUNNY,"Captain, listen. We are not here to destroy your ship. ",15,1,,,,,,,,CAPTAIN BUNS,You!  ...what?,2,0.9,,,1,8,0,,,BUNNY,"You see, we are merely here to inve... explore! ",0,1,,,,,,,,,,,,,,,,,,GAME,99,1,1,99,99,,npc1,,,,GAME,99,1,0,199,199,,npc2,,,,,99,1,1,299,99,,npc3,,,,,99,10,npc1,100,100,100,,,,,,99,10,npc2,200,200,100,,,,,,99,10,npc3,300,100,100,,,,,,99,5,0.5,,,,,,,,,99,30,"0,0,0","npc1,npc2,npc3","FALSE,false,false",,,,,,IVS,0,"npc1,npc2,npc3","108,101,103",,,,,,,,IVS,1,0,ivsDone,TRUE,,,,,,,DLG,BUNNY,And now you're outside of IVS mode. ,0,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,GAME,99,30,0,npc1,TRUE,,,,,,DLG,BUNNY,You're talking to npc 1.,0,1,,,6,93,,,GAME,99,30,0,npc2,TRUE,,,,,,DLG,CAPTAIN BUNS,"THAT""S NPC 2",2,1,,,6,93,,,GAME,99,30,0,npc3,TRUE,,,,,,DLG,CAPTAIN BUNS,npc 3!!!,3,1,,,6,93,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,GAME,99,31,"0,0","npc2,npc3",2,"true,true","110,99",,,,,,,,,,,,,,,GAME,99,30,0,ivsDone,TRUE,,,,,,DLG,BUNNY,"Good job, you've talked to all three of them!",0,1,,,6,93,,,,,,,,,,,,,,,,,,,,,,,,,SPECIAL,0,(if the player faints in game),,,,,,,,,GAME,99,6,bgFixed,0,,,,,,,DLG,BUNNY,"Agent, are you alright? You suddenly fainted...",6,1,,,,,,,,BUNNY,You've been out cold for an entire day. I was so worried!,0,1,,,,,,,,BUNNY,I've recovered your life for you. ,0,1,,,2,"1,1","1,0","2,5",,BUNNY,"You know, normally I'm not supposed to do this...",13,1,,,,,,,,BUNNY,"Now, go on and try again!",0,1,,,,,,,SPECIAL,40,end of SPECIAL 0,,,,,,,,,

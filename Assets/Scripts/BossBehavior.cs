@@ -25,6 +25,13 @@ public abstract class BossBehavior : MonoBehaviour
     protected RectTransform lifeRT;
     public bool lifeBarActive;
 
+    public enum bossMode { IDLE, DAMAGE, DIR_ATTK, SHOOT_ATTK, PROJ_ATTK, SPEC_ATTK, ANTICIP, DEFEATED };
+    public bossMode currMode = bossMode.IDLE;
+    /// <summary>
+    /// the second float in the tuple is erraticity of that attribute which ranges from 0 to 1
+    /// to expose in the editor, is typed Vector2 instead of (float, float)
+    /// </summary>
+    public Vector2 movementSpd, movementRange, hoverDuration, secondLayerNoise; 
 
     public void Start()
     {
@@ -45,6 +52,30 @@ public abstract class BossBehavior : MonoBehaviour
     public void Update()
     {
         setLifeBar();
+    }
+
+    public IEnumerator idleHover()
+    {
+        Debug.Log("idle hovering; "+currMode);
+        while(currMode.Equals(bossMode.IDLE)) //each while loop is one route 
+        {
+            Debug.Log("inside");
+            float spd = getCalcValue(movementSpd), range = getCalcValue(movementRange),
+                hoverTime = getCalcValue(hoverDuration), secondNoise = getCalcValue(secondLayerNoise);
+            float angle = UnityEngine.Random.Range(0.0f, Mathf.PI * 2); //random angle with no limit on direction
+            Vector3 dir = new Vector3(Mathf.Cos(angle), Mathf.Sin(-angle), 0f);
+
+            Ray ray = new Ray(transform.position, dir);
+            Vector3 destination = ray.GetPoint(range); //goal is to get to destination with generated spd and noise, then stay there for hoverTime
+
+            Debug.Log("gen values " + spd + " " + range + " " + hoverTime + " " + secondNoise + " " + dir + " " + destination);
+            bool[] moveDone = { false };
+            StartCoroutine(Global.moveTo(this.gameObject, (int)(destination.x), (int)(destination.y), spd, moveDone));
+            yield return new WaitUntil(() => moveDone[0]);
+            Debug.Log("waiting on hover");
+            yield return new WaitForSeconds(hoverTime);
+            Debug.Log("one route done, starting another");
+        }
     }
 
     //might need to be overridden
@@ -217,4 +248,28 @@ public abstract class BossBehavior : MonoBehaviour
         }
         done[0] = true;
     }
+
+
+
+    // ------------------------------------------------------HELPER FUNCTIONS--------------------------------------------------------------------
+    /// <summary>
+    /// takes in tuple of (value, erraticity)
+    /// </summary>
+    /// <param name="instance"></param>
+    /// <returns>returns a calculated value applied with erraticity</returns>
+    private float getCalcValue((float, float) instance)
+    {
+        float val = instance.Item1, err = instance.Item2;
+        float sign = UnityEngine.Random.Range(0.0f, 1.0f) > 0.5f ? 1 : -1;
+        float pickErr = UnityEngine.Random.Range(0.0f, err);
+        val *= 1 + sign * pickErr;
+        return val;
+    }
+
+    private float getCalcValue(Vector2 instance)
+    {
+        return getCalcValue((instance.x, instance.y));
+    }
+
+    // ------------------------------------------------------END HELPER FUNCTIONS--------------------------------------------------------------------
 }

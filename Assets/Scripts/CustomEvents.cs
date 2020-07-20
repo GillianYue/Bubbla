@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 /*
  * this class is in charge of carrying out the custom events (indicated by a code of 99 in game mode)
@@ -234,7 +235,7 @@ public class CustomEvents : MonoBehaviour
      * 
      * create a paintball  
      * 
-     * optional param 0: r,g,b of color, will use paintballSpawner's current atmospherical color if param is ""
+     * optional param 0: colorMode of color, will use paintballSpawner's current colorMode standards if param is ""
      * optional param 1: pos X,Y,Z, will use paintballSpawner.spawnValues if param is ""
      * optional param 2: an identifier id for the paintball, will not assign if empty    
      * optional param 3: size  
@@ -243,7 +244,6 @@ public class CustomEvents : MonoBehaviour
      */
     public void genPaintball(bool[] done, string[] prms)
     {
-        int r, g, b;
 
         float x, y, z;
         if (!prms[1].Equals(""))
@@ -265,12 +265,10 @@ public class CustomEvents : MonoBehaviour
 
         if (!prms[0].Equals(""))
         {
-            string[] res = prms[0].Split(',');
-            int.TryParse(res[0], out r);
-            int.TryParse(res[1], out g);
-            int.TryParse(res[2], out b);
 
-            p = pSpawner.genPaintball(r, g, b, x, y, z); //need not worry about conversion, taken care of in PBbehavior.setColor
+            Enum.TryParse(prms[0], true, out PaintballBehavior.ColorMode col);
+
+            p = pSpawner.genPaintball(col, x, y, z);
         }
         else
         {

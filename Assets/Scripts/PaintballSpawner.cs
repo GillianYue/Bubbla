@@ -89,9 +89,13 @@ public class PaintballSpawner : MonoBehaviour
         }
     }
 
-    /**
-     * generates a paintball at location, with parent set to Ballz
-     */
+    /// <summary>
+    /// generates a paintball at location, with parent set to Ballz
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="z"></param>
+    /// <returns></returns>
     public GameObject genPaintball(float x, float y, float z)
     {
         GameObject pb = paintBall;
@@ -105,19 +109,19 @@ public class PaintballSpawner : MonoBehaviour
         return pb;
     }
 
-    public GameObject genPaintball(Color c, float x, float y, float z)
+    public GameObject genPaintball(PaintballBehavior.ColorMode c, float x, float y, float z)
     {
         GameObject pb = genPaintball(x, y, z);
         pb.GetComponent<PaintballBehavior>().setColor(c);
         return pb;
     }
 
-    public GameObject genPaintball(float R, float G, float B, float x, float y, float z)
+/*    public GameObject genPaintball(float R, float G, float B, float x, float y, float z)
     {
         GameObject pb = genPaintball(x, y, z);
         pb.GetComponent<PaintballBehavior>().setColor(R,G,B);
         return pb;
-    }
+    }*/
 
     // creates an item based off of code that behaves like a paintball
     public GameObject genItem(int itemCode, float x, float y, float z)

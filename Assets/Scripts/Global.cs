@@ -64,6 +64,7 @@ public class Global : MonoBehaviour
 
     /**
      * checks if a 2-d touch is hitting a 2D obj of certain width and height
+     * NOTE: for this to properly work, it's assumed that itemPos is the center of the sprite, not the border corners
      */
     public static bool touching(Vector2 touch, Vector2 itemPos,
         double itemwidth, double itemheight){
@@ -184,13 +185,13 @@ public class Global : MonoBehaviour
     */
     public static IEnumerator moveTo(GameObject e, int x, int y, float spd, bool[] done)
     {
-        float hyp = Mathf.Sqrt(Mathf.Pow(x - e.transform.position.x, 2) +
-            Mathf.Pow(y - e.transform.position.y, 2));
+        float hyp = Mathf.Sqrt(Mathf.Pow(x - e.transform.position.x, 2) +  Mathf.Pow(y - e.transform.position.y, 2));
         float dx = spd * x / hyp * (x > e.transform.position.x ? 1 : -1); //amount of x changed each little move
         float dy = spd * y / hyp * (y > e.transform.position.y ? 1 : -1);
         Vector2 dir = new Vector2((dx > 0) ? 1 : -1, (dy > 0) ? 1 : -1);
 
         e.GetComponent<Rigidbody2D>().velocity = new Vector2(dx, dy);
+        Debug.Log("setting velo to " + e.GetComponent<Rigidbody2D>().velocity + " and pos" + e.transform.position);
         /**
          * messy looking check here, but basically makes sure it keeps moving until it gets to target
          */
@@ -198,9 +199,10 @@ public class Global : MonoBehaviour
             (e.transform.position.y) * dir.y <= y * dir.y)
         {
             //e.transform.position += new Vector3(dx, dy, 0);
+           // Debug.Log("not done yet, velo " + e.GetComponent<Rigidbody2D>().velocity + " and pos" + e.transform.position);
             yield return new WaitForSeconds(0.1f);
         }
-
+        Debug.Log("move done; supposedly " + x + " " + y + " and now at " + e.transform.position);
         e.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         done[0] = true;
     }
@@ -472,6 +474,23 @@ public class Global : MonoBehaviour
         rt.offsetMax = new Vector2(dX, dY);
         rt.offsetMin = new Vector2(-dX, -dY);
 
+    }
+
+    public static void ScaleAround(GameObject target, Vector3 pivot, Vector3 newScale)
+    {
+        Vector3 A = target.transform.localPosition;
+        Vector3 B = pivot;
+
+        Vector3 C = A - B; // diff from object pivot to desired pivot/origin
+
+        float RS = newScale.x / target.transform.localScale.x; // relataive scale factor
+
+        // calc final position post-scale
+        Vector3 FP = B + C * RS;
+
+        // finally, actually perform the scale/translation
+        target.transform.localScale = newScale;
+        target.transform.localPosition = FP;
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~UI logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
