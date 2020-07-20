@@ -50,6 +50,7 @@ public abstract class BossBehavior : MonoBehaviour
         if (colliderScale > 0) setColliderScale(colliderScale);
 
         lifeBar = GameObject.FindWithTag("BossLife");
+        if (hoverBounds.Equals(Vector2.zero)) hoverBounds = new Vector2(Global.MainCanvasWidth / 2, Global.MainCanvasHeight / 2);
 
         StartCoroutine(Global.WaitUntilThenDo(setLifeRT, (lifeBar != null)));
            
