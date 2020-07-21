@@ -185,32 +185,34 @@ public class Global : MonoBehaviour
         } //close enough
     }
 
-   /*
-    * moves any GO towards target destination (one call to the IEnumerator)
-    */
+    /// <summary>
+    /// moves any GO towards target destination (one call to the IEnumerator)
+    /// </summary>
+    /// <returns></returns>
     public static IEnumerator moveTo(GameObject e, int x, int y, float spd, bool[] done)
     {
         float hyp = Mathf.Sqrt(Mathf.Pow(x - e.transform.position.x, 2) +  Mathf.Pow(y - e.transform.position.y, 2));
-        float dx = spd * x / hyp * (x > e.transform.position.x ? 1 : -1); //amount of x changed each little move
-        float dy = spd * y / hyp * (y > e.transform.position.y ? 1 : -1);
 
         Vector2 temp = new Vector2(x - e.transform.position.x, y - e.transform.position.y);
         temp = temp.normalized * spd;
-        Vector2 dir = new Vector2((dx > 0) ? 1 : -1, (dy > 0) ? 1 : -1),
-            dest = new Vector2(x, y);
 
-        e.GetComponent<Rigidbody2D>().velocity = temp;
-        Debug.Log("setting velo to " + e.GetComponent<Rigidbody2D>().velocity + " and pos" + e.transform.position);
-        /**
-         * messy looking check here, but basically makes sure it keeps moving until it gets to target
-         */
-        while (findVectorDist(new Vector2(e.transform.position.x, e.transform.position.y), dest)>3)
-        {
-            yield return new WaitForSeconds(0.05f);
-        }
-        Debug.Log("move done; supposedly " + x + " " + y + " and now at " + e.transform.position);
+        e.GetComponent<Rigidbody2D>().velocity = temp; 
+        //Debug.Log("setting velo to " + e.GetComponent<Rigidbody2D>().velocity + " and pos" + e.transform.position);
+
+        float timeTakes = (x - e.transform.position.x) / temp.x;
+
+        yield return new WaitForSeconds(timeTakes);
+        // Debug.Log("move done; supposedly " + x + " " + y + " and now at " + e.transform.position);
         e.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         done[0] = true;
+    }
+
+    /// <summary>
+    /// moves any GO towards target destination (one call to the IEnumerator)
+    /// </summary>
+    public static IEnumerator moveTo(GameObject e, Vector2 dest, float spd, bool[] done)
+    {
+        return moveTo(e, (int)dest.x, (int)dest.y, spd, done);
     }
 
     public static IEnumerator moveToInSecs(GameObject e, int x, int y, float sec, bool[] done)
@@ -226,6 +228,11 @@ public class Global : MonoBehaviour
 
         e.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0); //stops the GO at dest
         done[0] = true;
+    }
+
+    public static IEnumerator moveToInSecs(GameObject e, Vector2 dest, float sec, bool[] done)
+    {
+        return moveToInSecs(e, (int)dest.x, (int)dest.y, sec, done);
     }
 
 
@@ -482,7 +489,7 @@ public class Global : MonoBehaviour
 
     }
 
-    public static void ScaleAround(GameObject target, Vector3 pivot, Vector3 newScale)
+/*    public static void ScaleAround(GameObject target, Vector3 pivot, Vector3 newScale)
     {
         Vector3 A = target.transform.localPosition;
         Vector3 B = pivot;
@@ -497,7 +504,7 @@ public class Global : MonoBehaviour
         // finally, actually perform the scale/translation
         target.transform.localScale = newScale;
         target.transform.localPosition = FP;
-    }
+    }*/
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~UI logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -554,10 +561,10 @@ public class Global : MonoBehaviour
         yield return 0;
     }
 
-    /**
-     *  helper function to copy the component of one GO to another; haven't tested out yet 
-     *     
-     */
+/// <summary>
+/// helper function to copy the components of one GO to another; haven't tested out yet
+/// </summary>
+/// <returns></returns>
     public static Component CopyComponent(Component original, GameObject destination)
     {
         System.Type type = original.GetType();

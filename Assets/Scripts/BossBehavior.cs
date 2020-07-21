@@ -8,6 +8,8 @@ using System;
  */
 public abstract class BossBehavior : MonoBehaviour
 {
+    [Inject(InjectFrom.Anywhere)]
+    public Player player;
 
     public int life = 1000, maxLife = 1000;
     public int attack;
@@ -30,14 +32,17 @@ public abstract class BossBehavior : MonoBehaviour
     /// <summary>
     /// the second float in the tuple is erraticity of that attribute which ranges from 0 to 1
     /// to expose in the editor, is typed Vector2 instead of (float, float)
+    /// 
+    /// TODO: noise - there are different types of noise. Can pick random location and random "delta" target value periodically, i.e. every moment there's a secondary layer
+    /// goal, such as +3 in 72 degree
     /// </summary>
     public Vector2 movementSpd, movementRange, hoverDuration, secondLayerNoise;
     /// <summary>
     /// hoverBounds defines the borders outside of which boss will not hover to
-    /// The way it works: say we have (x:200, y:300), it would mean that the boss's activity is limited within
-    /// +300 to -300 vertically, and +200 and -200 horizontally
+    /// The way it works: say we have upper (x:200, y:300) and lower (x:100, y: 50), it would mean that the boss's activity is limited within
+    /// +300 to -50 vertically, and +200 and -100 horizontally
     /// </summary>
-    public Vector2 hoverBounds; 
+    public Vector2 hoverBoundsUpper, hoverBoundsLower; 
 
     public void Start()
     {
@@ -50,7 +55,8 @@ public abstract class BossBehavior : MonoBehaviour
         if (colliderScale > 0) setColliderScale(colliderScale);
 
         lifeBar = GameObject.FindWithTag("BossLife");
-        if (hoverBounds.Equals(Vector2.zero)) hoverBounds = new Vector2(Global.MainCanvasWidth / 2, Global.MainCanvasHeight / 2);
+        if (hoverBoundsUpper.Equals(Vector2.zero)) hoverBoundsUpper = new Vector2(Global.MainCanvasWidth / 2, Global.MainCanvasHeight / 2);
+        if (hoverBoundsLower.Equals(Vector2.zero)) hoverBoundsUpper = new Vector2(Global.MainCanvasWidth / 2, Global.MainCanvasHeight / 2);
 
         StartCoroutine(Global.WaitUntilThenDo(setLifeRT, (lifeBar != null)));
            
@@ -66,28 +72,68 @@ public abstract class BossBehavior : MonoBehaviour
         Debug.Log("idle hovering; "+currMode);
         while(currMode.Equals(bossMode.IDLE)) //each while loop is one route 
         {
-            Debug.Log("inside");
             float spd = getCalcValue(movementSpd), range = getCalcValue(movementRange),
                 hoverTime = getCalcValue(hoverDuration), secondNoise = getCalcValue(secondLayerNoise);
 
             Vector3 destination, dir;
             do {
-                Debug.Log("generating values");
                 float angle = UnityEngine.Random.Range(0.0f, Mathf.PI * 2); //random angle with no limit on direction
                 dir = new Vector3(Mathf.Cos(angle), Mathf.Sin(-angle), 0f);
 
                 Ray ray = new Ray(transform.position, dir);
                 destination = ray.GetPoint(range); //goal is to get to destination with generated spd and noise, then stay there for hoverTime
-            } while ((Mathf.Abs(destination.x) > hoverBounds.x) || (Mathf.Abs(destination.y) > hoverBounds.y )); //keep randomize destination until satisfies constraints
+            } while ((destination.x > hoverBoundsUpper.x) || (destination.y > hoverBoundsUpper.y ) || (destination.x < -hoverBoundsLower.x) || (destination.y < -hoverBoundsLower.y)); 
+            //keep randomize destination until satisfies constraints
 
-            Debug.Log("gen values " + spd + " " + range + " " + hoverTime + " " + secondNoise + " " + dir + " " + destination);
+            // Debug.Log("gen values " + spd + " " + range + " " + hoverTime + " " + secondNoise + " " + dir + " " + destination);
             bool[] moveDone = { false };
             StartCoroutine(Global.moveTo(this.gameObject, (int)(destination.x), (int)(destination.y), spd, moveDone));
             yield return new WaitUntil(() => moveDone[0]);
-            Debug.Log("waiting on hover");
+
             yield return new WaitForSeconds(hoverTime);
-            Debug.Log("one route done, starting another");
         }
+    }
+
+    /// <summary>
+    /// the boss might have multiple kinds of direct attack, and the attkIndex is for indicating which one is intended to be called
+    /// 
+    /// we assume that attkIndex would provide us the values of all hardcoded in variables in function
+    /// </summary>
+    /// <param name="attkIndex"></param>
+    /// <returns></returns>
+    public IEnumerator directAttack(int attkIndex, bool[] done)
+    {
+        bool hasAnticip = true; bool[] anticip_done = new bool[1];
+        if (hasAnticip)
+        {
+            //TODO swap into sprite for anticipation
+            currMode = bossMode.ANTICIP;
+
+            anticip_done[0] = true;
+        }
+        yield return new WaitUntil(() => anticip_done[0]); //anticipation done
+
+        currMode = bossMode.DIR_ATTK;
+        Vector2 attkSpot = player.transform.position, from = transform.position; //targets player position *at this moment in time* (means could miss when actually reaching there)
+        float chargeSpd = 700, stopDistAway = 30; //stops some distance away from player's exact location to attack
+        //TODO play charge animation/sprite
+        Ray toPlayer = new Ray(from, attkSpot); bool[] charge_done = new bool[1];
+        Vector2 dest = toPlayer.GetPoint(Global.findVectorDist(from, attkSpot) - stopDistAway);
+
+        StartCoroutine(Global.moveTo(this.gameObject, attkSpot, chargeSpd, charge_done));
+        yield return new WaitUntil(() => charge_done[0]);
+
+        //TODO collider will need to change here
+        //TODO play attack animation; wait till done
+        yield return new WaitForSeconds(1.5f);
+
+        //TODO return animation
+        Vector2 returnTo = from; bool[] return_done = new bool[1];
+        float returnSpd = chargeSpd/2;
+        StartCoroutine(Global.moveTo(this.gameObject, from, returnSpd, return_done));
+        yield return new WaitUntil(() => return_done[0]);
+
+        done[0] = true;
     }
 
     //might need to be overridden

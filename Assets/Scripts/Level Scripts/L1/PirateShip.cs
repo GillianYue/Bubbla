@@ -5,8 +5,7 @@ using UnityEngine.UI;
 
 public class PirateShip : BossBehavior
 {
-    [Inject(InjectFrom.Anywhere)]
-    public Player player;
+
     public GameObject projectile;
     public float cannonSpeed; //velocity of shot cannonballs, NEED TO BE SET in EDITOR!!
     public float enemyShootSpeed; //velocity of shot enemies, NEED TO BE SET in EDITOR!!

@@ -2533,6 +2533,36 @@ PrefabInstance:
       propertyPath: secondLayerNoise.y
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: hoverBounds.x
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: hoverBounds.y
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: hoverBoundsUpper.x
+      value: 280
+      objectReference: {fileID: 0}
+    - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: hoverBoundsLower.x
+      value: 280
+      objectReference: {fileID: 0}
+    - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: hoverBoundsUpper.y
+      value: 380
+      objectReference: {fileID: 0}
+    - target: {fileID: 8736454631539633700, guid: 85a748d810cac4d939596b46881e6030,
+        type: 3}
+      propertyPath: hoverBoundsLower.y
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8736454631539633701, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
       propertyPath: m_IsTrigger
