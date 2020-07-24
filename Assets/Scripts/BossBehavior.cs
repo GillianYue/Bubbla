@@ -10,6 +10,8 @@ public abstract class BossBehavior : MonoBehaviour
 {
     [Inject(InjectFrom.Anywhere)]
     public Player player;
+    [Inject(InjectFrom.Anywhere)]
+    public BossVisual bossVisual;
 
     public int life = 1000, maxLife = 1000;
     public int attack;
@@ -23,7 +25,8 @@ public abstract class BossBehavior : MonoBehaviour
     protected CustomEvents customEvents;
 
     public GameObject lifeBar; //the one with image attached
-    public GameObject lifeContainer; //parent of lifeBar
+    public GameObject lifeContainer, //parent of lifeBar
+    moveBody; //moveBody is GO of which the position will be updated (moved)
     protected RectTransform lifeRT;
     public bool lifeBarActive;
 
@@ -46,10 +49,14 @@ public abstract class BossBehavior : MonoBehaviour
 
     public void Start()
     {
+
+        setMode(bossMode.IDLE);
         customEvents = gameObject.GetComponent<CustomEvents>();
         GameObject gameController = GameObject.FindWithTag("GameController");
         gameControl = gameController.GetComponent<GameControl>();
         gameFlow = gameController.GetComponent<GameFlow>();
+
+        moveBody = transform.parent.gameObject;
 
         if (sizeScale > 0) setSizeScale(sizeScale);
         if (colliderScale > 0) setColliderScale(colliderScale);
@@ -87,7 +94,7 @@ public abstract class BossBehavior : MonoBehaviour
 
             // Debug.Log("gen values " + spd + " " + range + " " + hoverTime + " " + secondNoise + " " + dir + " " + destination);
             bool[] moveDone = { false };
-            StartCoroutine(Global.moveTo(this.gameObject, (int)(destination.x), (int)(destination.y), spd, moveDone));
+            StartCoroutine(Global.moveTo(moveBody, (int)(destination.x), (int)(destination.y), spd, moveDone));
             yield return new WaitUntil(() => moveDone[0]);
 
             yield return new WaitForSeconds(hoverTime);
@@ -107,20 +114,20 @@ public abstract class BossBehavior : MonoBehaviour
         if (hasAnticip)
         {
             //TODO swap into sprite for anticipation
-            currMode = bossMode.ANTICIP;
+            setMode(bossMode.ANTICIP);
 
             anticip_done[0] = true;
         }
         yield return new WaitUntil(() => anticip_done[0]); //anticipation done
 
-        currMode = bossMode.DIR_ATTK;
+        setMode(bossMode.DIR_ATTK);
         Vector2 attkSpot = player.transform.position, from = transform.position; //targets player position *at this moment in time* (means could miss when actually reaching there)
         float chargeSpd = 700, stopDistAway = 30; //stops some distance away from player's exact location to attack
         //TODO play charge animation/sprite
         Ray toPlayer = new Ray(from, attkSpot); bool[] charge_done = new bool[1];
         Vector2 dest = toPlayer.GetPoint(Global.findVectorDist(from, attkSpot) - stopDistAway);
 
-        StartCoroutine(Global.moveTo(this.gameObject, attkSpot, chargeSpd, charge_done));
+        StartCoroutine(Global.moveTo(moveBody, attkSpot, chargeSpd, charge_done));
         yield return new WaitUntil(() => charge_done[0]);
 
         //TODO collider will need to change here
@@ -130,10 +137,15 @@ public abstract class BossBehavior : MonoBehaviour
         //TODO return animation
         Vector2 returnTo = from; bool[] return_done = new bool[1];
         float returnSpd = chargeSpd/2;
-        StartCoroutine(Global.moveTo(this.gameObject, from, returnSpd, return_done));
+        StartCoroutine(Global.moveTo(moveBody, from, returnSpd, return_done));
         yield return new WaitUntil(() => return_done[0]);
 
         done[0] = true;
+    }
+
+    public void setMode(bossMode m){
+        currMode = m;
+        bossVisual.updateModeSprite(m);
     }
 
     //might need to be overridden
