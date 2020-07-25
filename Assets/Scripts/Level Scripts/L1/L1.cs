@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -98,9 +98,10 @@ public class L1 : LevelScript
 
         //StartCoroutine(ps.bossFight(bossFightEnd));
 
-        StartCoroutine(ps.idleHover());
-        // bool[] attkDone = new bool[1];
-        // StartCoroutine(ps.directAttack(0, attkDone));
+        //StartCoroutine(ps.idleHover());
+        bool[] attkDone = new bool[1];
+        StartCoroutine(ps.directAttack(0, attkDone));
+
         yield return new WaitUntil(() => bossFightEnd[0]);
 
         Debug.Log("boss fight done");

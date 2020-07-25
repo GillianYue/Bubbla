@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -115,7 +115,9 @@ public abstract class BossBehavior : MonoBehaviour
         {
             //TODO swap into sprite for anticipation
             setMode(bossMode.ANTICIP);
+		Debug.Log("anticipation");
 
+		yield return new WaitForSeconds(2);
             anticip_done[0] = true;
         }
         yield return new WaitUntil(() => anticip_done[0]); //anticipation done

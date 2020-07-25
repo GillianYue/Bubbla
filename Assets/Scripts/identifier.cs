@@ -5,6 +5,7 @@ using UnityEngine;
 public class identifier : MonoBehaviour
 {
     public string id;
+    [Inject(InjectFrom.Anywhere)]
     public CustomEvents ce;
 
     void Start()
