@@ -1,0 +1,12 @@
+        deleted:    Assets/BGM/Logicx/Dunes.logicx/Media/Audio Files.meta
+        deleted:    Assets/BGM/Logicx/Dunes.logicx/Media/Freeze Files.nosync.meta
+        deleted:    Assets/BGM/Logicx/Dunes.logicx/Media/Sampler Instruments.meta
+        deleted:    Assets/BGM/Logicx/Dunes.logicx/Media/Samples.meta
+        deleted:    Assets/BGM/Logicx/Intro_tune.logicx/Media/Audio Files.meta
+        deleted:    Assets/BGM/Logicx/Intro_tune.logicx/Media/Freeze Files.nosync.meta
+        deleted:    Assets/BGM/Logicx/robotic_assistent.logicx/Media/Audio Files.meta
+        deleted:    Assets/BGM/Logicx/robotic_assistent.logicx/Media/Freeze Files.nosync.meta
+        deleted:    Assets/Models.meta
+        deleted:    Assets/Plugins/UnityChannel/Android.meta
+        deleted:    Assets/Plugins/UnityChannel/XiaomiSupport/Editor.meta
+        deleted:    Assets/Prefabs/L1/Temp.meta
