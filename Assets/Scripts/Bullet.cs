@@ -39,7 +39,7 @@ public class Bullet : MonoBehaviour {
 			}
 		}else if(t == "Boss")
         {
-            other.GetComponent<BossBehavior>().damage(damage,
+            other.transform.parent.GetComponent<BossBehavior>().damage(damage,
     gameObject.GetComponent<SpriteRenderer>().color);
             Destroy(gameObject);
         }
