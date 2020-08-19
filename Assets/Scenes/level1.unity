@@ -808,7 +808,7 @@ MonoBehaviour:
   armatureName: Armature
   isUGUI: 0
   debugDraw: 0
-  animationName: idle
+  animationName: claw1
   _playTimes: 0
   _timeScale: 0.75
   _sortingMode: 0
@@ -826,7 +826,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 225206555}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 26.3, y: 38.7, z: 0}
   m_LocalScale: {x: 54.33065, y: 54.33065, z: 54.33065}
   m_Children:
   - {fileID: 539646083}
@@ -865,7 +865,7 @@ MonoBehaviour:
   constantT: 3
   precisionRadius: 10
   max_velocity: 1
-  velocity: 0
+  velocity: 50
   mass: 1
   smooth: 0
   currForce: {x: 0, y: 0}
@@ -4429,10 +4429,13 @@ MonoBehaviour:
   - {fileID: 1845355658}
   - {fileID: 464930063}
   - {fileID: 255362220}
+  nodesVector3: []
   curve: 1
   markingPrefab: {fileID: 1306399492518983865, guid: 8607f1a117116404581a2b249233a327,
     type: 3}
   pathColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  rotationByPath: 1
+  loop: 1
 --- !u!4 &2084161204
 Transform:
   m_ObjectHideFlags: 0
@@ -4441,7 +4444,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084161202}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -318, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1120277135}

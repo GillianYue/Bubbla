@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 //GO movement
 public class EnemySteering : MonoBehaviour
@@ -24,11 +25,16 @@ public class EnemySteering : MonoBehaviour
 
     public bool smooth; //if true, will not instantly change velocity, but will steer towards ideal velocity
     public Vector2 currForce, target;
-    public enum Mode { pathFollow, seek, escape, pursuit }
+
+    //for curveFollow
+
+    float currentPathPercent;               //current percentage of completing the path
+
+    public enum Mode { pathFollow, curveFollow, seek, escape, pursuit, wait }
     //TODO arrival which slows down when getting close to target, obj never passing the destination
     public Mode movementType;
 
-    //returns force needed to go after the current target node
+    //returns force needed to go after the current target node 
     private Vector2 pathFollowing() {
 
         target = new Vector2();
@@ -77,6 +83,7 @@ public class EnemySteering : MonoBehaviour
     void Start()
     {
         if (path == null) path = pathManager.paths[0];
+        if (path.curve) movementType = Mode.curveFollow; else movementType = Mode.pathFollow;
     }
 
     // Update is called once per frame
@@ -95,6 +102,25 @@ public class EnemySteering : MonoBehaviour
                     moveForce = pathFollowing(); //returns spd clamped force needed to "seek" current target
                 }
                 break;
+            case Mode.curveFollow:
+                currentPathPercent += velocity / 100 * Time.deltaTime;     //every update calculating current path percentage according to the defined speed TODO check variable use here
+
+                transform.position = path.NewPositionByPath(path.nodesVector3, currentPathPercent); //moving the 'Enemy' to the path position, calculated in method NewPositionByPath
+                if (path.rotationByPath)                            //rotating the 'Enemy' in path direction, if set 'rotationByPath'
+                {
+                    transform.right = path.Interpolate(path.CreatePoints(path.nodesVector3), currentPathPercent + 0.01f) - transform.position;
+                    transform.Rotate(Vector3.forward * 90);
+                }
+                if (currentPathPercent > 1)                    //when the path is complete
+                {
+                    if (path.loop)                                   //when loop is set, moving to the path starting point; if not, destroying or deactivating the 'Enemy'
+                        currentPathPercent = 0;
+                    else
+                    {
+                        Destroy(gameObject); //TODO or, linger
+                    }
+                }
+                break;
             case Mode.seek:
                 moveForce = seek(currTarget);
                 break;
@@ -107,6 +133,9 @@ public class EnemySteering : MonoBehaviour
                 moveForce = pursuit(currTarget, targetVelocity,
     dynamicT? (int)(Global.findVectorDist(currTarget, (Vector2)transform.position) / max_velocity) :
     constantT); //dynamic T dependent on distance between the two
+                break;
+            case Mode.wait:
+                moveForce = Vector2.zero;
                 break;
         }
 
@@ -125,6 +154,9 @@ public class EnemySteering : MonoBehaviour
         transform.position = transform.position + (Vector3)currForce;
 
     }
+
+
+
 }
 
 

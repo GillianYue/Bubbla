@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEditor;
 
 public class SteerPath : MonoBehaviour
 {
@@ -10,18 +11,23 @@ public class SteerPath : MonoBehaviour
     public Transform[] pathPoints; //assign points GOs to this array to set the path on start
 
     private ArrayList nodes;
+    public Vector3[] nodesVector3;
     public bool curve; //if curve, interpolate curve; else assumed to be straight lines in between points
 
     public GameObject markingPrefab;
     public Color pathColor = Color.yellow;
 
+    public bool rotationByPath;   //whether 'Enemy' rotates in path direction or not
+    public bool loop;         //if loop is true, 'Enemy' returns to the path starting point after completing the path
+
     void Start()
     {
         if (pathPoints != null)
         {
-            Vector2[] pathPositions = getPointPositions(pathPoints);
+            Vector3[] pathPositions = getPointPositions(pathPoints);
 
             this.nodes = new ArrayList(pathPositions);
+            nodesVector3 = getNodesAsVectorArray();
         }
     }
 
@@ -49,21 +55,21 @@ public class SteerPath : MonoBehaviour
         this.nodes = new ArrayList();
     }
 
-    public SteerPath(Vector2[] list)
+    public SteerPath(Vector3[] list)
     {
         this.nodes = new ArrayList(list);
     }
 
     public SteerPath(Transform[] list)
     {
-        Vector2[] pathPositions = getPointPositions(list);
+        Vector3[] pathPositions = getPointPositions(list);
 
         this.nodes = new ArrayList(pathPositions);
     }
 
-    public Vector2[] getPointPositions(Transform[] list)
+    public Vector3[] getPointPositions(Transform[] list)
     {
-        Vector2[] pathPositions = new Vector2[list.Length];
+        Vector3[] pathPositions = new Vector3[list.Length];
         for (int i = 0; i < list.Length; i++)
         {
             pathPositions[i] = list[i].position;
@@ -72,9 +78,10 @@ public class SteerPath : MonoBehaviour
         return pathPositions;
     }
 
-    public void addNode(Vector2 coord)
+    public void addNode(Vector3 coord)
     {
         nodes.Add(coord);
+        nodesVector3 = getNodesAsVectorArray(); //refresh since length of nodes changed
     }
 
 
@@ -82,6 +89,19 @@ public class SteerPath : MonoBehaviour
     public ArrayList getNodes()
     {
         return nodes;
+    }
+
+    public Vector3[] getNodesAsVectorArray()
+    {
+        Vector3[] list = new Vector3[nodes.Count];
+        int c = 0;
+        foreach(Vector3 point in nodes)
+        {
+            list[c] = point;
+            c++;
+        }
+
+        return list;
     }
 
     /// / ////// //
@@ -121,7 +141,17 @@ public class SteerPath : MonoBehaviour
         }
     }
 
-    Vector3 Interpolate(Vector3[] path, float t)
+
+
+    //// ///  /////// /// functions for curve navigation
+    ///
+
+    public Vector3 NewPositionByPath(Vector3[] pathPos, float percent)
+    {
+        return Interpolate(CreatePoints(pathPos), percent);
+    }
+
+    public Vector3 Interpolate(Vector3[] path, float t)
     {
         int numSections = path.Length - 3;
         int currPt = Mathf.Min(Mathf.FloorToInt(t * numSections), numSections - 1);
@@ -133,7 +163,7 @@ public class SteerPath : MonoBehaviour
         return 0.5f * ((-a + 3f * b - 3f * c + d) * (u * u * u) + (2f * a - 5f * b + 4f * c - d) * (u * u) + (-a + c) * u + 2f * b);
     }
 
-    Vector3[] CreatePoints(Vector3[] path)  //using interpolation method calculating the path along the path points
+    public Vector3[] CreatePoints(Vector3[] path)  //using interpolation method calculating the path along the path points
     {
         Vector3[] pathPositions;
         Vector3[] newPathPos;
