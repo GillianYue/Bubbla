@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //GO movement
-public class Steering : MonoBehaviour
+public class EnemySteering : MonoBehaviour
 {
+
+    [Inject(InjectFrom.Anywhere)]
+    public PathManager pathManager;
+
     //Mode.pathFollow uses:
-    public SteerPath path;
+    public SteerPath path; //the instance of that path, specific to this enemy/GO
     public int currentNode;
     //Mode.seek & Mode.escape & Mode.pursuit uses:
     public Vector2 currTarget; //in world space
@@ -23,8 +27,6 @@ public class Steering : MonoBehaviour
     public enum Mode { pathFollow, seek, escape, pursuit }
     //TODO arrival which slows down when getting close to target, obj never passing the destination
     public Mode movementType;
-
-    public GameObject markingPrefab;
 
     //returns force needed to go after the current target node
     private Vector2 pathFollowing() {
@@ -74,21 +76,12 @@ public class Steering : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (path == null) path = pathManager.paths[0];
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (path == null) path = new SteerPath();
-            Vector3 mouse = Global.ScreenToWorld(Input.mousePosition);
-            path.addNode(mouse);
-            GameObject marking = Instantiate(markingPrefab);
-            marking.transform.position = mouse;
-
-        }
 
         currTarget = Global.ScreenToWorld(Input.mousePosition); //target is set to mouse
 
@@ -134,20 +127,4 @@ public class Steering : MonoBehaviour
     }
 }
 
-public class SteerPath
-{
-    private ArrayList nodes;
- 
-    public SteerPath()
-	{
-        this.nodes = new ArrayList();
-	}
 
-	public void addNode(Vector2 coord){
-        nodes.Add(coord);
-    }
-
-    public ArrayList getNodes(){
-        return nodes;
-    }
-}
