@@ -154,7 +154,7 @@ public class Player : MonoBehaviour
 		if (canShoot && canMove)
 		{
 			StartCoroutine(FireRate());
-
+			Debug.Log("fixed: " + Time.fixedDeltaTime + " normal: " + Time.deltaTime);
 		}
     }
 
@@ -163,7 +163,7 @@ public class Player : MonoBehaviour
 	{
 		setShootAnimation(true);
 
-		canShoot = false;
+		canShoot = false; 
 
 		launchBullet(new Vector3(0, 1), 0, 0, true);
 

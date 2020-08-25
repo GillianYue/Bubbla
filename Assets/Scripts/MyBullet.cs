@@ -19,15 +19,18 @@ public class MyBullet : MonoBehaviour {
 	}
 
 	public void Update () {
-		//acceleration
-		GetComponent<Rigidbody2D> ().velocity += new Vector2 
-			(GetComponent<Rigidbody2D> ().velocity.x * accl,  
-				GetComponent<Rigidbody2D> ().velocity.y *accl);
-
 
 	}
 
-	void OnTriggerEnter2D(Collider2D other){
+    public void FixedUpdate()
+    {
+        //acceleration
+        GetComponent<Rigidbody2D>().velocity += new Vector2
+            (GetComponent<Rigidbody2D>().velocity.x * accl,
+                GetComponent<Rigidbody2D>().velocity.y * accl);
+    }
+
+    void OnTriggerEnter2D(Collider2D other){
         string t = other.GetComponent<Collider2D>().tag;
         //if bullet hits enemy, it bursts and damages enemy
         if (t == "Enemy") {

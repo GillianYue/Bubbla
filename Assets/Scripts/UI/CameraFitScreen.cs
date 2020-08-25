@@ -14,11 +14,14 @@ public class CameraFitScreen : MonoBehaviour
         Vector2 gameViewSize = UnityEditor.Handles.GetMainGameViewSize();
 /*        Debug.Log("gameView size: " + gameViewSize);*/
 
-        float gvRatio = (float)gameViewSize.y / (float)gameViewSize.x;
+        float gvRatio = (float)Screen.height / (float)Screen.width;
 
         GameObject canv = GameObject.FindGameObjectWithTag("Canvas");
-        GetComponent<Camera>().orthographicSize = (gvRatio * Global.MainCanvasWidth / 2)
+        // GetComponent<Camera>().orthographicSize = (gvRatio * Global.MainCanvasWidth / 2)
+        //     /canv.transform.localScale.y;
+         GetComponent<Camera>().orthographicSize = (gvRatio * Screen.width / 2)
             /canv.transform.localScale.y;
+            
         Global.setGlobalConstants(GetComponent<Camera>());
 
 /*        Debug.Log("main canvas width: " + Global.MainCanvasWidth + " canv local scales: " + canv.transform.localScale);*/
@@ -38,29 +41,5 @@ public class CameraFitScreen : MonoBehaviour
     }
 
 
-
-    // supposed to be getting game view resolution; failed to work
-	Vector2 getScreenWidthAndHeightFromEditorGameViewViaReflection()
-	{
-		//Taking game view using the method shown below	
-		var gameView = GetMainGameView();
-		var prop = gameView.GetType().GetProperty("currentGameViewSize", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-		var gvsize = prop.GetValue(gameView, new object[0] { });
-		var gvSizeType = gvsize.GetType();
-
-		//I have 2 instance variable which this function sets:
-		int ScreenHeight = (int)gvSizeType.GetProperty("height", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetValue(gvsize, new object[0] { });
-		int ScreenWidth = (int)gvSizeType.GetProperty("width", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetValue(gvsize, new object[0] { });
-
-        return new Vector2(ScreenHeight, ScreenWidth);
-	}
-
-	UnityEditor.EditorWindow GetMainGameView()
-	{
-		System.Type T = System.Type.GetType("UnityEditor.GameView,UnityEditor");
-		System.Reflection.MethodInfo GetMainGameView = T.GetMethod("GetMainGameView", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-		System.Object Res = GetMainGameView.Invoke(null, null);
-		return (UnityEditor.EditorWindow)Res;
-	}
 
 }
