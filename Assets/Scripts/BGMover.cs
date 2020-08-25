@@ -8,27 +8,38 @@ using System.Collections;
  */
 public class BGMover : MonoBehaviour {
 
-	public float topY, bottomY, startY;
+	public float topY, bottomY;
 	//starting Z coordinate and ending Z coordinate
 	public float scrollSpd;
 	private bool scrollin;
-    private GameObject background;
+    public GameObject[] backgrounds; //will be resized; only assign static 
+    public RectTransform[] scrollTransforms; //need not be in backgrounds
 
 	void Start(){
+        foreach (GameObject background in backgrounds)
+        {
+            Global.resizeSpriteToRectX(background, transform.parent.gameObject); //parent is legit Canvas
+            Global.zeroX(background);
+        }
 
-        background = transform.GetChild(0).gameObject;
-        RectTransform bgRT = background.GetComponent<RectTransform>();
+        bool first = true;
+            foreach (RectTransform rt in scrollTransforms) {
+            GameObject background = rt.gameObject;
 
-        //setting dimensions for child, background (the actual holder of sprite)
-        Global.resizeSpriteToRectX(background, transform.parent.gameObject); //parent is legit Canvas
-        Global.zeroX(background);
+            Global.resizeSpriteToRectX(background, transform.parent.gameObject); //parent is legit Canvas
+            Global.zeroX(background);
 
-        float magicalNumber = background.GetComponent<SpriteRenderer>().sprite.rect.height * bgRT.localScale.y - Global.MainCanvasHeight;
-        //setting limits to bg sprite scroll
-        bottomY = -(magicalNumber);
+            if (first)
+            {
+                //setting limits to bg sprite scroll
+                bottomY = -rt.rect.height;
+                topY = -bottomY;
+            }
 
-        //initialize background starting position
-        bgRT.anchoredPosition = new Vector3(0f, magicalNumber/2, bgRT.localPosition.z);
+            //initialize background starting position
+            rt.anchoredPosition = new Vector3(0f, first? 0 : topY, rt.localPosition.z);
+            first = false;
+        }
     }
 
 	public void StartScrolling () {
@@ -39,19 +50,22 @@ public class BGMover : MonoBehaviour {
 	void Update () {
 
 		if (scrollin) {
-            Vector3 p = transform.localPosition;
-
-            if (p.y <= bottomY)
+            foreach (RectTransform rt in scrollTransforms)
             {
-                //if it goes beyond the lower threshold
-                transform.localPosition = new Vector3(0, topY, p.z);
-                //reset
+                Vector3 p = rt.localPosition;
+
+                if (p.y <= bottomY)
+                {
+                    //if it goes beyond the lower threshold
+                    rt.localPosition = new Vector3(0, topY, p.z);
+                    //reset
+                }
+
+                rt.localPosition -= new Vector3(0, scrollSpd * Time.deltaTime * 100, 0);
+
             }
 
-            transform.localPosition -= new Vector3 (0, scrollSpd * Time.deltaTime * 100, 0);
-			//negative is UP, so
-
-		}
+        }
 	}
 
 	public void stopBGScroll(){
