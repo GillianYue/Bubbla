@@ -13,7 +13,7 @@ public class BGMover : MonoBehaviour {
 	public float scrollSpd;
 	private bool scrollin;
     public GameObject[] backgrounds; //will be resized; only assign static 
-    public RectTransform[] scrollTransforms; //need not be in backgrounds
+    public RectTransform[] scrollTransforms; //need not be in backgrounds; for now, can only rotate between 2
 
 	void Start(){
         foreach (GameObject background in backgrounds)
@@ -72,17 +72,14 @@ public class BGMover : MonoBehaviour {
 		scrollin = false;
 	}
 
-	public void resumeBGScroll(){
-		scrollin = true;
-	}
-
-    public void jumpToPos(float pos)
+    public void revertToStartingPos() //resets all transforms to their starting positions
     {
-        transform.localPosition = new Vector3(0, pos, transform.localPosition.z);
-    }
-
-    public void revertToStartingPos()
-    {
-        transform.localPosition = new Vector3(0, 0, transform.localPosition.z);
+        bool first = true;
+        foreach (RectTransform rt in scrollTransforms)
+        {
+            //initialize background starting position
+            rt.anchoredPosition = new Vector3(0f, first ? 0 : topY, rt.localPosition.z);
+            first = false;
+        }
     }
 }

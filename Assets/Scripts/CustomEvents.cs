@@ -476,11 +476,11 @@ public class CustomEvents : MonoBehaviour
                 GameObject bg = findByIdentifier(id);
                 if (b == 0)
                 {
-                    bg.GetComponent<BGMover>().stopBGScroll();
+                    gameControl.bgManager.setBackgroundsActive(false); //pause
                 }
                 else if (b == 1)
                 {
-                    bg.GetComponent<BGMover>().resumeBGScroll();
+                    gameControl.bgManager.setBackgroundsActive(false); //resume
                 }
                 break;
             case 3:

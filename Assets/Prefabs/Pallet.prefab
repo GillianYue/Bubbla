@@ -96,10 +96,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9cfb0345b3747739b676300c6e1f9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accl: 0.4
+  accl: 0.2
   trail: {fileID: 0}
   explosion: {fileID: 1000010907713660, guid: 09b7e986056ec4d32ada9eaf77fdced1, type: 3}
   damage: 1
+  bulletSpeed: 30
 --- !u!50 &6046763718360734825
 Rigidbody2D:
   serializedVersion: 4

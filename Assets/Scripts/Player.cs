@@ -33,7 +33,6 @@ public class Player : MonoBehaviour
 	private GameObject palletSelectedVFX;
 	private Vector3[] slotPositions; //world locations to place the paint sprites; initialized on start
 
-	public float bulletSpeed;
     private float bulletWeaponDist = 2;
 	private int life;
 
@@ -380,7 +379,7 @@ public class Player : MonoBehaviour
 			anim.SetBool("Shoot", true);
 		}
 
-		//actual shooting
+		//actual shooting of the pellets
 		if (infinite) {
 
 			//normal attack
@@ -398,13 +397,8 @@ public class Player : MonoBehaviour
 			//Debug.Log("shooting one bullet up: dir" + direction + " angle " + angle + " bulletType " + bulletType);
 			if(!infinite) fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
-			bullet.GetComponent<Rigidbody2D> ().
-			velocity = new Vector2 (((direction.y>0)? 10:-10) * Mathf.Sin(angle)*bulletSpeed,
-				((direction.y>0)? 10:-10) * Mathf.Cos(angle)*bulletSpeed);
+			bullet.GetComponent<MyBullet>().setVelocity(direction, angle);
 
-
-			bullet.transform.Rotate (new Vector3(0,0,
-				((direction.y>0)? -1:1) * Mathf.Rad2Deg*angle));
 
 			//apply additional effects
 			if (bulletGaugeSelected != -1)
@@ -456,9 +450,7 @@ public class Player : MonoBehaviour
 				BulletObj[bulletType].transform.rotation) as GameObject;
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
-			bullet.GetComponent<Rigidbody2D> ().
-			velocity = new Vector3 (((direction.y>0)? 1:-1) * Mathf.Sin(angle)*bulletSpeed, 0,
-				((direction.y>0)? 1:-1) * Mathf.Cos(angle)*bulletSpeed);
+				bullet.GetComponent<MyBullet>().setVelocity(direction, angle);
 
 				Color c1 = bulletGauge [bulletGauge.Count - 1];
 				Color c2 = bulletGauge [bulletGauge.Count - 2];

@@ -7,8 +7,9 @@ public class MyBullet : MonoBehaviour {
 	public GameObject trail;
 	public GameObject explosion;
     public int damage = 1;
+    public float bulletSpeed;
 
-	public void Start () {
+    public void Start () {
         if (trail != null)
         {
             GameObject t = trail;
@@ -21,6 +22,16 @@ public class MyBullet : MonoBehaviour {
 	public void Update () {
 
 	}
+
+    public void setVelocity(Vector3 direction, float angle)
+    {
+        GetComponent<Rigidbody2D>().
+            velocity = new Vector2(((direction.y > 0) ? 10 : -10) * Mathf.Sin(angle) * bulletSpeed,
+                ((direction.y > 0) ? 10 : -10) * Mathf.Cos(angle) * bulletSpeed);
+
+        transform.Rotate(new Vector3(0, 0,
+                ((direction.y > 0) ? -1 : 1) * Mathf.Rad2Deg * angle));
+    }
 
     public void FixedUpdate()
     {

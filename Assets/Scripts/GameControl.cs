@@ -44,8 +44,8 @@ public class GameControl : MonoBehaviour {
 
     public GameObject GameOverC;
 
-    public BGMover[] backgrounds;
-    public GameObject fixedBG;
+    [Inject(InjectFrom.Anywhere)]
+    public BGManager bgManager;
 
     [Inject(InjectFrom.Anywhere)]
     public CustomEvents customEvents;
@@ -85,9 +85,6 @@ public class GameControl : MonoBehaviour {
         }
 
         StartCoroutine (StartGame());
-
-        //correct sizing for the backgrounds of this level, fixed or non-fixed
-        if(fixedBG) Global.resizeSpriteToRectX(fixedBG);
 
         //setting mask to the right dimension
         GameObject BGMask = GameObject.FindWithTag("BGMask");
@@ -277,9 +274,7 @@ public class GameControl : MonoBehaviour {
         bool[] esDone = new bool[1]; //a bool[] shared to ps and es so that they can be in sync
        pSpawner.StartSpawn (esDone);  //will end when enemySpawnerDone
         eSpawner.StartSpawn(gFlow, w, e, esDone);
-        foreach(BGMover m in backgrounds){
-            m.StartScrolling ();
-        }
+        bgManager.setBackgroundsActive(true);
         player.GetComponent<Player> ().enabled = true; //generation of heart, updates, etc. 
         foreach (GameObject g in gadgets) {
             g.SetActive (true); //make bullet gauge and life container show
@@ -334,30 +329,16 @@ public class GameControl : MonoBehaviour {
     public void pauseGame()
     {
         Time.timeScale = 0.0f; //stop gameplay
-        stopAllbgMovers();
+        bgManager.setBackgroundsActive(false);
     }
 
     public void resumeGame()
     {
         Time.timeScale = 1.0f; //resume gameplay
-        resumeAllbgMovers();
+        bgManager.setBackgroundsActive(true);
     }
 
-    public void stopAllbgMovers()
-    {
-        foreach (BGMover m in backgrounds)
-        {
-            m.stopBGScroll();
-        }
-    }
 
-    public void resumeAllbgMovers()
-    {
-        foreach (BGMover m in backgrounds)
-        {
-            m.resumeBGScroll();
-        }
-    }
 
     /*
      * a function best called in customized GameOver()s, 

@@ -128,7 +128,7 @@ public class GameFlow : MonoBehaviour {
             if (currMode == Mode.DLG) dialogue.disableDialogueBox(); //if transitioning from dlg to others
                 currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////the actual changing of mode
             if (currMode == Mode.DLG) { dialogue.enableDialogueBox();
-                gameControl.stopAllbgMovers();
+                gameControl.bgManager.setBackgroundsActive(false); //pause
             } //if the new mode is actually dlg
             else if(currMode == Mode.IVS)
             {
