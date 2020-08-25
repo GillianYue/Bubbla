@@ -94,3 +94,10 @@ Temporary Items
 # Logicx .undo files
 .undo
 *.undo.meta
+
+# Unity AssetStore Content
+*/TinyRPGForest/*
+
+# visio temp file
+*/*.~vsdx
+*~*.xlsx

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class projectile : Bullet
+public class projectile : MyBullet
 {
 
     new void Start()
