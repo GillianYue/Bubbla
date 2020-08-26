@@ -286,6 +286,8 @@ public class Global : MonoBehaviour
 
     /*
      * resizes sprite of a gameobj to the rect transform of this gameobj based on its x scale (ignoring y)
+     * 
+     * result: sprite will visually appear in the size of the *original* rect transform width; the rect transform's scale will be modified (both in x and y)
      */
     public static void resizeSpriteToRectX(GameObject obj)
     {
@@ -297,13 +299,16 @@ public class Global : MonoBehaviour
 
     /*
     * resizes sprite of GO sprHolder to the rect transform of rectObj based on its x scale (ignoring y)
+    * 
+    * although spr is usually from SpriteRenderer on sprHolder, there are exception cases: spr on child, spr on SpriteMask, etc. 
+    * And so spr is separated from obj, which will be scaled based on ratio between rectObj dimensions and the sprite
     */
-    public static void resizeSpriteToRectX(GameObject sprHolder, GameObject rectObj)
+    public static void resizeSpriteToRectX(GameObject obj, Sprite spr, GameObject rectObj)
     {
-        Rect sSize = sprHolder.GetComponent<SpriteRenderer>().sprite.rect;
-        var ratio = rectObj.GetComponent<RectTransform>().rect.width / sSize.width;
+        Vector3 sSize = spr.bounds.size;
+        var ratio = rectObj.GetComponent<RectTransform>().rect.width / sSize.x;
         Vector3 scale = new Vector3(ratio, ratio, 1);
-        sprHolder.GetComponent<RectTransform>().localScale = scale;
+        obj.GetComponent<RectTransform>().localScale = scale;
     }
 
     /*
@@ -313,6 +318,14 @@ public class Global : MonoBehaviour
     {
         Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
         var ratio = obj.GetComponent<RectTransform>().rect.height / sSize.y;
+        Vector3 scale = new Vector3(ratio, ratio, 1);
+        obj.GetComponent<RectTransform>().localScale = scale;
+    }
+
+    public static void resizeSpriteToRectY(GameObject obj, Sprite spr, GameObject rectObj)
+    {
+        Vector3 sSize = spr.bounds.size;
+        var ratio = rectObj.GetComponent<RectTransform>().rect.height / sSize.y;
         Vector3 scale = new Vector3(ratio, ratio, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
     }
@@ -329,15 +342,11 @@ public class Global : MonoBehaviour
         obj.GetComponent<RectTransform>().localScale = scale;
     }
 
-    /**
-     * overload method of above;   
-     * There are times when the sprite isn't from SpriteRenderer, in which case the sprite will be provided in param
-     */    
-    public static void resizeSpriteToRectXY(GameObject obj, Sprite spr)
+    public static void resizeSpriteToRectXY(GameObject obj, Sprite spr, GameObject rectObj)
     {
         Vector3 sSize = spr.bounds.size;
-        var ratioX = obj.GetComponent<RectTransform>().rect.width / sSize.x;
-        var ratioY = obj.GetComponent<RectTransform>().rect.height / sSize.y;
+        var ratioX = rectObj.GetComponent<RectTransform>().rect.width / sSize.x;
+        var ratioY = rectObj.GetComponent<RectTransform>().rect.height / sSize.y;
         Vector3 scale = new Vector3(ratioX, ratioY, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
     }
@@ -375,9 +384,9 @@ public class Global : MonoBehaviour
      * is how much bigger or smaller the rectangle is compared to its parent.    
      * 
      */
-    public static void setToRectTransform(GameObject obj, GameObject target)
+    public static void setToRectShape(GameObject obj, GameObject target)
     {
-        setRectTransform(obj, target.GetComponent<RectTransform>().rect.width,
+        setRectShape(obj, target.GetComponent<RectTransform>().rect.width,
            target.GetComponent<RectTransform>().rect.height);
     }
 
@@ -387,7 +396,7 @@ public class Global : MonoBehaviour
      *     
      * only requires the offset values    
      */
-    public static void setRectTransform(GameObject obj,
+    public static void setRectShape(GameObject obj,
    float leftOffset, float rightOffset, float upperOffset, float lowerOffset)
     {
         RectTransform rt = obj.GetComponent<RectTransform>();
@@ -404,13 +413,34 @@ public class Global : MonoBehaviour
      * 
      * This function will set the anchors to be 0-0, 0-0 to keep the sizes fixed.     
      */
-     public static void setRectTransform(GameObject obj, float width, float height)
+     public static void setRectShape(GameObject obj, float width, float height)
     {
         setRectTransformAnchorsIndependent(obj);
         RectTransform rt = obj.GetComponent<RectTransform>();
 
         rt.sizeDelta = new Vector2(width, height);
 
+    }
+
+    /// <summary>
+    /// should be called when one side (x or y) of the rect is ideal, but the other needs to be adjusted based on given ratio
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="widthOverHeightRatio"></param>
+    /// <param name="referX"></param>
+    public static void setRectShape(GameObject obj, float widthOverHeightRatio, bool referX)
+    {
+        RectTransform rt = obj.GetComponent<RectTransform>();
+        if (referX)
+        {
+            float height = rt.rect.width / widthOverHeightRatio;
+            setRectShape(obj, rt.rect.width, height);
+        }
+        else
+        {
+            float width = rt.rect.height * widthOverHeightRatio;
+            setRectShape(obj, width, rt.rect.height);
+        }
     }
 
     /**
@@ -420,7 +450,7 @@ public class Global : MonoBehaviour
      * Note: with a GO that has spriteRenderer, the sprite will not be stretched with
      * width/height! Always scale instead of changing dimensions    
      */
-     public static void setRectTransformX(GameObject obj, GameObject target)
+     public static void copyRectTransformX(GameObject obj, GameObject target)
     {
         RectTransform rt = obj.GetComponent<RectTransform>();
         RectTransform trt = target.GetComponent<RectTransform>();
@@ -428,7 +458,7 @@ public class Global : MonoBehaviour
         float w = trt.rect.width;
         float ratio = (float)w / (float)rt.rect.width;
 
-        setRectTransform(obj, w, rt.rect.height * ratio);
+        setRectShape(obj, w, rt.rect.height * ratio);
     }
 
     /**
@@ -489,22 +519,6 @@ public class Global : MonoBehaviour
 
     }
 
-/*    public static void ScaleAround(GameObject target, Vector3 pivot, Vector3 newScale)
-    {
-        Vector3 A = target.transform.localPosition;
-        Vector3 B = pivot;
-
-        Vector3 C = A - B; // diff from object pivot to desired pivot/origin
-
-        float RS = newScale.x / target.transform.localScale.x; // relataive scale factor
-
-        // calc final position post-scale
-        Vector3 FP = B + C * RS;
-
-        // finally, actually perform the scale/translation
-        target.transform.localScale = newScale;
-        target.transform.localPosition = FP;
-    }*/
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~UI logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

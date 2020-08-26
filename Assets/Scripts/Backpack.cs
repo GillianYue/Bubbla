@@ -30,7 +30,7 @@ public class Backpack : MonoBehaviour
     {
 
         Sprite spr = spriteMask.GetComponent<SpriteMask>().sprite;
-        Global.resizeSpriteToRectXY(spriteMask, spr); //resize itemsMask's spriteMask to its own rect transform
+        Global.resizeSpriteToRectXY(spriteMask, spr, spriteMask); //resize itemsMask's spriteMask to its own rect transform
 
         loadItemMold();
 
@@ -82,7 +82,7 @@ public class Backpack : MonoBehaviour
         GameObject items = itemBG.transform.parent.gameObject; RectTransform itmRT = items.GetComponent<RectTransform>();
 
 
-            Global.setRectTransform(items, itmRT.rect.width,
+            Global.setRectShape(items, itmRT.rect.width,
                 (numGrids / nc) * 100 + 20); //so that items' rect always fits perfectly the grids that are created
 
         itmRT.pivot = new Vector2(0, 1); //center properly

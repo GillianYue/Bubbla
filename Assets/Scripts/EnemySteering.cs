@@ -90,7 +90,7 @@ public class EnemySteering : MonoBehaviour
     void Update()
     {
 
-        currTarget = Global.ScreenToWorld(Input.mousePosition); //target is set to mouse
+        //currTarget = Global.ScreenToWorld(Input.mousePosition); //target is set to mouse
 
         Vector2 moveForce = new Vector2(); //0,0
 

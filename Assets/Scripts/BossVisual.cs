@@ -28,11 +28,6 @@ public class BossVisual : MonoBehaviour
 	//that collider is on index 0, and is disabled (need not be used in principle??)
         polyColliders = transform.GetComponentsInChildren<PolygonCollider2D>(true);
 
-        foreach(PolygonCollider2D p in polyColliders)
-        {
-            Debug.Log("parent name: " + p.name);
-
-        }
 
         //aoc = new AnimatorOverrideController(myAnimator.runtimeAnimatorController);
         switchToCollider(1); //defaults to one

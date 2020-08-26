@@ -45,12 +45,14 @@ public class CSVReader : MonoBehaviour
 
 		// creates new 2D string grid to output to
 		string[,] outputGrid = new string[width, matchLineWithExcel? lines.Length : lines.Length-1];
+        // Debug.Log("grid array size " + width + " " + lines.Length);
 
         outputGrid[0, 0] = ""; // row 0 in data has no data, and exists for the sake of consistency between Excel and pointer values";
 
 		for (int r = 0; r < lines.Length-1; r++)
 		{
 			string[] row = SplitCsvLine( lines[r] );
+			// Debug.Log("row length: " + row.Length);
 			for (int c = 0; c < row.Length; c++) 
 			{
                 if(matchLineWithExcel)

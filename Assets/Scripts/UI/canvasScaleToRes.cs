@@ -17,10 +17,10 @@ public class canvasScaleToRes : MonoBehaviour
         Vector2 gameViewSize = UnityEditor.Handles.GetMainGameViewSize();
         Debug.Log("Game View resolution: " + gameViewSize);
         //setting black border background to exactly the size of resolution
-        Global.setRectTransform(blackSpace, gameViewSize.x, gameViewSize.y);
+        Global.setRectShape(blackSpace, gameViewSize.x, gameViewSize.y);
 
         //the main canvas' dimension is constant, independent of resolution.
-        Global.setRectTransform(gameObject, Global.MainCanvasWidth, 
+        Global.setRectShape(gameObject, Global.MainCanvasWidth, 
             Global.MainCanvasHeight);
     }
 

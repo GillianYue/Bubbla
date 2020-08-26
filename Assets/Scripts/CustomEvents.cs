@@ -323,10 +323,11 @@ public class CustomEvents : MonoBehaviour
      */
     public IEnumerator changeAnimState(bool[] done, string[] prms)
     {
-        //look in identified for an identifier with the right id and return its gameObject
-        GameObject target = findByIdentifier(prms[0]);
-        Animator anim = target.GetComponent<Animator>();
-        SpriteRenderer spr = target.GetComponent<SpriteRenderer>();
+            //look in identified for an identifier with the right id and return its gameObject
+            GameObject target = findByIdentifier(prms[0]);
+            Animator anim = target.GetComponent<Animator>();
+            SpriteRenderer spr = target.GetComponent<SpriteRenderer>();
+
         Color orig = spr.color;
         float origA = orig.a;
 
@@ -365,7 +366,8 @@ public class CustomEvents : MonoBehaviour
             }
         }
         done[0] = true;
-    }
+
+        }
 
     /*
      * event #7

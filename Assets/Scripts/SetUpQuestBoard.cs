@@ -117,7 +117,7 @@ public class SetUpQuestBoard : MonoBehaviour {
 		
 		float height = GetComponent<RectTransform> ().rect.height;
 
-        Global.setRectTransform(q, 0, 0, -which * (questHeight) - 2,
+        Global.setRectShape(q, 0, 0, -which * (questHeight) - 2,
             height - (which + 1) * questHeight);
 
 			//q.GetComponent<RectTransform> ().offsetMax = 
