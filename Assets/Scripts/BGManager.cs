@@ -13,8 +13,6 @@ public class BGManager : MonoBehaviour
 
     void Start()
     {
-        //correct sizing for the backgrounds of this level, fixed or non-fixed
-        if (fixedBG) Global.resizeSpriteToRectX(fixedBG);
     }
 
     // Update is called once per frame

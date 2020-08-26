@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//not in use
 public class canvasScaleToRes : MonoBehaviour
 {
     /**

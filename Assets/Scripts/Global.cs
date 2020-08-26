@@ -278,7 +278,8 @@ public class Global : MonoBehaviour
     public static void resizeSpriteToDLG(GameObject character, GameObject DLGbg)
     {
         Vector3 sSize = character.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        var ratio = DLGbg.GetComponent<RectTransform>().rect.height / sSize.y;
+        RectTransform rt = DLGbg.GetComponent<RectTransform>();
+        var ratio = rt.rect.height * rt.localScale.y / sSize.y;
         Vector3 scale = new Vector3(ratio, ratio, 1);
         scale *= 0.98f; //this is because DLG background isn't a perfect rect, so sprite should be a little smaller
         character.GetComponent<RectTransform>().localScale = scale;
@@ -292,8 +293,11 @@ public class Global : MonoBehaviour
     public static void resizeSpriteToRectX(GameObject obj)
     {
         Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        var ratio = obj.GetComponent<RectTransform>().rect.width / sSize.x;
-        Vector3 scale = new Vector3(ratio, ratio, 1);
+        RectTransform rt = obj.GetComponent<RectTransform>();
+        var ratio = rt.rect.width * rt.lossyScale.x / sSize.x; //needs to find "true size" of rectTransform vs true sprite size
+
+        Vector3 gs = obj.transform.parent.lossyScale; //the original global scale of the current obj's parent, in order to offset difference
+        Vector3 scale = new Vector3(ratio / gs.x, ratio / gs.y, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
     }
 
@@ -306,8 +310,13 @@ public class Global : MonoBehaviour
     public static void resizeSpriteToRectX(GameObject obj, Sprite spr, GameObject rectObj)
     {
         Vector3 sSize = spr.bounds.size;
-        var ratio = rectObj.GetComponent<RectTransform>().rect.width / sSize.x;
-        Vector3 scale = new Vector3(ratio, ratio, 1);
+        RectTransform rt = rectObj.GetComponent<RectTransform>();
+        var ratio = rt.rect.width * rt.lossyScale.x / (sSize.x);
+        // Debug.Log("rect width: " + rt.rect.width + " scale " + rt.lossyScale.x);
+
+        Vector3 gs = obj.transform.parent.lossyScale; 
+        //bc the ratios calculated are only valid for a sprite with no parent/lossy scale 1 in the world; we need to adjust for that
+        Vector3 scale = new Vector3(ratio / gs.x, ratio / gs.y, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
     }
 
@@ -317,16 +326,22 @@ public class Global : MonoBehaviour
     public static void resizeSpriteToRectY(GameObject obj)
     {
         Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        var ratio = obj.GetComponent<RectTransform>().rect.height / sSize.y;
-        Vector3 scale = new Vector3(ratio, ratio, 1);
+        RectTransform rt = obj.GetComponent<RectTransform>();
+        var ratio = rt.rect.height * rt.lossyScale.y / sSize.y;
+
+        Vector3 gs = obj.transform.parent.lossyScale;
+        Vector3 scale = new Vector3(ratio / gs.x, ratio / gs.y, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
     }
 
     public static void resizeSpriteToRectY(GameObject obj, Sprite spr, GameObject rectObj)
     {
         Vector3 sSize = spr.bounds.size;
-        var ratio = rectObj.GetComponent<RectTransform>().rect.height / sSize.y;
-        Vector3 scale = new Vector3(ratio, ratio, 1);
+        RectTransform rt = rectObj.GetComponent<RectTransform>();
+        var ratio = rt.rect.height * rt.lossyScale.y / sSize.y;
+
+        Vector3 gs = obj.transform.parent.lossyScale; 
+        Vector3 scale = new Vector3(ratio / gs.x, ratio / gs.y, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
     }
 
@@ -336,18 +351,24 @@ public class Global : MonoBehaviour
     public static void resizeSpriteToRectXY(GameObject obj)
     {
         Vector3 sSize = obj.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        var ratioX = obj.GetComponent<RectTransform>().rect.width / sSize.x;
-        var ratioY = obj.GetComponent<RectTransform>().rect.height / sSize.y;
-        Vector3 scale = new Vector3(ratioX, ratioY, 1);
+        RectTransform rt = obj.GetComponent<RectTransform>();
+        var ratioX = rt.rect.width * rt.lossyScale.x / sSize.x;
+        var ratioY = rt.rect.height * rt.lossyScale.y / sSize.y;
+
+        Vector3 gs = obj.transform.parent.lossyScale;
+        Vector3 scale = new Vector3(ratioX / gs.x, ratioY / gs.y, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
     }
 
     public static void resizeSpriteToRectXY(GameObject obj, Sprite spr, GameObject rectObj)
     {
         Vector3 sSize = spr.bounds.size;
-        var ratioX = rectObj.GetComponent<RectTransform>().rect.width / sSize.x;
-        var ratioY = rectObj.GetComponent<RectTransform>().rect.height / sSize.y;
-        Vector3 scale = new Vector3(ratioX, ratioY, 1);
+        RectTransform rt = rectObj.GetComponent<RectTransform>();
+        var ratioX = rt.rect.width * rt.lossyScale.x / sSize.x;
+        var ratioY = rt.rect.height * rt.lossyScale.y / sSize.y;
+
+        Vector3 gs = obj.transform.parent.lossyScale;
+        Vector3 scale = new Vector3(ratioX / gs.x, ratioY / gs.y, 1);
         obj.GetComponent<RectTransform>().localScale = scale;
     }
 

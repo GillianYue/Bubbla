@@ -153,7 +153,6 @@ public class Player : MonoBehaviour
 		if (canShoot && canMove)
 		{
 			StartCoroutine(FireRate());
-			Debug.Log("fixed: " + Time.fixedDeltaTime + " normal: " + Time.deltaTime);
 		}
     }
 
