@@ -5,9 +5,12 @@ public class MyBullet : MonoBehaviour {
 	
 	public float accl;
 	public GameObject trail;
-	public GameObject explosion;
     public int damage = 1;
     public float bulletSpeed;
+    public PaintballBehavior.ColorMode myColor;
+
+    [Inject(InjectFrom.Anywhere)]
+    public PrefabHolder prefabHolder;
 
     public void Start () {
         if (trail != null)
@@ -45,18 +48,44 @@ public class MyBullet : MonoBehaviour {
         string t = other.GetComponent<Collider2D>().tag;
         //if bullet hits enemy, it bursts and damages enemy
         if (t == "Enemy") {
-			if (explosion != null) {
-				Instantiate (explosion, transform.position, transform.rotation);
-				other.GetComponent<Enemy> ().damage (damage, 
+
+                GameObject explosionPrefab;
+                Enemy e = other.GetComponent<Enemy>();
+
+                switch (myColor)
+                {
+                    case PaintballBehavior.ColorMode.RED:
+                        explosionPrefab = prefabHolder.palletExplosionRed;
+                        e.triggerBuff(Enemy.BuffMode.burn);
+                        break;
+                    case PaintballBehavior.ColorMode.BLUE:
+                        explosionPrefab = prefabHolder.palletExplosionBlue;
+                        e.triggerBuff(Enemy.BuffMode.freeze);
+                        break;
+                    case PaintballBehavior.ColorMode.YELLOW:
+                    explosionPrefab = prefabHolder.palletExplosionYellow;
+                        break;
+                    default:
+                        explosionPrefab = prefabHolder.palletExplosion;
+                        break;
+
+                }
+				Instantiate (explosionPrefab, transform.position, transform.rotation);
+				e.damage (damage, 
 					gameObject.GetComponent<SpriteRenderer>().color);
 				Destroy (gameObject);
-			}
 		}else if(t == "Boss")
         {
             other.transform.parent.GetComponent<BossBehavior>().damage(damage,
-    gameObject.GetComponent<SpriteRenderer>().color);
+        gameObject.GetComponent<SpriteRenderer>().color);
             Destroy(gameObject);
         }
 
 	}
+
+    public void setBulletColor(PaintballBehavior.ColorMode col)
+    {
+        GetComponent<SpriteRenderer>().color = PaintballBehavior.colorDict[col];
+        myColor = col;
+    }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//"enemy bullet"
 public class projectile : MyBullet
 {
 
@@ -28,10 +29,9 @@ public class projectile : MyBullet
         //if projectile hits player, should damage player 
         if (other.GetComponent<Collider2D>().tag == "Player")
         {
-            if (explosion != null)
-            {
-                Instantiate(explosion, transform.position, transform.rotation);
-            }
+
+                Instantiate(prefabHolder.palletExplosion, transform.position, transform.rotation);
+
             other.GetComponent<Player>().damage(damage);
             Destroy(gameObject);
 

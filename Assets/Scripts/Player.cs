@@ -11,12 +11,16 @@ public class Player : MonoBehaviour
     public enum Mode { ACCL, TOUCH, FREEZE };
     public Mode navigationMode;
 
-    public static List<Color> bulletGauge;
+    public static List<PaintballBehavior.ColorMode> bulletGauge;
 	public Text lifeText;
-	public GameObject PaintSpriteObj, BulletGaugeObj, BulletCont, BulletContCenter, BulletContBase; /* bullet container; base marks the top left corner of container for touch checking*/
-	public GameObject[] BulletObj, bulletGaugeMasks; //pivots are children of obj "Pivots" in scene to help locate the top center of masks
+	public GameObject BulletGaugeObj, BulletCont, BulletContCenter, BulletContBase; /* bullet container; base marks the top left corner of container for touch checking*/
+	public GameObject[] bulletGaugeMasks; //pivots are children of obj "Pivots" in scene to help locate the top center of masks
 	public RectTransform borderRect; //used to check for clicked bullet index
 	public float bulletGaugeMaskMaxScaleY;
+
+	//prefabs
+	private GameObject PaintSpritePrefab, palletSelectedVFXPrefab;
+	private GameObject[] BulletPrefabs;
 
 	public List<GameObject> PaintSprites;
 	public int bulletGaugeCapacity; // *number* of pbs allowed in the container
@@ -29,7 +33,7 @@ public class Player : MonoBehaviour
 	public bool canShoot = true, //bool for firing at a rate
 		canSelect = true, 
 		canMove = true; //toggled by UI bulletGauge select
-	public GameObject palletSelectedVFXPrefab;
+
 	private GameObject palletSelectedVFX;
 	private Vector3[] slotPositions; //world locations to place the paint sprites; initialized on start
 
@@ -39,6 +43,9 @@ public class Player : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public GameControl gameControl;
 	private AudioSource[] fire, ouch;
+
+	[Inject(InjectFrom.Anywhere)]
+	public PrefabHolder prefabHolder;
 
 	private Animator anim;
 
@@ -55,8 +62,9 @@ public class Player : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+
 		life = maxLife;
-		bulletGauge = new List<Color> ();
+		bulletGauge = new List<PaintballBehavior.ColorMode> ();
 		PaintSprites = new List<GameObject> ();
 
 		slotPositions = new Vector3[bulletGaugeCapacity];
@@ -95,7 +103,12 @@ public class Player : MonoBehaviour
 			m.transform.localScale = new Vector3(m.transform.localScale.x, 0.0001f, m.transform.localScale.z);
         }
 
-		
+
+		//locate prefabs
+		PaintSpritePrefab = prefabHolder.gaugePaintSprite;
+		palletSelectedVFXPrefab = prefabHolder.gaugeSelectedHalo;
+		BulletPrefabs = prefabHolder.pallets;
+
 
 	}
 	
@@ -332,7 +345,7 @@ public class Player : MonoBehaviour
 		if (palletSelectedVFX) Destroy(palletSelectedVFX);
 	}
 
-	public bool addPaint(Color c, int capacity){
+	public bool addPaint(PaintballBehavior.ColorMode c, int capacity){
 		//first check for space within slots that are already occupied
 		int remainder = capacity; //indicates extra amount that might/not be added as a new slot of the same color
 
@@ -355,7 +368,7 @@ public class Player : MonoBehaviour
 				int index = bulletGauge.Count - 1;
 
 				setGaugeContent(index, remainder);
-				addPaintSprite(c);
+				addPaintSprite(PaintballBehavior.colorDict[c]);
 			}
 			return true;
 		} else {
@@ -390,13 +403,14 @@ public class Player : MonoBehaviour
 			pos.z = 5;
 			//from cannon's position plus a little bit of delta x and y to find the firing pos
 
-			GameObject bullet = Instantiate(BulletObj[bulletType], pos,
-				                   BulletObj[bulletType].transform.rotation) as GameObject;
+			GameObject bullet = Instantiate(BulletPrefabs[bulletType], pos,
+								   BulletPrefabs[bulletType].transform.rotation) as GameObject;
 
 			//Debug.Log("shooting one bullet up: dir" + direction + " angle " + angle + " bulletType " + bulletType);
 			if(!infinite) fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
-			bullet.GetComponent<MyBullet>().setVelocity(direction, angle);
+			MyBullet bulletScript = bullet.GetComponent<MyBullet>();
+			bulletScript.setVelocity(direction, angle);
 
 
 			//apply additional effects
@@ -404,7 +418,7 @@ public class Player : MonoBehaviour
 			{
 				//applying special effects to attack; subtracting from the gauge of that pb
 
-				bullet.GetComponent<SpriteRenderer>().color = bulletGauge[bulletGaugeSelected];
+				bullet.GetComponent<SpriteRenderer>().color = PaintballBehavior.colorDict[bulletGauge[bulletGaugeSelected]];
 
 				decrementGaugeCapacity(bulletGaugeSelected, 1);
 
@@ -434,8 +448,8 @@ public class Player : MonoBehaviour
 		}
 		anim.SetBool ("Shoot", true);
 
-			float d = Global.find2ColorDist (bulletGauge [bulletGauge.Count - 1],
-				          bulletGauge [bulletGauge.Count - 2]);
+			float d = Global.find2ColorDist (PaintballBehavior.colorDict[bulletGauge[bulletGauge.Count - 1]],
+						  PaintballBehavior.colorDict[bulletGauge [bulletGauge.Count - 2]]);
 		//actual shooting
 			if (d<3) { //if colors r actually close enough
 			Vector3 pos = transform.position;
@@ -445,14 +459,14 @@ public class Player : MonoBehaviour
 				Mathf.Cos (angle) * (32 * Global.STWfactor.y);
 			//from cannon's position plus a little bit of delta x and y to find the firing pos
 
-			GameObject bullet = Instantiate (BulletObj[bulletType], pos,
-				BulletObj[bulletType].transform.rotation) as GameObject;
+			GameObject bullet = Instantiate (BulletPrefabs[bulletType], pos,
+				BulletPrefabs[bulletType].transform.rotation) as GameObject;
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
 				bullet.GetComponent<MyBullet>().setVelocity(direction, angle);
 
-				Color c1 = bulletGauge [bulletGauge.Count - 1];
-				Color c2 = bulletGauge [bulletGauge.Count - 2];
+				Color c1 = PaintballBehavior.colorDict[bulletGauge [bulletGauge.Count - 1]];
+				Color c2 = PaintballBehavior.colorDict[bulletGauge [bulletGauge.Count - 2]];
 			bullet.GetComponent<SpriteRenderer> ().color 
 				= new Color ((c1.r+c2.r)/2, (c1.g+c2.g)/2, (c1.b+c2.b)/2);
 			bullet.transform.Rotate (new Vector3(0,0,
@@ -607,10 +621,11 @@ public class Player : MonoBehaviour
 		if (PaintSprites.Count < bulletGaugeCapacity)
 		{
 
-			GameObject ps = PaintSpriteObj;
-			PaintSprites.Add(Instantiate(ps, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject);
-
-			PaintSprites[PaintSprites.Count - 1].transform.parent = BulletCont.transform; //bulletContainer
+			GameObject ps = Instantiate(PaintSpritePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
+			Debug.Log("lossy scale of paint sprite: " + ps.transform.lossyScale);
+			ps.transform.parent = BulletCont.transform; //bulletContainer
+			Debug.Log("lossy scale of paint sprite: " + ps.transform.lossyScale);
+			PaintSprites.Add(ps);
 
 			int index = bulletGauge.Count - 1; //spot to add to
 

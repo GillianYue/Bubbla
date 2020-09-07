@@ -11,6 +11,10 @@ public class Enemy : MonoBehaviour {
     public float sizeScale; //same as paintball, base scale to be multiplied with global
     public float colliderScale; //multiplied to the original generated polygon 2d collider shape to resize
 
+	public enum BuffMode { burn, freeze, none };
+	public BuffMode debuff = BuffMode.none;
+	IEnumerator currBuffProcess;
+
 	// Use this for initialization
 	void Start () {
 		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
@@ -81,4 +85,69 @@ public class Enemy : MonoBehaviour {
         }
         GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
     }
+
+	public void triggerBuff(BuffMode b)
+    {
+		if (currBuffProcess != null) StopCoroutine(currBuffProcess);
+		debuff = b;
+
+        switch (b)
+        {
+			case BuffMode.burn:
+				currBuffProcess = burnDuration();
+				StartCoroutine(currBuffProcess);
+				break;
+			case BuffMode.freeze:
+				currBuffProcess = freezeDuration();
+				StartCoroutine(currBuffProcess);
+				break;
+			default:
+				Debug.Log("buff case not recognized");
+				break;
+		}
+    }
+
+	IEnumerator burnDuration()
+    {
+		life -= 3; //TODO edit
+				   //TODO sound effect
+		//TODO instantiate vfx here
+		yield return new WaitForSeconds(2);
+    }
+
+	IEnumerator freezeDuration()
+    {
+		//sfx, vfx
+		yield return new WaitForSeconds(3);
+		debuff = BuffMode.none; //cancels after duration
+    }
+
+	IEnumerator poisonDuration()
+    {
+		for(int count = 0; count < 3; count++) { 
+		life -= 1;
+			//TODO sound effect
+		bool[] done = new bool[1];
+		StartCoroutine(poisonDamageEffect(this.gameObject, done));
+		yield return new WaitUntil(() => done[0]);
+
+		yield return new WaitForSeconds(1.0f);
+		}
+	}
+
+
+	public static IEnumerator poisonDamageEffect(GameObject go, bool[] done)
+    {
+		Vector3 origPos = go.transform.position;
+		go.transform.position = origPos + new Vector3(10, 0, 0);
+		yield return new WaitForSeconds(0.3f);
+		go.transform.position = origPos - new Vector3(10, 0, 0);
+		yield return new WaitForSeconds(0.3f);
+		go.transform.position = origPos;
+
+		done[0] = true;
+	}
+
+
+
 }

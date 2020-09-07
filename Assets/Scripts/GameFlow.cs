@@ -175,11 +175,13 @@ public class GameFlow : MonoBehaviour {
                         parameters[p] = data[p+3, pointer];
                     }
                     customEvents.customEvent(indexCE, parameters);
-                } else {
+                } else { //spawn wave
                     string[] waves = data[1, pointer].Split(',');
                     string[] enemies = data[2, pointer].Split(',');
                     string[] colorModes = data[3, pointer].Split(',');
                     string[] colorModeWeights = data[4, pointer].Split(',');
+
+                    bool loop = data[5, pointer].Equals("TRUE");
 
                     List<(PaintballBehavior.ColorMode, float)> tempList = new List<(PaintballBehavior.ColorMode, float)>();
                     for(int i=0; i < colorModes.Length; i++)

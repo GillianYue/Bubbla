@@ -540,6 +540,18 @@ public class Global : MonoBehaviour
 
     }
 
+    public static void SetGlobalScale(Transform t, Vector3 globalScale)
+    {
+        t.localScale = Vector3.one;
+        t.localScale = new Vector3(globalScale.x / t.lossyScale.x, globalScale.y / t.lossyScale.y, globalScale.z / t.lossyScale.z);
+    }
+
+    public static void SetGlobalScale(RectTransform t, Vector3 globalScale)
+    {
+        t.localScale = Vector3.one;
+        t.localScale = new Vector3(globalScale.x / t.lossyScale.x, globalScale.y / t.lossyScale.y, globalScale.z / t.lossyScale.z);
+    }
+
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~UI logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

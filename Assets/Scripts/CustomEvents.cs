@@ -24,6 +24,9 @@ public class CustomEvents : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public PaintballSpawner pSpawner;
 
+    [Inject(InjectFrom.Anywhere)]
+    public BGMover bgMover;
+
     protected GameObject vfxCanvas;
     public LevelScript levelScript;
 
@@ -116,6 +119,9 @@ public class CustomEvents : MonoBehaviour
                 break;
             case 31:
                 conditionalSwitch(done, prms);
+                break;
+            case 32:
+                swapBGScrollAndWaitForFinish(done, prms);
                 break;
             case 99:
                 levelScriptEvent(done, prms);
@@ -720,7 +726,7 @@ public class CustomEvents : MonoBehaviour
      *      -1: range comparison (only for integers, e.g. values 2,5,7 with lines 11,12,13 will operated under ranges
      *      2-5, 5-7 and 7+, which means a value of 4 of the variable will set the pointer to 11)
      *      -2: multiple variable fitting (checks for one case for multiple variables, that is, whether they are all
-     *      equal to the values provided in param 3. Param 4 will contain two lines, the first is for if all fit, the
+     *      equal to the values provided in param 3. Param 4 will contain values for two line pointers, the first is for if all fit, the
      *      second for otherwise --e.g. a,b,c varNames, 0,0,1 varTypes, true, false, 3 varValues, 11,13 lines. If a==true,
      *      b==false and c==3, will point to line 11, otherwise point to 13.
      * param 3: the values of each case, separated by comma
@@ -906,6 +912,24 @@ public class CustomEvents : MonoBehaviour
         }
 
 
+        done[0] = true;
+    }
+
+    /*
+     * event #32
+     * 
+     * swaps the upcoming background pic to indexed spot pic, yields done so that other stuff can execute, meanwhile wait for 
+     * the spot pic to scroll until reaches top (the wait is done inside bgMover's IEnumerator), sets designated bool to true
+     * 
+     * param 0: name for bool to be created that will be set to true when the spot bg finishes its scroll duration (needs another event to check)
+     * param 1: index of spot bg in bgMover (lingerSpots)
+     * 
+     */
+    public void swapBGScrollAndWaitForFinish(bool[] done, string[] prms)
+    {
+        int index;
+        int.TryParse(prms[1], out index);
+        bgMover.swapScroll(prms[0], index);
         done[0] = true;
     }
 

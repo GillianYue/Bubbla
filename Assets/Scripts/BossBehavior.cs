@@ -45,7 +45,9 @@ public abstract class BossBehavior : MonoBehaviour
     /// The way it works: say we have upper (x:200, y:300) and lower (x:100, y: 50), it would mean that the boss's activity is limited within
     /// +300 to -50 vertically, and +200 and -100 horizontally
     /// </summary>
-    public Vector2 hoverBoundsUpper, hoverBoundsLower; 
+    public Vector2 hoverBoundsUpper, hoverBoundsLower;
+
+    public Enemy.BuffMode debuff; //uses the same system as a normal enemy
 
     public void Start()
     {

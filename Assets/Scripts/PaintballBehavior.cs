@@ -22,7 +22,7 @@ public class PaintballBehavior : MonoBehaviour {
 	//public static float mxD; //distance on 3D RGBcube to the given "standard" color// public static Color standard;
 
 	/// <summary>
-	/// standards: a list of tuples ascending in the weights of the colors. 
+	/// standards: a list of tuples ascending in the weights of the colors. Effective to all pb spawned
 	/// 
 	/// e.g. 0: (RED, 0.3f); 1: (BLUE, 0.5f); 2: (YELLOW: 1.0f) means any random pb has 30% chance of being red, 20% blue and 50% yellow.
 	/// </summary>
@@ -109,7 +109,7 @@ public class PaintballBehavior : MonoBehaviour {
 				myVFX.transform.localScale = new Vector3(getScale(), getScale(), getScale());
                 audioz.paintballExplosionSE ();
 				myVFX.GetComponent<SpriteRenderer> ().color = color;
-				other.GetComponent<Player>().addPaint(color, size*20);
+				other.GetComponent<Player>().addPaint(myColor, size*20);
 				Destroy (gameObject);
 			}
 		}else if(other.GetComponent<Collider2D>().tag == "Bullet")

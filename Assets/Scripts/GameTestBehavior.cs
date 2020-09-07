@@ -57,4 +57,14 @@ public class GameTestBehavior : MonoBehaviour
         }
 
     }
+
+    public void pauseGame()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void resumeGame()
+    {
+        Time.timeScale = 1;
+    }
 }

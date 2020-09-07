@@ -160,9 +160,7 @@ public class EnemySpawner : MonoBehaviour {
 
         Vector3 spawnPosition = new Vector3 (x, y, z);
         e.transform.position = spawnPosition;
-
         e.transform.parent = enemiez.transform;
-
         return e;
     }
         

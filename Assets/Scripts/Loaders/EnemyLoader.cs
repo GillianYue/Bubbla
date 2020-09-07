@@ -49,6 +49,7 @@ public class EnemyLoader : MonoBehaviour
 
         GameObject e = Instantiate(enemyMold) as GameObject; //duplicate
         Animator animator = e.GetComponent<Animator>();
+        Debug.Log("lossy scale of e: " + e.transform.lossyScale);
 
         AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
 
@@ -81,7 +82,7 @@ public class EnemyLoader : MonoBehaviour
     void loadEnemyMold()
     {
         enemyMold = Resources.Load("EnemyMold") as GameObject;
-        if (enemyMold == null) Debug.LogError("load EnemyMold failed");
+        if (enemyMold == null) Debug.LogError("load EnemyMold failed"); Debug.Log("lossy scale of e: " + enemyMold.transform.lossyScale);
     }
 
     IEnumerator parseEnemyData()

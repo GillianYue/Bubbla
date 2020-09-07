@@ -34,10 +34,13 @@ public class GameControl : MonoBehaviour {
     public GameObject Hs_Holder, Ballz; //ballz is the empty parent GO holding all paintballs
     //Hs_holder likewise for hearts
 
-    public GameObject[] hearts, gadgets, icons, interactables; //gadgets being hearts_container, bulletGauge, etc.
+    public GameObject[] gadgets, icons, interactables; //gadgets being hearts_container, bulletGauge, etc.
     //icons being interactive UI that if pressed, should avoid any gameplay logic being carried out
-    public GameObject HeartVFX, aim;
     public GameObject player;
+
+    //prefabs
+    private GameObject HeartPopVFX, aim;
+    private GameObject[] hearts;
 
     //retrieved from player
     public Player p;
@@ -46,6 +49,8 @@ public class GameControl : MonoBehaviour {
 
     [Inject(InjectFrom.Anywhere)]
     public BGManager bgManager;
+    [Inject(InjectFrom.Anywhere)]
+    public PrefabHolder prefabHolder;
 
     [Inject(InjectFrom.Anywhere)]
     public CustomEvents customEvents;
@@ -64,6 +69,9 @@ public class GameControl : MonoBehaviour {
 
     [Inject(InjectFrom.Anywhere)]
     public Backpack backpack;
+
+    [Inject(InjectFrom.Anywhere)]
+    public GameTestBehavior testBehav;
 
     private float pressTime=-1;
     public bool ckTouch = true;
@@ -100,9 +108,13 @@ public class GameControl : MonoBehaviour {
 
         p = player.GetComponent<Player>();
 
+        //locate prefabs
+        HeartPopVFX = prefabHolder.heartPop;
+        hearts = prefabHolder.hearts;
+        aim = prefabHolder.aim;
+
     }
 
-    // Update is called once per frame
     void Update () {
 
         if (sceneType == Mode.GAME) 
@@ -318,7 +330,7 @@ public class GameControl : MonoBehaviour {
             } else if (dif < 0) {//needs to destroy hearts sprites
             for (int c = 0; c > dif; c--) {
                 Instantiate 
-                (HeartVFX, Hs_Holder.transform.GetChild (0).position, 
+                (HeartPopVFX, Hs_Holder.transform.GetChild (0).position, 
                     Hs_Holder.transform.GetChild (0).rotation);
                 Destroy (Hs_Holder.transform.GetChild (0).gameObject);
             }
