@@ -102,6 +102,9 @@ public class CustomEvents : MonoBehaviour
             case 8:
                 setScriptBoolean(done, prms);
                 break;
+            case 9:
+                StartCoroutine(waitUntil(done, prms));
+                break;
             case 10:
                 moveTo(done, prms);
                 break;
@@ -502,6 +505,50 @@ public class CustomEvents : MonoBehaviour
     }
 
     /*
+     * event #9
+     * 
+     * similar to a conditional switch, only that there are no line pointers and that only two possible outcomes exist:
+     * either the conditions are met and line pointer will be incremented by one, or conditions are not met and the game 
+     * will wait until condition is met
+     * 
+     * param 0: variable type
+     *      -0: bool
+     *      -1: integer
+     *      -2: string
+     * param 1: string to identify this variable
+     * param 2: comparison type
+     *      -0: exact value comparison
+     *      -2: multiple variable fitting (checks for one case for multiple variables, that is, whether they are all
+     *      equal to the values provided in param 3. Param 4 will contain values for two line pointers, the first is for if all fit, the
+     *      second for otherwise --e.g. a,b,c varNames, 0,0,1 varTypes, true, false, 3 varValues, 11,13 lines. If a==true,
+     *      b==false and c==3, will point to line 11, otherwise point to 13.
+     * param 3: the values of each case, separated by comma
+     * optional param 4: line number to go to when conditions are met (if left blank, assumes is next line)
+     * 
+     * 
+     */
+    public IEnumerator waitUntil(bool[] done, string[] prms)
+    {
+        string[] newParams = new string[5];
+        for (int i = 0; i < prms.Length; i++) newParams[i] = prms[i];
+
+        Debug.Log("params " + prms[0]+" "+ prms[4]);
+
+        if (prms[4].Equals(""))
+        {
+            int currNum = gameFlow.getCurrentLineNumber();
+            Debug.Log("curr num is " + currNum);
+            newParams[4] = (currNum + 1).ToString(); //only provide line when conditions are met (else, conditionalSwitch will simply return false and do nothing)
+        }
+
+        while (!conditionalSwitch(done, newParams)) //done is set here when successful
+        {
+            Debug.Log("wait until still happening");
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    /*
      * event #10
      * 
      * param 0: GameObject identifier id
@@ -734,7 +781,7 @@ public class CustomEvents : MonoBehaviour
      * 
      */
 
-    public void conditionalSwitch(bool[] done, string[] prms)
+    public bool conditionalSwitch(bool[] done, string[] prms)
     {
         string[] varTypez = prms[0].Split(',');
         int[] varTypes = new int[varTypez.Length];
@@ -898,12 +945,14 @@ public class CustomEvents : MonoBehaviour
                 }//end switch
             }
 
-            goToLine = lines[(ok ? 0 : 1)];
+            //if two options provided, act accordingly; else, only goTo when condition met
+            goToLine = lines.Length > 1 ? lines[(ok ? 0 : 1)] : (ok ? lines[0] : -1);
         }
 
             if (goToLine == -1)
         {
             Debug.Log("conditional switch failed to match with any case");
+            return false;
         }
         else
         {
@@ -913,6 +962,7 @@ public class CustomEvents : MonoBehaviour
 
 
         done[0] = true;
+        return true;
     }
 
     /*

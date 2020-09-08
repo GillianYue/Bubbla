@@ -272,7 +272,7 @@ public class GameControl : MonoBehaviour {
             int gfP;
             do
             {//once code gets here, should be ready to start gameFlow
-                if (tempPT != (gfP = gFlow.getPointer()))
+                if (tempPT != (gfP = gFlow.getCurrentLineNumber()))
                 { //avoid redundant work; only rerender if changed
                     tempPT = gfP;
                     gFlow.processCurrentLine();

@@ -340,7 +340,7 @@ public class GameFlow : MonoBehaviour {
 
     }
 
-    public int getPointer() {
+    public int getCurrentLineNumber() {
         return pointer;
     }
 

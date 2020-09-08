@@ -143,7 +143,6 @@ public class BGMover : MonoBehaviour {
     //customEvent #32
     public void swapScroll(string boolName, int index)
     {
-        Debug.Log("swapping scroll");
         Global.boolVariables.Add(boolName, false);
 
             StartCoroutine(waitForScrollFinish(boolName, index));
@@ -167,7 +166,6 @@ public class BGMover : MonoBehaviour {
             {
                 if (!isBGInView(scrollSequence[i]))
                 {
-                    Debug.Log(i + " is not in view");
                     target = i;
                     swapTo = scrollSequence[i].localPosition;
                     scrollSequence[i].gameObject.SetActive(false);
@@ -184,15 +182,14 @@ public class BGMover : MonoBehaviour {
         scrollSequence[target].transform.localPosition = swapTo;
 
         //wait until reach/settle
-        RectTransform spot = scrollSequence[index];
+        RectTransform spot = scrollSequence[target];
 
         float spriteHeight = getBackgroundHeight(spot);
 
         float reachPos = Screen.height - spriteHeight;
-        Debug.Log("reachPos " + reachPos);
 
-        yield return new WaitUntil(() => (spot.anchoredPosition.y <= reachPos)); //TODO
-        Debug.Log("scroll done");
+        yield return new WaitUntil(() => (spot.anchoredPosition.y <= reachPos)); 
+        scrollin = false;
         Global.boolVariables[boolName] = true;
     }
 
