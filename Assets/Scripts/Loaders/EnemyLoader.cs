@@ -49,7 +49,6 @@ public class EnemyLoader : MonoBehaviour
 
         GameObject e = Instantiate(enemyMold) as GameObject; //duplicate
         Animator animator = e.GetComponent<Animator>();
-        Debug.Log("lossy scale of e: " + e.transform.lossyScale);
 
         AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
 

@@ -136,7 +136,8 @@ public class BGMover : MonoBehaviour {
     //checks for whether the player is seeing this target through position
     public bool isBGInView(RectTransform target)
     {
-        return (target.localPosition.y >= 0 && target.localPosition.y <= topY);
+
+        return (target.anchoredPosition.y >= -getBackgroundHeight(target) && target.anchoredPosition.y <= Screen.height);
     }
 
     //customEvent #32
@@ -145,33 +146,59 @@ public class BGMover : MonoBehaviour {
         Debug.Log("swapping scroll");
         Global.boolVariables.Add(boolName, false);
 
-        int target = -1;
-
-        for(int i = 0; i< scrollSequence.Length; i++)
-        {
-            if (!isBGInView(scrollSequence[i])) { target = i; break;  }
-        }
-
-        if (target == -1) Debug.Log("error: out of screen bg not found");
-
-        else scrollSequence[target] = lingerSpots[index]; //the swap
-
             StartCoroutine(waitForScrollFinish(boolName, index));
     }
 
     /// <summary>
-    /// wait until the linger spot bg pic reaches top and sets global bool to true
+    /// wait until one of the two scroll bg is not in view, does the swap, then wait until the (swapped) linger spot bg pic reaches top and sets global bool to true
     /// 
     /// when this happens, we know it's time to stop all scroll activities 
     /// </summary>
     /// <returns></returns>
     private IEnumerator waitForScrollFinish(string boolName, int index)
     {
-        RectTransform spot = scrollSequence[index];
-        yield return new WaitUntil(() => (true)); //TODO
+        //wait for condition to swap; loop until condition met
 
+        int target = -1; Vector3 swapTo = Vector3.zero;
+
+        while (target == -1)
+        {
+            for (int i = 0; i < scrollSequence.Length; i++)
+            {
+                if (!isBGInView(scrollSequence[i]))
+                {
+                    Debug.Log(i + " is not in view");
+                    target = i;
+                    swapTo = scrollSequence[i].localPosition;
+                    scrollSequence[i].gameObject.SetActive(false);
+                    break;
+                } //finding the out-of-screen instance, since there's only two 
+            }
+
+            if (target == -1) yield return new WaitForSeconds(0.5f);
+
+            else scrollSequence[target] = lingerSpots[index]; //the swap when found
+        }
+
+        scrollSequence[target].gameObject.SetActive(true);
+        scrollSequence[target].transform.localPosition = swapTo;
+
+        //wait until reach/settle
+        RectTransform spot = scrollSequence[index];
+
+        float spriteHeight = getBackgroundHeight(spot);
+
+        float reachPos = Screen.height - spriteHeight;
+        Debug.Log("reachPos " + reachPos);
+
+        yield return new WaitUntil(() => (spot.anchoredPosition.y <= reachPos)); //TODO
+        Debug.Log("scroll done");
         Global.boolVariables[boolName] = true;
     }
 
-    
+    //specific to bg GO
+    private float getBackgroundHeight(RectTransform spot)
+    {
+        return spot.GetChild(0).GetComponent<SpriteRenderer>().sprite.rect.height * spot.transform.lossyScale.y;
+    }
 }

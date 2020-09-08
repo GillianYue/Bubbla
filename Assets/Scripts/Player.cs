@@ -622,9 +622,8 @@ public class Player : MonoBehaviour
 		{
 
 			GameObject ps = Instantiate(PaintSpritePrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
-			Debug.Log("lossy scale of paint sprite: " + ps.transform.lossyScale);
 			ps.transform.parent = BulletCont.transform; //bulletContainer
-			Debug.Log("lossy scale of paint sprite: " + ps.transform.lossyScale);
+
 			PaintSprites.Add(ps);
 
 			int index = bulletGauge.Count - 1; //spot to add to

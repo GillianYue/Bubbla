@@ -1528,6 +1528,7 @@ MonoBehaviour:
   gameFlow: {fileID: 0}
   eSpawner: {fileID: 0}
   pSpawner: {fileID: 0}
+  bgMover: {fileID: 0}
   levelScript: {fileID: 635836391}
   identified: []
 --- !u!4 &635836390
@@ -5193,18 +5194,28 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 575659350718755976, guid: 85a748d810cac4d939596b46881e6030,
-        type: 3}
+    - target: {fileID: 1432607842, guid: 85a748d810cac4d939596b46881e6030, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 272
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432607843, guid: 85a748d810cac4d939596b46881e6030, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: b3ec798c07097884fa2228e708b90cbf,
+      objectReference: {fileID: 21300000, guid: 4aea526650402914288153e7f946dfb8,
         type: 3}
-    - target: {fileID: 575659351991299045, guid: 85a748d810cac4d939596b46881e6030,
+    - target: {fileID: 1966779438, guid: 85a748d810cac4d939596b46881e6030, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -569
+      objectReference: {fileID: 0}
+    - target: {fileID: 1966779438, guid: 85a748d810cac4d939596b46881e6030, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -509
+      objectReference: {fileID: 0}
+    - target: {fileID: 535784135934599072, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: b3ec798c07097884fa2228e708b90cbf,
-        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 3583
+      objectReference: {fileID: 0}
     - target: {fileID: 9128375832452269202, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
       propertyPath: m_Camera
