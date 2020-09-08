@@ -95,6 +95,9 @@ Temporary Items
 .undo
 *.undo.meta
 
+# Logicx Media Folders
+*/Logicx/*/Media
+
 # Unity AssetStore Content
 */TinyRPGForest/*
 
