@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 736500567975021122}
   - component: {fileID: 736500567975021123}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: pallet_halo
   m_TagString: Untagged
   m_Icon: {fileID: 0}

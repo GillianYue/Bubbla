@@ -11,7 +11,8 @@ public class EnemyLoader : MonoBehaviour
     int[] enemyCode; //this one's kinda stupid, cuz enemyCode[0] = 0, enemyCode[1] = 1...
     string[] enemyName;
     int[] life, attack;
-    float[] sizeScale, colliderScale;
+    float[] sizeScale;
+    //float[] colliderScale; //colliderScale currently not in use (b/c of pixel perfect polyCollider), might be useful for scale change during game however
     string[] s0_anim, s1_anim, s2_anim; //path to animations
     AnimationClip[] S0_ANIM, S1_ANIM, S2_ANIM;
     int[] movement;
@@ -129,7 +130,7 @@ public class EnemyLoader : MonoBehaviour
         enemyCode = new int[numRows-1]; //num rows, int[] is for the entire column
         enemyName = new string[numRows-1];
         life = new int[numRows-1]; attack = new int[numRows-1];
-        sizeScale = new float[numRows-1]; colliderScale = new float[numRows-1];
+        sizeScale = new float[numRows-1]; // colliderScale = new float[numRows-1];
         s0_anim = new string[numRows-1]; s1_anim = new string[numRows-1]; s2_anim = new string[numRows-1];
         S0_ANIM = new AnimationClip[numRows-1];  S1_ANIM = new AnimationClip[numRows-1]; S2_ANIM = new AnimationClip[numRows-1];
         movement = new int[numRows-1]; moveSpeed = new int[numRows - 1];
@@ -144,7 +145,7 @@ public class EnemyLoader : MonoBehaviour
             int.TryParse(data[2, r], out life[r - 1]);
             int.TryParse(data[3, r], out attack[r - 1]);
             float.TryParse(data[4, r], out sizeScale[r - 1]);
-            float.TryParse(data[5, r], out colliderScale[r - 1]);
+            //float.TryParse(data[5, r], out colliderScale[r - 1]);
             s0_anim[r - 1] = data[6, r];
             s1_anim[r - 1] = data[7, r];
             s2_anim[r - 1] = data[8, r];

@@ -9,10 +9,11 @@ public class MyBullet : MonoBehaviour {
     public float bulletSpeed;
     public PaintballBehavior.ColorMode myColor;
 
-    [Inject(InjectFrom.Anywhere)]
     public PrefabHolder prefabHolder;
 
     public void Start () {
+        prefabHolder = FindObjectOfType<PrefabHolder>();
+
         if (trail != null)
         {
             GameObject t = trail;
@@ -60,7 +61,7 @@ public class MyBullet : MonoBehaviour {
                         break;
                     case PaintballBehavior.ColorMode.BLUE:
                         explosionPrefab = prefabHolder.palletExplosionBlue;
-                        e.triggerBuff(Enemy.BuffMode.freeze);
+                    e.triggerBuff(Enemy.BuffMode.freeze);
                         break;
                     case PaintballBehavior.ColorMode.YELLOW:
                     explosionPrefab = prefabHolder.palletExplosionYellow;

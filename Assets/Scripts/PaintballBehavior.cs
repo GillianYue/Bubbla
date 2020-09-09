@@ -37,7 +37,7 @@ public class PaintballBehavior : MonoBehaviour {
 			{ ColorMode.RED, new Color(246 / 255.0f, 80/ 255.0f, 82/ 255.0f) },
 			{ ColorMode.BLUE, new Color(16/ 255.0f, 161/ 255.0f, 246/ 255.0f) },
 			{ ColorMode.YELLOW, new Color(246/ 255.0f, 121/ 255.0f, 16/ 255.0f) },
-			{ ColorMode.NON, new Color(0,0,0) },
+			{ ColorMode.NON, new Color(1,1,1) },
 		};
 	public ColorMode myColor;
 	private Color color; //is literally colorDict[myColor]; stored as a variable for convenience

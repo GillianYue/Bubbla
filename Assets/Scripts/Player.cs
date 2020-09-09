@@ -418,7 +418,7 @@ public class Player : MonoBehaviour
 			{
 				//applying special effects to attack; subtracting from the gauge of that pb
 
-				bullet.GetComponent<SpriteRenderer>().color = PaintballBehavior.colorDict[bulletGauge[bulletGaugeSelected]];
+				bulletScript.setBulletColor(bulletGauge[bulletGaugeSelected]);
 
 				decrementGaugeCapacity(bulletGaugeSelected, 1);
 
@@ -427,7 +427,11 @@ public class Player : MonoBehaviour
 					removePaint(bulletGaugeSelected);
 				}
 
-			}
+            }
+            else
+            {
+				bulletScript.setBulletColor(PaintballBehavior.ColorMode.NON);
+            }
 
 		}
 		//is interrupted, aiming animation can still transition back to normal
