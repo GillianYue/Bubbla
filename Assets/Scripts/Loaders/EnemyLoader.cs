@@ -16,10 +16,14 @@ public class EnemyLoader : MonoBehaviour
     AnimationClip[] S0_ANIM, S1_ANIM, S2_ANIM;
     int[] movement;
     int[] moveSpeed;
+    bool[] sprite_on_child;
 
     GameObject enemyMold;
 
     public bool enemyLoaderDone; //this will be set to true once EnemyLoader is ready for usage
+
+    //colliders will be created (from PixelCollider script) as needed. When a new spawn happens, will check if collider for that enemy already exists here
+    List<List<Vector2>>[] enemyColliders;
 
 
     void Start()
@@ -48,12 +52,24 @@ public class EnemyLoader : MonoBehaviour
         }
 
         GameObject e = Instantiate(enemyMold) as GameObject; //duplicate
+
+        //SpriteRenderer
+        if (sprite_on_child[eCode])
+        {
+            e.GetComponent<SpriteRenderer>().enabled = false;
+            e.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
+        }
+
+        //Animator
         Animator animator = e.GetComponent<Animator>();
 
         AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
 
-        if(S0_ANIM[eCode] != null)
-        animatorOverrideController["State0anim"] = S0_ANIM[eCode];
+        if (S0_ANIM[eCode] != null)
+        {
+            animatorOverrideController["State0anim"] = S0_ANIM[eCode];
+
+        }
 
         if (S1_ANIM[eCode] != null)
             animatorOverrideController["State1anim"] = S1_ANIM[eCode];
@@ -64,16 +80,37 @@ public class EnemyLoader : MonoBehaviour
         animator.runtimeAnimatorController = animatorOverrideController;
         animator.Update(0.0f);
 
+        //Enemy stats
         e.name = enemyName[eCode];
         Enemy eScript = e.GetComponent<Enemy>();
         //NOTE: it's crucial that setLife is AFTER instantiation!
         eScript.setValues(life[eCode], attack[eCode]);
         eScript.setSizeScale(sizeScale[eCode]);
-        eScript.setColliderScale(colliderScale[eCode]);
+        //eScript.setColliderScale(colliderScale[eCode]);
 
         EnemyMover mover = e.GetComponent<EnemyMover>();
         mover.enemyType = movement[eCode];
         mover.setSpeed(moveSpeed[eCode]);
+
+
+        //PolygonCollider2D;    assumes enemyMold prefab has PolygonCollider2D and PixelCollider attached already
+        if (enemyColliders[eCode] == null) //collider for this enemy hasn't been generated and stored previously
+        {
+            List<List<Vector2>> enemy_Paths = e.GetComponent<PixelCollider2D>().Regenerate(sprite_on_child[eCode]);
+            enemyColliders[eCode] = enemy_Paths;
+
+        }
+        else
+        {
+            PolygonCollider2D pol = e.GetComponent<PolygonCollider2D>();
+
+            //transferring the points onto PolyCollider
+            pol.pathCount = enemyColliders[eCode].Count;
+            for (int p = 0; p < enemyColliders[eCode].Count; p++)
+            {
+                pol.SetPath(p, enemyColliders[eCode][p].ToArray());
+            }
+        }
 
         return e;
     }
@@ -81,7 +118,7 @@ public class EnemyLoader : MonoBehaviour
     void loadEnemyMold()
     {
         enemyMold = Resources.Load("EnemyMold") as GameObject;
-        if (enemyMold == null) Debug.LogError("load EnemyMold failed"); Debug.Log("lossy scale of e: " + enemyMold.transform.lossyScale);
+        if (enemyMold == null) Debug.LogError("load EnemyMold failed"); 
     }
 
     IEnumerator parseEnemyData()
@@ -96,9 +133,12 @@ public class EnemyLoader : MonoBehaviour
         s0_anim = new string[numRows-1]; s1_anim = new string[numRows-1]; s2_anim = new string[numRows-1];
         S0_ANIM = new AnimationClip[numRows-1];  S1_ANIM = new AnimationClip[numRows-1]; S2_ANIM = new AnimationClip[numRows-1];
         movement = new int[numRows-1]; moveSpeed = new int[numRows - 1];
+        sprite_on_child = new bool[numRows - 1];
+
+        enemyColliders = new List<List<Vector2>>[numRows - 1];
 
         //skip row 0 because those are all descriptors
-        for(int r = 1; r < numRows; r++) //-1 because title row doesn't count
+        for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
         {
             enemyName[r-1] = data[1, r]; //r-1 is for such that enemyName[enemyCode] matches that with the data
             int.TryParse(data[2, r], out life[r - 1]);
@@ -110,6 +150,7 @@ public class EnemyLoader : MonoBehaviour
             s2_anim[r - 1] = data[8, r];
             int.TryParse(data[9, r], out movement[r - 1]);
             int.TryParse(data[10, r], out moveSpeed[r - 1]);
+            if (data[11, r] != "") bool.TryParse(data[11, r], out sprite_on_child[r - 1]);
         }
 
         loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM);

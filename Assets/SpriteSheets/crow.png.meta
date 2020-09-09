@@ -1,13 +1,43 @@
 fileFormatVersion: 2
-guid: 136ae4010718b407484e09737b4c4977
+guid: 63c5eb71105b0db4aa86f2f3e55d2952
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2034786199343938137
-    second: outing_icon_2_0
+      213: 1388154641894931755
+    second: crow_0
   - first:
-      213: 4996709929766074560
-    second: outing_icon_2_1
+      213: 3383179551821478391
+    second: crow_1
+  - first:
+      213: 1439467775636262878
+    second: crow_2
+  - first:
+      213: -2254700722442048173
+    second: crow_3
+  - first:
+      213: -5564360847722458869
+    second: crow_4
+  - first:
+      213: 8492760901463939888
+    second: crow_5
+  - first:
+      213: -3656927932793817847
+    second: crow_0
+  - first:
+      213: 4130931352151838771
+    second: crow_1
+  - first:
+      213: 9052274218811791041
+    second: crow_2
+  - first:
+      213: 1453937309291707875
+    second: crow_3
+  - first:
+      213: -3782512584481635697
+    second: crow_4
+  - first:
+      213: -1594099781825083532
+    second: crow_5
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -42,7 +72,7 @@ TextureImporter:
     mipBias: -100
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: -1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -63,7 +93,7 @@ TextureImporter:
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
-  applyGammaDecoding: 1
+  applyGammaDecoding: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -93,7 +123,7 @@ TextureImporter:
     buildTarget: iPhone
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 33
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -105,13 +135,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: outing_icon_2_0
+      name: crow_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 35
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -119,20 +149,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9c40a81eb5ed04c449cd367eea9dea04
-      internalID: -2034786199343938137
+      spriteID: 905fe9c9b6bff3dc0800000000000000
+      internalID: -3656927932793817847
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: outing_icon_2_1
+      name: crow_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 35
         y: 0
-        width: 32
-        height: 32
+        width: 35
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +170,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9df0500b6be8b4f7b98c2fc2bf3e86d0
-      internalID: 4996709929766074560
+      spriteID: 330d88c9d24045930800000000000000
+      internalID: 4130931352151838771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: crow_2
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 0
+        width: 35
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c614b5e07320ad70800000000000000
+      internalID: 9052274218811791041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: crow_3
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 0
+        width: 35
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3edf40e874c6d2410800000000000000
+      internalID: 1453937309291707875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: crow_4
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 0
+        width: 35
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f82078358d0d18bc0800000000000000
+      internalID: -3782512584481635697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: crow_5
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 0
+        width: 35
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 477c9cfb1be90e9e0800000000000000
+      internalID: -1594099781825083532
       vertices: []
       indices: 
       edges: []
@@ -149,7 +263,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: a43850caef8fe49cf984e45752af5ff4
+    spriteID: d3bc9b983004169429fb7b860175c41b
     internalID: 0
     vertices: []
     indices: 
