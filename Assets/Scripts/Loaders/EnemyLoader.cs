@@ -19,13 +19,20 @@ public class EnemyLoader : MonoBehaviour
     int[] moveSpeed;
     bool[] sprite_on_child;
 
-    GameObject enemyMold;
+    string[] projectileName;
+    Sprite[] projectileSprites;
+    int[] projectileType;
+    float[] projectileSpeed, projectileShootInterval;
+
+    GameObject enemyMold, projectileMold;
 
     public bool enemyLoaderDone; //this will be set to true once EnemyLoader is ready for usage
 
     //colliders will be created (from PixelCollider script) as needed. When a new spawn happens, will check if collider for that enemy already exists here
     List<List<Vector2>>[] enemyColliders;
 
+    [Inject(InjectFrom.Anywhere)]
+    public GameControl gameControl;
     [Inject(InjectFrom.Anywhere)]
     public PrefabHolder prefabHolder;
 
@@ -87,11 +94,23 @@ public class EnemyLoader : MonoBehaviour
         //Enemy stats
         e.name = enemyName[eCode];
         Enemy eScript = e.GetComponent<Enemy>();
-        eScript.passPrefabHolder(prefabHolder);
+        eScript.passReferences(prefabHolder, gameControl);
         //NOTE: it's crucial that setLife is AFTER instantiation!
         eScript.setValues(life[eCode], attack[eCode]);
         eScript.setSizeScale(sizeScale[eCode]);
         //eScript.setColliderScale(colliderScale[eCode]);
+
+        //projectile if exists
+        if (projectileName[eCode] != "") {
+            GameObject newProj = Instantiate(projectileMold);
+            newProj.GetComponent<SpriteRenderer>().sprite = projectileSprites[eCode];
+            Destroy(newProj.GetComponent<CircleCollider2D>());
+            newProj.AddComponent<CircleCollider2D>(); //TODO check here; supposedly auto generates appropriately sized collider
+            newProj.transform.parent = e.transform;
+            newProj.SetActive(false);
+
+            eScript.setProjectile(newProj, eScript.attack, projectileType[eCode], projectileSpeed[eCode], projectileShootInterval[eCode]);
+        }
 
         EnemyMover mover = e.GetComponent<EnemyMover>();
         mover.enemyType = movement[eCode];
@@ -126,7 +145,9 @@ public class EnemyLoader : MonoBehaviour
     void loadEnemyMold()
     {
         enemyMold = Resources.Load("EnemyMold") as GameObject;
-        if (enemyMold == null) Debug.LogError("load EnemyMold failed"); 
+        if (enemyMold == null) Debug.LogError("load EnemyMold failed");
+
+        projectileMold = Resources.Load("Projectile") as GameObject;
     }
 
     IEnumerator parseEnemyData()
@@ -134,14 +155,18 @@ public class EnemyLoader : MonoBehaviour
         yield return new WaitUntil(() => loadDone[0]); //this would mean that data is ready to be parsed
 
         int numRows = data.GetLength(1); 
-        enemyCode = new int[numRows-1]; //num rows, int[] is for the entire column
-        enemyName = new string[numRows-1];
+        enemyCode = new int[numRows - 1]; //num rows, int[] is for the entire column
+        enemyName = new string[numRows - 1];
         life = new int[numRows-1]; attack = new int[numRows-1];
-        sizeScale = new float[numRows-1]; // colliderScale = new float[numRows-1];
-        s0_anim = new string[numRows-1]; s1_anim = new string[numRows-1]; s2_anim = new string[numRows-1];
-        S0_ANIM = new AnimationClip[numRows-1];  S1_ANIM = new AnimationClip[numRows-1]; S2_ANIM = new AnimationClip[numRows-1];
+        sizeScale = new float[numRows - 1]; // colliderScale = new float[numRows-1];
+        s0_anim = new string[numRows - 1]; s1_anim = new string[numRows - 1]; s2_anim = new string[numRows - 1];
+        S0_ANIM = new AnimationClip[numRows - 1];  S1_ANIM = new AnimationClip[numRows - 1]; S2_ANIM = new AnimationClip[numRows - 1];
         movement = new int[numRows-1]; moveSpeed = new int[numRows - 1];
         sprite_on_child = new bool[numRows - 1];
+
+        projectileName = new string[numRows - 1]; projectileSprites = new Sprite[numRows - 1]; 
+        projectileType = new int[numRows - 1];
+        projectileSpeed = new float[numRows - 1]; projectileShootInterval = new float[numRows - 1];
 
         enemyColliders = new List<List<Vector2>>[numRows - 1];
 
@@ -152,16 +177,22 @@ public class EnemyLoader : MonoBehaviour
             int.TryParse(data[2, r], out life[r - 1]);
             int.TryParse(data[3, r], out attack[r - 1]);
             float.TryParse(data[4, r], out sizeScale[r - 1]);
-            //float.TryParse(data[5, r], out colliderScale[r - 1]);
+            //float.TryParse(data[5, r], out colliderScale[r - 1]); 
             s0_anim[r - 1] = data[6, r];
             s1_anim[r - 1] = data[7, r];
             s2_anim[r - 1] = data[8, r];
             int.TryParse(data[9, r], out movement[r - 1]);
             int.TryParse(data[10, r], out moveSpeed[r - 1]);
             if (data[11, r] != "") bool.TryParse(data[11, r], out sprite_on_child[r - 1]);
+            if (data[12, r] != "") projectileName[r - 1] = data[12, r];
+            if (data[13, r] != "") int.TryParse(data[13, r], out projectileType[r - 1]);
+            if (data[14, r] != "") float.TryParse(data[14, r], out projectileSpeed[r - 1]);
+            if (data[15, r] != "") float.TryParse(data[15, r], out projectileShootInterval[r - 1]);
         }
 
         loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM);
+        loadSprites(projectileSprites);
+
         yield return new WaitUntil(() => {
             return (S0_ANIM[S0_ANIM.Length - 1] != null); }); //anim loaded, theoretically everything all set
 
@@ -222,6 +253,27 @@ public class EnemyLoader : MonoBehaviour
                     s2[eCode] = tmpAnim2;
                 }
             }
+        }
+    }
+
+    private void loadSprites(Sprite[] projSprites)
+    {
+        for (int eCode = 0; eCode < projectileName.GetLength(0); eCode++)
+        {
+            if (projectileName[eCode] != null)
+            {
+                Sprite spr = Resources.Load<Sprite>("Sprites/" + projectileName[eCode]);
+
+                if (spr == null)
+                {
+                    Debug.LogError("sprite "+ projectileName[eCode]+" NOT found");
+                }
+                else
+                {
+                    projSprites[eCode] = spr;
+                }
+            }
+
         }
     }
 

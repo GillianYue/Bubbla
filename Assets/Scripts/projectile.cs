@@ -13,7 +13,6 @@ public class projectile : MyBullet
 
     }
 
-    // Update is called once per frame
     new void Update()
     {
         base.Update();
@@ -30,7 +29,7 @@ public class projectile : MyBullet
         if (other.GetComponent<Collider2D>().tag == "Player")
         {
 
-                Instantiate(prefabHolder.palletExplosion, transform.position, transform.rotation);
+              //  Instantiate(prefabHolder.palletExplosion, transform.position, transform.rotation);
 
             other.GetComponent<Player>().damage(damage);
             Destroy(gameObject);

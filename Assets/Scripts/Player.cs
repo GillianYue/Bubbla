@@ -377,7 +377,17 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	//shoot paint; this is called in GameControl's update; just one single shot
+	/// <summary>
+	/// 
+	/// direction only concerns with .y's sign
+	/// 
+	/// angle == 0 is UP
+	/// 
+	/// </summary>
+	/// <param name="direction"></param>
+	/// <param name="angle"></param>
+	/// <param name="bulletType"></param>
+	/// <param name="infinite"></param>
 	public void launchBullet(Vector3 direction, float angle, int bulletType, bool infinite){
 		if (!infinite)
 		{

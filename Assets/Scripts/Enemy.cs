@@ -2,9 +2,10 @@
 using System.Collections;
 
 public class Enemy : MonoBehaviour {
-	
+
+	GameControl gameControl;
 	int life = 1000;
-	int attack;
+	public int attack;
 
     public AudioStorage audioz;
 
@@ -16,8 +17,13 @@ public class Enemy : MonoBehaviour {
 	IEnumerator currBuffProcess;
 
 	private PrefabHolder prefabHolder;
+	private GameObject myProjectilePrefab; //has projectile script attached
+	int projectileType, projectileAttack;
+	float projectileSpeed, shootInterval;
+	bool genProjectile;
+	IEnumerator projectileProcess;
 
-	// Use this for initialization
+
 	void Start () {
 		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
 
@@ -27,7 +33,6 @@ public class Enemy : MonoBehaviour {
 
     }
 	
-	// Update is called once per frame
 	void Update () {
 		if (life <= 0) {
 			audioz.enemyDefeatedSE ();
@@ -35,9 +40,57 @@ public class Enemy : MonoBehaviour {
 		}
 	}
 
-	public void passPrefabHolder(PrefabHolder ph)
+	public void passReferences(PrefabHolder ph, GameControl gc)
     {
 		prefabHolder = ph;
+		gameControl = gc;
+    }
+
+	public void setProjectile(GameObject prefab, int p_attk, int p_type, float p_spd, float p_shoot_interval)
+	{
+		if (projectileProcess != null) StopCoroutine(projectileProcess);
+
+		myProjectilePrefab = prefab;
+		projectileAttack = p_attk; //for now set to enemy's own attack
+		projectileType = p_type;
+		projectileSpeed = p_spd;
+		shootInterval = p_shoot_interval;
+
+		genProjectile = true;
+		projectileProcess = launchProjectiles();
+		StartCoroutine(projectileProcess);
+	}
+
+	IEnumerator launchProjectiles()
+    {
+		while (true)
+		{
+			if (genProjectile)
+			{
+				GameObject p = Instantiate(myProjectilePrefab, this.transform);
+				p.SetActive(true);
+				projectile proj = p.GetComponent<projectile>();
+				proj.damage = projectileAttack;
+				proj.bulletSpeed = projectileSpeed;
+
+				Vector3 direction = Vector3.down; float angle = 0;
+				switch (projectileType)
+				{
+					case 0:
+						break;
+					case 1:
+						direction = transform.position - gameControl.player.transform.position;
+						float tan = direction.x / direction.y;
+						angle = Mathf.Atan(tan);
+						break;
+				}
+
+				proj.setVelocity(direction, angle);
+
+			}
+
+			yield return new WaitForSeconds(shootInterval);
+		}
     }
 
 	public int getLife(){
