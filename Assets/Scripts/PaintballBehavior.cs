@@ -101,26 +101,27 @@ public class PaintballBehavior : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other){
 
-		//if paintball hit player, it bursts
+		bool explodeVFX = false, destroy = false;
+
 		if (other.GetComponent<Collider2D>().tag == "Player" ) {
-			if (explosion != null) {
-				//TODO: absorption vfx
-		myVFX = Instantiate (explosion, transform.position, transform.rotation) as GameObject;
-				myVFX.transform.localScale = new Vector3(getScale(), getScale(), getScale());
-                audioz.paintballExplosionSE ();
-				myVFX.GetComponent<SpriteRenderer> ().color = color;
-				other.GetComponent<Player>().addPaint(myColor, size*20);
-				Destroy (gameObject);
-			}
+			explodeVFX = true; destroy = true;
+                
+			other.GetComponent<Player>().addPaint(myColor, size*20);
+				
 		}else if(other.GetComponent<Collider2D>().tag == "Bullet")
         {
-			if (!myVFX)
-			{
-				myVFX = Instantiate
-				(explosion, transform.position, transform.rotation) as GameObject;
-				myVFX.transform.localScale = new Vector3(getScale(), getScale(), getScale());
-			}
+			explodeVFX = true;
 		}
+
+        if (explodeVFX && explosion)
+        {
+			myVFX = Instantiate(explosion, transform.position, transform.rotation) as GameObject;
+			myVFX.transform.localScale = new Vector3(getScale(), getScale(), getScale());
+			audioz.paintballExplosionSE();
+			myVFX.GetComponent<SpriteRenderer>().color = color;
+		}
+
+		if(destroy) Destroy(gameObject);
 
 	}
 		

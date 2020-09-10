@@ -4,7 +4,7 @@ using System.Collections;
 public class MyBullet : MonoBehaviour {
 	
 	public float accl;
-	public GameObject trail;
+    public GameObject trailPrefab, trail;
     public int damage = 1;
     public float bulletSpeed;
     public PaintballBehavior.ColorMode myColor;
@@ -12,15 +12,7 @@ public class MyBullet : MonoBehaviour {
     public PrefabHolder prefabHolder;
 
     public void Start () {
-        prefabHolder = FindObjectOfType<PrefabHolder>();
 
-        if (trail != null)
-        {
-            GameObject t = trail;
-            t = Instantiate(trail, gameObject.transform.position,
-                trail.transform.rotation) as GameObject;
-            t.GetComponent<TrailFollowBall>().setMyBullet(gameObject);
-        }
 	}
 
 	public void Update () {
@@ -52,29 +44,34 @@ public class MyBullet : MonoBehaviour {
 
                 GameObject explosionPrefab;
                 Enemy e = other.GetComponent<Enemy>();
+                bool parentToOther = false;
 
                 switch (myColor)
                 {
                     case PaintballBehavior.ColorMode.RED:
                         explosionPrefab = prefabHolder.palletExplosionRed;
                         e.triggerBuff(Enemy.BuffMode.burn);
+                    parentToOther = true;
                         break;
                     case PaintballBehavior.ColorMode.BLUE:
                         explosionPrefab = prefabHolder.palletExplosionBlue;
                     e.triggerBuff(Enemy.BuffMode.freeze);
+                    parentToOther = true;
                         break;
                     case PaintballBehavior.ColorMode.YELLOW:
                     explosionPrefab = prefabHolder.palletExplosionYellow;
                         break;
                     default:
-                        explosionPrefab = prefabHolder.palletExplosion;
+                        explosionPrefab = null;
                         break;
 
                 }
-				Instantiate (explosionPrefab, transform.position, transform.rotation);
-				e.damage (damage, 
-					gameObject.GetComponent<SpriteRenderer>().color);
+			 GameObject effect = (explosionPrefab != null)? Instantiate(explosionPrefab, transform.position, transform.rotation) : null;
+             if (parentToOther) effect.transform.parent = other.transform;
+
+				e.damage (damage, gameObject.GetComponent<SpriteRenderer>().color);
 				Destroy (gameObject);
+
 		}else if(t == "Boss")
         {
             other.transform.parent.GetComponent<BossBehavior>().damage(damage,
@@ -84,9 +81,43 @@ public class MyBullet : MonoBehaviour {
 
 	}
 
+    public void passPrefabHolderRef(PrefabHolder ph)
+    {
+        prefabHolder = ph;
+    }
+
+    //also instantiates trail of the corresponding color here
     public void setBulletColor(PaintballBehavior.ColorMode col)
     {
-        GetComponent<SpriteRenderer>().color = PaintballBehavior.colorDict[col];
+        Color c = PaintballBehavior.colorDict[col];
+        GetComponent<SpriteRenderer>().color = c;
         myColor = col;
+
+        switch (myColor)
+        {
+            case PaintballBehavior.ColorMode.RED:
+                trailPrefab = prefabHolder.palletTrailRed;
+                break;
+            case PaintballBehavior.ColorMode.BLUE:
+                trailPrefab = prefabHolder.palletTrailBlue;
+                break;
+            case PaintballBehavior.ColorMode.YELLOW:
+                break;
+            default:
+                trailPrefab = prefabHolder.palletTrail;
+                break;
+
+        }
+
+        trail = Instantiate(trailPrefab, gameObject.transform.position,
+            trailPrefab.transform.rotation) as GameObject;
+        /*        trail.transform.parent = gameObject.transform;
+                trail.transform.localScale = Vector3.one;*/
+        trail.GetComponent<TrailFollowBall>().setMyBullet(gameObject);
+    }
+
+    void OnDestroy()
+    {
+      //  if (transform.childCount != 0) transform.GetChild(0).parent = null; //detach child trail GO
     }
 }

@@ -577,6 +577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accl: 0.1
+  trailPrefab: {fileID: 0}
   trail: {fileID: 0}
   damage: 0
   bulletSpeed: 0
@@ -15709,7 +15710,7 @@ MonoBehaviour:
   heartPop: {fileID: 1000011440364364, guid: b6efbf73a4bf94fdf80691163f698028, type: 3}
   aim: {fileID: 1000013956966816, guid: 81e78162104d54ff6b0bdbdd6294b086, type: 3}
   palletExplosion: {fileID: 0}
-  palletTrail: {fileID: 1000010704061168, guid: 89da466b679374f48a5ba5cce6ced631,
+  palletTrail: {fileID: 8065166354008651221, guid: e09a4326ace3d7149929e8ebbf599cb5,
     type: 3}
   palletExplosionRed: {fileID: 8662318211613820086, guid: 20ca18d4ca966eb4793b57201751b0fc,
     type: 3}

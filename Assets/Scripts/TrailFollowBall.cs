@@ -4,17 +4,12 @@ using System.Collections;
 public class TrailFollowBall : MonoBehaviour {
 	
 	private GameObject myBullet;
-	public float lastingTime;
 	public DestroyByTime dbt;
-	public ParticleSystem smokeTrail;
+	public ParticleSystem[] trail;
 
 	void Start () {
+		if(!dbt) dbt = GetComponent<DestroyByTime>();
 		dbt.enabled = false;
-		smokeTrail = gameObject.transform.GetChild (0).gameObject.GetComponent<ParticleSystem> ();
-        smokeTrail.startColor = 
-            myBullet.gameObject.GetComponent<SpriteRenderer>().color;
-
-		//print (gameObject.transform.GetChild (0).gameObject.GetComponent<TrailRenderer> ().material.color);
 	}
 		
 	void Update () {
@@ -23,8 +18,11 @@ public class TrailFollowBall : MonoBehaviour {
 		} else {
 			if (!dbt.enabled) {
 				dbt.enabled = true;
-				ParticleSystem.EmissionModule em = smokeTrail.emission;
-				em.enabled = false;
+				foreach (ParticleSystem t in trail)
+				{
+					ParticleSystem.EmissionModule em = t.emission;
+					em.enabled = false;
+				}
 			}
 		}
 	}

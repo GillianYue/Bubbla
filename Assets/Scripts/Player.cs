@@ -410,6 +410,7 @@ public class Player : MonoBehaviour
 			if(!infinite) fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
 			MyBullet bulletScript = bullet.GetComponent<MyBullet>();
+			bulletScript.passPrefabHolderRef(prefabHolder);
 			bulletScript.setVelocity(direction, angle);
 
 
