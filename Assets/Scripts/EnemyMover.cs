@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//utilizes rigidbody.velocity to move enemies around
 public class EnemyMover : MonoBehaviour {
 
 	public float speed, accl = 0;
@@ -61,6 +62,7 @@ public class EnemyMover : MonoBehaviour {
     }
 
 
+	//does not interfere with movement on the y axis
 	IEnumerator movePause (int turns, float speed){
 
 		for (int t = 0; t < turns; t++) {

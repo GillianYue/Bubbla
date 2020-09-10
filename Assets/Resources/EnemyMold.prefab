@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 3772883831057003652}
   - component: {fileID: 3873322522222323800}
   - component: {fileID: 3873322521833092200}
+  - component: {fileID: 5277979170958827003}
   - component: {fileID: 3937519108669530522}
   - component: {fileID: 3820264307391585790}
   - component: {fileID: 2811425144014816303}
@@ -155,6 +156,34 @@ MonoBehaviour:
   cam: {fileID: 0}
   needVelo: 1
   needAccl: 0
+--- !u!114 &5277979170958827003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3771273923673524156}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3326450a546e54baa9d849fb67c1e35a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathManager: {fileID: 0}
+  path: {fileID: 0}
+  currentNode: 0
+  currTarget: {x: 0, y: 0}
+  prevTarget: {x: 0, y: 0}
+  targetVelocity: {x: 0, y: 0}
+  dynamicT: 0
+  constantT: 3
+  precisionRadius: 10
+  max_velocity: 1
+  velocity: 0
+  mass: 1
+  smooth: 0
+  currForce: {x: 0, y: 0}
+  target: {x: 0, y: 0}
+  movementType: 0
 --- !u!212 &3937519108669530522
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -395,3 +424,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alphaCutoff: 1
+  Sprite_on_child: 0

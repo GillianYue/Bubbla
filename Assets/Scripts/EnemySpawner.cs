@@ -13,7 +13,10 @@ public class EnemySpawner : MonoBehaviour {
     public EnemyLoader enemyLoader;
     public GameObject enemiez; //parent of all spawned enemies
 
-    public int waveIndex = 0; 
+    public int waveIndex = 0;
+
+    [Inject(InjectFrom.Anywhere)]
+    public PathManager pathManager;
 
     void Start()
     {
@@ -74,8 +77,11 @@ public class EnemySpawner : MonoBehaviour {
             case 4:
                 yield return StartCoroutine (SpawnCaret (5, currE));
                 break;
+/*            case 5:
+                break;*/
 
             default:
+                    if (currW >= 5 && currW <= 10) yield return StartCoroutine(SpawnPath(4, currW - 5, currE));
                 break;
                 
             }
@@ -145,7 +151,17 @@ public class EnemySpawner : MonoBehaviour {
         genMonster (0, spawnValues.y, spawnValues.z, enemyCode);
     }
 
+    public IEnumerator SpawnPath(int numEnemy, int pathCode, int enemyCode)
+    {
+        for (int c = 0; c < numEnemy; c++)
+        {
+            SteerPath p = pathManager.paths[pathCode];
+            Vector3 point = p.getNodesAsVectorArray()[0];
+            genMonster(point.x, point.y, point.z, enemyCode, p);
 
+            yield return new WaitForSeconds(enemySpawnWait + 1f);
+        }
+    }
 
     //ALL MONSTERS GENERATED HERE
     public GameObject genMonster(float x, float y, float z, int monsterCode){
@@ -163,7 +179,20 @@ public class EnemySpawner : MonoBehaviour {
         e.transform.parent = enemiez.transform;
         return e;
     }
-        
+
+    //overload for above, use when this enemy is supposed to be following a SteerPath
+    public GameObject genMonster(float x, float y, float z, int monsterCode, SteerPath p)
+    {
+
+        GameObject e = genMonster(x, y, z, monsterCode);
+        EnemySteering steer = e.GetComponent<EnemySteering>();
+        steer.enabled = true;
+        steer.setPath(pathManager, p);
+        //e.GetComponent<EnemyMover>().enabled = false;
+
+        return e;
+    }
+
     public void destroyAllEnemies()
     {
         foreach (Transform child in enemiez.transform)

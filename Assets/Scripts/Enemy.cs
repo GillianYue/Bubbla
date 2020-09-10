@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour {
 	public BuffMode debuff = BuffMode.none;
 	IEnumerator currBuffProcess;
 
+	private PrefabHolder prefabHolder;
+
 	// Use this for initialization
 	void Start () {
 		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
@@ -32,6 +34,11 @@ public class Enemy : MonoBehaviour {
 			Destroy (gameObject);
 		}
 	}
+
+	public void passPrefabHolder(PrefabHolder ph)
+    {
+		prefabHolder = ph;
+    }
 
 	public int getLife(){
 		return life;
@@ -89,23 +96,35 @@ public class Enemy : MonoBehaviour {
 	public void triggerBuff(BuffMode b)
     {
 		if (currBuffProcess != null) StopCoroutine(currBuffProcess);
-		debuff = b;
+		debuff = b; GameObject explosionPrefab;
+		bool parentToOther = false;
 
-        switch (b)
+		switch (b)
         {
 			case BuffMode.burn:
+				explosionPrefab = prefabHolder.palletExplosionRed;
+				parentToOther = true;
+
 				currBuffProcess = burnDuration();
 				StartCoroutine(currBuffProcess);
 				break;
 			case BuffMode.freeze:
+				explosionPrefab = prefabHolder.palletExplosionBlue;
+				parentToOther = true;
+
 				currBuffProcess = freezeDuration();
 				StartCoroutine(currBuffProcess);
 				break;
 			default:
 				Debug.Log("buff case not recognized");
+				explosionPrefab = null;
 				break;
+
 		}
-    }
+
+		GameObject effect = (explosionPrefab != null) ? Instantiate(explosionPrefab, transform.position, transform.rotation) : null;
+		if (parentToOther) effect.transform.parent = transform;
+	}
 
 	IEnumerator burnDuration()
     {

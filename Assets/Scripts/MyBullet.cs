@@ -19,6 +19,11 @@ public class MyBullet : MonoBehaviour {
 
 	}
 
+    public void passPrefabHolder(PrefabHolder ph)
+    {
+        prefabHolder = ph;
+    }
+
     public void setVelocity(Vector3 direction, float angle)
     {
         GetComponent<Rigidbody2D>().
@@ -42,32 +47,22 @@ public class MyBullet : MonoBehaviour {
         //if bullet hits enemy, it bursts and damages enemy
         if (t == "Enemy") {
 
-                GameObject explosionPrefab;
                 Enemy e = other.GetComponent<Enemy>();
-                bool parentToOther = false;
 
                 switch (myColor)
                 {
                     case PaintballBehavior.ColorMode.RED:
-                        explosionPrefab = prefabHolder.palletExplosionRed;
-                        e.triggerBuff(Enemy.BuffMode.burn);
-                    parentToOther = true;
+                        if(Global.percentChance(10)) e.triggerBuff(Enemy.BuffMode.burn);
                         break;
                     case PaintballBehavior.ColorMode.BLUE:
-                        explosionPrefab = prefabHolder.palletExplosionBlue;
-                    e.triggerBuff(Enemy.BuffMode.freeze);
-                    parentToOther = true;
+                    if (Global.percentChance(10)) e.triggerBuff(Enemy.BuffMode.freeze);
                         break;
                     case PaintballBehavior.ColorMode.YELLOW:
-                    explosionPrefab = prefabHolder.palletExplosionYellow;
                         break;
                     default:
-                        explosionPrefab = null;
                         break;
 
                 }
-			 GameObject effect = (explosionPrefab != null)? Instantiate(explosionPrefab, transform.position, transform.rotation) : null;
-             if (parentToOther) effect.transform.parent = other.transform;
 
 				e.damage (damage, gameObject.GetComponent<SpriteRenderer>().color);
 				Destroy (gameObject);
@@ -81,10 +76,6 @@ public class MyBullet : MonoBehaviour {
 
 	}
 
-    public void passPrefabHolderRef(PrefabHolder ph)
-    {
-        prefabHolder = ph;
-    }
 
     //also instantiates trail of the corresponding color here
     public void setBulletColor(PaintballBehavior.ColorMode col)

@@ -79,18 +79,27 @@ public class EnemySteering : MonoBehaviour
         return seek(futureTarget);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void setPath(PathManager pm, SteerPath p)
     {
-        if (path == null) path = pathManager.paths[0];
+        pathManager = pm;
+        path = p;
         if (path.curve) movementType = Mode.curveFollow; else movementType = Mode.pathFollow;
     }
 
-    // Update is called once per frame
+
+
+    void Start()
+    {
+        if (pathManager != null && path == null)
+        {
+            path = pathManager.paths[0];
+            if (path.curve) movementType = Mode.curveFollow; else movementType = Mode.pathFollow;
+        }
+    }
+
     void Update()
     {
 
-        //currTarget = Global.ScreenToWorld(Input.mousePosition); //target is set to mouse
 
         Vector2 moveForce = new Vector2(); //0,0
 
@@ -117,7 +126,7 @@ public class EnemySteering : MonoBehaviour
                         currentPathPercent = 0;
                     else
                     {
-                        Destroy(gameObject); //TODO or, linger
+                        // Destroy(gameObject); //TODO or, linger
                     }
                 }
                 break;

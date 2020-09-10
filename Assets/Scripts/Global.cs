@@ -3,9 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 /**
  * contains some essential global functions that are commonly used
@@ -630,6 +627,12 @@ public class Global : MonoBehaviour
         intVariables = new Dictionary<string, int>();
         boolVariables = new Dictionary<string, bool>();
         stringVariables = new Dictionary<string, string>();
+    }
+
+    public static bool percentChance(int percentage)
+    {
+        float ran = UnityEngine.Random.Range(0f, 1f);
+        return (ran <=  percentage / 100f) ;
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~Code Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

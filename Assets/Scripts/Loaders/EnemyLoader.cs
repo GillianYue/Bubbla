@@ -26,6 +26,9 @@ public class EnemyLoader : MonoBehaviour
     //colliders will be created (from PixelCollider script) as needed. When a new spawn happens, will check if collider for that enemy already exists here
     List<List<Vector2>>[] enemyColliders;
 
+    [Inject(InjectFrom.Anywhere)]
+    public PrefabHolder prefabHolder;
+
 
     void Start()
     {
@@ -84,6 +87,7 @@ public class EnemyLoader : MonoBehaviour
         //Enemy stats
         e.name = enemyName[eCode];
         Enemy eScript = e.GetComponent<Enemy>();
+        eScript.passPrefabHolder(prefabHolder);
         //NOTE: it's crucial that setLife is AFTER instantiation!
         eScript.setValues(life[eCode], attack[eCode]);
         eScript.setSizeScale(sizeScale[eCode]);
@@ -92,6 +96,9 @@ public class EnemyLoader : MonoBehaviour
         EnemyMover mover = e.GetComponent<EnemyMover>();
         mover.enemyType = movement[eCode];
         mover.setSpeed(moveSpeed[eCode]);
+
+        EnemySteering steer = e.GetComponent<EnemySteering>();
+        steer.velocity = moveSpeed[eCode];
 
 
         //PolygonCollider2D;    assumes enemyMold prefab has PolygonCollider2D and PixelCollider attached already
