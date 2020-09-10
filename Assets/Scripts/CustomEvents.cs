@@ -532,18 +532,14 @@ public class CustomEvents : MonoBehaviour
         string[] newParams = new string[5];
         for (int i = 0; i < prms.Length; i++) newParams[i] = prms[i];
 
-        Debug.Log("params " + prms[0]+" "+ prms[4]);
-
         if (prms[4].Equals(""))
         {
             int currNum = gameFlow.getCurrentLineNumber();
-            Debug.Log("curr num is " + currNum);
             newParams[4] = (currNum + 1).ToString(); //only provide line when conditions are met (else, conditionalSwitch will simply return false and do nothing)
         }
 
         while (!conditionalSwitch(done, newParams)) //done is set here when successful
         {
-            Debug.Log("wait until still happening");
             yield return new WaitForSeconds(0.5f);
         }
     }

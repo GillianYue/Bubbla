@@ -26,13 +26,13 @@ public class EnemySpawner : MonoBehaviour {
     /*
         Types of waves: singleEnemy, ––, /, \, ^, T, U, A, X, *, #, S
     */
-    public void StartSpawn (GameFlow gf, int[] w, int[] m, bool[] esDone) {
+    public void StartSpawn (GameFlow gf, int[] w, int[] m, int[] waveWaits, float[] intv, int[] spnm, bool[] esDone) {
 
 
         //int[] w: waves in this level
 
         //int[] m: types of monsters for each of the waves; the EXACT SAME SIZE as w[]
-        StartCoroutine (SpawnEnemyWaves (gf, w, m, esDone, waveIndex));
+        StartCoroutine (SpawnEnemyWaves (gf, w, m, waveWaits, intv, spnm, esDone, waveIndex));
         waveIndex++;
     }
 
@@ -52,12 +52,18 @@ public class EnemySpawner : MonoBehaviour {
     
     }
 
-    IEnumerator SpawnEnemyWaves(GameFlow gf, int[] waveTypes, int[] enemTypes, bool[] esDone, int index)
+    IEnumerator SpawnEnemyWaves(GameFlow gf, int[] waveTypes, int[] enemTypes, int[] waveWaits, float[] intervals, int[] spawnNum, bool[] esDone, int index)
     { //types of waves
-        yield return new WaitForSeconds (startWait);
-        //start wait time
+        
 
         for (int c = 0; c<waveTypes.Length; c++) {
+
+            if(waveWaits[c]!=-1) yield return new WaitForSeconds(waveWaits[c]); //-1 means wait until no enemies left on field
+            else while (GameObject.FindWithTag("Enemy") != null) //infinite wait time until prev wave gone
+                {
+                    yield return new WaitForSeconds(0.5f);
+                }
+
             int currW = waveTypes [c];
             int currE = enemTypes [c];
 
@@ -69,19 +75,19 @@ public class EnemySpawner : MonoBehaviour {
                 SpawnHorizontal (3, currE);
                 break;
             case 2: 
-                yield return StartCoroutine (SpawnSlash(true, 3, currE));
+                StartCoroutine (SpawnSlash(true, 3, currE));
                 break;
             case 3:
-                yield return StartCoroutine (SpawnSlash (false, 3, currE));
+                StartCoroutine (SpawnSlash (false, 3, currE));
                 break;
             case 4:
-                yield return StartCoroutine (SpawnCaret (5, currE));
+                StartCoroutine (SpawnCaret (5, currE));
                 break;
 /*            case 5:
                 break;*/
 
             default:
-                    if (currW >= 5 && currW <= 10) yield return StartCoroutine(SpawnPath(4, currW - 5, currE));
+                    if (currW >= 5 && currW <= 10) StartCoroutine(SpawnPath(spawnNum[c], currW - 5, currE, intervals[c]));
                 break;
                 
             }
@@ -95,7 +101,8 @@ public class EnemySpawner : MonoBehaviour {
             {
                 StartCoroutine(PerformEndCheck(gf, esDone, index));
             }
-                yield return new WaitForSeconds (waveSpawnWait);
+                //yield return new WaitForSeconds (waveSpawnWait);
+
             }
             //wait time between each wave
 
@@ -151,7 +158,7 @@ public class EnemySpawner : MonoBehaviour {
         genMonster (0, spawnValues.y, spawnValues.z, enemyCode);
     }
 
-    public IEnumerator SpawnPath(int numEnemy, int pathCode, int enemyCode)
+    public IEnumerator SpawnPath(int numEnemy, int pathCode, int enemyCode, float spawnInterval)
     {
         for (int c = 0; c < numEnemy; c++)
         {
@@ -159,7 +166,7 @@ public class EnemySpawner : MonoBehaviour {
             Vector3 point = p.getNodesAsVectorArray()[0];
             genMonster(point.x, point.y, point.z, enemyCode, p);
 
-            yield return new WaitForSeconds(enemySpawnWait + 1f);
+            yield return new WaitForSeconds(spawnInterval);
         }
     }
 
@@ -188,7 +195,7 @@ public class EnemySpawner : MonoBehaviour {
         EnemySteering steer = e.GetComponent<EnemySteering>();
         steer.enabled = true;
         steer.setPath(pathManager, p);
-        //e.GetComponent<EnemyMover>().enabled = false;
+        e.GetComponent<EnemyMover>().enabled = false;
 
         return e;
     }

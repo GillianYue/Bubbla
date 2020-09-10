@@ -47,7 +47,11 @@ public abstract class BossBehavior : MonoBehaviour
     /// </summary>
     public Vector2 hoverBoundsUpper, hoverBoundsLower;
 
-    public Enemy.BuffMode debuff; //uses the same system as a normal enemy
+    public Enemy.BuffMode debuff = Enemy.BuffMode.none; //uses the same system as a normal enemy
+    IEnumerator currBuffProcess;
+
+    [Inject(InjectFrom.Anywhere)]
+    public PrefabHolder prefabHolder;
 
     public void Start()
     {
@@ -236,6 +240,57 @@ public abstract class BossBehavior : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
     }
+
+
+    public void triggerBuff(Enemy.BuffMode b)
+    {
+        if (currBuffProcess != null) StopCoroutine(currBuffProcess);
+        debuff = b; GameObject explosionPrefab;
+        bool parentToOther = false;
+
+        switch (b)
+        {
+            case Enemy.BuffMode.burn:
+                explosionPrefab = prefabHolder.palletExplosionRed;
+                parentToOther = true;
+
+                currBuffProcess = burnDuration();
+                StartCoroutine(currBuffProcess);
+                break;
+            case Enemy.BuffMode.freeze:
+                explosionPrefab = prefabHolder.palletExplosionBlue;
+                parentToOther = true;
+
+                currBuffProcess = freezeDuration();
+                StartCoroutine(currBuffProcess);
+                break;
+            default:
+                Debug.Log("buff case not recognized");
+                explosionPrefab = null;
+                break;
+
+        }
+
+        GameObject effect = (explosionPrefab != null) ? Instantiate(explosionPrefab, transform.position, transform.rotation) : null;
+        if (parentToOther) effect.transform.parent = transform;
+    }
+
+    IEnumerator burnDuration()
+    {
+        life -= 3; //TODO edit
+                   //TODO sound effect
+                   //TODO instantiate vfx here
+        yield return new WaitForSeconds(2);
+    }
+
+    IEnumerator freezeDuration()
+    {
+        //sfx, vfx
+        yield return new WaitForSeconds(3);
+        debuff = Enemy.BuffMode.none; //cancels after duration
+    }
+
+    ////////////////////////
 
     /**
      * returns the instantiated projectile

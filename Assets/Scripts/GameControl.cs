@@ -282,10 +282,10 @@ public class GameControl : MonoBehaviour {
         }
     }
         
-    public void startEnemyWaves(int[] w, int[] e){
+    public void startEnemyWaves(int[] w, int[] e, int[] wvwt, float[] intv, int[] spnm){
         bool[] esDone = new bool[1]; //a bool[] shared to ps and es so that they can be in sync
        pSpawner.StartSpawn (esDone);  //will end when enemySpawnerDone
-        eSpawner.StartSpawn(gFlow, w, e, esDone);
+        eSpawner.StartSpawn(gFlow, w, e, wvwt, intv, spnm, esDone);
         bgManager.setBackgroundsActive(true);
         player.GetComponent<Player> ().enabled = true; //generation of heart, updates, etc. 
         foreach (GameObject g in gadgets) {

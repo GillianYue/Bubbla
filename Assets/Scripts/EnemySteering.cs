@@ -40,7 +40,7 @@ public class EnemySteering : MonoBehaviour
         target = new Vector2();
  
         if (path != null) {
-            ArrayList nodes = path.getNodes();
+            List<Vector3> nodes = path.getNodes();
  
             target = (Vector2)nodes[currentNode];
  
@@ -114,10 +114,11 @@ public class EnemySteering : MonoBehaviour
             case Mode.curveFollow:
                 currentPathPercent += velocity / 100 * Time.deltaTime;     //every update calculating current path percentage according to the defined speed TODO check variable use here
 
-                transform.position = path.NewPositionByPath(path.nodesVector3, currentPathPercent); //moving the 'Enemy' to the path position, calculated in method NewPositionByPath
+                Vector3[] arr = path.nodesVector3.ToArray();
+                transform.position = path.NewPositionByPath(arr, currentPathPercent); //moving the 'Enemy' to the path position, calculated in method NewPositionByPath
                 if (path.rotationByPath)                            //rotating the 'Enemy' in path direction, if set 'rotationByPath'
                 {
-                    transform.right = path.Interpolate(path.CreatePoints(path.nodesVector3), currentPathPercent + 0.01f) - transform.position;
+                    transform.right = path.Interpolate(path.CreatePoints(arr), currentPathPercent + 0.01f) - transform.position;
                     transform.Rotate(Vector3.forward * 90);
                 }
                 if (currentPathPercent > 1)                    //when the path is complete

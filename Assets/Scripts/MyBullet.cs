@@ -69,8 +69,23 @@ public class MyBullet : MonoBehaviour {
 
 		}else if(t == "Boss")
         {
-            other.transform.parent.GetComponent<BossBehavior>().damage(damage,
-        gameObject.GetComponent<SpriteRenderer>().color);
+            BossBehavior b = other.transform.parent.GetComponent<BossBehavior>();
+            switch (myColor)
+            {
+                case PaintballBehavior.ColorMode.RED:
+                    if (Global.percentChance(10)) b.triggerBuff(Enemy.BuffMode.burn);
+                    break;
+                case PaintballBehavior.ColorMode.BLUE:
+                    if (Global.percentChance(10)) b.triggerBuff(Enemy.BuffMode.freeze);
+                    break;
+                case PaintballBehavior.ColorMode.YELLOW:
+                    break;
+                default:
+                    break;
+
+            }
+
+            b.damage(damage, gameObject.GetComponent<SpriteRenderer>().color);
             Destroy(gameObject);
         }
 

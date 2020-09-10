@@ -10,8 +10,7 @@ public class SteerPath : MonoBehaviour
     public bool mouseGenPath; //whether mouse click setting path destination is enabled
     public Transform[] pathPoints; //assign points GOs to this array to set the path on start
 
-    private ArrayList nodes;
-    public Vector3[] nodesVector3;
+    public List<Vector3> nodesVector3;
     public bool curve; //if curve, interpolate curve; else assumed to be straight lines in between points
 
     public GameObject markingPrefab;
@@ -22,15 +21,9 @@ public class SteerPath : MonoBehaviour
 
     void Start()
     {
-        if (pathPoints != null)
-        {
-            Vector3[] pathPositions = getPointPositions(pathPoints);
-
-            this.nodes = new ArrayList(pathPositions);
-            nodesVector3 = getNodesAsVectorArray();
-        }
     }
 
+    //for testing purposes
     void Update()
     {
         if (mouseGenPath && Input.GetMouseButtonDown(0))
@@ -44,35 +37,30 @@ public class SteerPath : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            nodes = new ArrayList();
             Vector3 mouse = Global.ScreenToWorld(Input.mousePosition);
             addNode(mouse);
         }
     }
 
-    public SteerPath()
+    public SteerPath(List<Vector3> list)
     {
-        this.nodes = new ArrayList();
-    }
-
-    public SteerPath(Vector3[] list)
-    {
-        this.nodes = new ArrayList(list);
+        nodesVector3 = list;
     }
 
     public SteerPath(Transform[] list)
     {
-        Vector3[] pathPositions = getPointPositions(list);
+        List<Vector3> pathPositions = getPointPositions(list);
 
-        this.nodes = new ArrayList(pathPositions);
+        nodesVector3 = pathPositions;
     }
 
-    public Vector3[] getPointPositions(Transform[] list)
+    //used for initializing nodesVector3 list
+    public List<Vector3> getPointPositions(Transform[] list)
     {
-        Vector3[] pathPositions = new Vector3[list.Length];
+        List<Vector3> pathPositions = new List<Vector3>();
         for (int i = 0; i < list.Length; i++)
         {
-            pathPositions[i] = list[i].position;
+            pathPositions.Add(list[i].position);
         }
 
         return pathPositions;
@@ -80,28 +68,24 @@ public class SteerPath : MonoBehaviour
 
     public void addNode(Vector3 coord)
     {
-        nodes.Add(coord);
-        nodesVector3 = getNodesAsVectorArray(); //refresh since length of nodes changed
+        nodesVector3.Add(coord);
     }
 
 
-
-    public ArrayList getNodes()
+    public List<Vector3> getNodes()
     {
-        return nodes;
+        return nodesVector3;
     }
 
-    public Vector3[] getNodesAsVectorArray()
+    public List<Vector3> getNodesAsVectorArray()
     {
-        Vector3[] list = new Vector3[nodes.Count];
-        int c = 0;
-        foreach(Vector3 point in nodes)
-        {
-            list[c] = point;
-            c++;
-        }
+        if (nodesVector3.Count > 0) return nodesVector3;
 
-        return list;
+        //set up Vector3 array based on exposed points
+        Debug.Log("list length " + pathPoints.Length);
+        nodesVector3 = getPointPositions(pathPoints);
+
+        return nodesVector3;
     }
 
     /// / ////// //

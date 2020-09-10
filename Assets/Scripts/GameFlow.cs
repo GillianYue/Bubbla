@@ -178,10 +178,14 @@ public class GameFlow : MonoBehaviour {
                 } else { //spawn wave
                     string[] waves = data[1, pointer].Split(',');
                     string[] enemies = data[2, pointer].Split(',');
-                    string[] colorModes = data[3, pointer].Split(',');
-                    string[] colorModeWeights = data[4, pointer].Split(',');
+                    string[] waveWaits = data[3, pointer].Split(',');
+                    string[] spawnInterval = data[4, pointer].Split(',');
+                    string[] spawnNumber = data[5, pointer].Split(','); 
 
-                    bool loop = data[5, pointer].Equals("TRUE");
+                    string[] colorModes = data[6, pointer].Split(',');
+                    string[] colorModeWeights = data[7, pointer].Split(',');
+
+                    //bool loop = data[6, pointer].Equals("TRUE");
 
                     List<(PaintballBehavior.ColorMode, float)> tempList = new List<(PaintballBehavior.ColorMode, float)>();
                     for(int i=0; i < colorModes.Length; i++)
@@ -193,10 +197,14 @@ public class GameFlow : MonoBehaviour {
                     }
                     PaintballBehavior.standards = tempList;
 
-                    int[] wv, em;
+                    int[] wv, em, wvwt, spnm; float[] intv;
                     wv = System.Array.ConvertAll<string, int>(waves, int.Parse);
                     em = System.Array.ConvertAll<string, int>(enemies, int.Parse);
-                    gameControl.startEnemyWaves(wv, em);
+                    wvwt = System.Array.ConvertAll<string, int>(waveWaits, int.Parse);
+                    intv = System.Array.ConvertAll<string, float>(spawnInterval, float.Parse);
+                    spnm = System.Array.ConvertAll<string, int>(spawnNumber, int.Parse);
+
+                    gameControl.startEnemyWaves(wv, em, wvwt, intv, spnm);
                 }
                 break;
             case Mode.IVS:
