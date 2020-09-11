@@ -93,7 +93,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3234145231015402314}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c236aeda4306f48c1912173f47a21c50, type: 2}
   m_CullingMode: 0
@@ -138,9 +138,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accl: 0.1
+  trailPrefab: {fileID: 0}
   trail: {fileID: 0}
-  explosion: {fileID: 0}
   damage: 3
+  bulletSpeed: 0
+  myColor: 0
+  prefabHolder: {fileID: 0}
 --- !u!58 &214272362
 CircleCollider2D:
   m_ObjectHideFlags: 0

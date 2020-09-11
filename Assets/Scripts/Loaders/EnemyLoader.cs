@@ -22,7 +22,8 @@ public class EnemyLoader : MonoBehaviour
     string[] projectileName;
     Sprite[] projectileSprites;
     int[] projectileType;
-    float[] projectileSpeed, projectileAccl, projectileShootInterval;
+    float[] projectileSpeed, projectileAccl, projectileShootInterval, shootNoise, shootChanceIndividual, shootChanceEnemy; 
+    //shootNoise is random noise in shoot interval; shootChanceIndividual is chance each individual shot will be fired; ..Enemy is chance this enemy is *able* to fire
 
     GameObject enemyMold, projectileMold;
 
@@ -62,7 +63,7 @@ public class EnemyLoader : MonoBehaviour
             return null;
         }
 
-        GameObject e = Instantiate(enemyMold) as GameObject; //duplicate
+        GameObject e = Instantiate(enemyMold, enemyMold.transform.position, enemyMold.transform.rotation) as GameObject; //duplicate
 
         //SpriteRenderer
         if (sprite_on_child[eCode])
@@ -104,7 +105,8 @@ public class EnemyLoader : MonoBehaviour
         if (projectileName[eCode] != "") {
 
             eScript.setProjectile(projectileMold, projectileSprites[eCode], eScript.attack, projectileType[eCode], 
-                projectileSpeed[eCode], projectileAccl[eCode], projectileShootInterval[eCode]);
+                projectileSpeed[eCode], projectileAccl[eCode], projectileShootInterval[eCode], shootNoise[eCode], shootChanceIndividual[eCode], 
+                shootChanceEnemy[eCode]);
         }
 
         EnemyMover mover = e.GetComponent<EnemyMover>();
@@ -162,7 +164,8 @@ public class EnemyLoader : MonoBehaviour
         projectileName = new string[numRows - 1]; projectileSprites = new Sprite[numRows - 1]; 
         projectileType = new int[numRows - 1];
         projectileSpeed = new float[numRows - 1]; projectileAccl = new float[numRows - 1];
-        projectileShootInterval = new float[numRows - 1];
+        projectileShootInterval = new float[numRows - 1]; shootNoise = new float[numRows - 1];
+        shootChanceIndividual = new float[numRows - 1]; shootChanceEnemy = new float[numRows - 1];
 
         enemyColliders = new List<List<Vector2>>[numRows - 1];
 
@@ -185,6 +188,9 @@ public class EnemyLoader : MonoBehaviour
             if (data[14, r] != "") float.TryParse(data[14, r], out projectileSpeed[r - 1]);
             if (data[15, r] != "") float.TryParse(data[15, r], out projectileAccl[r - 1]);
             if (data[16, r] != "") float.TryParse(data[16, r], out projectileShootInterval[r - 1]);
+            if (data[17, r] != "") float.TryParse(data[17, r], out shootNoise[r - 1]);
+            if (data[18, r] != "") float.TryParse(data[18, r], out shootChanceIndividual[r - 1]);
+            if (data[19, r] != "") float.TryParse(data[18, r], out shootChanceEnemy[r - 1]);
         }
 
         loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM);

@@ -16,7 +16,6 @@ public class projectile : MyBullet
     new void Update()
     {
         base.Update();
-
     }
 
     /**

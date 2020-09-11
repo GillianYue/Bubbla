@@ -19,7 +19,9 @@ public class Enemy : MonoBehaviour {
 	private PrefabHolder prefabHolder;
 	private GameObject myProjectilePrefab; //has projectile script attached
 	int projectileType, projectileAttack;
-	float projectileSpeed, projectileAccl, shootInterval;
+	float projectileSpeed, projectileAccl, shootInterval, shootNoise, shootChanceIndividual;
+
+	bool willShoot; //determined by shootChanceEnemy in csv 
 	bool genProjectile;
 	Sprite projectileSprite;
 	IEnumerator projectileProcess;
@@ -47,7 +49,8 @@ public class Enemy : MonoBehaviour {
 		gameControl = gc;
     }
 
-	public void setProjectile(GameObject prefab, Sprite spr, int p_attk, int p_type, float p_spd, float p_accl, float p_shoot_interval)
+	public void setProjectile(GameObject prefab, Sprite spr, int p_attk, int p_type, float p_spd, float p_accl, float p_shoot_interval,
+		float p_noise, float p_chance_ind, float p_chance_en)
 	{
 		if (projectileProcess != null) StopCoroutine(projectileProcess);
 
@@ -58,49 +61,62 @@ public class Enemy : MonoBehaviour {
 		projectileSpeed = p_spd;
 		projectileAccl = p_accl;
 		shootInterval = p_shoot_interval;
+		shootNoise = p_noise;
+		shootChanceIndividual = p_chance_ind;
+		willShoot = Global.percentChance((int)(p_chance_en * 100));
 
-		genProjectile = true;
-		projectileProcess = launchProjectiles();
-		StartCoroutine(projectileProcess);
+		if (willShoot)
+		{
+			genProjectile = true;
+			projectileProcess = launchProjectiles();
+			StartCoroutine(projectileProcess);
+		}
 	}
 
 	IEnumerator launchProjectiles()
     {
+		//wait for 2 reasons: 1) enemy's position is set relatively late (might provide wrong source loc for projectile)
+		//2) more fair to start launch projectile after enemy visually shows up in screen
+		yield return new WaitUntil(() => Global.gameObjectInView(transform));
 		while (true)
 		{
-			if (genProjectile && projectileSprite)
+			if (genProjectile && projectileSprite && Global.percentChance((int)(shootChanceIndividual * 100)))
 			{
-				GameObject p = Instantiate(myProjectilePrefab, this.transform.position, myProjectilePrefab.transform.rotation);
+				GameObject p = Instantiate(myProjectilePrefab, this.transform.localPosition, myProjectilePrefab.transform.rotation);
+				p.transform.parent = null;
+				p.SetActive(true);
 				p.GetComponent<SpriteRenderer>().sprite = projectileSprite;
 				Destroy(p.GetComponent<CircleCollider2D>());
-				p.AddComponent<CircleCollider2D>(); //TODO check here; supposedly auto generates appropriately sized collider
+				CircleCollider2D circ = p.AddComponent<CircleCollider2D>(); //TODO check here; supposedly auto generates appropriately sized collider
+				circ.isTrigger = true;
 
-				p.transform.parent = null;
-				p.transform.localScale = transform.localScale;
-				Debug.Log("curr projectile scale " + p.transform.localScale);
-				p.SetActive(true);
+				p.transform.localScale = transform.lossyScale;
+
 				projectile proj = p.GetComponent<projectile>();
 				proj.damage = projectileAttack;
 				proj.setSpeed(projectileSpeed);
 				proj.setAcceleration(projectileAccl);
 
-				Vector3 direction = Vector3.down; float angle = 0;
+				Vector3 direction = Vector3.down; float angle = 0; bool rotateProjectile = false;
 				switch (projectileType)
 				{
 					case 0:
 						break;
 					case 1:
-						direction = transform.position - gameControl.player.transform.position;
+						direction = gameControl.player.transform.position - transform.position;
 						float tan = direction.x / direction.y;
 						angle = Mathf.Atan(tan);
+						if (direction.y > 0) Destroy(proj); //if player is above, this type of projectile will not be launched
+						rotateProjectile = true;
 						break;
 				}
 
-				proj.setDirection(direction, angle);
+				if(proj) proj.setDirection(direction, angle, rotateProjectile);
 
 			}
 
-			yield return new WaitForSeconds(shootInterval);
+			//effectively, noise = 0.2 will make shoot time range from 0.8x to 1.2x
+			yield return new WaitForSeconds(shootInterval + Random.Range(-shootNoise, shootNoise) * shootInterval);
 		}
     }
 

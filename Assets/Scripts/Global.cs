@@ -232,6 +232,21 @@ public class Global : MonoBehaviour
         return moveToInSecs(e, (int)dest.x, (int)dest.y, sec, done);
     }
 
+    /// <summary>
+    /// 
+    /// checks whether a gameobject's position is within screen view
+    /// 
+    /// </summary>
+    /// <param name="t"></param>
+    /// <returns></returns>
+    public static bool gameObjectInView(Transform t)
+    {
+        Vector3 p = t.localPosition;
+        float sw = Screen.width, sh = Screen.height;
+
+        return (p.x >= -sw / 2 && p.x <= sw / 2 && p.y >= -sh / 2 && p.y <= sh / 2);
+    }
+
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~game play logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

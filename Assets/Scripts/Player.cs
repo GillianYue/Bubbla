@@ -416,12 +416,11 @@ public class Player : MonoBehaviour
 			GameObject bullet = Instantiate(BulletPrefabs[bulletType], pos,
 								   BulletPrefabs[bulletType].transform.rotation) as GameObject;
 
-			//Debug.Log("shooting one bullet up: dir" + direction + " angle " + angle + " bulletType " + bulletType);
 			if(!infinite) fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
 			MyBullet bulletScript = bullet.GetComponent<MyBullet>();
 			bulletScript.passPrefabHolder(prefabHolder);
-			bulletScript.setDirection(direction, angle);
+			bulletScript.setDirection(direction, angle, false); //no rotation since only going up for now
 
 
 			//apply additional effects
@@ -478,7 +477,7 @@ public class Player : MonoBehaviour
 				BulletPrefabs[bulletType].transform.rotation) as GameObject;
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
-				bullet.GetComponent<MyBullet>().setDirection(direction, angle);
+				bullet.GetComponent<MyBullet>().setDirection(direction, angle, false);
 
 				Color c1 = PaintballBehavior.colorDict[bulletGauge [bulletGauge.Count - 1]];
 				Color c2 = PaintballBehavior.colorDict[bulletGauge [bulletGauge.Count - 2]];

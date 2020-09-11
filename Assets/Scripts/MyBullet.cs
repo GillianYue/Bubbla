@@ -34,14 +34,14 @@ public class MyBullet : MonoBehaviour {
         accl = ac;
     }
 
-    public void setDirection(Vector3 direction, float angle)
+    public void setDirection(Vector3 direction, float angle, bool rotateProjectile)
     {
         GetComponent<Rigidbody2D>().
             velocity = new Vector2(((direction.y > 0) ? 10 : -10) * Mathf.Sin(angle) * bulletSpeed,
                 ((direction.y > 0) ? 10 : -10) * Mathf.Cos(angle) * bulletSpeed);
 
-        transform.Rotate(new Vector3(0, 0,
-                ((direction.y > 0) ? -1 : 1) * Mathf.Rad2Deg * angle));
+        if(rotateProjectile) transform.Rotate(new Vector3(0, 0,
+                ((direction.y < 0) ? -1 : 1) * Mathf.Rad2Deg * angle));
     }
 
     public void FixedUpdate()
