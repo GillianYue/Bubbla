@@ -19,8 +19,9 @@ public class Enemy : MonoBehaviour {
 	private PrefabHolder prefabHolder;
 	private GameObject myProjectilePrefab; //has projectile script attached
 	int projectileType, projectileAttack;
-	float projectileSpeed, shootInterval;
+	float projectileSpeed, projectileAccl, shootInterval;
 	bool genProjectile;
+	Sprite projectileSprite;
 	IEnumerator projectileProcess;
 
 
@@ -46,14 +47,16 @@ public class Enemy : MonoBehaviour {
 		gameControl = gc;
     }
 
-	public void setProjectile(GameObject prefab, int p_attk, int p_type, float p_spd, float p_shoot_interval)
+	public void setProjectile(GameObject prefab, Sprite spr, int p_attk, int p_type, float p_spd, float p_accl, float p_shoot_interval)
 	{
 		if (projectileProcess != null) StopCoroutine(projectileProcess);
 
-		myProjectilePrefab = prefab;
+		myProjectilePrefab = prefab; //mold
+		projectileSprite = spr;
 		projectileAttack = p_attk; //for now set to enemy's own attack
 		projectileType = p_type;
 		projectileSpeed = p_spd;
+		projectileAccl = p_accl;
 		shootInterval = p_shoot_interval;
 
 		genProjectile = true;
@@ -65,13 +68,21 @@ public class Enemy : MonoBehaviour {
     {
 		while (true)
 		{
-			if (genProjectile)
+			if (genProjectile && projectileSprite)
 			{
-				GameObject p = Instantiate(myProjectilePrefab, this.transform);
+				GameObject p = Instantiate(myProjectilePrefab, this.transform.position, myProjectilePrefab.transform.rotation);
+				p.GetComponent<SpriteRenderer>().sprite = projectileSprite;
+				Destroy(p.GetComponent<CircleCollider2D>());
+				p.AddComponent<CircleCollider2D>(); //TODO check here; supposedly auto generates appropriately sized collider
+
+				p.transform.parent = null;
+				p.transform.localScale = transform.localScale;
+				Debug.Log("curr projectile scale " + p.transform.localScale);
 				p.SetActive(true);
 				projectile proj = p.GetComponent<projectile>();
 				proj.damage = projectileAttack;
-				proj.bulletSpeed = projectileSpeed;
+				proj.setSpeed(projectileSpeed);
+				proj.setAcceleration(projectileAccl);
 
 				Vector3 direction = Vector3.down; float angle = 0;
 				switch (projectileType)
@@ -85,7 +96,7 @@ public class Enemy : MonoBehaviour {
 						break;
 				}
 
-				proj.setVelocity(direction, angle);
+				proj.setDirection(direction, angle);
 
 			}
 

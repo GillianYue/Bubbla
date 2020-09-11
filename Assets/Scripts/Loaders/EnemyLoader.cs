@@ -22,7 +22,7 @@ public class EnemyLoader : MonoBehaviour
     string[] projectileName;
     Sprite[] projectileSprites;
     int[] projectileType;
-    float[] projectileSpeed, projectileShootInterval;
+    float[] projectileSpeed, projectileAccl, projectileShootInterval;
 
     GameObject enemyMold, projectileMold;
 
@@ -102,14 +102,9 @@ public class EnemyLoader : MonoBehaviour
 
         //projectile if exists
         if (projectileName[eCode] != "") {
-            GameObject newProj = Instantiate(projectileMold);
-            newProj.GetComponent<SpriteRenderer>().sprite = projectileSprites[eCode];
-            Destroy(newProj.GetComponent<CircleCollider2D>());
-            newProj.AddComponent<CircleCollider2D>(); //TODO check here; supposedly auto generates appropriately sized collider
-            newProj.transform.parent = e.transform;
-            newProj.SetActive(false);
 
-            eScript.setProjectile(newProj, eScript.attack, projectileType[eCode], projectileSpeed[eCode], projectileShootInterval[eCode]);
+            eScript.setProjectile(projectileMold, projectileSprites[eCode], eScript.attack, projectileType[eCode], 
+                projectileSpeed[eCode], projectileAccl[eCode], projectileShootInterval[eCode]);
         }
 
         EnemyMover mover = e.GetComponent<EnemyMover>();
@@ -166,7 +161,8 @@ public class EnemyLoader : MonoBehaviour
 
         projectileName = new string[numRows - 1]; projectileSprites = new Sprite[numRows - 1]; 
         projectileType = new int[numRows - 1];
-        projectileSpeed = new float[numRows - 1]; projectileShootInterval = new float[numRows - 1];
+        projectileSpeed = new float[numRows - 1]; projectileAccl = new float[numRows - 1];
+        projectileShootInterval = new float[numRows - 1];
 
         enemyColliders = new List<List<Vector2>>[numRows - 1];
 
@@ -187,7 +183,8 @@ public class EnemyLoader : MonoBehaviour
             if (data[12, r] != "") projectileName[r - 1] = data[12, r];
             if (data[13, r] != "") int.TryParse(data[13, r], out projectileType[r - 1]);
             if (data[14, r] != "") float.TryParse(data[14, r], out projectileSpeed[r - 1]);
-            if (data[15, r] != "") float.TryParse(data[15, r], out projectileShootInterval[r - 1]);
+            if (data[15, r] != "") float.TryParse(data[15, r], out projectileAccl[r - 1]);
+            if (data[16, r] != "") float.TryParse(data[16, r], out projectileShootInterval[r - 1]);
         }
 
         loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM);

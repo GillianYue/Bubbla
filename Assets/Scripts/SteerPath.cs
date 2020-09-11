@@ -82,7 +82,6 @@ public class SteerPath : MonoBehaviour
         if (nodesVector3.Count > 0) return nodesVector3;
 
         //set up Vector3 array based on exposed points
-        Debug.Log("list length " + pathPoints.Length);
         nodesVector3 = getPointPositions(pathPoints);
 
         return nodesVector3;

@@ -24,7 +24,17 @@ public class MyBullet : MonoBehaviour {
         prefabHolder = ph;
     }
 
-    public void setVelocity(Vector3 direction, float angle)
+    public void setSpeed(float spd)
+    {
+        bulletSpeed = spd;
+    }
+
+    public void setAcceleration(float ac)
+    {
+        accl = ac;
+    }
+
+    public void setDirection(Vector3 direction, float angle)
     {
         GetComponent<Rigidbody2D>().
             velocity = new Vector2(((direction.y > 0) ? 10 : -10) * Mathf.Sin(angle) * bulletSpeed,

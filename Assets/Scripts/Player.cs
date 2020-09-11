@@ -421,7 +421,7 @@ public class Player : MonoBehaviour
 
 			MyBullet bulletScript = bullet.GetComponent<MyBullet>();
 			bulletScript.passPrefabHolder(prefabHolder);
-			bulletScript.setVelocity(direction, angle);
+			bulletScript.setDirection(direction, angle);
 
 
 			//apply additional effects
@@ -478,7 +478,7 @@ public class Player : MonoBehaviour
 				BulletPrefabs[bulletType].transform.rotation) as GameObject;
 			fire[(int)(Random.Range(0, fire.Length-0.01f))].Play (); //sound
 
-				bullet.GetComponent<MyBullet>().setVelocity(direction, angle);
+				bullet.GetComponent<MyBullet>().setDirection(direction, angle);
 
 				Color c1 = PaintballBehavior.colorDict[bulletGauge [bulletGauge.Count - 1]];
 				Color c2 = PaintballBehavior.colorDict[bulletGauge [bulletGauge.Count - 2]];
