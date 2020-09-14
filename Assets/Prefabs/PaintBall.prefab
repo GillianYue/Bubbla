@@ -69,7 +69,10 @@ MonoBehaviour:
   - {fileID: 21300002, guid: 011ea748fb65e4d97be0c787c3aea05a, type: 3}
   - {fileID: 21300004, guid: 011ea748fb65e4d97be0c787c3aea05a, type: 3}
   - {fileID: 21300006, guid: 011ea748fb65e4d97be0c787c3aea05a, type: 3}
+  myColor: 0
   audioz: {fileID: 0}
+  myVFX: {fileID: 0}
+  VFXtimer: 0
 --- !u!114 &114000012605773320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,7 +85,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5807575cf104a0a99d435ae3a76600, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 70
+  speedHorizontal: 0
+  speedVertical: 80
   accl: 0
   direction: {x: 0, y: -1, z: 0}
   enemyType: 0

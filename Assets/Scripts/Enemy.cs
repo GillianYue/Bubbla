@@ -137,7 +137,7 @@ public class Enemy : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other){
 		if (other.GetComponent<Collider2D> ().tag == "Player") {
-			other.gameObject.GetComponent<Player> ().damage (attack);
+			other.GetComponent<Player> ().damage (attack);
 		}
 	}
 
@@ -178,6 +178,8 @@ public class Enemy : MonoBehaviour {
 		if (currBuffProcess != null) StopCoroutine(currBuffProcess);
 		debuff = b; GameObject explosionPrefab;
 		bool parentToOther = false;
+
+		if (!prefabHolder) prefabHolder = FindObjectOfType<PrefabHolder>();
 
 		switch (b)
         {

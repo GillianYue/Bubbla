@@ -83,24 +83,29 @@ public class L1 : LevelScript
 
     IEnumerator bossFight()
     {
-        if (ps == null)
-            ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();
+        bool[] bossReady = new bool[1];
+        customEvents.loadAndPlayBGM(new bool[1], makeParamString("1", "woods_boss", "1", "1"));
+        StartCoroutine(customEvents.setGOActive(bossReady, makeParamString("ps", "1", "0")));
 
-        ps.showLifeBar();
+        /*        if (ps == null)
+                    ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();*/
 
-        Debug.Log("starting boss fight");
+        // ps.showLifeBar();
+        yield return new WaitUntil(() => bossReady[0]);
+
+        BossStateManager b = FindObjectOfType<BossStateManager>();
+        b.showLifeBar();
+        b.startActivities();
+
         bool[] bossFightEnd = new bool[1];
 
        gameControl.pSpawner.StartSpawn(bossFightEnd); //will end when boss fight ends
 
-        //TODO enter BGM
         yield return new WaitForSeconds(3f);
 
         //StartCoroutine(ps.bossFight(bossFightEnd));
 
-        //StartCoroutine(ps.idleHover());
         bool[] attkDone = new bool[1];
-        StartCoroutine(ps.directAttack(0, attkDone));
 
         yield return new WaitUntil(() => bossFightEnd[0]);
 

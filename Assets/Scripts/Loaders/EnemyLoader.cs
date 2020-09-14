@@ -111,7 +111,7 @@ public class EnemyLoader : MonoBehaviour
 
         EnemyMover mover = e.GetComponent<EnemyMover>();
         mover.enemyType = movement[eCode];
-        mover.setSpeed(moveSpeed[eCode]);
+        mover.setSpeed(0, moveSpeed[eCode]); //TODO for now, setting horizontal speed to 0 (most don't move horizontally anyway)
 
         EnemySteering steer = e.GetComponent<EnemySteering>();
         steer.velocity = moveSpeed[eCode];

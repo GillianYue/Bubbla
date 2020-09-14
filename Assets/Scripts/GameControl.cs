@@ -80,6 +80,8 @@ public class GameControl : MonoBehaviour {
     public enum Mode { QUEST, GAME, TRAVEL }; //scene type
     public Mode sceneType;
 
+    public AudioSource bgmSource;
+
     // Use this for initialization
     void Start () {
         

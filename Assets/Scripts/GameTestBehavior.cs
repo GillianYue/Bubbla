@@ -27,7 +27,7 @@ public class GameTestBehavior : MonoBehaviour
             gf.setPointer(startLine); //for testing I'm putting in what line I'm seeing in the csv file
         }
 
-        if (invincible) player.invincible = true;
+        if (invincible) player.setInvincible(true);
     }
 
     // Update is called once per frame
@@ -58,12 +58,12 @@ public class GameTestBehavior : MonoBehaviour
 
     }
 
-    public void pauseGame()
+    public static void pauseGame()
     {
         Time.timeScale = 0;
     }
 
-    public void resumeGame()
+    public static void resumeGame()
     {
         Time.timeScale = 1;
     }

@@ -106,7 +106,7 @@ public class BGMover : MonoBehaviour {
                     scrollToggle = rt;
 
                     //if it goes beyond the lower threshold
-                    rt.anchoredPosition = new Vector3(0, topY, p.z);
+                    rt.anchoredPosition += new Vector2(0, topY - bottomY);
                     //reset
 
                 }
@@ -158,28 +158,33 @@ public class BGMover : MonoBehaviour {
     {
         //wait for condition to swap; loop until condition met
 
-        int target = -1; Vector3 swapTo = Vector3.zero;
+        int target = -1; 
 
         while (target == -1)
         {
             for (int i = 0; i < scrollSequence.Length; i++)
             {
-                if (!isBGInView(scrollSequence[i]))
+                if (!isBGInView(scrollSequence[i])) //bg out of screen (above) found
                 {
                     target = i;
-                    swapTo = scrollSequence[i].localPosition;
-                    scrollSequence[i].gameObject.SetActive(false);
                     break;
                 } //finding the out-of-screen instance, since there's only two 
             }
 
             if (target == -1) yield return new WaitForSeconds(0.5f);
 
-            else scrollSequence[target] = lingerSpots[index]; //the swap when found
+            else
+            {
+                lingerSpots[index].transform.localPosition = scrollSequence[target].localPosition;
+                lingerSpots[index].gameObject.SetActive(true);
+                scrollSequence[target].gameObject.SetActive(false);
+                scrollSequence[target] = lingerSpots[index]; //the swap when found
+
+                //GameTestBehavior.pauseGame();
+
+            }
         }
 
-        scrollSequence[target].gameObject.SetActive(true);
-        scrollSequence[target].transform.localPosition = swapTo;
 
         //wait until reach/settle
         RectTransform spot = scrollSequence[target];

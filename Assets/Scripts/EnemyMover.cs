@@ -4,7 +4,7 @@ using System.Collections;
 //utilizes rigidbody.velocity to move enemies around
 public class EnemyMover : MonoBehaviour {
 
-	public float speed, accl = 0;
+	public float speedHorizontal, speedVertical, accl = 0;
 	private Rigidbody2D rb;
 	public Vector3 direction;
 	public int enemyType;
@@ -17,11 +17,12 @@ public class EnemyMover : MonoBehaviour {
 	void Start() {
 		//Rigidbody
 		rb = GetComponent<Rigidbody2D> ();
-        if(needVelo) rb.velocity = direction * speed;
+        if(needVelo) rb.velocity = new Vector3(speedHorizontal * direction.x, speedVertical * direction.y, 0);
+		scnRange = Screen.width / 2 - 90; //TODO fix here
 
 		switch(enemyType){
 		case 1: //crab
-			StartCoroutine (movePause (8, speed));
+			StartCoroutine (movePause (8));
 			break;
 		case 2: 
 		//	StartCoroutine (screenSpan ());
@@ -35,11 +36,12 @@ public class EnemyMover : MonoBehaviour {
     /**
      * sets spd; assumes that direction is already in place
      */
-    public void setSpeed(float spd)
+    public void setSpeed(float spdHoriz, float spdVert)
     {
-        speed = spd;
+        speedHorizontal = spdHoriz;
+		speedVertical = spdVert;
         rb = GetComponent<Rigidbody2D>();
-        rb.velocity = direction * spd;
+        rb.velocity = new Vector3(speedHorizontal * direction.x, speedVertical * direction.y, 0);
     }
 
     public void setVelocity(Vector2 velo)
@@ -63,21 +65,20 @@ public class EnemyMover : MonoBehaviour {
 
 
 	//does not interfere with movement on the y axis
-	IEnumerator movePause (int turns, float speed){
+	IEnumerator movePause (int turns){
 
 		for (int t = 0; t < turns; t++) {
-			rb.velocity += new Vector2(speed * Mathf.Pow(-1, t%2), 0);
+			rb.velocity += new Vector2(speedHorizontal * Mathf.Pow(-1, t%2), 0);
 			GetComponent<SpriteRenderer> ().flipX = (t%2 == 0 ? false : true);
 			//even numbers: positive velocity
 			if (t % 2 == 0) {
-				while (rb.transform.position.x < 
-					(Screen.width * Global.STWfactor.x/2)*0.8) {
+				while (rb.transform.position.x < scnRange) {
 					yield return new WaitForSeconds (.5f);
 					//not changing the velocity (stuck in this loop) until reaching the target
 				}
 			} else { //else, odd, negative velocity
 				while (rb.transform.position.x > 
-					-1*(Screen.width * Global.STWfactor.x/2)*0.8) {
+					-1*(scnRange)) {
 					yield return new WaitForSeconds (.5f);
 				}
 			}

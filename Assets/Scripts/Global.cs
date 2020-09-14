@@ -650,6 +650,42 @@ public class Global : MonoBehaviour
         return (ran <=  percentage / 100f) ;
     }
 
+    public static bool percentChance(float percentage)
+    {
+        float ran = UnityEngine.Random.Range(0f, 1f);
+        return (ran <= percentage);
+    }
+
+    /// <summary>
+    /// takes in tuple of (value, erraticity (percentage))
+    /// </summary>
+    /// <param name="instance"></param>
+    /// <returns>returns a calculated value applied with erraticity</returns>
+    public static float getValueWithNoise((float, float) instance)
+    {
+        float val = instance.Item1, err = instance.Item2;
+        float sign = UnityEngine.Random.Range(0.0f, 1.0f) > 0.5f ? 1 : -1;
+        float pickErr = UnityEngine.Random.Range(0.0f, err);
+        val *= 1 + sign * pickErr;
+        return val;
+    }
+
+
+    public static float getValueWithNoise(Vector2 instance)
+    {
+        return getValueWithNoise((instance.x, instance.y));
+    }
+
+    /// <summary>
+    /// the y channel/error is percentage error
+    /// </summary>
+    /// <param name="instance"></param>
+    /// <returns></returns>
+    public static float getValueWithNoise(float val, float noise)
+    {
+        return getValueWithNoise((val, noise));
+    }
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~Code Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 }

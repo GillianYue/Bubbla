@@ -19,7 +19,6 @@ public class BossVisual : MonoBehaviour
     public Animator myAnimator; //needs editor assignment
     //public AnimatorOverrideController aoc;
 
-    // Start is called before the first frame update
     void Start()
     {
         myAnimator = transform.parent.gameObject.GetComponent<Animator>();
@@ -33,7 +32,7 @@ public class BossVisual : MonoBehaviour
         switchToCollider(1); //defaults to one
 	
 
-	    idle.Add(new Vector2(0, 1)); 
+	    idle.Add(new Vector2(0, 1)); //at frame x, switch to collider y (whenever this animation clip plays)
 	    //if unstated, assumes default collider is same as idle
 	    direct_attack.Add(new Vector2(15, 2));
 	    direct_attack_anticip.Add(new Vector2(0, 3));
@@ -41,7 +40,6 @@ public class BossVisual : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         

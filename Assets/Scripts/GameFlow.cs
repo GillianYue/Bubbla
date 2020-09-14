@@ -169,8 +169,8 @@ public class GameFlow : MonoBehaviour {
                     int indexCE;
                     int.TryParse(data[2, pointer], out indexCE);
                     //for now we assume there's at most 5 parameters to a custom event
-                    string[] parameters = new string[5];
-                    for (int p = 0; p < 5; p++)
+                    string[] parameters = new string[7];
+                    for (int p = 0; p < 7; p++)
                     {
                         parameters[p] = data[p+3, pointer];
                     }

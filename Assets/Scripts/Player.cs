@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
 	private Vector3[] slotPositions; //world locations to place the paint sprites; initialized on start
 
     private float bulletWeaponDist = 2;
-	private int life;
+	public int life;
 
     [Inject(InjectFrom.Anywhere)]
     public GameControl gameControl;
@@ -49,7 +49,8 @@ public class Player : MonoBehaviour
 
 	private Animator anim;
 
-	public bool checkForUpdates = true, invincible; //updates life UI and checks for life if true
+	public bool checkForUpdates = true;
+	private bool invincible; //updates life UI and checks for life if true
 
 
 	//those are relative to player, since Cannon(player's cannon) is a child of player
@@ -63,7 +64,7 @@ public class Player : MonoBehaviour
 	void Start ()
 	{
 
-		life = maxLife;
+		if(life == 0) life = maxLife;
 		bulletGauge = new List<PaintballBehavior.ColorMode> ();
 		PaintSprites = new List<GameObject> ();
 
@@ -496,6 +497,7 @@ public class Player : MonoBehaviour
         if (!invincible)
         {
             life -= damage;
+			Debug.Log("damage is " + damage + " and life now " + life);
         }
 		StartCoroutine (damageVFX ());
 		ouch [(int)(Random.Range (0, ouch.Length - 0.01f))].Play ();
@@ -678,6 +680,11 @@ public class Player : MonoBehaviour
 		canMove = false;
 		yield return new WaitForSeconds(0.1f);
 		canMove = true;
+    }
+
+	public void setInvincible(bool to)
+    {
+		invincible = to;
     }
 
 

@@ -126,6 +126,9 @@ public class CustomEvents : MonoBehaviour
             case 32:
                 swapBGScrollAndWaitForFinish(done, prms);
                 break;
+            case 33:
+                loadAndPlayBGM(done, prms);
+                break;
             case 99:
                 levelScriptEvent(done, prms);
                 break;
@@ -137,8 +140,8 @@ public class CustomEvents : MonoBehaviour
         yield return new WaitUntil(() => done[0]);
 
         //move on to the next command, we only need to update the csv pointer in game flow
-        if(index != 31) //conditional switch modifies the pointer already, should not have an additional increment
-        gameFlow.incrementPointer();
+        if (index != 31) //conditional switch/waitUntil modifies the pointer already, should not have an additional increment
+            gameFlow.incrementPointer();
     }
 
     /*
@@ -332,10 +335,10 @@ public class CustomEvents : MonoBehaviour
      */
     public IEnumerator changeAnimState(bool[] done, string[] prms)
     {
-            //look in identified for an identifier with the right id and return its gameObject
-            GameObject target = findByIdentifier(prms[0]);
-            Animator anim = target.GetComponent<Animator>();
-            SpriteRenderer spr = target.GetComponent<SpriteRenderer>();
+        //look in identified for an identifier with the right id and return its gameObject
+        GameObject target = findByIdentifier(prms[0]);
+        Animator anim = target.GetComponent<Animator>();
+        SpriteRenderer spr = target.GetComponent<SpriteRenderer>();
 
         Color orig = spr.color;
         float origA = orig.a;
@@ -376,7 +379,7 @@ public class CustomEvents : MonoBehaviour
         }
         done[0] = true;
 
-        }
+    }
 
     /*
      * event #7
@@ -524,24 +527,35 @@ public class CustomEvents : MonoBehaviour
      *      b==false and c==3, will point to line 11, otherwise point to 13.
      * param 3: the values of each case, separated by comma
      * optional param 4: line number to go to when conditions are met (if left blank, assumes is next line)
+     * optional param 5: 
+     *      -0 (default): do not yield control, will wait and prevent any other game logic from executing until condition met
+     *      -1: yields control to other events while waiting (by setting the done[0] var); when met, will redirect to desig line in conditionalSwitch
      * 
      * 
      */
     public IEnumerator waitUntil(bool[] done, string[] prms)
     {
-        string[] newParams = new string[5];
-        for (int i = 0; i < prms.Length; i++) newParams[i] = prms[i];
+        string[] newParams = new string[prms.Length];
+        for (int i = 0; i < prms.Length; i++) newParams[i] = prms[i]; //the extra stuff will be ignored. Hopefully
 
         if (prms[4].Equals(""))
         {
             int currNum = gameFlow.getCurrentLineNumber();
+            Debug.Log("curr num is " + currNum);
             newParams[4] = (currNum + 1).ToString(); //only provide line when conditions are met (else, conditionalSwitch will simply return false and do nothing)
         }
 
-        while (!conditionalSwitch(done, newParams)) //done is set here when successful
+        if (prms.Length >= 6 && prms[5] == "1")
+        {
+            done[0] = true; //yield control while waiting if need be
+            Debug.Log("yielding control");
+        }
+
+        while (!conditionalSwitch(new bool[1], newParams)) //this done will not increment pointer 
         {
             yield return new WaitForSeconds(0.5f);
         }
+
     }
 
     /*
@@ -718,7 +732,7 @@ public class CustomEvents : MonoBehaviour
 
         for (int t = 0; t < varTypes.Length; t++)
         {
-            
+
             switch (varTypes[t])
             {
                 case 0:
@@ -793,7 +807,7 @@ public class CustomEvents : MonoBehaviour
 
         string[] linez = prms[4].Split(',');
         int[] lines = new int[linez.Length];
-        for(int n=0; n<linez.Length; n++)
+        for (int n = 0; n < linez.Length; n++)
         {
             int.TryParse(linez[n], out lines[n]);
         }
@@ -916,10 +930,10 @@ public class CustomEvents : MonoBehaviour
                         break;
 
                     case 1:
-                if (!Global.intVariables.ContainsKey(varNames[v]))
-                {
-                    Debug.Log("variable with name " + varNames[v] + " not found");
-                }
+                        if (!Global.intVariables.ContainsKey(varNames[v]))
+                        {
+                            Debug.Log("variable with name " + varNames[v] + " not found");
+                        }
 
                         int iValue = Global.intVariables[varNames[v]];
                         int i;
@@ -945,7 +959,7 @@ public class CustomEvents : MonoBehaviour
             goToLine = lines.Length > 1 ? lines[(ok ? 0 : 1)] : (ok ? lines[0] : -1);
         }
 
-            if (goToLine == -1)
+        if (goToLine == -1)
         {
             Debug.Log("conditional switch failed to match with any case");
             return false;
@@ -978,6 +992,39 @@ public class CustomEvents : MonoBehaviour
         bgMover.swapScroll(prms[0], index);
         done[0] = true;
     }
+
+    /*
+     * event #33
+     * 
+     * param 0: whether or not to load the clip from Resources/BGM
+     *      -0: use the currently loaded one (GameControl.bgmSource)
+     *      -1: load
+     * param 1: if load, the name of the sound file
+     * optional param 2: whether the bgm should loop
+     *      -0 (default): don't loop
+     *      -1: loop
+     * optional param 3: whether to play immediately
+     *      -0 (default): pause and wait
+     *      -1: play immediately
+     */
+    public void loadAndPlayBGM(bool[] done, string[] prms)
+    {
+        bool[] parms = new bool[4];
+        for(int i=0; i<4; i++)
+        {
+            parms[i] = !(prms[i] == "" || prms[i] == "0"); //parms[1] obviously has no use
+        }
+
+        if (parms[0]) { 
+            gameControl.bgmSource.clip = (AudioClip)Resources.Load("BGM/" + prms[1]);
+           // Debug.Log("load result: " + gameControl.bgmSource.clip.name);
+        }
+        gameControl.bgmSource.loop = parms[2];
+        if (parms[3]) gameControl.bgmSource.Play(); else gameControl.bgmSource.Stop();
+
+        done[0] = true;
+    }
+
 
     /*
      * event #99

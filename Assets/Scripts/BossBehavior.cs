@@ -15,10 +15,10 @@ public abstract class BossBehavior : MonoBehaviour
 
     public int life = 1000, maxLife = 1000;
     public int attack;
-    public int stage; //0
+    public int stage; //0; TODO
 
     public float sizeScale; //same as paintball, base scale to be multiplied with global
-    public float colliderScale; //multiplied to the original generated polygon 2d collider shape to resize
+    //public float colliderScale; //multiplied to the original generated polygon 2d collider shape to resize
 
     protected GameControl gameControl;
     protected GameFlow gameFlow;
@@ -29,9 +29,11 @@ public abstract class BossBehavior : MonoBehaviour
     moveBody; //moveBody is GO of which the position will be updated (moved)
     protected RectTransform lifeRT;
     public bool lifeBarActive;
+    bool vfxInProcess; //don't start another one when one is already in progress
 
     public enum bossMode { IDLE, DAMAGE, DIR_ATTK, SHOOT_ATTK, PROJ_ATTK, SPEC_ATTK, ANTICIP, DEFEATED };
-    public bossMode currMode = bossMode.IDLE;
+    public bossMode currMode = bossMode.IDLE; 
+    IEnumerator currModeProcess;
     /// <summary>
     /// the second float in the tuple is erraticity of that attribute which ranges from 0 to 1
     /// to expose in the editor, is typed Vector2 instead of (float, float)
@@ -53,10 +55,15 @@ public abstract class BossBehavior : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public PrefabHolder prefabHolder;
 
+    public float[] dirAttkChargeSpd, dirAttkStopDist, dirAttkAnticipTime, dirAttkLingerTime;
+    public int[] shootAttkRounds;
+    public float[] shootAttkAnticipTime, shootAttkInterval, shootAttkRoundsNoise;
+
+    public GameObject[] projectiles;
+
     public void Start()
     {
 
-        setMode(bossMode.IDLE);
         customEvents = gameObject.GetComponent<CustomEvents>();
         GameObject gameController = GameObject.FindWithTag("GameController");
         gameControl = gameController.GetComponent<GameControl>();
@@ -65,7 +72,7 @@ public abstract class BossBehavior : MonoBehaviour
         moveBody = transform.parent.gameObject;
 
         if (sizeScale > 0) setSizeScale(sizeScale);
-        if (colliderScale > 0) setColliderScale(colliderScale);
+        // if (colliderScale > 0) setColliderScale(colliderScale);
 
         lifeBar = GameObject.FindWithTag("BossLife");
         if (hoverBoundsUpper.Equals(Vector2.zero)) hoverBoundsUpper = new Vector2(Global.MainCanvasWidth / 2, Global.MainCanvasHeight / 2);
@@ -78,15 +85,29 @@ public abstract class BossBehavior : MonoBehaviour
     public void Update()
     {
         setLifeBar();
+
+        if (life <= 0)
+        {
+            setModeAndStart(bossMode.DEFEATED);
+            Destroy(this.gameObject, 7);
+        }
     }
 
-    public IEnumerator idleHover()
+    /// <summary>
+    /// Once started, will keep hover around as long as state is idle. 
+    /// 
+    /// done[0] is true when GO is not moving (generally preferred to be switching modes during this time)
+    /// 
+    /// </summary>
+    /// <param name="done"></param>
+    /// <returns></returns>
+    public IEnumerator idleHover(bool[] done)
     {
-        Debug.Log("idle hovering; "+currMode);
         while(currMode.Equals(bossMode.IDLE)) //each while loop is one route 
         {
-            float spd = getCalcValue(movementSpd), range = getCalcValue(movementRange),
-                hoverTime = getCalcValue(hoverDuration), secondNoise = getCalcValue(secondLayerNoise);
+            done[0] = false;
+            float spd = Global.getValueWithNoise(movementSpd), range = Global.getValueWithNoise(movementRange),
+                hoverTime = Global.getValueWithNoise(hoverDuration), secondNoise = Global.getValueWithNoise(secondLayerNoise);
 
             Vector3 destination, dir;
             do {
@@ -99,10 +120,11 @@ public abstract class BossBehavior : MonoBehaviour
             //keep randomize destination until satisfies constraints
 
             // Debug.Log("gen values " + spd + " " + range + " " + hoverTime + " " + secondNoise + " " + dir + " " + destination);
-            bool[] moveDone = { false };
+            bool[] moveDone = { false }; //local
             StartCoroutine(Global.moveTo(moveBody, (int)(destination.x), (int)(destination.y), spd, moveDone));
             yield return new WaitUntil(() => moveDone[0]);
 
+            done[0] = true;
             yield return new WaitForSeconds(hoverTime);
         }
     }
@@ -119,18 +141,16 @@ public abstract class BossBehavior : MonoBehaviour
         bool hasAnticip = true; bool[] anticip_done = new bool[1];
         if (hasAnticip)
         {
-            //TODO swap into sprite for anticipation
             setMode(bossMode.ANTICIP);
-		Debug.Log("anticipation");
 
-		yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(dirAttkAnticipTime[attkIndex]);
             anticip_done[0] = true;
         }
         yield return new WaitUntil(() => anticip_done[0]); //anticipation done
 
         setMode(bossMode.DIR_ATTK);
         Vector2 attkSpot = player.transform.position, from = transform.position; //targets player position *at this moment in time* (means could miss when actually reaching there)
-        float chargeSpd = 700, stopDistAway = 30; //stops some distance away from player's exact location to attack
+        float chargeSpd = dirAttkChargeSpd[attkIndex], stopDistAway = dirAttkStopDist[attkIndex]; //stops some distance away from player's exact location to attack
         //TODO play charge animation/sprite
         Ray toPlayer = new Ray(from, attkSpot); bool[] charge_done = new bool[1];
         Vector2 dest = toPlayer.GetPoint(Global.findVectorDist(from, attkSpot) - stopDistAway);
@@ -140,7 +160,7 @@ public abstract class BossBehavior : MonoBehaviour
 
         //TODO collider will need to change here
         //TODO play attack animation; wait till done
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(dirAttkLingerTime[attkIndex]);
 
         //TODO return animation
         Vector2 returnTo = from; bool[] return_done = new bool[1];
@@ -151,9 +171,74 @@ public abstract class BossBehavior : MonoBehaviour
         done[0] = true;
     }
 
-    public void setMode(bossMode m){
+    public IEnumerator shootAttack(int attkIndex, bool[] done)
+    {
+
+        bool hasAnticip = true; bool[] anticip_done = new bool[1];
+        if (hasAnticip)
+        {
+            setMode(bossMode.ANTICIP);
+
+            yield return new WaitForSeconds(shootAttkAnticipTime[attkIndex]);
+            anticip_done[0] = true;
+        }
+        yield return new WaitUntil(() => anticip_done[0]); //anticipation done
+
+        setMode(bossMode.SHOOT_ATTK);
+        for(int r = 0; r < Global.getValueWithNoise(shootAttkRounds[attkIndex], shootAttkRoundsNoise[attkIndex]); r++)
+        {
+            //shoot one projectile here
+            //TODO lotta work to be done here
+            Instantiate(projectiles[0], transform.position, transform.rotation); //for now expect projectile itself to do the work 
+            yield return new WaitForSeconds(shootAttkInterval[attkIndex]);
+        }
+
+        done[0] = true;
+
+    }
+
+    //will not start the process
+    public void setMode(bossMode m)
+    {
+        currMode = m; 
+        bossVisual.updateModeSprite(m);
+    }
+
+    //setting the mode WILL start the process (and so within the processes DO NOT CALL THIS FUNCTION)
+    public void setModeAndStart(bossMode m, bool[] done){
+        if (currModeProcess != null) StopCoroutine(currModeProcess);
+        currModeProcess = null;
+
         currMode = m;
         bossVisual.updateModeSprite(m);
+
+        switch (m)
+        {
+            case BossBehavior.bossMode.IDLE:
+                currModeProcess = idleHover(done);
+                break;
+            case BossBehavior.bossMode.ANTICIP:
+                break;
+            case BossBehavior.bossMode.SHOOT_ATTK:
+                currModeProcess = shootAttack(0, done);
+                break;
+            case BossBehavior.bossMode.DIR_ATTK:
+                currModeProcess = directAttack(0, done);
+                break;
+            case BossBehavior.bossMode.DEFEATED:
+                break;
+            default:
+                break;
+        }
+
+        if (currModeProcess != null) StartCoroutine(currModeProcess);
+
+    }
+
+    void setModeAndStart(bossMode m)
+    {
+        bool[] done = new bool[1];
+        setModeAndStart(m, done);
     }
 
     //might need to be overridden
@@ -210,7 +295,7 @@ public abstract class BossBehavior : MonoBehaviour
         }
     }
 
-    public void setColliderScale(float cScale)
+/*    public void setColliderScale(float cScale)
     {
         Vector2[] colliderPoints = GetComponent<PolygonCollider2D>().points;
         Vector2[] scaledPoints = new Vector2[colliderPoints.Length];
@@ -220,25 +305,37 @@ public abstract class BossBehavior : MonoBehaviour
             scaledPoints[p] = np;
         }
         GetComponent<PolygonCollider2D>().SetPath(0, scaledPoints);
-    }
+    }*/
 
     public void damage(int damage, Color col)
     {
         life -= damage;
         //audioz.enemyDamagedSE();
-        StartCoroutine(damageVFXboss(col));
+        if (!vfxInProcess)
+        {
+            StartCoroutine(damageVFXboss());
+        }
     }
 
     //can be overridden by children
-    IEnumerator damageVFXboss(Color col)
+    IEnumerator damageVFXboss()
     {
+        vfxInProcess = true;
+
+        SpriteRenderer s = GetComponent<SpriteRenderer>();
+        Color origCol = s.color;
+
         for (int i = 0; i < 2; i++)
         {
             //              //flip visibility on and off
-            GetComponent<SpriteRenderer>().enabled = !GetComponent<SpriteRenderer>().enabled;
+            // s.enabled = !s.enabled;
+            if (i % 2 == 0) s.color = new Color(origCol.r, origCol.g, origCol.b, origCol.a * 0.7f);
+            else s.color = new Color(origCol.r, origCol.g, origCol.b, origCol.a);
 
             yield return new WaitForSeconds(0.1f);
         }
+
+        vfxInProcess = false;
     }
 
 
@@ -301,10 +398,10 @@ public abstract class BossBehavior : MonoBehaviour
      * if inst is true, assumes GO proj is a mold, instantiates another copy of it;
      * if inst is false, will not instantiate but use proj directly
      */
-    public static GameObject shootProjectileAt(bool inst, GameObject proj, Vector3 spawnPos, Vector3 dir, float spd, float angle)
+    public static GameObject shootProjectileAt(bool isPrefab, GameObject proj, Vector3 spawnPos, Vector3 dir, float spd, float angle)
     {
         GameObject p;
-        if (inst)
+        if (isPrefab)
         {
             p = Instantiate(proj, spawnPos, proj.transform.rotation) as GameObject;
         }
@@ -380,25 +477,15 @@ public abstract class BossBehavior : MonoBehaviour
 
 
 
-    // ------------------------------------------------------HELPER FUNCTIONS--------------------------------------------------------------------
-    /// <summary>
-    /// takes in tuple of (value, erraticity)
-    /// </summary>
-    /// <param name="instance"></param>
-    /// <returns>returns a calculated value applied with erraticity</returns>
-    private float getCalcValue((float, float) instance)
+
+    //collision
+    void OnTriggerEnter2D(Collider2D other)
     {
-        float val = instance.Item1, err = instance.Item2;
-        float sign = UnityEngine.Random.Range(0.0f, 1.0f) > 0.5f ? 1 : -1;
-        float pickErr = UnityEngine.Random.Range(0.0f, err);
-        val *= 1 + sign * pickErr;
-        return val;
+        Debug.Log("test/////////");
+        if (other.GetComponent<Collider2D>().tag == "Player")
+        {
+            other.gameObject.GetComponent<Player>().damage(attack);
+        }
     }
 
-    private float getCalcValue(Vector2 instance)
-    {
-        return getCalcValue((instance.x, instance.y));
-    }
-
-    // ------------------------------------------------------END HELPER FUNCTIONS--------------------------------------------------------------------
 }
