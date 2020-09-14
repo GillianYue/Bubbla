@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour {
 
 
 	void Start () {
-		audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
+		if(!audioz) audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
 
         setSizeScale(sizeScale);
 

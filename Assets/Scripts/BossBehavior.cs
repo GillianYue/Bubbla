@@ -61,8 +61,12 @@ public abstract class BossBehavior : MonoBehaviour
 
     public GameObject[] projectiles;
 
+    [Inject(InjectFrom.Anywhere)]
+    public AudioStorage audioz;
+
     public void Start()
     {
+        if (!audioz) audioz = GameObject.FindWithTag("AudioStorage").GetComponent<AudioStorage>();
 
         customEvents = gameObject.GetComponent<CustomEvents>();
         GameObject gameController = GameObject.FindWithTag("GameController");
@@ -89,6 +93,7 @@ public abstract class BossBehavior : MonoBehaviour
         if (life <= 0)
         {
             setModeAndStart(bossMode.DEFEATED);
+            gameControl.bgmSource.Stop();
             Destroy(this.gameObject, 7);
         }
     }
@@ -310,7 +315,7 @@ public abstract class BossBehavior : MonoBehaviour
     public void damage(int damage, Color col)
     {
         life -= damage;
-        //audioz.enemyDamagedSE();
+        audioz.enemyDamagedSE();
         if (!vfxInProcess)
         {
             StartCoroutine(damageVFXboss());
