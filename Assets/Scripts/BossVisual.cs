@@ -31,7 +31,7 @@ public class BossVisual : MonoBehaviour
         //aoc = new AnimatorOverrideController(myAnimator.runtimeAnimatorController);
         switchToCollider(1); //defaults to one
 	
-
+        //note: lines below are specific to one boss ONLY
 	    idle.Add(new Vector2(0, 1)); //at frame x, switch to collider y (whenever this animation clip plays)
 	    //if unstated, assumes default collider is same as idle
 	    direct_attack.Add(new Vector2(15, 2));

@@ -19,7 +19,7 @@ public class projectile : MyBullet
     }
 
     /**
-     * unlike in bullet, we want to detect collision with the player
+     * unlike in bullet, we want to detect collision with the player; override
      */
     void OnTriggerEnter2D(Collider2D other)
     {

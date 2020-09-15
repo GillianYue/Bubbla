@@ -73,6 +73,12 @@ public class L1 : LevelScript
             case 3:
                 StartCoroutine(bossFight());
                 break;
+            case 4:
+                StartCoroutine(psRoutinePt1());
+                break;
+            case 5:
+                StartCoroutine(psRoutinePt2());
+                break;
             default:
                 break;
 
@@ -81,16 +87,40 @@ public class L1 : LevelScript
         yield return new WaitUntil(() => done[0]);
     }
 
+    //obviously TODO need to organize boss behaviors; ideally it's only a one-liner in the script
+    IEnumerator psRoutinePt1()
+    {
+        if (ps == null)
+            ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();
+
+        bool[] bossReady = new bool[1];
+        customEvents.loadAndPlayBGM(new bool[1], makeParamString("1", "sea_boss(temp)", "1", "1"));
+        StartCoroutine(customEvents.setGOActive(bossReady, makeParamString("ps", "1", "0")));
+
+        yield return new WaitUntil(() => bossReady[0]);
+        gameFlow.incrementPointer();
+
+    }
+
+    IEnumerator psRoutinePt2()
+    {
+        bool[] bossFightEnd = new bool[1];
+        ps.showLifeBar();
+        gameControl.pSpawner.StartSpawn(bossFightEnd); //will end when boss fight ends
+        StartCoroutine(ps.bossFight(bossFightEnd));
+
+        yield return new WaitUntil(() => bossFightEnd[0]);
+
+        Debug.Log("boss fight done");
+        gameFlow.incrementPointer();
+    }
+
     IEnumerator bossFight()
     {
         bool[] bossReady = new bool[1];
         customEvents.loadAndPlayBGM(new bool[1], makeParamString("1", "woods_boss", "1", "1"));
         StartCoroutine(customEvents.setGOActive(bossReady, makeParamString("ps", "1", "0")));
 
-        /*        if (ps == null)
-                    ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();*/
-
-        // ps.showLifeBar();
         yield return new WaitUntil(() => bossReady[0]);
 
         BossStateManager b = FindObjectOfType<BossStateManager>();
@@ -100,12 +130,6 @@ public class L1 : LevelScript
         bool[] bossFightEnd = new bool[1];
 
        gameControl.pSpawner.StartSpawn(bossFightEnd); //will end when boss fight ends
-
-        yield return new WaitForSeconds(3f);
-
-        //StartCoroutine(ps.bossFight(bossFightEnd));
-
-        bool[] attkDone = new bool[1];
 
         yield return new WaitUntil(() => bossFightEnd[0]);
 

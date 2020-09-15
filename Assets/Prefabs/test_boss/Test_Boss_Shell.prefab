@@ -592,7 +592,7 @@ MonoBehaviour:
   moveBody: {fileID: 0}
   lifeBarActive: 0
   currMode: 0
-  movementSpd: {x: 200, y: 0.2}
+  movementSpd: {x: 300, y: 0.2}
   movementRange: {x: 200, y: 0.3}
   hoverDuration: {x: 2, y: 0.3}
   secondLayerNoise: {x: 5, y: 0.2}

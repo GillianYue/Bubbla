@@ -414,7 +414,7 @@ public abstract class BossBehavior : MonoBehaviour
      * if inst is true, assumes GO proj is a mold, instantiates another copy of it;
      * if inst is false, will not instantiate but use proj directly
      */
-    public static GameObject shootProjectileAt(bool isPrefab, GameObject proj, Vector3 spawnPos, Vector3 dir, float spd, float angle)
+    public static GameObject shootProjectileAt(bool isPrefab, GameObject proj, Vector3 spawnPos, Vector3 dir, float spd, float angle, float localScaleFactor)
     {
         GameObject p;
         if (isPrefab)
@@ -426,25 +426,40 @@ public abstract class BossBehavior : MonoBehaviour
             p = proj;
         }
 
+        p.transform.localScale = Vector3.one * localScaleFactor;
+
         if (proj.CompareTag("Enemy"))
         {
             p.GetComponent<EnemyMover>().setVelocity(new Vector2(((dir.y > 0) ? 10 : -10) * Mathf.Sin(angle) * spd,
                  ((dir.y > 0) ? 10 : -10) * Mathf.Cos(angle) * spd));
         }
-        else { 
-        p.GetComponent<Rigidbody2D>().velocity =
-                  new Vector2(((dir.y > 0) ? 10 : -10) * Mathf.Sin(angle) * spd,
-                 ((dir.y > 0) ? 10 : -10) * Mathf.Cos(angle) * spd);
+        else {
+
+            p.GetComponent<projectile>().setDirectionAndSpeed(dir, angle, false, spd);
+            /*        p.GetComponent<Rigidbody2D>().velocity =
+                              new Vector2(((dir.y > 0) ? 10 : -10) * Mathf.Sin(angle) * spd,
+                             ((dir.y > 0) ? 10 : -10) * Mathf.Cos(angle) * spd);*/
     }
 
         return p;
     }
 
-    /*
-     * NEED TEST
-     * range for startAngle and endAngle is 0-360 (unit circle), with endAngle always greater or equal to startAngle
-     */
-    public static ArrayList shootGroupProjectiles(GameObject prefab, Vector3 spawnPos, float startAngle, float endAngle, int num_pellets, float spd)
+    public static GameObject shootProjectileAt(bool isPrefab, GameObject proj, Vector3 spawnPos, Vector3 dir, float spd, float angle, float localScaleFactor, 
+        GameObject trailPrefab)
+    {
+        GameObject p = shootProjectileAt(isPrefab, proj, spawnPos, dir, spd, angle, localScaleFactor);
+
+        GameObject trail = Instantiate(trailPrefab, p.transform.position, trailPrefab.transform.rotation) as GameObject;
+
+        trail.GetComponent<TrailFollowBall>().setMyBullet(p);
+        return p;
+    }
+
+        /*
+         * NEED TEST
+         * range for startAngle and endAngle is 0-360 (unit circle), with endAngle always greater or equal to startAngle
+         */
+        public static ArrayList shootGroupProjectiles(GameObject prefab, Vector3 spawnPos, float startAngle, float endAngle, int num_pellets, float spd, float localScale)
     {
         ArrayList pellets = new ArrayList();
 
@@ -453,7 +468,7 @@ public abstract class BossBehavior : MonoBehaviour
         for(int n=0; n<num_pellets; n++)
         {
             pellets.Add(
-            shootProjectileAt(true, prefab, spawnPos, new Vector3((currAngle >= 90 && currAngle <= 270) ? -1 : 1, 0), spd, currAngle));
+            shootProjectileAt(true, prefab, spawnPos, new Vector3((currAngle >= 90 && currAngle <= 270) ? -1 : 1, 0), spd, currAngle, localScale));
             
             currAngle += startAngle;
         }
@@ -464,10 +479,10 @@ public abstract class BossBehavior : MonoBehaviour
      * NEED TEST
      * overload method that instead of taking starting and ending angles, only takes the starting angle and the increment angle
      */
-    public static ArrayList shootGroupProjectiles(float startAngle, float incre, int num_pellets, GameObject prefab, Vector3 spawnPos, float spd)
+    public static ArrayList shootGroupProjectiles(float startAngle, float incre, int num_pellets, GameObject prefab, Vector3 spawnPos, float spd, float localScale)
     {
         float endAngle = startAngle + incre * num_pellets;
-        return shootGroupProjectiles(prefab, spawnPos, startAngle, endAngle, num_pellets, spd);
+        return shootGroupProjectiles(prefab, spawnPos, startAngle, endAngle, num_pellets, spd, localScale);
     }
 
 

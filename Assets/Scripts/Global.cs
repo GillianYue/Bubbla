@@ -323,8 +323,7 @@ public class Global : MonoBehaviour
     {
         Vector3 sSize = spr.bounds.size;
         RectTransform rt = rectObj.GetComponent<RectTransform>();
-        var ratio = rt.rect.width * rt.lossyScale.x / (sSize.x);
-        // Debug.Log("rect width: " + rt.rect.width + " scale " + rt.lossyScale.x);
+        var ratio = rt.rect.width / (sSize.x);
 
         Vector3 gs = obj.transform.parent.lossyScale; 
         //bc the ratios calculated are only valid for a sprite with no parent/lossy scale 1 in the world; we need to adjust for that

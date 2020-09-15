@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PirateShip : BossBehavior
 {
 
-    public GameObject projectile;
+    public GameObject projectile, projectileTrail;
     public float cannonSpeed; //velocity of shot cannonballs, NEED TO BE SET in EDITOR!!
     public float enemyShootSpeed; //velocity of shot enemies, NEED TO BE SET in EDITOR!!
     public Text lifeText;
@@ -19,20 +19,18 @@ public class PirateShip : BossBehavior
     new void Start()
     {
         base.Start();
-        maxLife = 50;
-        life = 50;
         attack = 3; //cannonball damage
         //player = gameControl.player.GetComponent<Player>();
         //enemyLoader = gameFlow.loader.GetComponent<EnemyLoader>();
         bossFightStop = new bool[1];
 
-        projectile = Resources.Load("Projectile") as GameObject;
+        if(!projectile) projectile = Resources.Load("Projectile") as GameObject;
     }
 
     new void Update()
     {
         base.Update();
-        lifeText.text = "boss life: " + life;
+        if(lifeText) lifeText.text = "boss life: " + life;
     }
 
     public IEnumerator bossFight(bool[] done)
@@ -88,8 +86,8 @@ public class PirateShip : BossBehavior
 
         float dgAngle = -1 * (angle * Mathf.Rad2Deg); //convert from radian to dgr
 
-        GameObject cannonball = shootProjectileAt(true, projectile, gameObject.transform.position, direction, cannonSpeed, angle); //already instantiated
-        cannonball.transform.parent = transform;
+        GameObject cannonball = shootProjectileAt(true, projectile, gameObject.transform.position, direction, cannonSpeed, angle, 
+            projectile.transform.localScale.x, projectileTrail); //already instantiated
 
         done[0] = true;
     }
@@ -106,7 +104,7 @@ public class PirateShip : BossBehavior
         float dgAngle = -1 * (angle * Mathf.Rad2Deg); //convert from radian to dgr
 
         GameObject e = enemyLoader.getEnemyInstance(eCode);
-        shootProjectileAt(false, e, gameObject.transform.position, direction, enemyShootSpeed, angle); //already instantiated
+        shootProjectileAt(false, e, gameObject.transform.position, direction, enemyShootSpeed, angle, 1); //already instantiated
 
         done[0] = true;
     }

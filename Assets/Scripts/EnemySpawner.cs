@@ -87,7 +87,7 @@ public class EnemySpawner : MonoBehaviour {
                 break;*/
 
             default:
-                    if (currW >= 5 && currW <= 10) StartCoroutine(SpawnPath(spawnNum[c], currW - 5, currE, intervals[c]));
+                    if (currW >= 5) StartCoroutine(SpawnPath(spawnNum[c], currW - 5, currE, intervals[c]));
                 break;
                 
             }

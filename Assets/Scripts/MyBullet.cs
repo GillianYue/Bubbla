@@ -44,6 +44,13 @@ public class MyBullet : MonoBehaviour {
                 ((direction.y < 0) ? -1 : 1) * Mathf.Rad2Deg * angle));
     }
 
+    public void setDirectionAndSpeed(Vector3 direction, float angle, bool rotateProjectile, float spd)
+    {
+        setSpeed(spd);
+
+        setDirection(direction, angle, rotateProjectile);
+    }
+
     public void FixedUpdate()
     {
         //acceleration
