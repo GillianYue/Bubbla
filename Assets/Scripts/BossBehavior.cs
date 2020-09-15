@@ -94,6 +94,7 @@ public abstract class BossBehavior : MonoBehaviour
         {
             setModeAndStart(bossMode.DEFEATED);
             gameControl.bgmSource.Stop();
+            hideLifeBar();
             Destroy(this.gameObject, 7);
         }
     }
@@ -192,6 +193,7 @@ public abstract class BossBehavior : MonoBehaviour
         setMode(bossMode.SHOOT_ATTK);
         for(int r = 0; r < Global.getValueWithNoise(shootAttkRounds[attkIndex], shootAttkRoundsNoise[attkIndex]); r++)
         {
+            Debug.Log("shoot one");
             //shoot one projectile here
             //TODO lotta work to be done here
             Instantiate(projectiles[0], transform.position, transform.rotation); //for now expect projectile itself to do the work 
@@ -199,7 +201,7 @@ public abstract class BossBehavior : MonoBehaviour
         }
 
         done[0] = true;
-
+        Debug.Log("shoot attack done");
     }
 
     //will not start the process
@@ -381,6 +383,7 @@ public abstract class BossBehavior : MonoBehaviour
     {
         life -= 3; //TODO edit
                    //TODO sound effect
+        audioz.burnSFX.Play();
                    //TODO instantiate vfx here
         yield return new WaitForSeconds(2);
     }
@@ -388,7 +391,15 @@ public abstract class BossBehavior : MonoBehaviour
     IEnumerator freezeDuration()
     {
         //sfx, vfx
+        audioz.freezeSFX.Play();
+
+        movementSpd.x *= 0.7f;
+        dirAttkChargeSpd[0] *= 0.7f;
         yield return new WaitForSeconds(3);
+
+        movementSpd.x /= 0.7f;
+        dirAttkChargeSpd[0] /= 0.7f;
+
         debuff = Enemy.BuffMode.none; //cancels after duration
     }
 

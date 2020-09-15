@@ -67,11 +67,12 @@ public class EnemyMover : MonoBehaviour {
 	//does not interfere with movement on the y axis
 	IEnumerator movePause (int turns){
 
+		float rand = (int)Random.Range(0.01f, 1.99f);
 		for (int t = 0; t < turns; t++) {
-			rb.velocity += new Vector2(speedHorizontal * Mathf.Pow(-1, t%2), 0);
+			rb.velocity += new Vector2((rand == 0 ? 1 : -1) * speedHorizontal * Mathf.Pow(-1, t%2), 0);
 			GetComponent<SpriteRenderer> ().flipX = (t%2 == 0 ? false : true);
 			//even numbers: positive velocity
-			if (t % 2 == 0) {
+			if (t % 2 == rand) {
 				while (rb.transform.position.x < scnRange) {
 					yield return new WaitForSeconds (.5f);
 					//not changing the velocity (stuck in this loop) until reaching the target

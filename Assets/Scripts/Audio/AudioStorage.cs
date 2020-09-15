@@ -9,6 +9,8 @@ public class AudioStorage : MonoBehaviour {
 
 	private AudioSource pbExplosion, potionAbsorption;
 
+	public AudioSource burnSFX, freezeSFX;
+
 	// Use this for initialization
 	void Start () {
 		

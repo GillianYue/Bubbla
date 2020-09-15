@@ -62,10 +62,10 @@ public class MyBullet : MonoBehaviour {
                 switch (myColor)
                 {
                     case PaintballBehavior.ColorMode.RED:
-                        if(Global.percentChance(10)) e.triggerBuff(Enemy.BuffMode.burn);
+                        if(Global.percentChance(20)) e.triggerBuff(Enemy.BuffMode.burn);
                         break;
                     case PaintballBehavior.ColorMode.BLUE:
-                    if (Global.percentChance(10)) e.triggerBuff(Enemy.BuffMode.freeze);
+                    if (Global.percentChance(20)) e.triggerBuff(Enemy.BuffMode.freeze);
                         break;
                     case PaintballBehavior.ColorMode.YELLOW:
                         break;

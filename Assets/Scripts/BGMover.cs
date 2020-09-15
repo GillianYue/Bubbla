@@ -192,8 +192,10 @@ public class BGMover : MonoBehaviour {
         float spriteHeight = getBackgroundHeight(spot);
 
         float reachPos = Screen.height - spriteHeight;
+        Debug.Log("sprite height calced is " + spriteHeight + " and reachPos is " + reachPos);
 
-        yield return new WaitUntil(() => (spot.anchoredPosition.y <= reachPos)); 
+        yield return new WaitUntil(() => (spot.anchoredPosition.y <= reachPos));
+        Debug.Log("now reached: " + spot.anchoredPosition.y);
         scrollin = false;
         Global.boolVariables[boolName] = true;
     }

@@ -4,7 +4,7 @@ using System.Collections;
 public class Enemy : MonoBehaviour {
 
 	GameControl gameControl;
-	int life = 1000;
+	int life = 1;
 	public int attack;
 
     public AudioStorage audioz;
@@ -26,6 +26,8 @@ public class Enemy : MonoBehaviour {
 	Sprite projectileSprite;
 	IEnumerator projectileProcess;
 
+	public EnemySteering steer;
+
 
 	void Start () {
 		if(!audioz) audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
@@ -34,6 +36,7 @@ public class Enemy : MonoBehaviour {
 
         setColliderScale(colliderScale);
 
+		if (!steer) steer = GetComponent<EnemySteering>();
     }
 	
 	void Update () {
@@ -210,8 +213,9 @@ public class Enemy : MonoBehaviour {
 
 	IEnumerator burnDuration()
     {
-		life -= 3; //TODO edit
+		life -= 1; //TODO edit
 				   //TODO sound effect
+		audioz.burnSFX.Play();
 		//TODO instantiate vfx here
 		yield return new WaitForSeconds(2);
     }
@@ -219,7 +223,10 @@ public class Enemy : MonoBehaviour {
 	IEnumerator freezeDuration()
     {
 		//sfx, vfx
+		audioz.freezeSFX.Play();
+		if(steer) steer.velocity *= 0.5f;
 		yield return new WaitForSeconds(3);
+		if (steer) steer.velocity /= 0.5f;
 		debuff = BuffMode.none; //cancels after duration
     }
 

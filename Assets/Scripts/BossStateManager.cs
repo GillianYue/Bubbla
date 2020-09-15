@@ -33,21 +33,18 @@ public class BossStateManager : BossBehavior
 
         while (true)
         {
-            Debug.Log("idle");
             bool[] idleDone = new bool[1];
-            setModeAndStart(currMode, idleDone);
+            setModeAndStart(bossMode.IDLE, idleDone);
             for (int rounds = 0; rounds < Global.getValueWithNoise(idleHoverRounds, idleHoverRoundsNoise); rounds++)
             {
                 yield return new WaitUntil(() => (!idleDone[0]));
-                Debug.Log("idle round " + rounds);
                 yield return new WaitUntil(() => (idleDone[0])); //if and only if this round's status changed from "not there" to "there"
             }
 
-            Debug.Log("attack");
             bool[] attackDone = new bool[1];
             setModeAndStart(Global.percentChance(dirAttkDistrib) ? bossMode.DIR_ATTK : bossMode.SHOOT_ATTK, attackDone);
             yield return new WaitUntil(() => attackDone[0]);
-            Debug.Log("attack done");
+
 
         }
     }

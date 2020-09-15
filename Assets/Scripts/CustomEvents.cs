@@ -314,14 +314,20 @@ public class CustomEvents : MonoBehaviour
      * event #5
      * 
      * param 0: time to wait and do nothing in seconds
+     * optional param 1: whether or not to increment pointer after wait time done
+     *       -TRUE (default)
+     *       -FALSE
      */
     public IEnumerator wait(bool[] done, string[] prms)
     {
         float secs;
         float.TryParse(prms[0], out secs);
 
+        bool inc = true;
+        if(prms[1] != "") bool.TryParse(prms[1], out inc);
+
         yield return new WaitForSeconds(secs);
-        done[0] = true;
+        if(inc) done[0] = true;
     }
 
     /*
@@ -541,14 +547,12 @@ public class CustomEvents : MonoBehaviour
         if (prms[4].Equals(""))
         {
             int currNum = gameFlow.getCurrentLineNumber();
-            Debug.Log("curr num is " + currNum);
             newParams[4] = (currNum + 1).ToString(); //only provide line when conditions are met (else, conditionalSwitch will simply return false and do nothing)
         }
 
         if (prms.Length >= 6 && prms[5] == "1")
         {
             done[0] = true; //yield control while waiting if need be
-            Debug.Log("yielding control");
         }
 
         while (!conditionalSwitch(new bool[1], newParams)) //this done will not increment pointer 

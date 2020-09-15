@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 public class Player : MonoBehaviour
 {
@@ -179,7 +178,7 @@ public class Player : MonoBehaviour
 
 		launchBullet(new Vector3(0, 1), 0, 0, true);
 
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.12f);
 		canShoot = true;
 
 		setShootAnimation(false);
@@ -497,7 +496,6 @@ public class Player : MonoBehaviour
         if (!invincible)
         {
             life -= damage;
-			Debug.Log("damage is " + damage + " and life now " + life);
         }
 		StartCoroutine (damageVFX ());
 		ouch [(int)(Random.Range (0, ouch.Length - 0.01f))].Play ();

@@ -26,9 +26,9 @@ public class L1 : LevelScript
     {
 
         gameControl.endGame(); //stop spawners and clears GOs on field
-        ps.StopAllCoroutines();
+/*        ps.StopAllCoroutines();
         ps.hideLifeBar();
-        ps.resetStats();
+        ps.resetStats();*/
 
         player.respawn();
 
