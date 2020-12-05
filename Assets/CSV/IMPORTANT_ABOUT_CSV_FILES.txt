@@ -1,6 +1,6 @@
 Note:
 
-In order for the csv file to be properly processed, it has to be saved as MS-DOS csv format, not anything else! 
+In order for the csv file to be properly processed, it has to be saved as Mcintosh csv format, not anything else! 
 
 Special:
  

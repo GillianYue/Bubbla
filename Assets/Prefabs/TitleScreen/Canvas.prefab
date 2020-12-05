@@ -340,7 +340,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ID NO.
+  m_Text: I
 --- !u!1 &1000010670960706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1411,7 +1411,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 0
-  m_Text: 9:04 A
+  m_Text: 9
 --- !u!114 &114000011406401858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2359,7 +2359,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Rank  '
+  m_Text: R
 --- !u!1 &1000014092693908
 GameObject:
   m_ObjectHideFlags: 0

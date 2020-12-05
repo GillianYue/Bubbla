@@ -52,7 +52,7 @@ public class CSVReader : MonoBehaviour
 		for (int r = 0; r < lines.Length-1; r++)
 		{
 			string[] row = SplitCsvLine( lines[r] );
-			// Debug.Log("row length: " + row.Length);
+			// Debug.Log("row length: " + row.Length+" "+lines[r]);
 			for (int c = 0; c < row.Length; c++) 
 			{
                 if(matchLineWithExcel)
@@ -61,6 +61,7 @@ public class CSVReader : MonoBehaviour
                 outputGrid[c, r] = row[c];
             }
 		}
+
 
 		return outputGrid; 
 	}

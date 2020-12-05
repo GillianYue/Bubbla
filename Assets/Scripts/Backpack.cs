@@ -135,19 +135,24 @@ public class Backpack : MonoBehaviour
 
     public void closeBackpackUI()
     {
-        gameControl.ckTouch = true; //to start checking on game progress
-        gameControl.resumeGame();
+        if (gameControl)
+        {
+            gameControl.ckTouch = true; //to start checking on game progress
+            gameControl.resumeGame();
+
+            if (gameControl.player) //if player exists --> which could be false if in title scene backpack view
+            {
+                Transform aimy = gameControl.player.transform.Find("Aim(Clone)");
+                if (aimy != null)
+                {
+                    Destroy(aimy.gameObject);
+                }
+            }
+        }
 
         Time.timeScale = 1.0f; //resume gameplay
 
-        if (gameControl.player) //if player exists --> which could be false if in title scene backpack view
-        {
-            Transform aimy = gameControl.player.transform.Find("Aim(Clone)");
-            if (aimy != null)
-            {
-                Destroy(aimy.gameObject);
-            }
-        }
+
 
         //might eventually play an animation (UI screen folding or something) here before setting to inactive
 

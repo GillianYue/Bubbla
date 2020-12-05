@@ -54,6 +54,7 @@ public class QuestLoader : MonoBehaviour
         }
 
         numOfQuests = questData.GetLength(1) - 1; //exclude title row; data[col, 1_to_numOfQuests] are the quests
+
         allQuests = new Quest[numOfQuests + 1]; //b/c 0 doesn't count; the first quest's index is 1
         allQuests[0] = null;
 
@@ -63,17 +64,26 @@ public class QuestLoader : MonoBehaviour
             quest.type = questData[0, q]; quest.description = questData[1, q];
             quest.message = questData[2, q];
 
-            quest.scene_to_load = int.Parse(questData[3, q]);
 
-            quest.message_color = new Color(int.Parse(questData[4, q]) / 255.0f,
-            int.Parse(questData[5, q]) / 255.0f, int.Parse(questData[6, q]) / 255.0f);
+            int s = -1;
+            int.TryParse(questData[3, q], out s);
+            if(s != -1) quest.scene_to_load = s;
 
-            quest.specifics = questData[7, q]; quest.long_message = questData[8, q];
+            int col1 = -1, col2 = -1, col3 = -1;
+            int.TryParse(questData[4, q], out col1); int.TryParse(questData[5, q], out col2);
+            int.TryParse(questData[6, q], out col3);
+            if(col1 == -1 || col2 == -1 || col3 == -1) { print("parse error"); }
+
+            quest.message_color = new Color(col1/255.0f, col2 / 255.0f, col3 / 255.0f);
+
+            quest.specifics = questData[7, q]; 
+            quest.long_message = questData[8, q];
+
 
             allQuests[q] = quest;
         }
 
-
+        print("done");
         questLoaderDone[0] = true; //data loaded and parsed
     }
 

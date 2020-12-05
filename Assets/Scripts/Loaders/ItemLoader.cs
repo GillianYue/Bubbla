@@ -15,7 +15,7 @@ public class ItemLoader : MonoBehaviour
     public string[] s0_anim, s1_anim, s2_anim; //path to animations
     public AnimationClip[] S0_ANIM, S1_ANIM, S2_ANIM;
     public Sprite[] S0_SPRITE; //for inanimate items, sprite instead of anim is used
-    public int[] itemType, movement; //way of moving
+    public int[] itemType; //, movement; //way of moving TODO
 
     GameObject inGameItemMold, itemMold;
 
@@ -123,6 +123,7 @@ public class ItemLoader : MonoBehaviour
     {
         yield return new WaitUntil(() => loadDone[0]); //this would mean that data is ready to be parsed
 
+
         int numRows = data.GetLength(1);
        itemCode = new int[numRows - 1]; //num rows, int[] is for the entire column
        itemName = new string[numRows - 1];
@@ -131,7 +132,7 @@ public class ItemLoader : MonoBehaviour
         s0_anim = new string[numRows - 1]; s1_anim = new string[numRows - 1]; s2_anim = new string[numRows - 1];
         S0_ANIM = new AnimationClip[numRows - 1]; S1_ANIM = new AnimationClip[numRows - 1]; S2_ANIM = new AnimationClip[numRows - 1];
         S0_SPRITE = new Sprite[numRows - 1];
-        itemType = new int[numRows - 1];  movement = new int[numRows - 1];
+        itemType = new int[numRows - 1];  //movement = new int[numRows - 1];
 
         //skip row 0 because those are all descriptors
         for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
@@ -145,7 +146,7 @@ public class ItemLoader : MonoBehaviour
             s1_anim[r - 1] = data[6, r];
             s2_anim[r - 1] = data[7, r];
             int.TryParse(data[8, r], out itemType[r - 1]);
-            int.TryParse(data[9, r], out movement[r - 1]);
+            
         }
 
         loadAnimationClips(S0_ANIM, S1_ANIM, S2_ANIM, S0_SPRITE);
@@ -218,7 +219,7 @@ public class ItemLoader : MonoBehaviour
                 Sprite tmpSpr0 = Resources.Load<Sprite>("Sprites/" + s0_anim[iCode]);
                 if (tmpSpr0 == null)
                 {
-                    Debug.LogError("Sprite 0 NOT found: "+ iCode);
+                    Debug.LogError("Sprite 0 NOT found: "+ s0_anim[iCode]);
                 }
                 else
                 {
