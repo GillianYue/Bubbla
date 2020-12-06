@@ -43,6 +43,7 @@ public class GameControl : MonoBehaviour {
     private GameObject[] hearts;
 
     //retrieved from player
+    [Inject(InjectFrom.Anywhere)]
     public Player p;
 
     public GameObject GameOverC;
@@ -90,6 +91,7 @@ public class GameControl : MonoBehaviour {
         //player.GetComponent<Player> ().enabled = false;
 
         //gadgets are GOs like life container that are needed in game play but not in DLG mode
+        if(gadgets != null)
         foreach (GameObject g in gadgets) {
             g.SetActive (false);
         }

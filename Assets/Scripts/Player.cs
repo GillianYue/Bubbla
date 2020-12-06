@@ -116,6 +116,7 @@ public class Player : MonoBehaviour
 	void Update ()
 	{
 
+		if(lifeText)
 		lifeText.text = ("Life: " + life.ToString ());
 
         if (checkForUpdates) {
