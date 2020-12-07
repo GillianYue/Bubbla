@@ -22,12 +22,16 @@ public class Backpack : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public ItemLoader itemLoader;
 
+    Vector3 startPos;
+
     public bool backpackBtnActive = true,
         fullScreenMode; //if checked, affects num item listed in one row & size scale of displayed item image
 
     // Start is called before the first frame update
     void Start()
     {
+
+        startPos = backpack.transform.position;
 
         Sprite spr = spriteMask.GetComponent<SpriteMask>().sprite;
         Global.resizeSpriteToRectXY(spriteMask, spr, spriteMask); //resize itemsMask's spriteMask to its own rect transform
@@ -119,17 +123,19 @@ public class Backpack : MonoBehaviour
 
     public void openBackpackUI(bool fullScreen)
     {
-        fullScreenMode = fullScreen;
+        fullScreenMode = fullScreen; //TODO what
 
         if (backpackBtnActive)
         {
+            if(gameControl != null) {
             gameControl.ckTouch = false; //to stop checking on game progress
             gameControl.pauseGame();
+            }
 
             if (backpack != null)
             {
                 backpack.SetActive(true);
-                backpack.transform.position = new Vector3(0, 0, -30);
+                Global.changePos(backpack, 0, 0);
             }
         }
     }
@@ -159,6 +165,7 @@ public class Backpack : MonoBehaviour
 
         if (backpack != null)
         {
+            Global.changePos(backpack, (int)startPos.x, (int)startPos.y);
             backpack.SetActive(false);
             dialogue.gameObject.SetActive(true);
         }

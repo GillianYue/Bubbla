@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MainMenuButtons : MonoBehaviour
 {
+    //TODO can also take care of open animation in this script
 
     [Inject(InjectFrom.Anywhere)]
     public Backpack backpack;
@@ -13,13 +14,11 @@ public class MainMenuButtons : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public Outing outing;
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -44,6 +43,31 @@ public class MainMenuButtons : MonoBehaviour
 
     public void openPurchaseMenu()
     {
-        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("level1"));
+      //  LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("level1"));
+    }
+
+    //close functions
+    //assign to respective close buttons
+
+    public void closeBackpack()
+    {
+        backpack.closeBackpackUI(); 
+        dialogue.gameObject.SetActive(true);
+    }
+
+    public void closeSettings()
+    {
+
+    }
+
+    public void closeGoOutMenu()
+    {
+        outing.closeMapUI();
+        dialogue.gameObject.SetActive(true);
+    }
+
+    public void closePurchaseMenu()
+    {
+
     }
 }

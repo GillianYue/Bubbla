@@ -32,7 +32,9 @@ public class QuestLoader : MonoBehaviour
 
     public bool questLoadDone()
     {
-        return questLoaderDone[0];
+        if (questLoaderDone != null)
+            return questLoaderDone[0];
+        else return false;
     }
 
     public void setData(string[,] d)

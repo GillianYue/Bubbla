@@ -9,13 +9,15 @@ public class Outing : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public Dialogue dialogue;
 
-    // Start is called before the first frame update
+    public Vector3 startPos;
+
     void Start()
     {
-        
+        if (outing == null) outing = gameObject;
+
+        startPos = outing.transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -25,6 +27,8 @@ public class Outing : MonoBehaviour
     {
         if (outing != null)
         {
+            Global.changePos(outing, 0, 0);
+
             outing.SetActive(true);
             outing.transform.position = new Vector3(0, 0, -30);
         }
@@ -34,6 +38,8 @@ public class Outing : MonoBehaviour
     {
         if (outing != null)
         {
+            Global.changePos(outing, (int)startPos.x, (int)startPos.y);
+
             outing.SetActive(false);
             dialogue.gameObject.SetActive(true);
         }
