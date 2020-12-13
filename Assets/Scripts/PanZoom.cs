@@ -14,6 +14,8 @@ public class PanZoom : MonoBehaviour
     public delegate Vector2 RecalcExtents();
     public RecalcExtents recalcExtents;
 
+    public bool checkForPanZoom;
+
     void Start()
     {
         
@@ -27,56 +29,60 @@ public class PanZoom : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (checkForPanZoom)
         {
-            moveGOstartPos = moveAroundGO.transform.localPosition;
-            touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        }
+            if (Input.GetMouseButtonDown(0))
+            {
+                moveGOstartPos = moveAroundGO.transform.localPosition;
+                touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            }
 
-        if (Input.GetMouseButton(0))
-        {
-            Vector3 direction = touchStart - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 dest = moveGOstartPos - direction;
-            if (Mathf.Abs(dest.x) <= extents.x && Mathf.Abs(dest.y) <= extents.y)
+            if (Input.GetMouseButton(0))
             {
-                moveAroundGO.transform.localPosition = dest;
-            }else if (Mathf.Abs(dest.x) <= extents.x)
+                Vector3 direction = touchStart - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 dest = moveGOstartPos - direction;
+                if (Mathf.Abs(dest.x) <= extents.x && Mathf.Abs(dest.y) <= extents.y)
+                {
+                    moveAroundGO.transform.localPosition = dest;
+                }
+                else if (Mathf.Abs(dest.x) <= extents.x)
+                {
+                    Vector3 curr = moveAroundGO.transform.localPosition;
+                    moveAroundGO.transform.localPosition = new Vector3(dest.x, curr.y, curr.z);
+                }
+                else if (Mathf.Abs(dest.y) <= extents.y)
+                {
+                    Vector3 curr = moveAroundGO.transform.localPosition;
+                    moveAroundGO.transform.localPosition = new Vector3(curr.x, dest.y, curr.z);
+                }
+
+            }
+
+            if (Input.GetMouseButtonUp(0))
             {
-                Vector3 curr = moveAroundGO.transform.localPosition;
-                moveAroundGO.transform.localPosition = new Vector3(dest.x, curr.y, curr.z);
-            }else if (Mathf.Abs(dest.y) <= extents.y)
+                moveGOstartPos = moveAroundGO.transform.localPosition;
+            }
+
+            if (Input.touchCount == 2) //TODO need test on ios
             {
-                Vector3 curr = moveAroundGO.transform.localPosition;
-                moveAroundGO.transform.localPosition = new Vector3(curr.x, dest.y, curr.z);
+                Touch t0 = Input.GetTouch(0), t1 = Input.GetTouch(1);
+                Vector3 prevPos0 = t0.position - t0.deltaPosition,
+                    prevPos1 = t1.position - t1.deltaPosition;
+
+                float prevMag = (prevPos0 - prevPos1).magnitude,
+                    currMag = (t0.position - t1.position).magnitude;
+
+                float diff = currMag - prevMag;
+
+                zoom(diff * 0.01f);
+
+            }
+            else
+            {
+                zoom(Input.GetAxis("Mouse ScrollWheel"));
             }
 
         }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            moveGOstartPos = moveAroundGO.transform.localPosition;
-        }
-
-        if(Input.touchCount == 2) //TODO need test on ios
-        {
-            Touch t0 = Input.GetTouch(0), t1 = Input.GetTouch(1);
-            Vector3 prevPos0 = t0.position - t0.deltaPosition,
-                prevPos1 = t1.position - t1.deltaPosition;
-
-            float prevMag = (prevPos0 - prevPos1).magnitude,
-                currMag = (t0.position - t1.position).magnitude;
-
-            float diff = currMag - prevMag;
-
-            zoom(diff * 0.01f);
-
-        }
-        else
-        {
-            zoom(Input.GetAxis("Mouse ScrollWheel"));
-        }
-
-        
     }
 
     void zoom(float increment)

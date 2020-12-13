@@ -35,7 +35,7 @@ public class Outing : MonoBehaviour
             Global.changePos(outing, 0, 0);
 
             outing.SetActive(true);
-            if (panZoomControl != null) panZoomControl.enabled = true;
+            map.openUI();
         }
     }
 
@@ -47,7 +47,7 @@ public class Outing : MonoBehaviour
 
             outing.SetActive(false);
             dialogue.gameObject.SetActive(true);
-            if (panZoomControl != null) panZoomControl.enabled = false;
+            map.closeUI();
         }
     }
 }

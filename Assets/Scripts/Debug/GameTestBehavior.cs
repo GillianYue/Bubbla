@@ -52,7 +52,7 @@ public class GameTestBehavior : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.S)) //save
             {
-                saveLoad.SaveQuestStatus(qb.currentQuestStatus);
+                saveLoad.SaveQuestStatus(qb.getCurrentQuestStatus());
             }
         }
 

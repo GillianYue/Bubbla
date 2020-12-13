@@ -12,7 +12,7 @@ public class SetUpQuestBoard : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
 
-    public QuestStatusData currentQuestStatus;
+    QuestStatusData currentQuestStatus;
 
     public GameObject questGO; //the game object that can visualize quests
 
@@ -63,50 +63,24 @@ public class SetUpQuestBoard : MonoBehaviour {
 
         ////
 
-        setup(); //set up questBoard now that we know how many/what quests we need to create
+        setupList(); //set up questBoard now that we know how many/what quests we need to create
     }
 
     /// <summary>
     /// set up the physical dimensions for the quest prefab instances
     /// </summary>
-    private void setup()
+    private void setupList()
     {
+        ListScroller.setupListComponents(this.gameObject, questGO, availableQuests.Count);
 
         questHeight = Mathf.Abs(questGO.GetComponent<RectTransform>().rect.height);
-        var qbHeight = GetComponent<RectTransform>().rect.height;
-
-
-        float heightNeeded = availableQuests.Count * questHeight; 
-        //numOfQuests needed to be gen is going to come from the compareQuests function
-        if (heightNeeded > qbHeight)
-        {
-            GetComponent<RectTransform>().offsetMin =
-                new Vector2(0, -1 * (heightNeeded - qbHeight));
-            //OffsetMin.x = left, OffsetMin.y = bottom
-            GetComponent<RectTransform>().offsetMax =
-                new Vector2(0, 0);
-            //OffsetMax.x = -right, OffsetMax.y = -top
-
-        }//if scroll bar doesn't need to be stretched (numQuest<4), don't stretch qb rect
-
-        genQuests(availableQuests.Count); //gen quests after setup 
+        ListScroller.genListItems(questGO, availableQuests.Count, this.gameObject, setSingleQuestData);
     }
 
-	private void genQuests(int numOfQuests){
+    //callback after the quests are generated as list items; used for setting data on quests
+	void setSingleQuestData(GameObject q, int which){
 
-		for (int i = 0; i < numOfQuests; i++) {
-			genSingleQuest (i, (Quest)availableQuests[i]); //gives quest the row to refer to in string[,] data
-		}
-	}
-
-	void genSingleQuest(int which, Quest quest){
-		GameObject q = questGO; //GO with the aiming sprite
-		q = Instantiate (q, GetComponent<RectTransform>().position,
-			GetComponent<RectTransform>().rotation) as GameObject;
-
-		q.transform.SetParent (transform);
-		q.transform.localScale = new Vector3 (1, 1, 1);
-
+        Quest quest = (Quest)availableQuests[which];
 
 		q.transform.Find ("Description").GetComponent<Text> ().text = 
 			quest.type + " "+ quest.description;
@@ -116,16 +90,11 @@ public class SetUpQuestBoard : MonoBehaviour {
 		q.GetComponent<QuestSelect>().setGoToScene(quest.scene_to_load);
 		q.GetComponent<QuestSelect> ().setQuestSpecifics (quest.specifics,
 			quest.long_message);
-		
-		float height = GetComponent<RectTransform> ().rect.height;
-
-        Global.setRectShape(q, 0, 0, -which * (questHeight) - 2,
-            height - (which + 1) * questHeight);
-
-			//q.GetComponent<RectTransform> ().offsetMax = 
-			//	new Vector2(0,  - which * (questHeight) -2);
-			//q.GetComponent<RectTransform> ().offsetMin = 
-				//new Vector2(0, height - (which+1) * questHeight);
-
 	}
+
+
+    public QuestStatusData getCurrentQuestStatus()
+    {
+        return currentQuestStatus;
+    }
 }
