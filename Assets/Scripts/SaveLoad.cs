@@ -6,13 +6,11 @@ using System.Collections;
 
 public class SaveLoad : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -86,6 +84,8 @@ public class SaveLoad : MonoBehaviour
 
 
 }
+
+
 
 [Serializable]
 public class PlayerData

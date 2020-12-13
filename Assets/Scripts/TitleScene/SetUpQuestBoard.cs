@@ -20,7 +20,6 @@ public class SetUpQuestBoard : MonoBehaviour {
     private ArrayList ongoingQuests, availableQuests, pastQuests;
 
 
-    // Use this for initialization
     void Start () {
 
         //first set the dimensions of our questBoard rect (based on num of quests
@@ -30,7 +29,6 @@ public class SetUpQuestBoard : MonoBehaviour {
         StartCoroutine(compareQuests()); //eventually this is called during scene load
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		
 	}
@@ -44,6 +42,7 @@ public class SetUpQuestBoard : MonoBehaviour {
     {
         QuestStatusData questStatus;
         questStatus = saveLoad.LoadQuestStatus();
+        //questStatus is current player's progress on quests; questLoadDone is for loading all quests that exist
         yield return new WaitUntil(() => questLoader.questLoadDone() && questStatus != null);
         //so that the quest roster is ready to be compared
 
@@ -56,9 +55,9 @@ public class SetUpQuestBoard : MonoBehaviour {
 
         ///////only for testing purposes, delete later
         ///
-        //availableQuests.Add(questLoader.getQuest(1));
-        //availableQuests.Add(questLoader.getQuest(2));
-        //availableQuests.Add(questLoader.getQuest(3));
+        availableQuests.Add(questLoader.getQuest(1));
+        availableQuests.Add(questLoader.getQuest(2));
+        availableQuests.Add(questLoader.getQuest(3));
         //availableQuests.Add(questLoader.getQuest(4));
         //availableQuests.Add(questLoader.getQuest(5));
 
@@ -67,6 +66,9 @@ public class SetUpQuestBoard : MonoBehaviour {
         setup(); //set up questBoard now that we know how many/what quests we need to create
     }
 
+    /// <summary>
+    /// set up the physical dimensions for the quest prefab instances
+    /// </summary>
     private void setup()
     {
 
@@ -74,8 +76,8 @@ public class SetUpQuestBoard : MonoBehaviour {
         var qbHeight = GetComponent<RectTransform>().rect.height;
 
 
-        float heightNeeded = availableQuests.Count * questHeight; //numOfQuests needed to be gen is not gna be from questLoader,
-        //but result from the compare function
+        float heightNeeded = availableQuests.Count * questHeight; 
+        //numOfQuests needed to be gen is going to come from the compareQuests function
         if (heightNeeded > qbHeight)
         {
             GetComponent<RectTransform>().offsetMin =

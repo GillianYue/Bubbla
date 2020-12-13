@@ -9,7 +9,7 @@ public class QuestLoader : MonoBehaviour
 
     public TextAsset questCsv; //contains info for quests
     private string[,] questData;
-    private int numOfQuests;
+    public int numOfQuests;
 
     private bool[] questLoaderDone, loadDone;
     private Quest[] allQuests;
@@ -20,7 +20,6 @@ public class QuestLoader : MonoBehaviour
         loadDone = new bool[1];
         questLoaderDone = new bool[1];
 
-        StartCoroutine(LoadScene.processCSV(loadDone, questCsv, setData, false)); //data[col,1] will be the first quest (tho in excel visually it's at line 2)
         StartCoroutine(parseQuestData());
     }
 
@@ -50,10 +49,8 @@ public class QuestLoader : MonoBehaviour
 
     IEnumerator parseQuestData()
     {
-        while (!(loadDone[0]))
-        {
-            yield return null;
-        }
+        //data[col,1] will be the first quest (tho in excel visually it's at line 2)
+        yield return LoadScene.processCSV(loadDone, questCsv, setData, false);
 
         numOfQuests = questData.GetLength(1) - 1; //exclude title row; data[col, 1_to_numOfQuests] are the quests
 
@@ -93,6 +90,12 @@ public class QuestLoader : MonoBehaviour
     {
         return allQuests[index];
     }
+
+    /// <summary>
+    /// will return literally all quests that ever existed
+    /// </summary>
+    /// <returns></returns>
+    public Quest[] getAllQuests() { return allQuests;  }
 }
 
 // class for one single quest

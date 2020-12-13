@@ -76,6 +76,7 @@ public class LoadScene : MonoBehaviour {
         {
             yield return null;
         }
+
         loadDone[0] = true;
         //levelScript.setLevelCsvData(data);
     }
