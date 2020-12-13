@@ -13,9 +13,10 @@ public class QuestDetail : MonoBehaviour {
 	void Start () {
 		cancel = cancelScn; //cancel will block interaction w background UIs
 		cancel = Instantiate (cancel) as GameObject;
-		cancel.transform.SetParent (GameObject.Find ("Canvas").transform, false);
+		cancel.transform.SetParent (GameObject.Find ("CanvasBG").transform, false);
 		cancel.SetActive (true);
-		this.transform.SetAsLastSibling ();
+		//this.transform.SetAsLastSibling (); //move to front most position
+		transform.SetAsLastSibling(); 
 
 		cclB = cancel.GetComponent<Button>();
 		cclB.onClick.AddListener(cancelClicked);

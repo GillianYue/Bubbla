@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//add dialogue integration here, specific map UI functions will be written in Map
 public class Outing : MonoBehaviour
 {
 
@@ -11,6 +12,8 @@ public class Outing : MonoBehaviour
 
     public Vector3 startPos;
     public PanZoom panZoomControl;
+    [Inject(InjectFrom.Anywhere)]
+    public Map map;
 
     void Start()
     {

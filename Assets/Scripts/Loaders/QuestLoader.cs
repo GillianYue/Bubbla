@@ -14,7 +14,6 @@ public class QuestLoader : MonoBehaviour
     private bool[] questLoaderDone, loadDone;
     private Quest[] allQuests;
 
-    // Start is called before the first frame update
     void Start()
     {
         loadDone = new bool[1];
@@ -23,7 +22,6 @@ public class QuestLoader : MonoBehaviour
         StartCoroutine(parseQuestData());
     }
 
-    // Update is called once per frame
     void Update()
     {
         

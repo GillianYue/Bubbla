@@ -27,7 +27,7 @@ public class QuestSelect : MonoBehaviour {
 		qd.transform.Find("Description").GetComponent<Text>().text = longDesc;
 		qd.transform.Find("Message").GetComponent<Text>().text = longMSG;
 
-		qd.transform.SetParent (GameObject.Find("Canvas").transform, false);
+		qd.transform.SetParent (GameObject.Find("CanvasBG").transform, false);
 		qd.transform.localRotation = new Quaternion (0, 0, 0, 0);
 
 		qd.SetActive (true);

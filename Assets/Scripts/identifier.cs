@@ -21,6 +21,6 @@ public class identifier : MonoBehaviour
 
     void OnDestroy()
     {
-        ce.removeFromIdentified(this);
+        if(ce) ce.removeFromIdentified(this);
     }
 }

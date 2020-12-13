@@ -8,34 +8,53 @@ public class PanZoom : MonoBehaviour
     public GameObject moveAroundGO; //pos will change as mouse drag
     Vector3 moveGOstartPos;
 
-    public float zoomOutMin = 1,
-        zoomOutMax = 3;
+    public float zoomOutMin = 1, zoomOutMax = 3;
+    Vector2 extents = new Vector2(9999, 9999); //extents to which the moveAroundGO can move, details see notes in Map
 
-    public Camera camForZoom;
+    public delegate Vector2 RecalcExtents();
+    public RecalcExtents recalcExtents;
 
     void Start()
     {
         
     }
 
+    public void setExtentsCallback(RecalcExtents recalcE)
+    {
+        recalcExtents = recalcE;
+        recalcExtents();
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            moveGOstartPos = moveAroundGO.transform.position;
+            moveGOstartPos = moveAroundGO.transform.localPosition;
             touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
         if (Input.GetMouseButton(0))
         {
             Vector3 direction = touchStart - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            moveAroundGO.transform.position = moveGOstartPos - direction;
+            Vector3 dest = moveGOstartPos - direction;
+            if (Mathf.Abs(dest.x) <= extents.x && Mathf.Abs(dest.y) <= extents.y)
+            {
+                moveAroundGO.transform.localPosition = dest;
+            }else if (Mathf.Abs(dest.x) <= extents.x)
+            {
+                Vector3 curr = moveAroundGO.transform.localPosition;
+                moveAroundGO.transform.localPosition = new Vector3(dest.x, curr.y, curr.z);
+            }else if (Mathf.Abs(dest.y) <= extents.y)
+            {
+                Vector3 curr = moveAroundGO.transform.localPosition;
+                moveAroundGO.transform.localPosition = new Vector3(curr.x, dest.y, curr.z);
+            }
 
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            moveGOstartPos = moveAroundGO.transform.position;
+            moveGOstartPos = moveAroundGO.transform.localPosition;
         }
 
         if(Input.touchCount == 2) //TODO need test on ios
@@ -67,6 +86,16 @@ public class PanZoom : MonoBehaviour
             zoomOutMin, zoomOutMax);
         moveAroundGO.transform.localScale = new Vector3(newScl, newScl, 1);
 
+        if(recalcExtents != null) extents = recalcExtents(); //scale change will result in different extents
 
+        //after scaling, we could be out of boundary, need to check and nudge back
+        Vector3 curr = moveAroundGO.transform.localPosition;
+        if (curr.x < -extents.x) curr.x = -extents.x;
+        else if (curr.x > extents.x) curr.x = extents.x;
+
+        if (curr.y < -extents.y) curr.y = -extents.y;
+        else if (curr.y > extents.y) curr.y = extents.y;
+
+        moveAroundGO.transform.localPosition = curr;
     }
 }
