@@ -14,6 +14,8 @@ public class MainMenuButtons : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public Outing outing;
 
+    public GameObject basePanel; //needs to be disabled when upper ui shows up
+
     void Start()
     {
         
@@ -24,26 +26,34 @@ public class MainMenuButtons : MonoBehaviour
         
     }
 
+    void toggleMainUI(bool active)
+    {
+        basePanel.SetActive(active);
+        dialogue.gameObject.SetActive(active);
+    }
+
     public void openBackpack()
     {
         backpack.openBackpackUI(true); //fullscreen
-        dialogue.gameObject.SetActive(false);
+        toggleMainUI(false);
     }
 
     public void openSettings()
     {
 
+        toggleMainUI(false);
     }
 
     public void openGoOutMenu()
     {
         outing.openMapUI();
-        dialogue.gameObject.SetActive(false);
+        toggleMainUI(false);
     }
 
     public void openPurchaseMenu()
     {
-      //  LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("level1"));
+        //  LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("level1"));
+        toggleMainUI(false);
     }
 
     //close functions
@@ -51,23 +61,25 @@ public class MainMenuButtons : MonoBehaviour
 
     public void closeBackpack()
     {
-        backpack.closeBackpackUI(); 
-        dialogue.gameObject.SetActive(true);
+        backpack.closeBackpackUI();
+        toggleMainUI(true);
     }
 
     public void closeSettings()
     {
 
+        toggleMainUI(true);
     }
 
     public void closeGoOutMenu()
     {
         outing.closeMapUI();
-        dialogue.gameObject.SetActive(true);
+        toggleMainUI(true);
     }
 
     public void closePurchaseMenu()
     {
 
+        toggleMainUI(true);
     }
 }

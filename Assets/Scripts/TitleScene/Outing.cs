@@ -10,12 +10,14 @@ public class Outing : MonoBehaviour
     public Dialogue dialogue;
 
     public Vector3 startPos;
+    public PanZoom panZoomControl;
 
     void Start()
     {
         if (outing == null) outing = gameObject;
 
         startPos = outing.transform.position;
+        if(panZoomControl != null) panZoomControl.enabled = false;
     }
 
     void Update()
@@ -30,6 +32,7 @@ public class Outing : MonoBehaviour
             Global.changePos(outing, 0, 0);
 
             outing.SetActive(true);
+            if (panZoomControl != null) panZoomControl.enabled = true;
         }
     }
 
@@ -41,6 +44,7 @@ public class Outing : MonoBehaviour
 
             outing.SetActive(false);
             dialogue.gameObject.SetActive(true);
+            if (panZoomControl != null) panZoomControl.enabled = false;
         }
     }
 }
