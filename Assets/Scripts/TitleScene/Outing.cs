@@ -30,7 +30,6 @@ public class Outing : MonoBehaviour
             Global.changePos(outing, 0, 0);
 
             outing.SetActive(true);
-            outing.transform.position = new Vector3(0, 0, -30);
         }
     }
 

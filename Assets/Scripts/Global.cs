@@ -129,7 +129,7 @@ public class Global : MonoBehaviour
 
     public static void changePos(GameObject e, int x, int y)
     {
-        e.transform.position.Set(x, y, e.transform.position.z);
+        e.transform.position = new Vector3(x, y, e.transform.position.z); 
     }
 
     /*
