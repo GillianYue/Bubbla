@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //map related UI control; pan and zoom handled by PanZoom script
+//a site is represented by a dot on the map, a site has many sublocations
 public class Map : MonoBehaviour
 {
     public Button[] dots;
@@ -13,8 +14,8 @@ public class Map : MonoBehaviour
     public GameObject siteDetailPanel; //UI
 
     public GameObject siteDetailListRect;
-    public GameObject siteListItemPrefab;
-    public Image siteImage; //display will change depending on the currently selected site sublocation
+    public GameObject siteListItemPrefab; //sublocation list item prefab
+    public Image sublocationImage; //display for sublocation image; assigned in editor
 
     void Start()
     {
@@ -24,6 +25,19 @@ public class Map : MonoBehaviour
         panZoom = GetComponent<PanZoom>();
 
         panZoom.setExtentsCallback(getCurrentMapExtents);
+
+        //TODO some load in dots process, need to associate dots with the sublocations that they hold
+        //there should be something that keeps track of all dots, their locations, indices and sublocations (sublocations tracking sub-images and names)
+
+        for(int d = 0; d < dots.Length; d++)
+        {
+            var fix = d; //because d is dynamic, can't be used for callback functions
+            dots[d].GetComponent<SiteInfo>().siteIndex = d;
+
+            dots[fix].onClick.AddListener(() => {
+                onClickSiteDot(dots[fix].GetComponent<SiteInfo>().siteIndex); 
+            });
+        }
 
         ListScroller.setupListComponents(siteDetailListRect, siteListItemPrefab, 15); //set to a default location on start
         ListScroller.genListItems(siteListItemPrefab, 15, siteDetailListRect, setSiteSublocationData);
@@ -78,6 +92,17 @@ public class Map : MonoBehaviour
     }
 
     /// <summary>
+    /// onclick event for dots[dotIndex]
+    /// </summary>
+    /// <param name="dotIndex"></param>
+    public void onClickSiteDot(int dotIndex)
+    {
+        ListScroller.setupListComponents(siteDetailListRect, siteListItemPrefab, 5); //needs to match "that site"
+
+        panToSite(dots[dotIndex].transform.localPosition);
+    }
+
+    /// <summary>
     /// moves view to spot where the dot for site is visible and suitable for further UI
     /// 
     /// will check which quadrant the dot is in relative to the map, then move accordingly
@@ -88,8 +113,7 @@ public class Map : MonoBehaviour
     /// <param name="pos"></param>
     public void panToSite(Vector3 pos)
     {
-
-        ListScroller.setupListComponents(siteDetailListRect, siteListItemPrefab, 5); //needs to match "that site"
+        panZoom.smoothLerpTo(pos, 2);
 
         if (pos.x < 0 && pos.y < 0) //bottom left
         {
@@ -106,4 +130,5 @@ public class Map : MonoBehaviour
 
         }
     }
+
 }

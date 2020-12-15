@@ -8,7 +8,8 @@ public class ListScroller : MonoBehaviour
 {
 
     /// <summary>
-    /// sets the physical dimensions for all components involved in a list scroll 
+    /// Sets the physical dimensions for all components involved in a list scroll.
+    /// 
     /// NOTE: RectTransform here is not the rect for the actual scrollRect Gameobject, but the rect that will BE scrolled
     /// 
     /// assumes everything passed has a RectTransform
@@ -39,14 +40,14 @@ public class ListScroller : MonoBehaviour
     }
 
     /// <summary>
-    /// parent is the listContainer rect GO
+    /// spawns the list items in the right positions. 
     /// 
-    /// dataSpecificCallback takes a GameObject as param and does the data setup necessary for each generated list item based on index in list
     /// </summary>
     /// <param name="pref"></param>
     /// <param name="numPrefs"></param>
-    /// <param name="parent"></param>
-    /// <param name="dataSpecificCallback"></param>
+    /// <param name="parent"> parent is the listContainer rect GO</param>
+    /// <param name="dataSpecificCallback">dataSpecificCallback takes a GameObject as param and does the data setup 
+    /// necessary for each generated list item based on index in list</param>
     public static void genListItems(GameObject pref, int numPrefs, GameObject parent, System.Action<GameObject, int> dataSpecificCallback)
     {
 

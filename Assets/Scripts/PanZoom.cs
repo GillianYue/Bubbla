@@ -16,6 +16,10 @@ public class PanZoom : MonoBehaviour
 
     public bool checkForPanZoom;
 
+    bool lerpMoving;
+    Vector3 panDest;
+    float zoomDest;
+
     void Start()
     {
         
@@ -29,7 +33,15 @@ public class PanZoom : MonoBehaviour
 
     void Update()
     {
-        if (checkForPanZoom)
+        if (lerpMoving)
+        {
+            moveAroundGO.transform.localPosition = moveAroundGO.transform.localPosition + 0.001f * panDest;
+            float scl = moveAroundGO.transform.localScale.x, newScl = scl + zoomDest * 0.001f;
+            moveAroundGO.transform.localScale = new Vector3(newScl, newScl, 1);
+
+            if (checkForDestReach()) lerpMoving = false;
+        }
+        else if (checkForPanZoom) //when lerp, don't check for input control
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -85,6 +97,7 @@ public class PanZoom : MonoBehaviour
         }
     }
 
+
     void zoom(float increment)
     {
         float scl = moveAroundGO.transform.localScale.x;
@@ -92,7 +105,8 @@ public class PanZoom : MonoBehaviour
             zoomOutMin, zoomOutMax);
         moveAroundGO.transform.localScale = new Vector3(newScl, newScl, 1);
 
-        if(recalcExtents != null) extents = recalcExtents(); //scale change will result in different extents
+        //scale change will result in different extents (boundaries of the map), so recalculate
+        if (recalcExtents != null) extents = recalcExtents(); 
 
         //after scaling, we could be out of boundary, need to check and nudge back
         Vector3 curr = moveAroundGO.transform.localPosition;
@@ -103,5 +117,39 @@ public class PanZoom : MonoBehaviour
         else if (curr.y > extents.y) curr.y = extents.y;
 
         moveAroundGO.transform.localPosition = curr;
+    }
+
+    public void smoothLerpTo(Vector3 dest)
+    {
+        smoothLerpTo(dest, moveAroundGO.transform.localScale.x);
+    }
+
+    /// <summary>
+    /// use local position for the item to zoom on
+    /// </summary>
+    /// <param name="scl"></param>
+    public void smoothLerpTo(float zoomScl)
+    {
+        smoothLerpTo(moveAroundGO.transform.localPosition, zoomScl);
+    }
+
+    /// <summary>
+    /// setting both panning and zooming destinations for lerp movement
+    /// </summary>
+    /// <param name="dest"></param>
+    /// <param name="scl"></param>
+    public void smoothLerpTo(Vector3 dest, float zoomScl)
+    {
+        lerpMoving = true;
+        zoomDest = zoomScl;
+        panDest = dest;
+    }
+
+    bool checkForDestReach()
+    {
+        float currScl = moveAroundGO.transform.localScale.x;
+        Vector3 currPos = moveAroundGO.transform.localPosition;
+
+        return (Mathf.Abs(currScl - zoomDest) < 0.2f && Global.findVectorDist(currPos, panDest) < 20);
     }
 }
