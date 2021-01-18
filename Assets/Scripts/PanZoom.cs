@@ -16,7 +16,7 @@ public class PanZoom : MonoBehaviour
 
     public bool checkForPanZoom;
 
-    bool lerpMoving;
+    bool lerpMoving; //whether is in motion of zooming to target scale, will ignore input when true
     Vector3 panDest;
     float zoomDest;
 
