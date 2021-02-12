@@ -35,7 +35,7 @@ public class GameFlow : MonoBehaviour {
     private bool pointerCheck = true;
     private bool[] loadDone;  //this bool is only for the level progress file, not everything
     public bool canMovePointer = true; //canMovePointer MUST be set to true on start
-    private int specialGoToLine = -1; //if set to anything other than -1, click in DLG will go to this line rather than increment
+    private int specialGoToLine = -1; //if set to anything other than -1, a click in DLG will go to this line rather than increment
 
     public TextAsset DlgCsv; //dialogue file for a specific level
     private string[,] data; //double array that stores all info of this level

@@ -1,0 +1,29 @@
+TODO
+
+special gameplay effects:
+
+dark cover fadeout/in
+
+screen shake
+
+camera route (point, linger time, speed)
+
+screen flash (white)
+
+
+
+
+
+other mechanisms:
+
+open up some UI window
+
+single sprite animation (slight quiver, slight jump motion, sprite switch, etc.)
+(use common anim controller for this)
+
+play sound effect
+
+play bgm (handle prev potentially existing bgm)
+
+sprite play animation of certain name 
+

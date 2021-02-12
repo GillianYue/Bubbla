@@ -86,6 +86,7 @@ public class Dialogue : MonoBehaviour
 			}
 			else
 			{
+				// assign animator
 				character.GetComponent<Animator>().runtimeAnimatorController =
 				characterLoader.getAnimatorByIndex(index);
 				cVoiceClip = characterLoader.getVoiceByIndex(index);
@@ -117,20 +118,20 @@ public class Dialogue : MonoBehaviour
         int special;
         int.TryParse(special_index, out special);
         /*
-		 * the two params for special event could be int, could be int arrays, so to cover all 
+		 * the params for special events could be int, could be int arrays, so to cover all 
 		 * cases we create variables for all possibilities                
 		 */
         ArrayList PARAM1, PARAM2, PARAM3;
 		PARAM1 = new ArrayList(); PARAM2 = new ArrayList(); PARAM3 = new ArrayList();
-		if (special != 0) //if there is special, parse
+		if (special != 0) //if there is special, parse params
 		{
 			parseDLGspecialParams(PARAM1, PARAM2, PARAM3, param_1, param_2, param_3);
 		}
 		//end parsing special param, start adding chars 
 
-		int wordCount = 1; int[] paramPointer = new int[4]; //paramPointer[2] would be pointer for special #2
+		int wordCount = 1; int[] paramPointer = new int[4]; //paramPointer[2] would be pointer for special #2, pointer tracks curr position in string
 
-		if (special == 3) //special 3 disables users from clicking to proceed, will auto proceed after certain seconds
+		if (special == 3) //SPECIAL 3 disables users from clicking to proceed; will auto proceed after certain seconds
 		{
 			gameFlow.canMovePointer = false;
 			//chains a WaitForSecond with <what should be done afterwards>
@@ -142,6 +143,7 @@ public class Dialogue : MonoBehaviour
 		}
 		else if (special == 6)
 		{
+			//SPECIAL 6: incrementPointer() will go to PARAM1[0] instead of the next line
 			gameFlow.setSpecialGoToLine ((int)PARAM1[0]);
 		}
 
@@ -184,27 +186,29 @@ public class Dialogue : MonoBehaviour
 				switch (special)
 				{
 					/*
-					 * mode 1, the changing of sprites of the speaking character
+					 * SPECIAL mode 1, changing of sprite of the speaking character
 					 *  -param 1: indices of char count to change sprite
 					 *  -param 2: number for State variable of the character (will assign sprite accordingly)
 					 */
 					case 1:
-						if (n == (int)PARAM1[paramPointer[1]])
+						if (n == (int)PARAM1[paramPointer[1]]) //if current char is char at which a switch should happen
 						{
 							setAnimBaseState(character, (int)PARAM2[paramPointer[1]]);
 							if (paramPointer[1] < PARAM1.Count - 1)
 							{
-								paramPointer[1]++;
+								paramPointer[1]++; 
 							}
 						}
 						break;
 					/*
-					 * mode 2, the changing of motion states of the character (Talking, Typing, Blinking, etc.)
+					 * SPECIAL mode 2, the changing of motion states of the character (Talking, Typing, Blinking, etc.)
 					 * -param 1: "which" state(s) to be set (will add float to anim State accordingly, e.g. Typing --> State += 0.05) 
 					 * the same state can appear for multiple times (e.g. 0, 1, 0 will set, for example, Talking, Typing and Talking in order);
                      * NOTE: this needs to match the number of items in param2/3; in other words, even "1,1" is necessary
 					 * -param 2: true/false boolean(s) to set those state(s), where 0 is false and 1 is true
 					 * -param 3: word count indices at which the state(s) are to be set
+					 * 
+					 * e.g. [0,1];[1,1];
 					 */
 					case 2:
 						if (wordCount == (int)PARAM3[paramPointer[2]])
@@ -217,12 +221,12 @@ public class Dialogue : MonoBehaviour
 							}
 						}
 						break;
-					//mode 3 disables users from clicking to proceed, will auto proceed after certain seconds
+					//SPECIAL mode 3 disables users from clicking to proceed, will auto proceed after certain seconds
 					case 3:
 						//called once above previous to the double for loop
 						break;
 					/*
-					 * mode 4, character speaking speed change in dialogue
+					 * SPECIAL mode 4, character speaking speed change in dialogue
 					 * -param 1: indices of char count to change dialogue speed
 					 * -param 2: spd(s) to change into
 					 */
@@ -237,7 +241,7 @@ public class Dialogue : MonoBehaviour
 						}
 						break;
 					/*
-						* mode 5, opens up option prompt for user to choose after character finishes talking
+						* SPECIAL mode 5, opens up option prompt for user to choose after character finishes talking
 						* -param 1: texts of choices, separated by comma
 						* -param 2: lines to point to after selecting those choices
 						*/
@@ -245,7 +249,7 @@ public class Dialogue : MonoBehaviour
 						//happens after the entire dialogue is displayed, so isn't called repetitively here
 						break;
 					/*
-					 * mode 6, directs pointer to provided line other than increment by 1
+					 * SPECIAL mode 6, directs pointer to provided line other than increment by 1
 						* -param 1: line to point to
 						*/
 					case 6:
