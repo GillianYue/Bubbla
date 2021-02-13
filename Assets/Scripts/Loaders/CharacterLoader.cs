@@ -112,28 +112,29 @@ public class CharacterLoader : MonoBehaviour
     //in-game state transitions will depend on those variables
     public void setStateMachineData(string[,] d, int cCode)
     {
-        Debug.Log("state machine data first row first col: " + d[0, 0]);
 
-        for (int i = 0; i < d.GetLength(1); i++) 
+        for (int i = 1; i < d.GetLength(1); i++) 
         {
-            string animClipName = d[i, 0];
+            string animClipName = d[0, i];
             int stateNum = -1;
 
-            if (d[i, 1] != "") //clip belongs to BASE layer
+            print("row"+ i+": " + d[1, i] + d[2, i] + d[3, i]);
+
+            if (d[1, i] != "") //clip belongs to BASE layer
             {
-                int.TryParse(d[i, 1], out stateNum);
+                int.TryParse(d[1, i], out stateNum);
                 baseStateAnimationClipNames[cCode][stateNum] = animClipName;
-            } else if (d[i, 2] != "") //PART 1 layer
+            } else if (d[2, i] != "") //PART 1 layer
             {
-                int.TryParse(d[i, 2], out stateNum);
+                int.TryParse(d[2, i], out stateNum);
                 Part1AnimationClipNames[cCode][stateNum] = animClipName;
-            } else if (d[i, 3] != "") //PART 2 layer
+            } else if (d[3, i] != "") //PART 2 layer
             {
-                int.TryParse(d[i, 3], out stateNum);
+                int.TryParse(d[3, i], out stateNum);
                 Part2AnimationClipNames[cCode][stateNum] = animClipName;
             }
             else{
-                Debug.LogError(d[i,0] + " no proper transition condition found");
+                Debug.LogError(d[0, i] + " no proper transition condition found");
             }
         }
     }

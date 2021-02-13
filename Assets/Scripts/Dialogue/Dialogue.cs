@@ -111,7 +111,7 @@ public class Dialogue : MonoBehaviour
 		DIALOGUE.text = "";
 
 		//character start talking (default talking anim state); assumes part1 is always mouth 
-		setPartLayerParam(index, character, 0, 1);
+		setPartLayerParam(index, character, 1, 1);
 
 		setAnimBaseState(index, character, SpriteNum);
 
@@ -299,7 +299,7 @@ public class Dialogue : MonoBehaviour
 		}
 
 		//character stop talking (default talking anim state)
-		setPartLayerParam(index, character, 0, 0);
+		setPartLayerParam(index, character, 1, 0);
 		lineDone = true;
 		skipping = false;
 
@@ -501,7 +501,7 @@ public class Dialogue : MonoBehaviour
 	public void setAnimBaseState(int cCode, GameObject c, int n)
 	{
 		Animator a = c.GetComponent<Animator>();
-
+		print("setting anim base state to " + characterLoader.baseStateAnimationClipNames[cCode][n]);
 		a.Play(characterLoader.baseStateAnimationClipNames[cCode][n]);
 	}
 
@@ -515,10 +515,10 @@ public class Dialogue : MonoBehaviour
 
         switch (partIndex)
         {
-			case 0: //part 1
+			case 1: //part 1
 				a.Play(characterLoader.Part1AnimationClipNames[cCode][value]);
 				break;
-			case 1: //part 2
+			case 2: //part 2
 				a.Play(characterLoader.Part2AnimationClipNames[cCode][value]);
 				break;
 			default:
@@ -567,7 +567,7 @@ public class Dialogue : MonoBehaviour
 		//Canvas.ForceUpdateCanvases();
 		DIALOGUE.text = "";
 
-		setPartLayerParam(index, character, 0, 1); //start talking
+		setPartLayerParam(index, character, 1, 1); //start talking
 
 		for (int s = 0; s < store.Length; s++)
 		{
@@ -582,7 +582,7 @@ public class Dialogue : MonoBehaviour
 			}
 		}
 
-		setPartLayerParam(index, character, 0, 0); //end talking
+		setPartLayerParam(index, character, 1, 0); //end talking
 	}
 
 }

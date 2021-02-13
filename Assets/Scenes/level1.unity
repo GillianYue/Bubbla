@@ -4034,6 +4034,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -569
       objectReference: {fileID: 0}
+    - target: {fileID: 1966779438, guid: 85a748d810cac4d939596b46881e6030, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -509
+      objectReference: {fileID: 0}
     - target: {fileID: 9128375832452269202, guid: 85a748d810cac4d939596b46881e6030,
         type: 3}
       propertyPath: m_Camera
@@ -6113,6 +6117,11 @@ PrefabInstance:
       propertyPath: customEvents
       value: 
       objectReference: {fileID: 635836389}
+    - target: {fileID: 8532775518385008724, guid: 2ab1bf52ba78ef14fa1750b43ed3969e,
+        type: 3}
+      propertyPath: DlgCsv
+      value: 
+      objectReference: {fileID: 4900000, guid: 2d5c3555e5c4e944ca8ce1f2404ba3c7, type: 3}
     - target: {fileID: 8534146758958614026, guid: 2ab1bf52ba78ef14fa1750b43ed3969e,
         type: 3}
       propertyPath: Ballz
@@ -6305,6 +6314,11 @@ PrefabInstance:
       propertyPath: spriteSource
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8319214614881829179, guid: 668bc50e1a491954abf8bb8e42167bfe,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9001115275121079128, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6423,12 +6437,12 @@ PrefabInstance:
     - target: {fileID: 9219339533269405907, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -175.00005
+      value: -175
       objectReference: {fileID: 0}
     - target: {fileID: 9219339533269405907, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -18.999985
+      value: -19
       objectReference: {fileID: 0}
     - target: {fileID: 9219470914659307741, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
