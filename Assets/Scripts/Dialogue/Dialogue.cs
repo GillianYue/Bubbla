@@ -42,7 +42,6 @@ public class Dialogue : MonoBehaviour
 		loadDone = new bool[1]; //TODO
 	}
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -60,15 +59,16 @@ public class Dialogue : MonoBehaviour
 	{
 
 		//sprite fixes size of background square
-		Global.resizeSpriteToDLG(character, character.transform.parent.gameObject);
+		//Global.resizeSpriteToDLG(character, character.transform.parent.gameObject); no need, using images
 		AudioClip cVoiceClip = null;
 
 		lineDone = false; //dialogue is shown one char at a time
 		NAME.text = c_name;
+		int index = -1; //cCode of the upcoming character
 
 		if (!prevChaName.Equals(NAME.text)) //if equal, no need to change animator
 		{
-			int index = characterLoader.getIndex(NAME.text);
+			index = characterLoader.getIndex(NAME.text);
 
 			if (index == -1) //not found, check for special param instructing which Animator to use
 			{
@@ -110,10 +110,10 @@ public class Dialogue : MonoBehaviour
 		Canvas.ForceUpdateCanvases();
 		DIALOGUE.text = "";
 
+		//character start talking (default talking anim state); assumes part1 is always mouth 
+		setPartLayerParam(index, character, 0, 1);
 
-		setBoolParam(character, 0, true); //talking is param 0
-
-		setAnimBaseState(character, SpriteNum);
+		setAnimBaseState(index, character, SpriteNum);
 
         int special;
         int.TryParse(special_index, out special);
@@ -193,7 +193,7 @@ public class Dialogue : MonoBehaviour
 					case 1:
 						if (n == (int)PARAM1[paramPointer[1]]) //if current char is char at which a switch should happen
 						{
-							setAnimBaseState(character, (int)PARAM2[paramPointer[1]]);
+							setAnimBaseState(index, character, (int)PARAM2[paramPointer[1]]);
 							if (paramPointer[1] < PARAM1.Count - 1)
 							{
 								paramPointer[1]++; 
@@ -201,20 +201,21 @@ public class Dialogue : MonoBehaviour
 						}
 						break;
 					/*
-					 * SPECIAL mode 2, the changing of motion states of the character (Talking, Typing, Blinking, etc.)
-					 * -param 1: "which" state(s) to be set (will add float to anim State accordingly, e.g. Typing --> State += 0.05) 
-					 * the same state can appear for multiple times (e.g. 0, 1, 0 will set, for example, Talking, Typing and Talking in order);
-                     * NOTE: this needs to match the number of items in param2/3; in other words, even "1,1" is necessary
-					 * -param 2: true/false boolean(s) to set those state(s), where 0 is false and 1 is true
+					 * SPECIAL mode 2, the changing of motion states of the character's body parts (Part1, Part2, etc.)
+					 * -param 1: "which" state(s) to be set 
+					 * the same state can appear for multiple times (e.g. 0, 1, 0 will set, for example);
+                     * NOTE: this needs to match the number of items in param2/3; in other words, even "[1];[1]" is necessary
+					 * -param 2: value(s) to set those state(s), integer
 					 * -param 3: word count indices at which the state(s) are to be set
 					 * 
-					 * e.g. [0,1];[1,1];
+					 * e.g. [0,1];[3,5];[2,3] sets part 1(0) to "3" at word 2, sets part 2(1) to "5" at word 3
 					 */
 					case 2:
 						if (wordCount == (int)PARAM3[paramPointer[2]])
 						{
-							setBoolParam(character, (int)PARAM1[paramPointer[2]],
-								((int)PARAM2[paramPointer[2]] == 1));
+							setPartLayerParam(index, character, (int)PARAM1[paramPointer[2]],
+								(int)PARAM2[paramPointer[2]]);
+
 							if (paramPointer[2] < PARAM3.Count - 1)
 							{
 								paramPointer[2]++;
@@ -297,8 +298,8 @@ public class Dialogue : MonoBehaviour
 			dlgOptions.showOptions(PARAM1.Count, messages, lines);
 		}
 
-		//character.GetComponent<Animator>().SetBool("Talking", false);
-		setBoolParam(character, 0, false); //talking is param 0
+		//character stop talking (default talking anim state)
+		setPartLayerParam(index, character, 0, 0);
 		lineDone = true;
 		skipping = false;
 
@@ -402,15 +403,15 @@ public class Dialogue : MonoBehaviour
 	}
 
 	/*
- * prevents long words at end of line from jumping to the next when rendering
- *     
- * adds the parsed sentences to ArrayList result one by one.
- *     
- * Checks if there are tags first. 
- * If yes, stores the positions of the opening and ending tags in an int array that's returned.
- * If no, the returned array[0] will be -1, indicating that there's no tags in this sentence.
- * 
- */
+	 * prevents long words at end of line from jumping to the next when rendering
+	 *     
+	 * adds the parsed sentences to ArrayList result one by one.
+	 *     
+	 * Checks if there are tags first. 
+	 * If yes, stores the positions of the opening and ending tags in an int array that's returned.
+	 * If no, the returned array[0] will be -1, indicating that there's no tags in this sentence.
+	 * 
+	 */
 	private int[] GetFormattedText(Text textUI, string text, ArrayList result)
 	{
 
@@ -496,63 +497,36 @@ public class Dialogue : MonoBehaviour
 		return size;
 	}
 
-	public void setAnimState(GameObject c, float n)
+
+	public void setAnimBaseState(int cCode, GameObject c, int n)
 	{
 		Animator a = c.GetComponent<Animator>();
 
-		a.SetFloat("State", n);
-		//  animIndicator.text = n.ToString();
-
+		a.Play(characterLoader.baseStateAnimationClipNames[cCode][n]);
 	}
 
-	public void setAnimBaseState(GameObject c, int n)
-	{
-		Animator a = c.GetComponent<Animator>();
-
-		float bools = a.GetFloat("State") - Mathf.Floor(a.GetFloat("State"));
-		setAnimState(c, n + bools);
-	}
 
 	/**
- * calculates the overall State float based on the two bool params
- */
-	public void setBoolParam(GameObject c, int num, bool b)
+	 * sets the parameter for the part's animation layer to be value given
+	 */
+	public void setPartLayerParam(int cCode, GameObject c, int partIndex, int value)
 	{
 		Animator a = c.GetComponent<Animator>();
-		// a.SetBool(name, b);
 
-		if (num == 0)
-		{
-			animBool0 = b;
-		}
-		else if (num == 1)
-		{
-			animBool1 = b;
-		}
-
-		bool p0 = animBool0, p1 = animBool1;
-
-		if (p0 && p1)
-		{
-			setAnimState(c, Mathf.Floor(a.GetFloat("State")) + 0.15f);
-
-		}
-		else if (p0 && (!p1))
-		{
-			setAnimState(c, Mathf.Floor(a.GetFloat("State")) + 0.1f);
-		}
-		else if ((!p0) && p1)
-		{
-			setAnimState(c, Mathf.Floor(a.GetFloat("State")) + 0.05f);
-		}
-		else //neither
-		{
-			setAnimState(c, Mathf.Floor(a.GetFloat("State")));
-		}
-
+        switch (partIndex)
+        {
+			case 0: //part 1
+				a.Play(characterLoader.Part1AnimationClipNames[cCode][value]);
+				break;
+			case 1: //part 2
+				a.Play(characterLoader.Part2AnimationClipNames[cCode][value]);
+				break;
+			default:
+				Debug.Log("unknown layer");
+				break;
+        }
 
 	}
-
 
 	//** TITLE
 
@@ -581,7 +555,9 @@ public class Dialogue : MonoBehaviour
 
 		int SpriteNum;
 		int.TryParse(data[2, line], out SpriteNum);
-		setAnimBaseState(character, SpriteNum);
+
+		int index = characterLoader.getIndex(NAME.text); //
+		setAnimBaseState(index, character, SpriteNum);
 
 		int disp_spd;
 		int.TryParse(data[3, line], out disp_spd); //converts string to int
@@ -591,8 +567,7 @@ public class Dialogue : MonoBehaviour
 		//Canvas.ForceUpdateCanvases();
 		DIALOGUE.text = "";
 
-		setBoolParam(character, 0, true); //talking is param 0
-		setBoolParam(character, 1, true); //typing is param 1
+		setPartLayerParam(index, character, 0, 1); //start talking
 
 		for (int s = 0; s < store.Length; s++)
 		{
@@ -607,8 +582,7 @@ public class Dialogue : MonoBehaviour
 			}
 		}
 
-		setBoolParam(character, 0, false); //talking is param 0
-		setBoolParam(character, 1, false); //typing is param 1
+		setPartLayerParam(index, character, 0, 0); //end talking
 	}
 
 }
