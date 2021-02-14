@@ -11,7 +11,7 @@ public class CharacterLoader : MonoBehaviour
 
     int[] characterCode; 
     ArrayList cName;
-    public List<string[]> baseStateAnimationClipNames, Part1AnimationClipNames, Part2AnimationClipNames; //holds transition conditions for each character
+    public List<List<string>> baseStateAnimationClipNames, Part1AnimationClipNames, Part2AnimationClipNames; //holds transition conditions for each character
     string[] pathName; //animators, voices will have the same local path (e.g. CaptainBuns) for files
     RuntimeAnimatorController[] cAnimators;
     AudioClip[] voiceClips;
@@ -63,9 +63,9 @@ public class CharacterLoader : MonoBehaviour
 
         characterCode = new int[numRows - 1]; //num rows, int[] is for the entire column
         cName = new ArrayList();
-        baseStateAnimationClipNames = new List<string[]>();
-        Part1AnimationClipNames = new List<string[]>();
-        Part2AnimationClipNames = new List<string[]>();
+        baseStateAnimationClipNames = new List<List<string>>();
+        Part1AnimationClipNames = new List<List<string>>();
+        Part2AnimationClipNames = new List<List<string>>();
 
         //bool1Name = new string[numRows - 1]; bool2Name = new string[numRows - 1];
         pathName = new string[numRows - 1]; 
@@ -77,9 +77,11 @@ public class CharacterLoader : MonoBehaviour
         for (int r = 1; r < numRows; r++) 
         {
             cName.Add(data[1, r]);
-            baseStateAnimationClipNames.Add(new string[numRows - 1]);
-            Part1AnimationClipNames.Add(new string[numRows - 1]);
-            Part2AnimationClipNames.Add(new string[numRows - 1]);
+
+            //////will change to string[] with actual size afterwards
+            baseStateAnimationClipNames.Add(new List<string>(new string[5])); //only a holder
+            Part1AnimationClipNames.Add(new List<string>(new string[5]));
+            Part2AnimationClipNames.Add(new List<string>(new string[5]));
 
             //bool1Name[r - 1] = data[2, r]; left blank for now
             //bool2Name[r - 1] = data[3, r];
@@ -92,12 +94,9 @@ public class CharacterLoader : MonoBehaviour
             bgColor[r - 1] = new Color(R, G, B);
         }
 
-        loadAnimators(cAnimators);
+        
         loadVoices(voiceClips);
-        yield return new WaitUntil(() =>
-        {
-            return (cAnimators[pathName.Length - 1] != null);
-        }); //anim loaded, theoretically everything all set
+        yield return loadAnimators(cAnimators); //waits until all animators are loaded
 
         characterLoaderDone = true;
         Debug.Log("CharacterLoader ready");
@@ -118,19 +117,20 @@ public class CharacterLoader : MonoBehaviour
             string animClipName = d[0, i];
             int stateNum = -1;
 
-            print("row"+ i+": " + d[1, i] + d[2, i] + d[3, i]);
-
             if (d[1, i] != "") //clip belongs to BASE layer
             {
                 int.TryParse(d[1, i], out stateNum);
+                checkExpandList(baseStateAnimationClipNames[cCode], stateNum, "");
                 baseStateAnimationClipNames[cCode][stateNum] = animClipName;
             } else if (d[2, i] != "") //PART 1 layer
             {
                 int.TryParse(d[2, i], out stateNum);
+                checkExpandList(Part1AnimationClipNames[cCode], stateNum, "");
                 Part1AnimationClipNames[cCode][stateNum] = animClipName;
             } else if (d[3, i] != "") //PART 2 layer
             {
                 int.TryParse(d[3, i], out stateNum);
+                checkExpandList(Part2AnimationClipNames[cCode], stateNum, "");
                 Part2AnimationClipNames[cCode][stateNum] = animClipName;
             }
             else{
@@ -139,8 +139,23 @@ public class CharacterLoader : MonoBehaviour
         }
     }
 
-    private void loadAnimators(RuntimeAnimatorController[] cAnim)
+    private void checkExpandList<T>(List<T> list, int insertIndex, T defaultVal)
     {
+        if (insertIndex >= list.Count)
+        {
+            int slotsNeeded = Mathf.Max(insertIndex - list.Count + 1, 5);
+            for (int s = 0; s < slotsNeeded; s++)
+            {
+                list.Add(defaultVal);
+            }
+            print("expanded list, list current size: " + list.Count);
+        }
+    }
+
+    private IEnumerator loadAnimators(RuntimeAnimatorController[] cAnim)
+    {
+
+        List<Coroutine> coroutines = new List<Coroutine>();
 
         //load the animation clips into the arrays
         for (int cCode = 0; cCode < cAnim.GetLength(0); cCode++)
@@ -151,20 +166,31 @@ public class CharacterLoader : MonoBehaviour
                 var amt = Resources.Load("Animator/" + pathName[cCode]) as RuntimeAnimatorController;
                 var transitionConditionCSV = Resources.Load("Animator/StateMachineCSV/" + pathName[cCode]+"Animator") as TextAsset;
 
-                if (amt == null || transitionConditionCSV == null)
+                if (amt == null)
                 {
                     Debug.Log("Animator for c"+cCode+" NOT found");
                 }
                 else
                 {
+
                     cAnim[cCode] = amt;
 
                     bool[] csvLoadDone = new bool[1];
                     //sets transition data for each character based on csv
-                    StartCoroutine(LoadScene.processCSV(csvLoadDone, transitionConditionCSV, (string[,] d) => setStateMachineData(d, cCode), false));
-                    //TODO do we wait for done here
+                    if (transitionConditionCSV != null)
+                    {
+                        Coroutine c = StartCoroutine(LoadScene.processCSV(csvLoadDone, transitionConditionCSV, (string[,] d) => setStateMachineData(d, cCode), false));
+                        coroutines.Add(c);
+                    
+                    }
                 }
             }
+        }
+
+        //will start the coroutines in parallel and wait for all to finish 
+        foreach (Coroutine c in coroutines)
+        {
+            yield return c;
         }
 
     }
@@ -238,6 +264,41 @@ public class CharacterLoader : MonoBehaviour
     public Color getColorByIndex(int index)
     {
         return bgColor[index];
+    }
+
+    public void playBaseAnimation(Animator a, int cCode, int state)
+    {
+        if (baseStateAnimationClipNames[cCode] != null && baseStateAnimationClipNames[cCode][state] != null)
+        {
+            a.Play(baseStateAnimationClipNames[cCode][state]);
+        }
+        else
+        {
+            Debug.Log("character " + cCode + " does not have base state " + state);
+        }
+    }
+
+    public void playPart1Animation(Animator a, int cCode, int state)
+    {
+        if (Part1AnimationClipNames[cCode] != null && Part1AnimationClipNames[cCode][state] != null)
+        {
+            a.Play(Part1AnimationClipNames[cCode][state]);
+        }
+        else
+        {
+            Debug.Log("character " + cCode + " does not have part 1 state " + state);
+        }
+    }
+    public void playPart2Animation(Animator a, int cCode, int state)
+    {
+        if (Part2AnimationClipNames[cCode] != null && Part2AnimationClipNames[cCode][state] != null)
+        {
+            a.Play(Part2AnimationClipNames[cCode][state]);
+        }
+        else
+        {
+            Debug.Log("character " + cCode + " does not have part 2 state " + state);
+        }
     }
 }
 

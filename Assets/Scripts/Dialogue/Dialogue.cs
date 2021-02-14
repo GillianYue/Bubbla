@@ -22,6 +22,7 @@ public class Dialogue : MonoBehaviour
 	public GameObject character, dlgBox; //character is current character speaking
 	public AudioSource cVoiceSource;
 	public Image bgBox;
+	public int cIndex = -1;
 
 	public Text animIndicator; //number to show which state the character is
 	public bool animBool0, animBool1; //names of the two bool switches of the character's animator, e.g. talking, typing
@@ -39,7 +40,7 @@ public class Dialogue : MonoBehaviour
 
 		cVoiceSource = character.GetComponent<AudioSource>(); //audioSource for the voice blips
 
-		loadDone = new bool[1]; //TODO
+		loadDone = new bool[1]; 
 	}
 
     void Update()
@@ -59,28 +60,28 @@ public class Dialogue : MonoBehaviour
 	{
 
 		//sprite fixes size of background square
-		//Global.resizeSpriteToDLG(character, character.transform.parent.gameObject); no need, using images
 		AudioClip cVoiceClip = null;
 
 		lineDone = false; //dialogue is shown one char at a time
 		NAME.text = c_name;
-		int index = -1; //cCode of the upcoming character
+		
 
 		if (!prevChaName.Equals(NAME.text)) //if equal, no need to change animator
 		{
-			index = characterLoader.getIndex(NAME.text);
+			cIndex = -1; //cCode of the upcoming character
+			cIndex = characterLoader.getIndex(NAME.text);
 
-			if (index == -1) //not found, check for special param instructing which Animator to use
+			if (cIndex == -1) //not found, check for special param instructing which Animator to use
 			{
 				if (Invasion2000 != null) NAME.font = Invasion2000;
-				int.TryParse(not_found_param, out index); //if success, assign animator accordingly
+				int.TryParse(not_found_param, out cIndex); //if success, assign animator accordingly
 			}
 			else
 			{
 				if (ArcadeClassic != null) NAME.font = ArcadeClassic;
 			}
 
-			if (index == -1) //not assigned, no animator
+			if (cIndex == -1) //not assigned, no animator
 			{
 				bgBox.color = new Color(0, 0, 0); //black 
 			}
@@ -88,11 +89,11 @@ public class Dialogue : MonoBehaviour
 			{
 				// assign animator
 				character.GetComponent<Animator>().runtimeAnimatorController =
-				characterLoader.getAnimatorByIndex(index);
-				cVoiceClip = characterLoader.getVoiceByIndex(index);
+				characterLoader.getAnimatorByIndex(cIndex);
+				cVoiceClip = characterLoader.getVoiceByIndex(cIndex);
 				cVoiceSource.clip = cVoiceClip;
 				Color c = bgBox.color;
-				c = characterLoader.getColorByIndex(index);
+				c = characterLoader.getColorByIndex(cIndex);
 				bgBox.color = new Color(c.r / 255.0f, c.g / 255.0f, c.b / 255.0f);
 			}
 
@@ -111,9 +112,9 @@ public class Dialogue : MonoBehaviour
 		DIALOGUE.text = "";
 
 		//character start talking (default talking anim state); assumes part1 is always mouth 
-		setPartLayerParam(index, character, 1, 1);
+		setPartLayerParam(cIndex, character, 1, 2);
 
-		setAnimBaseState(index, character, SpriteNum);
+		setAnimBaseState(cIndex, character, SpriteNum);
 
         int special;
         int.TryParse(special_index, out special);
@@ -191,10 +192,11 @@ public class Dialogue : MonoBehaviour
 					 *  -param 2: number for State variable of the character (will assign sprite accordingly)
 					 */
 					case 1:
-						if (n == (int)PARAM1[paramPointer[1]]) //if current char is char at which a switch should happen
+						if (paramPointer[1]<PARAM1.Count &&
+							n == (int)PARAM1[paramPointer[1]]) //if current char is char at which a switch should happen
 						{
-							setAnimBaseState(index, character, (int)PARAM2[paramPointer[1]]);
-							if (paramPointer[1] < PARAM1.Count - 1)
+							setAnimBaseState(cIndex, character, (int)PARAM2[paramPointer[1]]);
+							if (paramPointer[1] <= PARAM1.Count - 1)
 							{
 								paramPointer[1]++; 
 							}
@@ -211,15 +213,17 @@ public class Dialogue : MonoBehaviour
 					 * e.g. [0,1];[3,5];[2,3] sets part 1(0) to "3" at word 2, sets part 2(1) to "5" at word 3
 					 */
 					case 2:
-						if (wordCount == (int)PARAM3[paramPointer[2]])
+						if (paramPointer[2]<PARAM3.Count &&
+							wordCount == (int)PARAM3[paramPointer[2]]) //is at the right word and the first char
 						{
-							setPartLayerParam(index, character, (int)PARAM1[paramPointer[2]],
+							setPartLayerParam(cIndex, character, (int)PARAM1[paramPointer[2]],
 								(int)PARAM2[paramPointer[2]]);
 
-							if (paramPointer[2] < PARAM3.Count - 1)
+							if (paramPointer[2] <= PARAM3.Count - 1)
 							{
 								paramPointer[2]++;
 							}
+
 						}
 						break;
 					//SPECIAL mode 3 disables users from clicking to proceed, will auto proceed after certain seconds
@@ -232,10 +236,11 @@ public class Dialogue : MonoBehaviour
 					 * -param 2: spd(s) to change into
 					 */
 					case 4:
-						if (n == (int)PARAM1[paramPointer[4]])
+						if (paramPointer[4] < PARAM1.Count &&
+							n == (int)PARAM1[paramPointer[4]])
 						{
 							disp_spd = (float)PARAM2[paramPointer[4]];
-							if (paramPointer[4] < PARAM1.Count - 1)
+							if (paramPointer[4] <= PARAM1.Count - 1)
 							{
 								paramPointer[4]++;
 							}
@@ -299,7 +304,7 @@ public class Dialogue : MonoBehaviour
 		}
 
 		//character stop talking (default talking anim state)
-		setPartLayerParam(index, character, 1, 0);
+		setPartLayerParam(cIndex, character, 1, 1);
 		lineDone = true;
 		skipping = false;
 
@@ -501,8 +506,7 @@ public class Dialogue : MonoBehaviour
 	public void setAnimBaseState(int cCode, GameObject c, int n)
 	{
 		Animator a = c.GetComponent<Animator>();
-		print("setting anim base state to " + characterLoader.baseStateAnimationClipNames[cCode][n]);
-		a.Play(characterLoader.baseStateAnimationClipNames[cCode][n]);
+		characterLoader.playBaseAnimation(a, cCode, n);
 	}
 
 
@@ -516,10 +520,10 @@ public class Dialogue : MonoBehaviour
         switch (partIndex)
         {
 			case 1: //part 1
-				a.Play(characterLoader.Part1AnimationClipNames[cCode][value]);
+				characterLoader.playPart1Animation(a, cCode, value);
 				break;
 			case 2: //part 2
-				a.Play(characterLoader.Part2AnimationClipNames[cCode][value]);
+				characterLoader.playPart2Animation(a, cCode, value);
 				break;
 			default:
 				Debug.Log("unknown layer");
@@ -567,7 +571,7 @@ public class Dialogue : MonoBehaviour
 		//Canvas.ForceUpdateCanvases();
 		DIALOGUE.text = "";
 
-		setPartLayerParam(index, character, 1, 1); //start talking
+		setPartLayerParam(index, character, 1, 2); //start talking
 
 		for (int s = 0; s < store.Length; s++)
 		{
@@ -582,7 +586,7 @@ public class Dialogue : MonoBehaviour
 			}
 		}
 
-		setPartLayerParam(index, character, 1, 0); //end talking
+		setPartLayerParam(index, character, 1, 1); //end talking
 	}
 
 }

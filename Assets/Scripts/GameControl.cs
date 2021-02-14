@@ -273,7 +273,7 @@ public class GameControl : MonoBehaviour {
         if (sceneType == Mode.GAME)
         {
             int tempPT = -1; //temp pointer, is passive, updates as gFlow pointer updates
-            int gfP;
+            int gfP; //game flow pointer
             do
             {//once code gets here, should be ready to start gameFlow
                 if (tempPT != (gfP = gFlow.getCurrentLineNumber()))

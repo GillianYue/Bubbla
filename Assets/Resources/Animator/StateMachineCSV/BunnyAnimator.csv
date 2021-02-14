@@ -1,7 +1,1 @@
-ANIM CLIP NAME,ANIM STATE,PART1,PART2,PART3
-BunnyBaseDefault1,1,,,
-BunnyBaseSlightBlush2,2,,,
-BunnyMouthDefault1,,1,,
-BunnyMouthTalking2,,2,,
-BunnyHandsDefault1,,,1,
-BunnyHandsTyping2,,,2,
+ANIM CLIP NAME,ANIM STATE,PART1,PART2,PART3BunnyBaseDefault1,1,,,BunnyBaseSlightBlush2,2,,,BunnyMouthDefault1,,1,,BunnyMouthTalking2,,2,,BunnyHandsDefault1,,,1,BunnyHandsTyping2,,,2,

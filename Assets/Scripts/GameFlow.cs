@@ -92,7 +92,6 @@ public class GameFlow : MonoBehaviour {
         }
 
         parseDone[0] = true;
-        print("parse dialogue csv done");
     }
 
     public void processCurrentLine()
