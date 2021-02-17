@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6554607266806570967}
   - component: {fileID: 6554607266806570966}
   - component: {fileID: 6554607266806570971}
+  - component: {fileID: 1756869951}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -57,8 +58,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0
+  far clip plane: 200
   field of view: 60
   orthographic: 1
   orthographic size: 568
@@ -71,7 +72,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -105,3 +106,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e4839e9b596d47afa665ea00271448f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvasToScale: {fileID: 0}
+--- !u!114 &1756869951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6554607266806570965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93cecf5afdb6794a94714f87b2ff458, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeTransform: {fileID: 0}

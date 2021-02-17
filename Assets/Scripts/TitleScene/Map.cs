@@ -17,12 +17,18 @@ public class Map : MonoBehaviour
     public GameObject siteListItemPrefab; //sublocation list item prefab
     public Image sublocationImage; //display for sublocation image; assigned in editor
 
-    void Start()
+
+    void Awake()
     {
         mapWidth = GetComponent<RectTransform>().rect.width;
         mapHeight = GetComponent<RectTransform>().rect.height;
 
         panZoom = GetComponent<PanZoom>();
+    }
+
+    void Start()
+    {
+
 
         panZoom.setExtentsCallback(getCurrentMapExtents);
 

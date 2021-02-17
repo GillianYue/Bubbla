@@ -83,7 +83,14 @@ public class GameControl : MonoBehaviour {
 
     public AudioSource bgmSource;
 
-    // Use this for initialization
+    void Awake()
+    {
+        //locate prefabs
+        HeartPopVFX = prefabHolder.heartPop;
+        hearts = prefabHolder.hearts;
+        aim = prefabHolder.aim;
+    }
+
     void Start () {
         
         if(sceneType == Mode.GAME && GameOverC) GameOverC.SetActive (false);
@@ -95,8 +102,6 @@ public class GameControl : MonoBehaviour {
         foreach (GameObject g in gadgets) {
             g.SetActive (false);
         }
-
-        StartCoroutine (StartGame());
 
         //setting mask to the right dimension
         GameObject BGMask = GameObject.FindWithTag("BGMask");
@@ -112,11 +117,7 @@ public class GameControl : MonoBehaviour {
 
         p = player.GetComponent<Player>();
 
-        //locate prefabs
-        HeartPopVFX = prefabHolder.heartPop;
-        hearts = prefabHolder.hearts;
-        aim = prefabHolder.aim;
-
+        StartCoroutine(StartGame());
     }
 
     void Update () {
@@ -180,8 +181,8 @@ public class GameControl : MonoBehaviour {
                                 if (Global.touching(new Vector2(Input.mousePosition.x,
                                     Input.mousePosition.y), //screen 
                               icon, //screen
-                        i.GetComponent<Image>().sprite.rect.width * Global.WTSfactor.x * i.transform.localScale.x,
-                        i.GetComponent<Image>().sprite.rect.height * Global.WTSfactor.y * i.transform.localScale.y
+                        i.GetComponent<Image>().sprite.rect.width * i.transform.localScale.x,
+                        i.GetComponent<Image>().sprite.rect.height * i.transform.localScale.y
                         ))
                                 {
                                     //if code reaches here, means that one icon is pressed
@@ -234,8 +235,8 @@ public class GameControl : MonoBehaviour {
                     if (Global.touching(new Vector2(Input.mousePosition.x,
                         Input.mousePosition.y), //screen 
                   go, //screen
-            i.GetComponent<SpriteRenderer>().sprite.rect.width * Global.WTSfactor.x * i.transform.localScale.x,
-            i.GetComponent<SpriteRenderer>().sprite.rect.height * Global.WTSfactor.y * i.transform.localScale.y
+            i.GetComponent<SpriteRenderer>().sprite.rect.width * i.transform.localScale.x,
+            i.GetComponent<SpriteRenderer>().sprite.rect.height * i.transform.localScale.y
             ))
                     {
                         //if code reaches here, means that one sprite is clicked, get the ivs-related script & call function

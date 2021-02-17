@@ -560,7 +560,7 @@ public class Dialogue : MonoBehaviour
 		int SpriteNum;
 		int.TryParse(data[2, line], out SpriteNum);
 
-		int index = characterLoader.getIndex(NAME.text); //
+		int index = 0;  //TODO always bunny, for now...
 		setAnimBaseState(index, character, SpriteNum);
 
 		int disp_spd;

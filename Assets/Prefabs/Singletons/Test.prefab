@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 23789271091681725}
   - component: {fileID: 23789271091681722}
+  - component: {fileID: 23789270388822611}
   m_Layer: 0
   m_Name: Test
   m_TagString: Untagged
@@ -51,3 +52,15 @@ MonoBehaviour:
   test: 1
   invincible: 0
   speedUpRate: 15
+--- !u!114 &23789270388822611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23789271091681723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d054524d6c64a419dd2956ea99ec1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

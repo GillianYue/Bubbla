@@ -40,20 +40,23 @@ public class CustomEvents : MonoBehaviour
      */
     public List<identifier> identified;
 
-    // Use this for initialization
+    void Awake()
+    {
+        identified = new List<identifier>();
+    }
+
     void Start()
     {
 
         vfxCanvas = (gameControl.vfxCanvas) ? gameControl.vfxCanvas : null;
 
-        identified = new List<identifier>();
         foreach (identifier i in FindObjectsOfType<identifier>())
         {
             identified.Add(i);
         }
     }
 
-    // Update is called once per frame
+
     void Update()
     {
 
@@ -115,7 +118,13 @@ public class CustomEvents : MonoBehaviour
                 clearEnemiesOrPBs(done, prms);
                 break;
             case 20:
-                StartCoroutine(vfx(done, prms));
+                StartCoroutine(fadeInOutToColor(done, prms));
+                break;
+            case 21:
+                screenShake(done, prms);
+                break;
+            case 22:
+                StartCoroutine(screenFlash(done, prms));
                 break;
             case 30:
                 variable(done, prms);
@@ -649,16 +658,15 @@ public class CustomEvents : MonoBehaviour
     /*
      * event #20
      * 
-     * IEnumerator for all sorts of visual effects
+     * fade out/in into pure colored backgrounds
      * 
      * param 0: vfx index
-     *      -0: black fade out
-     *      -1: black fade in    
-     * param 1: whether to leave vfxCanvas active afterwards
-     *      -0: false (set to inactive)
-     *      -1: true (leave as active)    
+     *      -0: black fade in
+     *      -1: black fade out to screen    
+     *      -2
+     * optional param 1: alternative color in the form of "rValue,gValue,bValue"   
      */
-    public IEnumerator vfx(bool[] done, string[] prms)
+    public IEnumerator fadeInOutToColor(bool[] done, string[] prms)
     {
         vfxCanvas.SetActive(true);
 
@@ -666,40 +674,111 @@ public class CustomEvents : MonoBehaviour
         int.TryParse(prms[0], out index);
         Image img = vfxCanvas.GetComponent<Image>();
 
-        int leaveActive;
-        int.TryParse(prms[1], out leaveActive);
+        Color col = Color.black;
+        parseColorParameter(prms[1], ref col);
 
         switch (index)
         {
-            case 0: //fade out to black canvas; default fade out is 2 seconds in total
+            case 1: //fade out to black canvas; default fade out is 2 seconds in total
                 if (img != null)
                 {
 
                     for (float o = 0; o <= 1; o += 0.025f) //fade out of sprite
                     {
-                        img.color = new Color(0, 0, 0, o);
+                        img.color = new Color(col.r, col.g, col.b, o);
                         yield return new WaitForSeconds(0.05f);
                     }
-                    if (img.color.a < 1) img.color = new Color(0, 0, 0, 1); //black
+                    if (img.color.a < 1) img.color = new Color(col.r, col.g, col.b, 1); //black
+
                 }
                 break;
-            case 1: //black canvas fading back into view, reverse process of case 0
+            case 0: //black canvas fading back into view, reverse process of case 0
                 if (img != null)
                 {
 
                     for (float o = 1; o >= 0; o -= 0.025f) //fade out of sprite
                     {
-                        img.color = new Color(0, 0, 0, o);
+                        img.color = new Color(col.r, col.g, col.b, o);
                         yield return new WaitForSeconds(0.05f);
                     }
-                    if (img.color.a > 0) img.color = new Color(0, 0, 0, 0); //black
+                    if (img.color.a > 0) img.color = new Color(col.r, col.g, col.b, 0); //transparent
+                    vfxCanvas.SetActive(false);
                 }
                 break;
 
         }
 
-        if (leaveActive == 0)
+        done[0] = true;
+    }
+
+    /*
+     * event #21
+     * 
+     * screen shake effect, assumes main canvas is in world space
+     * 
+     * param 0: shake duration (float)
+     * optional param 1: shake magnitude (float, default 0.7f)
+     * optional param 2: damping speed (float, default 1.0f)
+     */
+    public void screenShake(bool[] done, string[] prms)
+    {
+        print("screenshake: " + prms[0] + "s, mag " + prms[1] + " damp " + prms[2]);
+        float duration;
+        if (!float.TryParse(prms[0], out duration)) duration = 1f;
+
+        ScreenShake shake = gameControl.mainCamera.GetComponent<ScreenShake>();
+
+        if (prms[2] == "" && prms[1] == "")
+        {
+            shake.TriggerShake(duration);
+        }else if(prms[2] == "")
+        {
+            float mag;
+            float.TryParse(prms[1], out mag);
+            shake.TriggerShake(duration, mag);
+        }
+        else
+        {
+            float mag;
+            float.TryParse(prms[1], out mag);
+
+            float damp;
+            float.TryParse(prms[2], out damp);
+
+            shake.TriggerShake(duration, mag, damp);
+        }
+
+        done[0] = true;
+    }
+
+    /*
+     * event #22
+     * 
+     * screen flash effect, defaults to a white screen
+     * 
+     * param 0: int, number of times flash takes place
+     * optional param 1: interval time between flashes (if any) defaults to 0.5f seconds
+     * optional param 2: 
+     */
+    public IEnumerator screenFlash(bool[] done, string[] prms)
+    {
+        int times;
+        if (!int.TryParse(prms[0], out times)) times = 1;
+
+        float interval;
+        if (!float.TryParse(prms[1], out interval)) interval = 0.2f;
+
+        Image img = vfxCanvas.GetComponent<Image>();
+        img.color = Color.white;
+
+        //mark mark
+        for(int t=0; t<times; t++)
+        {
+            vfxCanvas.SetActive(true);
+            yield return new WaitForSeconds(0.05f); //for now, hard coded in linger time 
             vfxCanvas.SetActive(false);
+            yield return new WaitForSeconds(interval);
+        }
 
         done[0] = true;
     }
@@ -709,17 +788,16 @@ public class CustomEvents : MonoBehaviour
     * event #30
     * 
     * to create a new or modify an old variable with a string name (linked in code via a dictionary)
-     * 
-     * param 0: variable type(s), separated by comma
-     *      -0: bool
-     *      -1: integer
-     *      -2: string
-     * param 1: string(s) to identify this variable, separated by comma
-     * param 2: starting value(s) of this variable (type will be converted accordingly) OR value(s) to be mod into,
-     * separated by comma
-     * 
-     */
-
+    * 
+    * param 0: variable type(s), separated by comma
+    *      -0: bool
+    *      -1: integer
+    *      -2: string
+    * param 1: string(s) to identify this variable, separated by comma
+    * param 2: starting value(s) of this variable (type will be converted accordingly) OR value(s) to be mod into,
+    * separated by comma
+    * 
+    */
     public void variable(bool[] done, string[] prms)
     {
 
@@ -1077,6 +1155,28 @@ public class CustomEvents : MonoBehaviour
     public void removeFromIdentified(identifier i)
     {
         identified.Remove(i);
+    }
+
+    //parses a string of form "rValue,gValue,bValue" (0-255) to a color. sets the given color variable to the parsed color
+    //returns false if param not parsable as color
+    public bool parseColorParameter(string param, ref Color col)
+    {
+        float x=0, y=0, z=0;
+        if (!param.Equals(""))
+        {
+            string[] res = param.Split(',');
+            bool allValid = float.TryParse(res[0], out x) && float.TryParse(res[1], out y) && float.TryParse(res[2], out z);
+
+            if(x>1 || y>1 || z > 1) { x /= 255; y /= 255; z /= 255; } //if input is in 0-255, convert
+
+            if (allValid) col = new Color(x, y, z);
+
+            return allValid;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~helper functions~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

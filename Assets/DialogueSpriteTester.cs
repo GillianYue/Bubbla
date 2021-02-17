@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DialogueSpriteTester : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // TODO
     void Start()
     {
         

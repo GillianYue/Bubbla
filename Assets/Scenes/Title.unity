@@ -5281,6 +5281,7 @@ GameObject:
   - component: {fileID: 1961527696}
   - component: {fileID: 1961527695}
   - component: {fileID: 1961527697}
+  - component: {fileID: 1961527698}
   m_Layer: 0
   m_Name: Loader
   m_TagString: Untagged
@@ -5342,6 +5343,21 @@ MonoBehaviour:
   S0_SPRITE: []
   itemType: 
   itemLoaderDone: 0
+--- !u!114 &1961527698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961527694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73eb27d22fe65445b8e143af1ad10b0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterCsv: {fileID: 4900000, guid: 70c7380e75e8d4fd4b2f94b876026158, type: 3}
+  bgColor: []
+  characterLoaderDone: 0
 --- !u!1 &2007368377
 GameObject:
   m_ObjectHideFlags: 0
@@ -11757,6 +11773,7 @@ MonoBehaviour:
   dlgBox: {fileID: 1606072294993445238}
   cVoiceSource: {fileID: 0}
   bgBox: {fileID: 7917235346745241023}
+  cIndex: -1
   animIndicator: {fileID: 7803236160635631864}
   animBool0: 0
   animBool1: 0

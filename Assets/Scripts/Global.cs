@@ -22,7 +22,7 @@ public class Global : MonoBehaviour
      * So for XR screen (828*1792), WTSfactor would allow world * WTSfactor = screen.
      * So WTSfactor in this case would be 1.3, 1.3    
      */
-     public static Vector2 WTSfactor, STWfactor;
+     //public static Vector2 WTSfactor, STWfactor;
     public static Vector2 gameViewSize;
     public static int scaleRatio; 
     /**raw sprite presented on screen would be too small
@@ -49,9 +49,9 @@ public class Global : MonoBehaviour
     0,0));
         Vector3 one = mainCamera.WorldToScreenPoint(new Vector3(1,
            1,0));
-        WTSfactor = new Vector2((one.x - zero.x), (one.y - zero.y));
+        //WTSfactor = new Vector2((one.x - zero.x), (one.y - zero.y));
 
-        STWfactor = new Vector2((1.0f / WTSfactor.x), (1.0f /WTSfactor.y));
+        //STWfactor = new Vector2((1.0f / WTSfactor.x), (1.0f /WTSfactor.y));
     
         gameViewSize = UnityEditor.Handles.GetMainGameViewSize();
         //Debug.Log("WTS: " + WTSfactor + " STW: " + STWfactor);

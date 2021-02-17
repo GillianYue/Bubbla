@@ -38,8 +38,8 @@ public class L1 : LevelScript
         customEvents.findByIdentifier("bg").GetComponent<BGMover>().revertToStartingPos();
 
         bool[] vfxDone = new bool[1];
-        string[] vfxPrms = makeParamString("0", "1");
-        StartCoroutine(customEvents.vfx(vfxDone, vfxPrms)); //fade in
+        string[] vfxPrms = makeParamString("1", "");
+        StartCoroutine(customEvents.fadeInOutToColor(vfxDone, vfxPrms)); //fade in to black
 
         yield return new WaitUntil(() => vfxDone[0]); //will wait until vfx done
         yield return new WaitForSeconds(2);
@@ -50,8 +50,8 @@ public class L1 : LevelScript
         //clear scene, revert back to beginning bg
 
         bool[] vfxDone2 = new bool[1];
-        string[] vfxPrms2 = makeParamString("1", "0"); //second param is for not leaving active
-        StartCoroutine(customEvents.vfx(vfxDone2, vfxPrms2));
+        string[] vfxPrms2 = makeParamString("0", ""); //fade out to bg
+        StartCoroutine(customEvents.fadeInOutToColor(vfxDone2, vfxPrms2));
         yield return new WaitUntil(() => vfxDone2[0]); //will wait until vfx done
 
         gameFlow.setPointerToSpecial(0); //SPECIAL 0

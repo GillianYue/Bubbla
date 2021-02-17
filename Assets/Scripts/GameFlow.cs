@@ -45,9 +45,12 @@ public class GameFlow : MonoBehaviour {
 
     public ArrayList specialDLGstarts, specialDLGends; //arraylist of ints
 
-    void Start() {
-
+    void Awake()
+    {
         specialDLGstarts = new ArrayList(); specialDLGends = new ArrayList();
+    }
+
+    void Start() {
 
         loadDone = new bool[1];
         bool[] parseDone = new bool[1];

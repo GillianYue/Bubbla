@@ -408,9 +408,9 @@ public class Player : MonoBehaviour
 			//normal attack
 			Vector3 pos = transform.GetComponent<RectTransform>().position;
 			pos.x += (direction.y > 0 ? bulletWeaponDist : -bulletWeaponDist) * //TODO the 32 looks fishy here
-				Mathf.Sin(angle) * (32 * Global.STWfactor.x);
+				Mathf.Sin(angle) * (32);
 			pos.y += (direction.y > 0 ? bulletWeaponDist : -bulletWeaponDist) *
-				Mathf.Cos(angle) * (32 * Global.STWfactor.y);
+				Mathf.Cos(angle) * (32);
 			pos.z = 5;
 			//from cannon's position plus a little bit of delta x and y to find the firing pos
 
@@ -469,9 +469,9 @@ public class Player : MonoBehaviour
 			if (d<3) { //if colors r actually close enough
 			Vector3 pos = transform.position;
 			pos.x += (direction.y>0 ? 1:-1) *  //TODO fishy 32
-				Mathf.Sin (angle) * (32 * Global.STWfactor.x);
+				Mathf.Sin (angle) * (32);
 			pos.z += (direction.y>0 ? 1:-1) *
-				Mathf.Cos (angle) * (32 * Global.STWfactor.y);
+				Mathf.Cos (angle) * (32);
 			//from cannon's position plus a little bit of delta x and y to find the firing pos
 
 			GameObject bullet = Instantiate (BulletPrefabs[bulletType], pos,
