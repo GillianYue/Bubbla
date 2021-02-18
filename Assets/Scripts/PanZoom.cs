@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// this script zooms by adjusting the orthographic size of the camera (and recalculating extents)
+/// 
+/// panning is also done by moving the camera around
+/// </summary>
 public class PanZoom : MonoBehaviour
 {
     Vector3 touchStart;
@@ -10,6 +15,7 @@ public class PanZoom : MonoBehaviour
 
     public float zoomOutMin = 1, zoomOutMax = 3;
     Vector2 extents = new Vector2(9999, 9999); //extents to which the moveAroundGO can move, details see notes in Map
+    public float camOrthoSizeMin, camOrthoSizeMax;
 
     public delegate Vector2 RecalcExtents();
     public RecalcExtents recalcExtents;
@@ -86,28 +92,47 @@ public class PanZoom : MonoBehaviour
 
                 float diff = currMag - prevMag;
 
-                zoom(diff * 0.01f);
+                zoom(diff * 0.01f, Input.mousePosition);
 
             }
             else
             {
-                zoom(Input.GetAxis("Mouse ScrollWheel"));
+                zoom(Input.GetAxis("Mouse ScrollWheel"), Input.mousePosition);
             }
 
         }
     }
 
 
-    void zoom(float increment)
+    void zoom(float increment, Vector2 center)
     {
+        /*
         float scl = moveAroundGO.transform.localScale.x;
         float newScl = Mathf.Clamp(scl+increment, 
             zoomOutMin, zoomOutMax);
         moveAroundGO.transform.localScale = new Vector3(newScl, newScl, 1);
+        */
+
+        Vector2 mouseScreenPos = center;
+        Ray mouseWorldRay = Camera.main.ScreenPointToRay(mouseScreenPos);
+
+        Vector3 newPos = mouseWorldRay.origin + (mouseWorldRay.direction * increment * 100);
+
+        Vector3 newSetPos = Vector3.MoveTowards(Camera.main.transform.position,
+            newPos, increment * 500f * Time.deltaTime);
+        Vector3 deltaPos = Camera.main.transform.position - newSetPos;
+
+        Vector3 finalDest = moveAroundGO.transform.position + deltaPos * (increment > 0 ? 1 : -1);
+
+        //if (finalDest.z < zMax && finalDest.z > zMin)
+        //{
+        //    moveAroundGO.transform.position = finalDest;
+        //}
 
         //scale change will result in different extents (boundaries of the map), so recalculate
         if (recalcExtents != null) extents = recalcExtents(); 
 
+        /*
         //after scaling, we could be out of boundary, need to check and nudge back
         Vector3 curr = moveAroundGO.transform.localPosition;
         if (curr.x < -extents.x) curr.x = -extents.x;
@@ -117,6 +142,7 @@ public class PanZoom : MonoBehaviour
         else if (curr.y > extents.y) curr.y = extents.y;
 
         moveAroundGO.transform.localPosition = curr;
+        */
     }
 
     public void smoothLerpTo(Vector3 dest)

@@ -17,6 +17,8 @@ public class Map : MonoBehaviour
     public GameObject siteListItemPrefab; //sublocation list item prefab
     public Image sublocationImage; //display for sublocation image; assigned in editor
 
+    public Camera myCam; //camera showing this map
+
 
     void Awake()
     {
@@ -79,16 +81,19 @@ public class Map : MonoBehaviour
     }
 
     /// <summary>
-    /// returns the furthest the map can be moved under the current scale
+    /// returns the furthest the camera showing map can be moved under the current orthographic size
+    /// the smaller the orthographic size, the more zoomed in it is
     /// 
     /// if returning (200,300), means map can have a maximum x of 200 and a minimum x of -200
     /// </summary>
     /// <returns></returns>
     Vector2 getCurrentMapExtents()
     {
-        Vector3 scl = transform.localScale;
-        float xExt = (scl.x - 1) * mapWidth / 2, yExt = (scl.y - 1) * mapHeight / 2;
-        return new Vector2(xExt, yExt);
+        //   float halfCamWidth = myCam.orthographicSize * myCam.aspect, halfCamHeight = myCam.orthographicSize;
+        //    float halfMapWidth = GetComponent<RectTransform>().rect.width / 2, halfMapHeight = GetComponent<RectTransform>().rect.height / 2;
+
+        //  return new Vector2(halfMapWidth - halfCamWidth, halfMapHeight - halfCamHeight);
+        return new Vector2();
     }
 
     void setSiteSublocationData(GameObject listItem, int index)

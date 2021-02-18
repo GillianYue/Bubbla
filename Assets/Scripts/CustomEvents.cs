@@ -771,7 +771,6 @@ public class CustomEvents : MonoBehaviour
         Image img = vfxCanvas.GetComponent<Image>();
         img.color = Color.white;
 
-        //mark mark
         for(int t=0; t<times; t++)
         {
             vfxCanvas.SetActive(true);
