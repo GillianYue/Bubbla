@@ -1731,6 +1731,7 @@ GameObject:
   m_Component:
   - component: {fileID: 630930623}
   - component: {fileID: 630930624}
+  - component: {fileID: 630930625}
   m_Layer: 5
   m_Name: MapMask
   m_TagString: Untagged
@@ -1770,6 +1771,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &630930625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630930622}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Content: {fileID: 782551014}
+  m_Horizontal: 1
+  m_Vertical: 1
+  m_MovementType: 1
+  m_Elasticity: 0.05
+  m_Inertia: 0
+  m_DecelerationRate: 0.135
+  m_ScrollSensitivity: 1
+  m_Viewport: {fileID: 0}
+  m_HorizontalScrollbar: {fileID: 0}
+  m_VerticalScrollbar: {fileID: 0}
+  m_HorizontalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarSpacing: 0
+  m_VerticalScrollbarSpacing: 0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &660411834
 GameObject:
   m_ObjectHideFlags: 0
@@ -2250,12 +2281,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c48356eae5452749806df1ec8639db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveAroundGO: {fileID: 2937260654583291518}
-  zoomOutMin: 1
-  zoomOutMax: 3
-  camOrthoSizeMin: 0
-  camOrthoSizeMax: 0
+  moveAroundGO: {fileID: 782551014}
   checkForPanZoom: 0
+  zMin: -320
+  zMax: 0
+  zInitialBase: 0
+  extentsXMin: {x: 0, y: 0}
+  extentsXMax: {x: 200, y: -200}
+  extentsYMin: {x: 0, y: 0}
+  extentsYMax: {x: -300, y: 316}
 --- !u!1 &901269328
 GameObject:
   m_ObjectHideFlags: 0

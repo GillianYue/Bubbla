@@ -32,8 +32,6 @@ public class Map : MonoBehaviour
     {
 
 
-        panZoom.setExtentsCallback(getCurrentMapExtents);
-
         //TODO some load in dots process, need to associate dots with the sublocations that they hold
         //there should be something that keeps track of all dots, their locations, indices and sublocations (sublocations tracking sub-images and names)
 
@@ -80,21 +78,6 @@ public class Map : MonoBehaviour
         panZoom.checkForPanZoom = true;
     }
 
-    /// <summary>
-    /// returns the furthest the camera showing map can be moved under the current orthographic size
-    /// the smaller the orthographic size, the more zoomed in it is
-    /// 
-    /// if returning (200,300), means map can have a maximum x of 200 and a minimum x of -200
-    /// </summary>
-    /// <returns></returns>
-    Vector2 getCurrentMapExtents()
-    {
-        //   float halfCamWidth = myCam.orthographicSize * myCam.aspect, halfCamHeight = myCam.orthographicSize;
-        //    float halfMapWidth = GetComponent<RectTransform>().rect.width / 2, halfMapHeight = GetComponent<RectTransform>().rect.height / 2;
-
-        //  return new Vector2(halfMapWidth - halfCamWidth, halfMapHeight - halfCamHeight);
-        return new Vector2();
-    }
 
     void setSiteSublocationData(GameObject listItem, int index)
     {
