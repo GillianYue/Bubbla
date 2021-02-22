@@ -45,6 +45,10 @@ public class QuestLoader : MonoBehaviour
         return numOfQuests; 
     }
 
+    /// <summary>
+    /// parses data for all quest entries 
+    /// </summary>
+    /// <returns></returns>
     IEnumerator parseQuestData()
     {
         //data[col,1] will be the first quest (tho in excel visually it's at line 2)
@@ -76,6 +80,8 @@ public class QuestLoader : MonoBehaviour
             quest.specifics = questData[7, q]; 
             quest.long_message = questData[8, q];
 
+            quest.setupFilePath = questData[9, q];
+
 
             allQuests[q] = quest;
         }
@@ -84,10 +90,27 @@ public class QuestLoader : MonoBehaviour
         questLoaderDone[0] = true; //data loaded and parsed
     }
 
+    /// <summary>
+    /// parses data for a single quest
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator parseAndAssignQuestSetupData(Quest q)
+    {
+
+        TextAsset setupCSV = Resources.Load(q.setupFilePath) as TextAsset;
+
+        bool[] done = new bool[1];
+        string[,] setupData;
+        yield return LoadScene.processCSV(done, setupCSV, (string[,] d) => { setupData = d; }, false);
+
+        //TODO assign setupData to right places
+    }
+
     public Quest getQuest(int index)
     {
         return allQuests[index];
     }
+
 
     /// <summary>
     /// will return literally all quests that ever existed
@@ -97,13 +120,19 @@ public class QuestLoader : MonoBehaviour
 }
 
 // class for one single quest
+/// <summary>
+/// for now a quest is serializable and can be saved, iffy if should do this; for now will parse and load quests, then questStatus save 
+/// data (int[]) indicates completion statuses of quests (questboard will use that as reference to set up stuff)
+/// </summary>
 [Serializable]
 public class Quest
 {
     public int index, scene_to_load; //the official index of the quest
     public string type, description, message, specifics, long_message;
+    public string setupFilePath; //TODO csv to ready the quest in game (setups, file writeups, etc.)
     public SerializableColor message_color; 
     public SerializableVector2 location; //coordinate on map; convertable between location name (string) and location coordinates
+    public bool ongoing = false; //defaults to false upon parsed, will be set to true if indicated by questStatus
 
     public Quest(int INDEX, string TYPE, string DESCRIPTION, string MSG, int SCENE_TO_LOAD, string SPECIFICS, string LONG_MSG,
         Color MSG_COLOR, Vector2 LOCATION) //need not be serializable in params b/c of implicit operator casting
@@ -119,4 +148,27 @@ public class Quest
     {
         index = INDEX;
     }
+
+}
+
+
+/// <summary>
+/// player's quests status
+///
+/// - should store all past completed quests (those quests will be inactive and not checked in compareQuests())
+/// - current ongoing quests
+/// - should store quest objects (quest is a class in QuestLoader)
+/// 
+/// </summary>
+[Serializable]
+public class QuestStatusData
+{
+    //type: Quest
+    public int[] allQuestsStatus; //0 inactive/locked, 1 available, 2 active/ongoing, 3 completed
+
+    public QuestStatusData(int numQuests)
+    {
+        allQuestsStatus = new int[numQuests+1]; //[0] is null, since quest 0 doesn't exist
+    }
+
 }

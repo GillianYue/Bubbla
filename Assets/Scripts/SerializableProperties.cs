@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//public class SerializableProperties : MonoBehaviour
-//{
-//}
-
+/// <summary>
+/// custom serializable properties so that those data can be saved within a serializable object
+/// </summary>
 [System.Serializable]
 public class SerializableColor
 {

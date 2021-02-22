@@ -69,6 +69,7 @@ public class LoadScene : MonoBehaviour {
 
     public static IEnumerator processCSV(bool[] loadDone, TextAsset csv, setterDelegate setter, bool matchLineWithExcel)
     {
+        //print("parsing " + csv.name);
         string[,] data = CSVReader.SplitCsvGrid(csv.text, matchLineWithExcel); 
 
         setter(data);
@@ -78,7 +79,6 @@ public class LoadScene : MonoBehaviour {
         }
 
         loadDone[0] = true;
-        //levelScript.setLevelCsvData(data);
     }
 
     /*
@@ -86,6 +86,7 @@ public class LoadScene : MonoBehaviour {
      */
     public static IEnumerator processCSV(bool[] loadDone, TextAsset csv, setterDelegateD setter, bool[] setterDone, bool matchLineWithExcel)
     {
+        //print("parsing " + csv.name);
         string[,] data = CSVReader.SplitCsvGrid(csv.text, matchLineWithExcel);
         setter(data, setterDone);
         while (!(data.Length > 0 && setterDone[0]))

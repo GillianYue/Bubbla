@@ -77,8 +77,8 @@ public class SaveLoad : MonoBehaviour
         }
         else
         {
-            Debug.Log("file not found in LoadQuestStatus(), returning new instance");
-            return new QuestStatusData();
+            Debug.Log("quest status file not found in LoadQuestStatus()");
+            return null;
         }
     }
 
@@ -95,23 +95,3 @@ public class PlayerData
 
 }
 
-/// <summary>
-/// player's quests status
-///
-/// - should store all past completed quests (those quests will be inactive and not checked in compareQuests())
-/// - current ongoing quests
-/// - should store quest objects (quest is a class in QuestLoader)
-/// 
-/// </summary>
-[Serializable]
-public class QuestStatusData
-{
-    public ArrayList pastQuests, availableQuests, ongoingQuests; //TODO there's more
-
-    public QuestStatusData()
-    {
-        pastQuests = new ArrayList(); availableQuests = new ArrayList();
-        ongoingQuests = new ArrayList();
-    }
-
-}

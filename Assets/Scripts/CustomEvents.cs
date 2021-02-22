@@ -717,6 +717,7 @@ public class CustomEvents : MonoBehaviour
      * screen shake effect, assumes main canvas is in world space
      * 
      * param 0: shake duration (float)
+     *    - if equal to -1, will trigger infinite screen shake (the check is within ScreenShake script)
      * optional param 1: shake magnitude (float, default 0.7f)
      * optional param 2: damping speed (float, default 1.0f)
      */

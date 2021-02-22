@@ -23,6 +23,7 @@ public class ScreenShake : MonoBehaviour
 
     // The initial position of the GameObject
     Vector3 initialPosition;
+    public bool infiniteShake = false;
 
     void Awake()
     {
@@ -38,12 +39,12 @@ public class ScreenShake : MonoBehaviour
 
     void Update()
     {
-        if (shakeDuration > 0)
+        if (infiniteShake || shakeDuration > 0)
         {
             Vector3 temp = initialPosition + Random.insideUnitSphere * shakeMagnitude;
             shakeTransform.localPosition = new Vector3(Mathf.FloorToInt(temp.x), Mathf.FloorToInt(temp.y), Mathf.FloorToInt(temp.z));
 
-            shakeDuration -= Time.deltaTime * dampingSpeed;
+            if(!infiniteShake) shakeDuration -= Time.deltaTime * dampingSpeed;
         }
         else
         {
@@ -52,11 +53,29 @@ public class ScreenShake : MonoBehaviour
         }
     }
 
-    public void TriggerShake(float duration, float magnitude, float dampingSpd)
+    public void TriggerInfiniteShake() { TriggerInfiniteShake(shakeMagnitude, dampingSpeed);  }
+
+    public void TriggerInfiniteShake(float magnitude, float dampingSpd)
     {
-        shakeDuration = duration;
+        infiniteShake = true;
         shakeMagnitude = magnitude;
         dampingSpeed = dampingSpd;
+    }
+
+    public void StopInfiniteShake() { infiniteShake = false; }
+
+    public void TriggerShake(float duration, float magnitude, float dampingSpd)
+    {
+        if (duration != -1)
+        {
+            shakeDuration = duration;
+            shakeMagnitude = magnitude;
+            dampingSpeed = dampingSpd;
+        }
+        else
+        {
+            TriggerInfiniteShake(magnitude, dampingSpd);
+        }
     }
 
     public void TriggerShake(float duration, float magnitude)

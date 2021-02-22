@@ -3,6 +3,9 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
+/// <summary>
+/// UI helper script for single quest object
+/// </summary>
 public class QuestSelect : MonoBehaviour {
 
 	private Button btn;

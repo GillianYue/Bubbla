@@ -22,6 +22,9 @@ public class SetUpQuestBoard : MonoBehaviour {
 
     void Start () {
 
+        //type: Quest
+        availableQuests = new ArrayList();
+
         //first set the dimensions of our questBoard rect (based on num of quests
         //the "height" of the rect in RectTransform of quests should always be 80
         //NOTE: this MUST be done before quests are generated
@@ -43,25 +46,39 @@ public class SetUpQuestBoard : MonoBehaviour {
         QuestStatusData questStatus;
         questStatus = saveLoad.LoadQuestStatus();
         //questStatus is current player's progress on quests; questLoadDone is for loading all quests that exist
-        yield return new WaitUntil(() => questLoader.questLoadDone() && questStatus != null);
+        yield return new WaitUntil(() => questLoader.questLoadDone());
         //so that the quest roster is ready to be compared
 
-        //TODO this and that
-        ongoingQuests = questStatus.ongoingQuests; //store quests here
-        pastQuests = questStatus.pastQuests; //in case it's a first time
-        availableQuests = questStatus.availableQuests;
+        //initialize questStatus if non-existent
+        if (questStatus == null) questStatus = new QuestStatusData(questLoader.getNumQuests());
 
         currentQuestStatus = questStatus; //this instance is modified as game progresses, and will be taken to use for saving
 
-        ///////only for testing purposes, delete later
-        ///
-        availableQuests.Add(questLoader.getQuest(1));
-        availableQuests.Add(questLoader.getQuest(2));
-        availableQuests.Add(questLoader.getQuest(3));
-        //availableQuests.Add(questLoader.getQuest(4));
-        //availableQuests.Add(questLoader.getQuest(5));
+        Quest currActive = null;
+        //quest #0 doesn't exist, skipped
+        for (int _num=1; _num<currentQuestStatus.allQuestsStatus.Length; _num++)
+        {
+            switch (currentQuestStatus.allQuestsStatus[_num])
+            {
+                case 0: break; //inactive
+                case 1: //available
+                    availableQuests.Add(questLoader.getQuest(_num));
+                    break;
+                case 2:
+                    currActive = questLoader.getQuest(_num);
+                    currActive.ongoing = true; 
+                    break;
+                case 3: break; //finished
+            }
+        }
+        if (currActive != null) availableQuests.Insert(0, currActive); //insert at top of list
 
-        ////
+        //TODO temp
+        availableQuests.Add(questLoader.getQuest(1));
+        currActive = questLoader.getQuest(2);
+        currActive.ongoing = true;
+        availableQuests.Insert(0, currActive);
+        //
 
         setupList(); //set up questBoard now that we know how many/what quests we need to create
     }
@@ -71,9 +88,12 @@ public class SetUpQuestBoard : MonoBehaviour {
     /// </summary>
     private void setupList()
     {
+        if (availableQuests.Count == 0) return;
         ListScroller.setupListComponents(this.gameObject, questGO, availableQuests.Count);
 
         questHeight = Mathf.Abs(questGO.GetComponent<RectTransform>().rect.height);
+
+        //spawn the quest objects within scrollRect
         ListScroller.genListItems(questGO, availableQuests.Count, this.gameObject, setSingleQuestData);
     }
 
@@ -90,6 +110,8 @@ public class SetUpQuestBoard : MonoBehaviour {
 		q.GetComponent<QuestSelect>().setGoToScene(quest.scene_to_load);
 		q.GetComponent<QuestSelect> ().setQuestSpecifics (quest.specifics,
 			quest.long_message);
+
+        if (quest.ongoing) q.GetComponent<Image>().color = Color.cyan; //diff color for ongoing quest
 	}
 
 
