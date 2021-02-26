@@ -6,6 +6,8 @@ using System.Collections;
 
 public class SaveLoad : MonoBehaviour
 {
+    string playerInfo = "/playerInfo.dat", allQuestsStatus = "/questStatus.dat";
+
     void Start()
     {
         
@@ -16,72 +18,82 @@ public class SaveLoad : MonoBehaviour
         
     }
 
-    public void SavePlayerInfo()
+    public void SavePlayerInfo(PlayerData playerData)
     {
-        BinaryFormatter bf = new BinaryFormatter();
-      //  Debug.Log("persistentDataPath: " + Application.persistentDataPath);
-        FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
-
-        PlayerData playerData = new PlayerData();
-        playerData.rankPoints = 50; //test
-        playerData.coins = 10;
-
-        bf.Serialize(file, playerData);
-        file.Close();
-
-        Debug.Log("player info saved to playerInfo.dat");
+        SaveFileOfType<PlayerData>(playerData, playerInfo);
     }
 
     public PlayerData LoadPlayerInfo()
     {
-        if(File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
+        PlayerData d;
+        if ((d = LoadFileOfType<PlayerData>(playerInfo)) != null)
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
-            PlayerData data = (PlayerData)bf.Deserialize(file);
-            file.Close();
-
-            Debug.Log("loaded. rankPoints: " + data.rankPoints + " coins: " + data.coins);
-            return data;
+            return d;
         }
         else
         {
-            Debug.Log("file not found in LoadPlayerInfo(), returning new instance");
             return new PlayerData();
         }
     }
 
     public void SaveQuestStatus(QuestStatusData data)
     {
-        BinaryFormatter bf = new BinaryFormatter();
-       // Debug.Log("persistentDataPath: " + Application.persistentDataPath);
-        FileStream file = File.Create(Application.persistentDataPath + "/questStatus.dat");
-
-        bf.Serialize(file, data);
-        file.Close();
-
-        Debug.Log("quest saved to questStatus.dat");
+        SaveFileOfType<QuestStatusData>(data, allQuestsStatus);
     }
 
-    public QuestStatusData LoadQuestStatus()
+    /// <summary>
+    /// returns the loaded questStatusData from file, if nonexistent will create new data based on numQuests
+    /// </summary>
+    /// <param name="numQuests"></param>
+    /// <returns></returns>
+    public QuestStatusData LoadQuestStatus(int numQuests)
     {
-       // Debug.Log("persistentDataPath: " + Application.persistentDataPath);
-        if (File.Exists(Application.persistentDataPath + "/questStatus.dat"))
+        QuestStatusData d;
+        if((d = LoadFileOfType<QuestStatusData>(allQuestsStatus)) != null){
+            return d;
+        }
+        else
+        {
+            return new QuestStatusData(numQuests);
+        }
+    }
+
+    /// <summary>
+    /// loads a file of type T, relativePath should be the name of the file to load. e.g. "/questStatus.dat"
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="relativePath"></param>
+    /// <returns></returns>
+    public T LoadFileOfType<T>(string relativePath)
+    {
+        if (File.Exists(Application.persistentDataPath + relativePath))
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/questStatus.dat", FileMode.Open);
-            QuestStatusData data = (QuestStatusData)bf.Deserialize(file);
+            FileStream file = File.Open(Application.persistentDataPath + relativePath, FileMode.Open);
+            T data = (T)bf.Deserialize(file);
             file.Close();
 
             return data;
         }
         else
         {
-            Debug.Log("quest status file not found in LoadQuestStatus()");
-            return null;
+            Debug.Log("load file not found for file " + relativePath); ;
+            return default(T);
         }
     }
 
+    
+    public void SaveFileOfType<T>(T data, string relativePath)
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+
+        FileStream file = File.Create(Application.persistentDataPath + relativePath);
+
+        bf.Serialize(file, data);
+        file.Close();
+
+        Debug.Log(data.ToString() + " saved to " + relativePath);
+    }
 
 }
 

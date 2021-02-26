@@ -43,8 +43,7 @@ public class SetUpQuestBoard : MonoBehaviour {
     /// <returns></returns>
     private IEnumerator compareQuests()
     {
-        QuestStatusData questStatus;
-        questStatus = saveLoad.LoadQuestStatus();
+        QuestStatusData questStatus = questLoader.questStatus;
         //questStatus is current player's progress on quests; questLoadDone is for loading all quests that exist
         yield return new WaitUntil(() => questLoader.questLoadDone());
         //so that the quest roster is ready to be compared

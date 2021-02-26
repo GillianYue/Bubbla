@@ -4,6 +4,9 @@ using UnityEngine;
 using System;
 using System.IO;
 
+/// <summary>
+/// loads and stores all Quests
+/// </summary>
 public class QuestLoader : MonoBehaviour
 {
 
@@ -14,10 +17,16 @@ public class QuestLoader : MonoBehaviour
     private bool[] questLoaderDone, loadDone;
     private Quest[] allQuests;
 
+    [Inject(InjectFrom.Anywhere)]
+    public SaveLoad saveLoad;
+    public QuestStatusData questStatus; //stores (in)active statuses for all quests
+
     void Start()
     {
         loadDone = new bool[1];
         questLoaderDone = new bool[1];
+
+        questStatus = saveLoad.LoadQuestStatus(); //TODO put this AFTER we know numQuests, async loading
 
         StartCoroutine(parseQuestData());
     }
@@ -153,7 +162,7 @@ public class Quest
 
 
 /// <summary>
-/// player's quests status
+/// player's questS' status
 ///
 /// - should store all past completed quests (those quests will be inactive and not checked in compareQuests())
 /// - current ongoing quests
@@ -164,11 +173,39 @@ public class Quest
 public class QuestStatusData
 {
     //type: Quest
-    public int[] allQuestsStatus; //0 inactive/locked, 1 available, 2 active/ongoing, 3 completed
+    public int[] allQuestsStatus; //0 inactive/locked, 1 available, 2 active/ongoing, 3 completed; index corresponds to quest id of the quest
 
     public QuestStatusData(int numQuests)
     {
         allQuestsStatus = new int[numQuests+1]; //[0] is null, since quest 0 doesn't exist
     }
 
+    public int getSingleQuestStatus(int index) { if (index>=allQuestsStatus.Length) return -1; else return allQuestsStatus[index]; }
+}
+
+
+/// <summary>
+/// tracks the ongoing quest and its progress
+/// </summary>
+[Serializable]
+public class ActiveQuestData
+{
+    public int activeQuestIndex; //quest id of the quest, if == -1, means not taking any quest at the moment
+    public QuestProgress currQuestProgress;
+
+    public ActiveQuestData()
+    {
+        activeQuestIndex = -1; //defaults to none
+    }
+
+    public void setActiveQuestIndex(int i) { activeQuestIndex = i; }
+
+    //TODO etc etc
+}
+
+
+[Serializable]
+public class QuestProgress
+{
+    //TODO
 }
