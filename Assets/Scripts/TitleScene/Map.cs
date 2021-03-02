@@ -91,9 +91,9 @@ public class Map : MonoBehaviour
     /// <param name="dotIndex"></param>
     public void onClickSiteDot(int dotIndex)
     {
-        ListScroller.setupListComponents(siteDetailListRect, siteListItemPrefab, 5); //needs to match "that site"
+        ListScroller.setupListComponents(siteDetailListRect, siteListItemPrefab, 5); //TODO needs to match "that site"
 
-        panToSite(dots[dotIndex].transform.localPosition);
+        panToSite(dots[dotIndex].transform.position);
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public class Map : MonoBehaviour
     /// <param name="pos"></param>
     public void panToSite(Vector3 pos)
     {
-        panZoom.smoothLerpTo(pos, 2);
+        panZoom.smoothLerpTo(pos, panZoom.zMin); //maximize zoom when lerp to site
 
         if (pos.x < 0 && pos.y < 0) //bottom left
         {

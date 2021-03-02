@@ -2283,13 +2283,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveAroundGO: {fileID: 782551014}
   checkForPanZoom: 0
-  zMin: -320
+  zMin: -350
   zMax: 0
   zInitialBase: 0
   extentsXMin: {x: 0, y: 0}
-  extentsXMax: {x: 200, y: -200}
+  extentsXMax: {x: 220, y: -220}
   extentsYMin: {x: 0, y: 0}
-  extentsYMax: {x: -300, y: 316}
+  extentsYMax: {x: -325, y: 345}
 --- !u!1 &901269328
 GameObject:
   m_ObjectHideFlags: 0
@@ -5260,6 +5260,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questCsv: {fileID: 4900000, guid: 5fbf344abca6c4d4e8da792403a05bb2, type: 3}
   numOfQuests: 0
+  saveLoad: {fileID: 0}
+  questProgressTracker: {fileID: 0}
+  questStatus:
+    allQuestsStatus: 
+    activeQuestData:
+      activeQuestIndex: -1
 --- !u!4 &1961527696
 Transform:
   m_ObjectHideFlags: 0
@@ -6286,6 +6292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questLoader: {fileID: 0}
   saveLoad: {fileID: 0}
+  globalSingleton: {fileID: 0}
   questGO: {fileID: 1000010312989194, guid: 43cd1803b609d4530b86a0f47716bc73, type: 3}
 --- !u!114 &114000015422952462
 MonoBehaviour:
@@ -7046,7 +7053,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 100.2
+  field of view: 179
   orthographic: 0
   orthographic size: 568
   m_Depth: 0
@@ -7561,12 +7568,12 @@ PrefabInstance:
     - target: {fileID: 9069359000760581487, guid: 8233f55e22928374b964acb29d536479,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 75
+      value: 245.3
       objectReference: {fileID: 0}
     - target: {fileID: 9069359000760581487, guid: 8233f55e22928374b964acb29d536479,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 18.7
+      value: 40.5
       objectReference: {fileID: 0}
     - target: {fileID: 9069359000760581487, guid: 8233f55e22928374b964acb29d536479,
         type: 3}

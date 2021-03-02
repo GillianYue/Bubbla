@@ -39,6 +39,7 @@ public class QuestDetail : MonoBehaviour {
 	}
 
 	void startQuest(){
+
 		Global.Scene_To_Load = go_to_scene;
 		StartCoroutine(Global.LoadAsyncScene (1)); //TODO revise
 	}

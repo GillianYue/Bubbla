@@ -14,7 +14,7 @@ public class ListScroller : MonoBehaviour
     /// 
     /// assumes everything passed has a RectTransform
     /// </summary>
-    public static void setupListComponents(GameObject listRect, GameObject pref, int numPrefs)
+    public static void setupListComponents(GameObject listRect, GameObject pref, int numItems)
     {
         //first destroy previously existing items in list
         foreach(Transform prevChild in listRect.transform)
@@ -26,7 +26,7 @@ public class ListScroller : MonoBehaviour
         var rectHeight = listRect.GetComponent<RectTransform>().rect.height;
 
 
-        float heightNeeded = numPrefs * prefHeight;
+        float heightNeeded = numItems * prefHeight;
 
         print("height needed " + heightNeeded + " single " + prefHeight);
 
