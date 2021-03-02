@@ -10,6 +10,9 @@ using UnityEngine;
 public class GlobalSingleton : MonoBehaviour
 {
     public static GlobalSingleton Instance;
+    public QuestProgressTracker questProgressTracker;
+    public LocationSetup locationSetup; //manager for setting up locations during map/scene transitions
+    //TODO temp cache data on current quest
 
     void Awake()
     {

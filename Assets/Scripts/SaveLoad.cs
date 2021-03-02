@@ -54,6 +54,8 @@ public class SaveLoad : MonoBehaviour
         }
         else
         {
+            //if save file for questStatusData doesn't exist, will create new 
+            Debug.Log("new questStatusData created");
             return new QuestStatusData(numQuests);
         }
     }

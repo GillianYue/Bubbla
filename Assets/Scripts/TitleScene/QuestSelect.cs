@@ -4,26 +4,28 @@ using System.Collections;
 using System;
 
 /// <summary>
-/// UI helper script for single quest object
+/// UI helper script for single quest object, attached to the minimized quests (buttons)
 /// </summary>
 public class QuestSelect : MonoBehaviour {
+
+	public GlobalSingleton globalSingleton;
 
 	private Button btn;
 	private int goToSceneNO = -1;
 	private String longDesc, longMSG;
 	public GameObject questDetails;
 
-		void Start()
-		{
+	void Start()
+	{
 
-			btn = gameObject.GetComponent<Button>();
+		btn = gameObject.GetComponent<Button>();
 
-		btn.onClick.AddListener(openQuestDetail);
+		btn.onClick.AddListener(spawnQuestDetail);
 
-		}
+	}
 		
 
-	public void openQuestDetail(){ //happens when pressed
+	public void spawnQuestDetail(){ //happens when pressed
 		GameObject qd = questDetails; //GO with the aiming sprite
 		qd = Instantiate (qd) as GameObject;
 
@@ -36,6 +38,7 @@ public class QuestSelect : MonoBehaviour {
 		qd.SetActive (true);
 
 		qd.GetComponent<QuestDetail> ().setGoToScene (goToSceneNO);
+		qd.GetComponent<QuestDetail>().globalSingleton = globalSingleton;
 		/*
 		foreach (Button b in transform.parent.GetComponentsInChildren<Button>()) {
 			b.interactable = false;

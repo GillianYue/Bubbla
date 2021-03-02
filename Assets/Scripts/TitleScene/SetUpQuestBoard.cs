@@ -11,13 +11,15 @@ public class SetUpQuestBoard : MonoBehaviour {
     public QuestLoader questLoader;
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
+    [Inject(InjectFrom.Anywhere)]
+    public GlobalSingleton globalSingleton;
 
     QuestStatusData currentQuestStatus;
 
     public GameObject questGO; //the game object that can visualize quests
 
     private float questHeight;
-    private ArrayList ongoingQuests, availableQuests, pastQuests;
+    private ArrayList availableQuests;
 
 
     void Start () {
@@ -29,7 +31,7 @@ public class SetUpQuestBoard : MonoBehaviour {
         //the "height" of the rect in RectTransform of quests should always be 80
         //NOTE: this MUST be done before quests are generated
 
-        StartCoroutine(compareQuests()); //eventually this is called during scene load
+        StartCoroutine(setupQuestBoard()); //eventually this is called during scene load
 	}
 	
 	void Update () {
@@ -41,7 +43,7 @@ public class SetUpQuestBoard : MonoBehaviour {
     ///
     /// </summary>
     /// <returns></returns>
-    private IEnumerator compareQuests()
+    private IEnumerator setupQuestBoard()
     {
         QuestStatusData questStatus = questLoader.questStatus;
         //questStatus is current player's progress on quests; questLoadDone is for loading all quests that exist
@@ -101,14 +103,16 @@ public class SetUpQuestBoard : MonoBehaviour {
 
         Quest quest = (Quest)availableQuests[which];
 
-		q.transform.Find ("Description").GetComponent<Text> ().text = 
+		q.transform.Find("Description").GetComponent<Text>().text = 
 			quest.type + " "+ quest.description;
 		Text msg = q.transform.Find ("Message").GetComponent<Text> ();
 			msg.text = quest.message;
         msg.color = quest.message_color;
-		q.GetComponent<QuestSelect>().setGoToScene(quest.scene_to_load);
-		q.GetComponent<QuestSelect> ().setQuestSpecifics (quest.specifics,
+        QuestSelect qs = q.GetComponent<QuestSelect>();
+        qs.setGoToScene(quest.scene_to_load);
+		qs.setQuestSpecifics (quest.specifics,
 			quest.long_message);
+        qs.globalSingleton = globalSingleton;
 
         if (quest.ongoing) q.GetComponent<Image>().color = Color.cyan; //diff color for ongoing quest
 	}

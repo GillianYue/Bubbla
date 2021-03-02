@@ -19,21 +19,30 @@ public class QuestLoader : MonoBehaviour
 
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
-    public QuestStatusData questStatus; //stores (in)active statuses for all quests
+
+    [Inject(InjectFrom.Anywhere)]
+    public QuestProgressTracker questProgressTracker;
+
+    public QuestStatusData questStatus; //stores (in)active statuses for all quests as well as activeQuestData
 
     void Start()
     {
         loadDone = new bool[1];
         questLoaderDone = new bool[1];
 
-        questStatus = saveLoad.LoadQuestStatus(); //TODO put this AFTER we know numQuests, async loading
-
-        StartCoroutine(parseQuestData());
+        StartCoroutine(startLoad());
     }
 
     void Update()
     {
         
+    }
+
+    IEnumerator startLoad()
+    {
+        yield return StartCoroutine(parseQuestData()); //will set the correct numOfQuests
+
+        questStatus = saveLoad.LoadQuestStatus(numOfQuests);
     }
 
     public bool questLoadDone()
@@ -100,13 +109,14 @@ public class QuestLoader : MonoBehaviour
     }
 
     /// <summary>
-    /// parses data for a single quest
+    /// parses setup data for a single quest, assumes quest's setupFilePath is a valid csv
     /// </summary>
     /// <returns></returns>
     IEnumerator parseAndAssignQuestSetupData(Quest q)
     {
 
         TextAsset setupCSV = Resources.Load(q.setupFilePath) as TextAsset;
+        if (!setupCSV) Debug.LogError("invalid csv path: " + q.setupFilePath);
 
         bool[] done = new bool[1];
         string[,] setupData;
@@ -174,10 +184,12 @@ public class QuestStatusData
 {
     //type: Quest
     public int[] allQuestsStatus; //0 inactive/locked, 1 available, 2 active/ongoing, 3 completed; index corresponds to quest id of the quest
+    public ActiveQuestData activeQuestData;
 
     public QuestStatusData(int numQuests)
     {
         allQuestsStatus = new int[numQuests+1]; //[0] is null, since quest 0 doesn't exist
+        activeQuestData = new ActiveQuestData();
     }
 
     public int getSingleQuestStatus(int index) { if (index>=allQuestsStatus.Length) return -1; else return allQuestsStatus[index]; }
@@ -198,7 +210,10 @@ public class ActiveQuestData
         activeQuestIndex = -1; //defaults to none
     }
 
-    public void setActiveQuestIndex(int i) { activeQuestIndex = i; }
+    public void setActiveQuestIndex(int i) { 
+        activeQuestIndex = i;
+        currQuestProgress = new QuestProgress(); //TODO might need to specialize based on quest
+    }
 
     //TODO etc etc
 }

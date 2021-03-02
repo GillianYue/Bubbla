@@ -2,8 +2,13 @@
 using UnityEngine.UI;
 using System.Collections;
 
+/// <summary>
+/// attached to quest objects instantiated under a questboard. Will trigger startQuest when player chooses to start the given quest
+/// </summary>
 public class QuestDetail : MonoBehaviour {
-	
+
+	public GlobalSingleton globalSingleton;
+
 	public GameObject cancelScn;
 	private GameObject cancel;
 	private Button cclB;
@@ -35,7 +40,7 @@ public class QuestDetail : MonoBehaviour {
 
 	void startQuest(){
 		Global.Scene_To_Load = go_to_scene;
-		StartCoroutine(Global.LoadAsyncScene (1)); //loads the loading scene, which
+		StartCoroutine(Global.LoadAsyncScene (1)); //TODO revise
 	}
 
 	public void setGoToScene(int s){ //individual quests will transfer this info to quest detail
