@@ -685,6 +685,64 @@ public class Global : MonoBehaviour
         return getValueWithNoise((val, noise));
     }
 
+    //parses a string of form "rValue,gValue,bValue" (0-255) to a color. sets the given color variable to the parsed color
+    //returns false if param not parsable as color
+    public static bool parseColorParameter(string param, ref Color col)
+    {
+        float x = 0, y = 0, z = 0;
+        if (!param.Equals(""))
+        {
+            string[] res = param.Split(',');
+            bool allValid = float.TryParse(res[0], out x) && float.TryParse(res[1], out y) && float.TryParse(res[2], out z);
+
+            if (x > 1 || y > 1 || z > 1) { x /= 255; y /= 255; z /= 255; } //if input is in 0-255, convert
+
+            if (allValid) col = new Color(x, y, z);
+
+            return allValid;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static bool parseVector3Parameter(string param, ref Vector3 vec)
+    {
+        float x = 0, y = 0, z = 0;
+        if (!param.Equals(""))
+        {
+            string[] res = param.Split(',');
+            bool allValid = float.TryParse(res[0], out x) && float.TryParse(res[1], out y) && float.TryParse(res[2], out z);
+
+            if (allValid) vec = new Vector3(x, y, z);
+
+            return allValid;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static bool parseVector2Parameter(string param, ref Vector2 vec)
+    {
+        float x = 0, y = 0;
+        if (!param.Equals(""))
+        {
+            string[] res = param.Split(',');
+            bool allValid = float.TryParse(res[0], out x) && float.TryParse(res[1], out y);
+
+            if (allValid) vec = new Vector2(x, y);
+
+            return allValid;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~Code Helper Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 }

@@ -40,7 +40,7 @@ public class CharacterLoader : MonoBehaviour
 
     void loadCharacterMold()
     {
-        cMold = Resources.Load("cMold") as GameObject;
+        cMold = Resources.Load("Prefabs/cMold") as GameObject;
         if (cMold == null) Debug.LogError("load CharacterMold failed");
     }
 

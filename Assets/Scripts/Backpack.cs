@@ -173,7 +173,7 @@ public class Backpack : MonoBehaviour
 
     void loadItemMold()
     {
-        itemMold = Resources.Load("ItemMold") as GameObject;
+        itemMold = Resources.Load("Prefabs/ItemMold") as GameObject;
         if (itemMold == null)
         {
             Debug.LogError("load ItemMold failed");

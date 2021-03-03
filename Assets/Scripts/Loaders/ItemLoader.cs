@@ -115,7 +115,7 @@ public class ItemLoader : MonoBehaviour
         inGameItemMold = Resources.Load("IngameItemMold") as GameObject;
         if (inGameItemMold == null) Debug.LogError("load in-game-ItemMold failed");
 
-        itemMold = Resources.Load("ItemMold") as GameObject;
+        itemMold = Resources.Load("Prefabs/ItemMold") as GameObject;
         if (itemMold == null) Debug.LogError("load ItemMold failed");
     }
 

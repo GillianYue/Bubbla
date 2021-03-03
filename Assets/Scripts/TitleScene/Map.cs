@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Map : MonoBehaviour
 {
     public Button[] dots;
+    public GameObject dotPrefab;
     float mapWidth, mapHeight;
 
     public PanZoom panZoom;
@@ -18,6 +19,9 @@ public class Map : MonoBehaviour
     public Image sublocationImage; //display for sublocation image; assigned in editor
 
     public Camera myCam; //camera showing this map
+
+    [Inject(InjectFrom.Anywhere)]
+    public MapLoader mapLoader;
 
 
     void Awake()
@@ -30,7 +34,7 @@ public class Map : MonoBehaviour
 
     void Start()
     {
-
+        SpawnSiteDots();
 
         //TODO some load in dots process, need to associate dots with the sublocations that they hold
         //there should be something that keeps track of all dots, their locations, indices and sublocations (sublocations tracking sub-images and names)
@@ -52,6 +56,19 @@ public class Map : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SpawnSiteDots()
+    {
+        int numSites = mapLoader.siteNames.Length - 1;
+        dots = new Button[numSites+1]; //in sync with site id, starting with 1 (0 nil)
+
+        for (int s=1; s<=numSites; s++)
+        {
+            GameObject dot = Instantiate(dotPrefab);
+            dots[s] = dot.GetComponent<Button>();
+            //TODO assign data based on maploader 
+        }
     }
 
     public void openUI()

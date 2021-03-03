@@ -141,7 +141,7 @@ public class EnemyLoader : MonoBehaviour
 
     void loadEnemyMold()
     {
-        enemyMold = Resources.Load("EnemyMold") as GameObject;
+        enemyMold = Resources.Load("Prefabs/EnemyMold") as GameObject;
         if (enemyMold == null) Debug.LogError("load EnemyMold failed");
 
         projectileMold = Resources.Load("Projectile") as GameObject;

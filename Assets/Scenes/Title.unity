@@ -2262,6 +2262,8 @@ MonoBehaviour:
   dots:
   - {fileID: 4061063775974885336}
   - {fileID: 2141840283}
+  dotPrefab: {fileID: 3676700732204462530, guid: 8233f55e22928374b964acb29d536479,
+    type: 3}
   panZoom: {fileID: 782551019}
   siteDetailPanel: {fileID: 326213903}
   siteDetailListRect: {fileID: 394423940}
@@ -2269,6 +2271,7 @@ MonoBehaviour:
     type: 3}
   sublocationImage: {fileID: 2108763333}
   myCam: {fileID: 0}
+  mapLoader: {fileID: 0}
 --- !u!114 &782551019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5239,6 +5242,7 @@ GameObject:
   - component: {fileID: 1961527695}
   - component: {fileID: 1961527697}
   - component: {fileID: 1961527698}
+  - component: {fileID: 1961527699}
   m_Layer: 0
   m_Name: Loader
   m_TagString: Untagged
@@ -5321,6 +5325,22 @@ MonoBehaviour:
   characterCsv: {fileID: 4900000, guid: 70c7380e75e8d4fd4b2f94b876026158, type: 3}
   bgColor: []
   characterLoaderDone: 0
+--- !u!114 &1961527699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961527694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdddfce2ab6086044a46ec4b6e191151, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapCsv: {fileID: 0}
+  siteLocations: []
+  siteNames: []
+  mapLoaderDone: 0
 --- !u!1 &2007368377
 GameObject:
   m_ObjectHideFlags: 0
