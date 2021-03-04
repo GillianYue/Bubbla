@@ -23,6 +23,9 @@ public class Map : MonoBehaviour
 
     [Inject(InjectFrom.Anywhere)]
     public MapLoader mapLoader;
+    [Inject(InjectFrom.Anywhere)]
+    public LoadScene loadScene;
+
 
     public int currSelectSite = 1;
 
@@ -36,7 +39,7 @@ public class Map : MonoBehaviour
 
     void Start()
     {
-        SpawnSiteDots();
+        StartCoroutine(Initialize());
     }
 
     void Update()
@@ -44,17 +47,25 @@ public class Map : MonoBehaviour
         
     }
 
+    IEnumerator Initialize()
+    {
+        yield return loadScene.waitForLoadDone();
+
+        SpawnSiteDots();
+    }
+
     /// <summary>
     /// instantiate site dot objects based on dot prefab; assigns data from mapLoader
     /// </summary>
     public void SpawnSiteDots()
     {
-        int numSites = mapLoader.siteNames.Length - 1;
-        dots = new Button[numSites+1]; //in sync with site id, starting with 1 (0 nil)
+        int numSites = mapLoader.siteNames.Length; //e.g. 24 sites, site 1-24 data found in array[0-23]
+        dots = new Button[numSites]; //starts with 0, so dots[s] is for site index s+1
 
         for (int s=0; s<numSites; s++)
         {
             GameObject dot = Instantiate(dotPrefab);
+            dot.transform.parent = transform; //Map object's transform should be parent
             dots[s] = dot.GetComponent<Button>();
 
             var sIndex = s;
@@ -67,6 +78,7 @@ public class Map : MonoBehaviour
 
             //sets local position of dot
             dot.transform.localPosition = mapLoader.getSiteLocationOfIndex(info.siteIndex);
+            dot.transform.localScale = Vector3.one;
 
             //add onclick event to button
             dot.GetComponent<Button>().onClick.AddListener(() => {
@@ -107,6 +119,7 @@ public class Map : MonoBehaviour
         listItem.transform.GetChild(0).GetComponent<Text>().text = "sublocation " + index.ToString();
         //listItem.transform.GetChild(1).GetComponent<Image>().sprite = TODO Load in some sprite here;
         //TODO set list item thing based on curr site info 
+
     }
 
     /// <summary>

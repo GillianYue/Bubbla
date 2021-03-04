@@ -267,9 +267,8 @@ public class GameControl : MonoBehaviour {
     }
 
     IEnumerator StartGame(){ 
-        while (!loadScene.checkLoadDone(sceneType)) {//wait till csv's loaded //TODO 
-            yield return null;
-        }
+
+        yield return loadScene.waitForLoadDone();
 
         if (sceneType == Mode.GAME)
         {

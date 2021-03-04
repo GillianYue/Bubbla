@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemLoader : MonoBehaviour
+public class ItemLoader : Loader
 {
     private bool[] loadDone; //when loadDone[0] == true, loading is done for the csv file
     public TextAsset itemCsv;
@@ -19,11 +19,12 @@ public class ItemLoader : MonoBehaviour
 
     GameObject inGameItemMold, itemMold;
 
-    public bool itemLoaderDone; //this will be set to true once EnemyLoader is ready for usage
+    private bool itemLoaderDone; //this will be set to true once EnemyLoader is ready for usage
 
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         loadDone = new bool[1];
 
         loadItemMold(); //ready the mold prefab(s)
@@ -36,6 +37,15 @@ public class ItemLoader : MonoBehaviour
     void Update()
     {
 
+    }
+
+    /// <summary>
+    /// overrides parent
+    /// </summary>
+    /// <returns></returns>
+    public override bool isLoadDone()
+    {
+        return itemLoaderDone;
     }
 
     /** this function should only be called by ItemSpawner, as it deals with base level data

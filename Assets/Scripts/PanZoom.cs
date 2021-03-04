@@ -209,7 +209,7 @@ public class PanZoom : MonoBehaviour
     bool checkForDestReach()
     {
         Vector3 currPos = moveAroundGO.transform.position;
-        print(findVectorDist(currPos, panDest) +" between "+currPos+" and "+panDest);
+        //print(findVectorDist(currPos, panDest) +" between "+currPos+" and "+panDest);
         return (findVectorDist(currPos, panDest) < 2);
     }
 

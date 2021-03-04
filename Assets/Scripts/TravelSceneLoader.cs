@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TravelSceneManager : MonoBehaviour
+public class TravelSceneLoader : Loader
 {
     private bool[] loadDone;  //this bool is only for the level progress file, not everything
 
@@ -10,10 +10,12 @@ public class TravelSceneManager : MonoBehaviour
     private string[,] data; //double array that stores all info of this level
     public GameObject BG; //parent of background prefabs
 
-    // Start is called before the first frame update
-    void Start()
+    private bool travelSceneLoadDone;
+
+    protected override void Start()
     {
-        loadDone = new bool[2];
+        base.Start();
+        loadDone = new bool[1];
         bool[] parseDone = new bool[1];
         StartCoroutine(LoadScene.processCSV(loadDone, sceneCsv, setData, parseDone, true)); //if true, will match excel line num
 
@@ -26,23 +28,27 @@ public class TravelSceneManager : MonoBehaviour
         parseDone[0] = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
 
-    public bool travelLoadDone() //data is ready
+    /// <summary>
+    /// overrides parent
+    /// </summary>
+    /// <returns></returns>
+    public override bool isLoadDone()
     {
-        return loadDone[1]; //not 0, because loadDone[0] is for data ready, not for load in 
+        return travelSceneLoadDone;
     }
+
 
     IEnumerator loadTravelScene()
     {
         yield return new WaitUntil(() => (data != null));
         loadBackgroundPrefab();
 
-        loadDone[1] = true;
+        travelSceneLoadDone = true;
     }
 
     //will be indicated in the first line of the file

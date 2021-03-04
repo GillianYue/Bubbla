@@ -22,7 +22,7 @@ public class GameTestBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (test)
+        if (test && gf!=null)
         {
             gf.setPointer(startLine); //for testing I'm putting in what line I'm seeing in the csv file
         }

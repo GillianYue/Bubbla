@@ -7,14 +7,15 @@ using System.IO;
 /// <summary>
 /// loads and stores all Quests
 /// </summary>
-public class QuestLoader : MonoBehaviour
+public class QuestLoader : Loader
 {
 
     public TextAsset questCsv; //contains info for quests
     private string[,] questData;
     public int numOfQuests;
 
-    private bool[] questLoaderDone, loadDone;
+    private bool[] loadDone;
+    private bool questLoaderDone;
     private Quest[] allQuests;
 
     [Inject(InjectFrom.Anywhere)]
@@ -25,10 +26,12 @@ public class QuestLoader : MonoBehaviour
 
     public QuestStatusData questStatus; //stores (in)active statuses for all quests as well as activeQuestData
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         loadDone = new bool[1];
-        questLoaderDone = new bool[1];
+        questLoaderDone = false;
 
         StartCoroutine(startLoad());
     }
@@ -45,11 +48,13 @@ public class QuestLoader : MonoBehaviour
         questStatus = saveLoad.LoadQuestStatus(numOfQuests);
     }
 
-    public bool questLoadDone()
+    /// <summary>
+    /// overrides parent
+    /// </summary>
+    /// <returns></returns>
+    public override bool isLoadDone()
     {
-        if (questLoaderDone != null)
-            return questLoaderDone[0];
-        else return false;
+        return questLoaderDone;
     }
 
     public void setData(string[,] d)
@@ -104,8 +109,8 @@ public class QuestLoader : MonoBehaviour
             allQuests[q] = quest;
         }
 
-        print("done");
-        questLoaderDone[0] = true; //data loaded and parsed
+        print("quest loader done");
+        questLoaderDone = true; //data loaded and parsed
     }
 
     /// <summary>

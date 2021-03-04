@@ -2,6 +2,9 @@
 using UnityEngine.UI;
 using System.Collections;
 
+/// <summary>
+/// animates starting scene UI
+/// </summary>
 public class TitleBGanim : MonoBehaviour {
 
     [Inject(InjectFrom.Anywhere)]

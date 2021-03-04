@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Collections;
 
 public delegate void setterDelegate(string[,] data);
@@ -6,7 +7,6 @@ public delegate void setterDelegateD(string[,] data, bool[] sd);
 
 //script in charge of all loading-related functionalities
 public class LoadScene : MonoBehaviour {
-
 
     [Inject(InjectFrom.Anywhere)]
     public EnemyLoader enemyLoader;
@@ -19,39 +19,34 @@ public class LoadScene : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public GameFlow gameFlow;
     [Inject(InjectFrom.Anywhere)]
-    public TravelSceneManager travelSceneManager;
+    public TravelSceneLoader travelSceneLoader;
+
+    //allLoadersToCheck will be added loader from the subloaders separately
+    public List<Loader> allLoadersToCheck;
 
     private int scn_to_load;
 
 	void Start () {
 		scn_to_load = Global.Scene_To_Load;
-		//loadScene();
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	}
 
-    public bool checkLoadDone(GameControl.Mode sceneMode) //TODO messy conditioning
-    { //check if all loaders are ready for game
-        if (sceneMode == GameControl.Mode.GAME)
-        {
-            return (gameFlow.checkGameFlowLoadDone() && enemyLoader.enemyLoaderDone
-                && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
+    public IEnumerator waitForLoadDone()
+    {
+        //wait until all loaders are ready for game
+        bool allDone = false;
+        while (!allDone) { 
+            allDone = true;
+            foreach (Loader l in allLoadersToCheck)
+            {
+                if (!l.isLoadDone()) { allDone = false; break; }
+            }
+            if (!allDone || allLoadersToCheck.Count == 0) yield return new WaitForSeconds(0.5f);
         }
-        else if (sceneMode == GameControl.Mode.TRAVEL)
-        {
-            return (travelSceneManager.travelLoadDone() && enemyLoader.enemyLoaderDone
-                && characterLoader.characterLoaderDone && itemLoader.itemLoaderDone);
-        }
-        else if (sceneMode == GameControl.Mode.QUEST)
-        {
-            return itemLoader.itemLoaderDone;
-        }
-        else
-        {
-            return true;
-        }
+
+        print("all loaders are loaded!");
     }
 
     public void loadScene()

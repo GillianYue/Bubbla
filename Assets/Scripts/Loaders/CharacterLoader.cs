@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterLoader : MonoBehaviour
+public class CharacterLoader : Loader
 {
 
     private bool[] loadDone; //when loadDone[0] == true, loading is done for the csv file
@@ -19,11 +19,12 @@ public class CharacterLoader : MonoBehaviour
 
     GameObject cMold;
 
-    public bool characterLoaderDone; //this will be set to true once is ready for usage
+    private bool characterLoaderDone; //this will be set to true once is ready for usage
 
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         loadDone = new bool[1];
 
         loadCharacterMold(); //ready the mold prefab(s)
@@ -37,7 +38,14 @@ public class CharacterLoader : MonoBehaviour
 
     }
 
-
+    /// <summary>
+    /// overrides parent
+    /// </summary>
+    /// <returns></returns>
+    public override bool isLoadDone()
+    {
+        return characterLoaderDone;
+    }
     void loadCharacterMold()
     {
         cMold = Resources.Load("Prefabs/cMold") as GameObject;

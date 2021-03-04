@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyLoader : MonoBehaviour
+public class EnemyLoader : Loader
 {
     private bool[] loadDone; //when loadDone[0] == true, loading is done for the csv file
     public TextAsset enemyCsv;
@@ -27,7 +27,7 @@ public class EnemyLoader : MonoBehaviour
 
     GameObject enemyMold, projectileMold;
 
-    public bool enemyLoaderDone; //this will be set to true once EnemyLoader is ready for usage
+    private bool enemyLoaderDone; //this will be set to true once EnemyLoader is ready for usage
 
     //colliders will be created (from PixelCollider script) as needed. When a new spawn happens, will check if collider for that enemy already exists here
     List<List<Vector2>>[] enemyColliders;
@@ -37,9 +37,9 @@ public class EnemyLoader : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public PrefabHolder prefabHolder;
 
-
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         loadDone = new bool[1];
 
         loadEnemyMold(); //ready the mold prefab(s)
@@ -48,10 +48,18 @@ public class EnemyLoader : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    /// <summary>
+    /// overrides parent
+    /// </summary>
+    /// <returns></returns>
+    public override bool isLoadDone()
+    {
+        return enemyLoaderDone;
     }
 
     //this function should only be called by EnemySpawner, as it deals with base level data

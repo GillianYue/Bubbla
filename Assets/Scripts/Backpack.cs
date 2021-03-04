@@ -64,7 +64,7 @@ public class Backpack : MonoBehaviour
     IEnumerator waitTilDone()
     {
         if(itemLoader != null)
-        yield return new WaitUntil(() => itemLoader.itemLoaderDone);
+        yield return new WaitUntil(() => itemLoader.isLoadDone());
         bool[] loadItemsDone = new bool[1];
         loadInItems(loadItemsDone);
         yield return new WaitUntil(() => loadItemsDone[0]);

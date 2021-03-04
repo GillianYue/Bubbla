@@ -46,7 +46,7 @@ public class SetUpQuestBoard : MonoBehaviour {
     {
         QuestStatusData questStatus = questLoader.questStatus;
         //questStatus is current player's progress on quests; questLoadDone is for loading all quests that exist
-        yield return new WaitUntil(() => questLoader.questLoadDone());
+        yield return new WaitUntil(() => questLoader.isLoadDone());
         //so that the quest roster is ready to be compared
 
         //initialize questStatus if non-existent

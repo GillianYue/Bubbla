@@ -51,7 +51,7 @@ public class GameFlow : MonoBehaviour {
     }
 
     void Start() {
-
+        //TODO move this to separate loader
         loadDone = new bool[1];
         bool[] parseDone = new bool[1];
         StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone, true));
