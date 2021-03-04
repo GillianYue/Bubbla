@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 //map related UI control; pan and zoom handled by PanZoom script
 //a site is represented by a dot on the map, a site has many sublocations
 public class Map : MonoBehaviour
@@ -23,6 +24,7 @@ public class Map : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public MapLoader mapLoader;
 
+    public int currSelectSite = 1;
 
     void Awake()
     {
@@ -35,22 +37,6 @@ public class Map : MonoBehaviour
     void Start()
     {
         SpawnSiteDots();
-
-        //TODO some load in dots process, need to associate dots with the sublocations that they hold
-        //there should be something that keeps track of all dots, their locations, indices and sublocations (sublocations tracking sub-images and names)
-
-        for(int d = 0; d < dots.Length; d++)
-        {
-            var fix = d; //because d is dynamic, can't be used for callback functions
-            dots[d].GetComponent<SiteInfo>().siteIndex = d;
-
-            dots[fix].onClick.AddListener(() => {
-                onClickSiteDot(dots[fix].GetComponent<SiteInfo>().siteIndex); 
-            });
-        }
-
-        ListScroller.setupListComponents(siteDetailListRect, siteListItemPrefab, 15); //set to a default location on start
-        ListScroller.genListItems(siteListItemPrefab, 15, siteDetailListRect, setSiteSublocationData);
     }
 
     void Update()
@@ -58,19 +44,38 @@ public class Map : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// instantiate site dot objects based on dot prefab; assigns data from mapLoader
+    /// </summary>
     public void SpawnSiteDots()
     {
         int numSites = mapLoader.siteNames.Length - 1;
         dots = new Button[numSites+1]; //in sync with site id, starting with 1 (0 nil)
 
-        for (int s=1; s<=numSites; s++)
+        for (int s=0; s<numSites; s++)
         {
             GameObject dot = Instantiate(dotPrefab);
             dots[s] = dot.GetComponent<Button>();
-            //TODO assign data based on maploader 
+
+            var sIndex = s;
+
+            SiteInfo info = dot.GetComponent<SiteInfo>();
+            info.siteIndex = sIndex+1; //since first site index starts at 1
+            info.siteName = mapLoader.getSiteNameOfIndex(info.siteIndex);
+            info.sublocationImages = mapLoader.getSublocationSpritesOfIndex(info.siteIndex);
+            info.sublocationNames = mapLoader.getSublocationNamesOfIndex(info.siteIndex);
+
+            //sets local position of dot
+            dot.transform.localPosition = mapLoader.getSiteLocationOfIndex(info.siteIndex);
+
+            //add onclick event to button
+            dot.GetComponent<Button>().onClick.AddListener(() => {
+                onClickSiteDot(info.siteIndex);
+            });
         }
     }
 
+    // opens up map UI 
     public void openUI()
     {
         if (panZoom != null) panZoom.enabled = true;
@@ -78,6 +83,7 @@ public class Map : MonoBehaviour
         panZoom.checkForPanZoom = true;
     }
 
+    // closes map UI
     public void closeUI()
     {
         if (panZoom != null) panZoom.enabled = false;
@@ -96,21 +102,26 @@ public class Map : MonoBehaviour
     }
 
 
-    void setSiteSublocationData(GameObject listItem, int index)
+    void setSiteSublocationData(GameObject listItem, int index)//TODO
     {
         listItem.transform.GetChild(0).GetComponent<Text>().text = "sublocation " + index.ToString();
         //listItem.transform.GetChild(1).GetComponent<Image>().sprite = TODO Load in some sprite here;
+        //TODO set list item thing based on curr site info 
     }
 
     /// <summary>
-    /// onclick event for dots[dotIndex]
+    /// onclick event for dots[dotIndex], will pan & zoom to that site and open up the sublocation UI
     /// </summary>
     /// <param name="dotIndex"></param>
     public void onClickSiteDot(int dotIndex)
     {
-        ListScroller.setupListComponents(siteDetailListRect, siteListItemPrefab, 5); //TODO needs to match "that site"
+        currSelectSite = dotIndex + 1;
 
-        panToSite(dots[dotIndex].transform.position);
+        //set up site detail for new site
+        ListScroller.setupList(siteDetailListRect, siteListItemPrefab, 15, setSiteSublocationData);
+
+        //pan & zoom to site, and then open up site detail panel
+        panToSite(dots[dotIndex].transform.position, openSiteDetailPanel);
     }
 
     /// <summary>
@@ -122,24 +133,10 @@ public class Map : MonoBehaviour
     /// bottom left part of the map (also space for UI window)
     /// </summary>
     /// <param name="pos"></param>
-    public void panToSite(Vector3 pos)
+    public void panToSite(Vector3 pos, Callback callback)
     {
-        panZoom.smoothLerpTo(pos, panZoom.zMin); //maximize zoom when lerp to site
+        panZoom.smoothLerpTo(pos, panZoom.zMin, callback); //maximize zoom when lerp to site
 
-        if (pos.x < 0 && pos.y < 0) //bottom left
-        {
-
-        }else if(pos.x < 0 && pos.y > 0) //upper left
-        {
-
-        }else if (pos.y < 0) //bottom right
-        {
-
-        }
-        else //upper right
-        {
-
-        }
     }
 
 }

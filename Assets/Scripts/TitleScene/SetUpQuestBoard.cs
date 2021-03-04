@@ -18,7 +18,6 @@ public class SetUpQuestBoard : MonoBehaviour {
 
     public GameObject questGO; //the game object that can visualize quests
 
-    private float questHeight;
     private ArrayList availableQuests;
 
 
@@ -90,12 +89,8 @@ public class SetUpQuestBoard : MonoBehaviour {
     private void setupList()
     {
         if (availableQuests.Count == 0) return;
-        ListScroller.setupListComponents(this.gameObject, questGO, availableQuests.Count);
 
-        questHeight = Mathf.Abs(questGO.GetComponent<RectTransform>().rect.height);
-
-        //spawn the quest objects within scrollRect
-        ListScroller.genListItems(questGO, availableQuests.Count, this.gameObject, setSingleQuestData);
+        ListScroller.setupList(this.gameObject, questGO, availableQuests.Count, setSingleQuestData);
     }
 
     //callback after the quests are generated as list items; used for setting data on quests

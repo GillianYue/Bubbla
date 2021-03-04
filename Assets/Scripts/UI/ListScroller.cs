@@ -6,6 +6,20 @@ using UnityEngine.UI;
 
 public class ListScroller : MonoBehaviour
 {
+    /// <summary>
+    /// sets up a list object with instances of its list items. 
+    /// 
+    /// dataSpecificCallback(listItemGO, index) will be called after spawning the list items
+    /// </summary>
+    /// <param name="listRect"></param>
+    /// <param name="listItemPrefab"></param>
+    /// <param name="numItems"></param>
+    /// <param name="dataSpecificCallback"></param>
+    public static void setupList(GameObject listRect, GameObject listItemPrefab, int numItems, System.Action<GameObject, int> dataSpecificCallback)
+    {
+        setupListComponents(listRect, listItemPrefab, numItems);
+        genListItems(listItemPrefab, numItems, listRect, dataSpecificCallback);
+    }
 
     /// <summary>
     /// Sets the physical dimensions for all components involved in a list scroll.
@@ -14,7 +28,7 @@ public class ListScroller : MonoBehaviour
     /// 
     /// assumes everything passed has a RectTransform
     /// </summary>
-    public static void setupListComponents(GameObject listRect, GameObject pref, int numItems)
+    static void setupListComponents(GameObject listRect, GameObject listItemPrefab, int numItems)
     {
         //first destroy previously existing items in list
         foreach(Transform prevChild in listRect.transform)
@@ -22,7 +36,7 @@ public class ListScroller : MonoBehaviour
             Destroy(prevChild.gameObject);
         }
 
-        var prefHeight = Mathf.Abs(pref.GetComponent<RectTransform>().rect.height);
+        var prefHeight = Mathf.Abs(listItemPrefab.GetComponent<RectTransform>().rect.height);
         var rectHeight = listRect.GetComponent<RectTransform>().rect.height;
 
 
@@ -43,19 +57,19 @@ public class ListScroller : MonoBehaviour
     /// spawns the list items in the right positions. 
     /// 
     /// </summary>
-    /// <param name="pref"></param>
+    /// <param name="listItemPrefab"></param>
     /// <param name="numPrefs"></param>
     /// <param name="parent"> parent is the listContainer rect GO</param>
     /// <param name="dataSpecificCallback">dataSpecificCallback takes a GameObject as param and does the data setup 
     /// necessary for each generated list item based on index in list</param>
-    public static void genListItems(GameObject pref, int numPrefs, GameObject parent, System.Action<GameObject, int> dataSpecificCallback)
+    static void genListItems(GameObject listItemPrefab, int numPrefs, GameObject parent, System.Action<GameObject, int> dataSpecificCallback)
     {
 
-        var prefHeight = Mathf.Abs(pref.GetComponent<RectTransform>().rect.height);
+        var prefHeight = Mathf.Abs(listItemPrefab.GetComponent<RectTransform>().rect.height);
 
         for (int i = 0; i < numPrefs; i++)
         {
-            GameObject item = genSingleListItem(i, pref, prefHeight, parent);
+            GameObject item = genSingleListItem(i, listItemPrefab, prefHeight, parent);
             dataSpecificCallback(item, i);
         }
     }
@@ -66,12 +80,12 @@ public class ListScroller : MonoBehaviour
     /// IMPORTANT: rect transform config on list item prefab: Anchors Min (0,1) Max (1,1) Pivot (0.5,1) so height is fixed with adaptive width
     /// </summary>
     /// <param name="which"></param>
-    /// <param name="pref"></param>
+    /// <param name="listItemPrefab"></param>
     /// <param name="prefHeight"></param>
     /// <param name="parent"></param>
-    static GameObject genSingleListItem(int which, GameObject pref, float prefHeight, GameObject parent)
+    static GameObject genSingleListItem(int which, GameObject listItemPrefab, float prefHeight, GameObject parent)
     {
-        GameObject q = pref; 
+        GameObject q = listItemPrefab; 
         q = Instantiate(q, parent.transform.position, Quaternion.identity) as GameObject;
 
         q.transform.SetParent(parent.transform);

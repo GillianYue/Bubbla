@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
+public delegate void Callback();
+
 /**
  * contains some essential global functions that are commonly used
  */

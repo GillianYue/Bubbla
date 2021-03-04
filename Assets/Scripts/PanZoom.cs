@@ -25,6 +25,8 @@ public class PanZoom : MonoBehaviour
     public Vector2 extentsXMin, extentsXMax, //extentsXMin.x is left bound, .y is right bound; same for max
     extentsYMin, extentsYMax;  //.x is for top bound, .y is for bottom
 
+    public Callback lerpEndCallback = null;
+
     void Start()
     {
         zInitialBase = moveAroundGO.transform.position.z;
@@ -71,7 +73,10 @@ public class PanZoom : MonoBehaviour
             //line below will prevent being stuck on boundaries by unmet distance
             if(Vector3.Distance(startPos, moveAroundGO.transform.position)<0.05f) { panDest = startPos;  }
 
-             if (checkForDestReach()) lerpMoving = false;
+            if (checkForDestReach()) { 
+                lerpMoving = false;
+                if (lerpEndCallback!=null) lerpEndCallback();
+            }
           }
             else if (checkForPanZoom) //when lerp, don't check for input control
             {
@@ -189,7 +194,7 @@ public class PanZoom : MonoBehaviour
     /// setting both panning and zooming destinations for lerp movement
     /// </summary>
     /// <param name="dest"></param>
-    public void smoothLerpTo(Vector3 dest, float zDestination)
+    public void smoothLerpTo(Vector3 dest, float zDestination, Callback cb)
     {
 
         lerpMoving = true;
@@ -197,7 +202,7 @@ public class PanZoom : MonoBehaviour
         panDest.y += (extentsY.x + extentsY.y) / 2; //offset by correct center y point
         panDest.z = zDestination;
 
-
+        if (cb != null) lerpEndCallback = cb;
         print("lerp trying to move to " + panDest);
     }
 

@@ -9,6 +9,7 @@ public class MapLoader : MonoBehaviour
     public TextAsset mapCsv;
     private string[,] data; //double array that stores all info 
 
+    //all of the lists below start count at 0, which means item s will keep track of info for site s+1
     public Vector2[] siteLocations;
     public string[] siteNames;
     public List<List<string>> sublocationNames;
@@ -30,6 +31,12 @@ public class MapLoader : MonoBehaviour
     {
 
     }
+
+    //functions below return info on a site with given site index
+    public string getSiteNameOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, siteNames.Length); return siteNames[idx-1]; }
+    public Vector2 getSiteLocationOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, siteNames.Length); return siteLocations[idx-1]; }
+    public List<string> getSublocationNamesOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, siteNames.Length); return sublocationNames[idx-1]; }
+    public List<Sprite> getSublocationSpritesOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, siteNames.Length); return sublocationImages[idx-1]; }
 
     IEnumerator parseMapData()
     {
