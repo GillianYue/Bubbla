@@ -24,7 +24,9 @@ public class QuestSelect : MonoBehaviour {
 
 	}
 		
-
+	/// <summary>
+	/// UI event for mini quest display onclick (will show quest detail)
+	/// </summary>
 	public void spawnQuestDetail(){ //happens when pressed
 		GameObject qd = questDetails; //GO with the aiming sprite
 		qd = Instantiate (qd) as GameObject;

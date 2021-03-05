@@ -26,6 +26,8 @@ public class Map : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public LoadScene loadScene;
 
+    public GameObject cancelScnPrefab;
+    public GameObject cancel;
 
     public int currSelectSite = 1;
 
@@ -105,18 +107,33 @@ public class Map : MonoBehaviour
     {
         siteDetailPanel.SetActive(true);
         panZoom.checkForPanZoom = false;
+
+        //cancel will block interaction w background UIs
+        cancel = Instantiate(cancelScnPrefab) as GameObject;
+        cancel.transform.SetParent(siteDetailPanel.transform.parent, false);
+        cancel.SetActive(true);
+
+        siteDetailPanel.transform.SetAsLastSibling();
+
+        Button cclB = cancel.GetComponent<Button>();
+        cclB.onClick.AddListener(closeSiteDetailPanel);
     }
 
     public void closeSiteDetailPanel()
     {
         siteDetailPanel.SetActive(false);
         panZoom.checkForPanZoom = true;
+        GameObject.Destroy(cancel);
     }
 
-
-    void setSiteSublocationData(GameObject listItem, int index)//TODO
+    /// <summary>
+    /// index is for the sublocation
+    /// </summary>
+    /// <param name="listItem"></param>
+    /// <param name="index"></param>
+    void setSiteSublocationData(GameObject listItem, int index, List<string> namesList, List<Sprite> spritesList)//TODO
     {
-        listItem.transform.GetChild(0).GetComponent<Text>().text = "sublocation " + index.ToString();
+        listItem.transform.GetChild(0).GetComponent<Text>().text = namesList[index];
         //listItem.transform.GetChild(1).GetComponent<Image>().sprite = TODO Load in some sprite here;
         //TODO set list item thing based on curr site info 
 
@@ -126,15 +143,20 @@ public class Map : MonoBehaviour
     /// onclick event for dots[dotIndex], will pan & zoom to that site and open up the sublocation UI
     /// </summary>
     /// <param name="dotIndex"></param>
-    public void onClickSiteDot(int dotIndex)
+    public void onClickSiteDot(int siteIndex)
     {
-        currSelectSite = dotIndex + 1;
+
+        List<string> namesList = mapLoader.getSublocationNamesOfIndex(siteIndex);
+        List<Sprite> spritesList = mapLoader.getSublocationSpritesOfIndex(siteIndex);
 
         //set up site detail for new site
-        ListScroller.setupList(siteDetailListRect, siteListItemPrefab, 15, setSiteSublocationData);
+        ListScroller.setupList(siteDetailListRect, siteListItemPrefab, mapLoader.getSublocationNamesOfIndex(siteIndex).Count, 
+            (GameObject listItem, int index) => { setSiteSublocationData(listItem, index, namesList, spritesList); });
 
         //pan & zoom to site, and then open up site detail panel
-        panToSite(dots[dotIndex].transform.position, openSiteDetailPanel);
+        panToSite(dots[siteIndex-1].transform.position, openSiteDetailPanel);
+
+        print("selected site at " + mapLoader.getSiteNameOfIndex(siteIndex));
     }
 
     /// <summary>

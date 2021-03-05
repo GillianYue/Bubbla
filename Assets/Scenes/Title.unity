@@ -2146,6 +2146,9 @@ MonoBehaviour:
   myCam: {fileID: 0}
   mapLoader: {fileID: 0}
   loadScene: {fileID: 0}
+  cancelScnPrefab: {fileID: 1000013005674284, guid: 1a3e40824031d4a2cbe515896cedd312,
+    type: 3}
+  cancel: {fileID: 0}
   currSelectSite: 1
 --- !u!114 &782551019
 MonoBehaviour:

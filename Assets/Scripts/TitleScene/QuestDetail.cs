@@ -9,18 +9,18 @@ public class QuestDetail : MonoBehaviour {
 
 	public GlobalSingleton globalSingleton;
 
-	public GameObject cancelScn;
+	public GameObject cancelScnPrefab;
 	private GameObject cancel;
 	private Button cclB;
 	public Button go;
 	private int go_to_scene = -1;
 
 	void Start () {
-		cancel = cancelScn; //cancel will block interaction w background UIs
-		cancel = Instantiate (cancel) as GameObject;
+		//cancel will block interaction w background UIs
+		cancel = Instantiate (cancelScnPrefab) as GameObject;
 		cancel.transform.SetParent (GameObject.Find ("CanvasBG").transform, false);
 		cancel.SetActive (true);
-		//this.transform.SetAsLastSibling (); //move to front most position
+		//move to front most position
 		transform.SetAsLastSibling(); 
 
 		cclB = cancel.GetComponent<Button>();
