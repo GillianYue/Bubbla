@@ -62,7 +62,7 @@ public class GameControl : MonoBehaviour {
 
     [Inject(InjectFrom.Anywhere)]
     public GameFlow gFlow;
-    [Inject(InjectFrom.Anywhere)]
+    //Manually assign the right one
     public Dialogue dialogue;
 
     [Inject(InjectFrom.Anywhere)]
@@ -121,6 +121,7 @@ public class GameControl : MonoBehaviour {
     }
 
     void Update () {
+        print("ck touch is " + ckTouch);
 
         if (sceneType == Mode.GAME) 
         {
@@ -128,7 +129,7 @@ public class GameControl : MonoBehaviour {
             {
                 case GameFlow.Mode.DLG:
                     //mouseclick
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetMouseButtonDown(0) && ckTouch)
                     {
 
                         if (dialogue.checkCurrentLineDone())
@@ -144,14 +145,13 @@ public class GameControl : MonoBehaviour {
                     break;
 
                 case GameFlow.Mode.GAME:
-                    if (ckTouch)
-                    {
+
                         if (touchCooler > 0) { touchCooler -= 1 * Time.deltaTime; }
                         else { 
                             touchCount = 0; //reset 
                         }
 
-                    if (Input.GetMouseButtonDown(0)) //on first press/click
+                    if (Input.GetMouseButtonDown(0) && ckTouch) //on first press/click
                         {
 
                             if (p.selectGauge(new Vector2(Input.mousePosition.x, Input.mousePosition.y)))
@@ -192,7 +192,7 @@ public class GameControl : MonoBehaviour {
 
                         }//end first press check
 
-                        if (Input.GetMouseButton(0)) //if held
+                        if (Input.GetMouseButton(0) && ckTouch) //if held
                             {
 
 
@@ -216,7 +216,6 @@ public class GameControl : MonoBehaviour {
                         }
 
 
-                    }
                     break;
                 default:
                     break;
@@ -226,7 +225,7 @@ public class GameControl : MonoBehaviour {
         else if(sceneType == Mode.TRAVEL)
         {
 
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0) && ckTouch)
             {
                 foreach (GameObject i in interactables)
                 {

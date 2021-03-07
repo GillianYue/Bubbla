@@ -48,7 +48,7 @@ public class Backpack : MonoBehaviour
 
         //loadInItems(); eventually oughta switch back to this instead of the below line
 
-        StartCoroutine(Global.Chain(this, waitTilDone(), Global.Do(() => closeBackpackUI())));
+      //  StartCoroutine(Global.Chain(this, waitTilDone(), Global.Do(() => closeBackpackUI())));
     }
 
     // Update is called once per frame

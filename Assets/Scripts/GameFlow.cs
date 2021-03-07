@@ -16,7 +16,7 @@ public class GameFlow : MonoBehaviour {
     public CustomEvents customEvents;
     [Inject(InjectFrom.Anywhere)]
     public Player player;
-    [Inject(InjectFrom.Anywhere)]
+    //Manually assign dialogue, since can be duplicate testers
     public Dialogue dialogue;
 
     [Inject(InjectFrom.Anywhere)]

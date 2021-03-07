@@ -19,7 +19,6 @@ public class GameTestBehavior : MonoBehaviour
     public bool test, invincible;
     public int speedUpRate;
 
-    // Start is called before the first frame update
     void Start()
     {
         if (test && gf!=null)
@@ -30,7 +29,6 @@ public class GameTestBehavior : MonoBehaviour
         if (invincible) player.setInvincible(true);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (test)
@@ -50,10 +48,10 @@ public class GameTestBehavior : MonoBehaviour
                 Time.timeScale = 1.0f;
             }
 
-            if (Input.GetKeyDown(KeyCode.S)) //save
-            {
-                saveLoad.SaveQuestStatus(qb.getCurrentQuestStatus());
-            }
+            //if (Input.GetKeyDown(KeyCode.S)) //save
+            //{
+            //    saveLoad.SaveQuestStatus(qb.getCurrentQuestStatus());
+            //}
         }
 
     }

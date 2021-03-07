@@ -55,6 +55,11 @@ public class Dialogue : MonoBehaviour
             param_3));
 	}
 
+	public void simpleDisplayOneLine(string c_name, string content, string sprite_state)
+    {
+		StartCoroutine(oneLine(c_name, content, sprite_state, "1", "", "", "", "", ""));
+	}
+
     private IEnumerator oneLine(string c_name, string content, string sprite_state, string display_spd, string not_found_param,
         string special_index, string param_1, string param_2, string param_3)
 	{
@@ -94,7 +99,7 @@ public class Dialogue : MonoBehaviour
 				cVoiceSource.clip = cVoiceClip;
 				Color c = bgBox.color;
 				c = characterLoader.getColorByIndex(cIndex);
-				bgBox.color = new Color(c.r / 255.0f, c.g / 255.0f, c.b / 255.0f);
+				bgBox.color = new Color(c.r, c.g, c.b);
 			}
 
 			prevChaName = NAME.text;
@@ -104,7 +109,7 @@ public class Dialogue : MonoBehaviour
 		int.TryParse(sprite_state, out SpriteNum);
 
 		float disp_spd;
-		float.TryParse(display_spd, out disp_spd); //converts string to int
+		if(!float.TryParse(display_spd, out disp_spd)) disp_spd = 1; //converts string to int
 		string[] store; ArrayList result = new ArrayList();
 		int[] tags = GetFormattedText(DIALOGUE, content, result);
 		store = result.ToArray(typeof(string)) as string[];
@@ -114,6 +119,7 @@ public class Dialogue : MonoBehaviour
 		//character start talking (default talking anim state); assumes part1 is always mouth 
 		setPartLayerParam(cIndex, character, 1, 2);
 
+		//sets default base state 
 		setAnimBaseState(cIndex, character, SpriteNum);
 
         int special;
@@ -280,7 +286,7 @@ public class Dialogue : MonoBehaviour
 					{
 						yield return new WaitForSeconds(-1.0333f * disp_spd + 1.07f);
 					}
-				}
+                }
 			}
 			if (!(s == (store.Length - 1)))
 			{

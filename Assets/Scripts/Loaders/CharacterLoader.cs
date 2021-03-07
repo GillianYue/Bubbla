@@ -99,7 +99,7 @@ public class CharacterLoader : Loader
             int.TryParse(data[5, r], out R);
             int.TryParse(data[6, r], out G);
             int.TryParse(data[7, r], out B);
-            bgColor[r - 1] = new Color(R, G, B);
+            bgColor[r - 1] = new Color(R/255f, G/255f, B/255f);
         }
 
         
@@ -189,7 +189,11 @@ public class CharacterLoader : Loader
                     {
                         Coroutine c = StartCoroutine(LoadScene.processCSV(csvLoadDone, transitionConditionCSV, (string[,] d) => setStateMachineData(d, cCode), false));
                         coroutines.Add(c);
-                    
+
+                    }
+                    else
+                    {
+                        Debug.Log("Transition Condition for c" + cCode + " NOT found, should have a " + "Animator/StateMachineCSV/" + pathName[cCode] + "Animator");
                     }
                 }
             }
@@ -269,16 +273,25 @@ public class CharacterLoader : Loader
         return index;
     }
 
+    public string getName(int index) { return (string)cName[index]; }
+
     public Color getColorByIndex(int index)
     {
         return bgColor[index];
     }
 
+    /// <summary>
+    /// plays base layer animation of a certain character
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="cCode"></param>
+    /// <param name="state"></param>
     public void playBaseAnimation(Animator a, int cCode, int state)
     {
         if (baseStateAnimationClipNames[cCode] != null && baseStateAnimationClipNames[cCode][state] != null)
         {
             a.Play(baseStateAnimationClipNames[cCode][state]);
+            print("playing " + baseStateAnimationClipNames[cCode][state]);
         }
         else
         {
@@ -286,6 +299,12 @@ public class CharacterLoader : Loader
         }
     }
 
+    /// <summary>
+    /// plays part I layer animation of a certain character
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="cCode"></param>
+    /// <param name="state"></param>
     public void playPart1Animation(Animator a, int cCode, int state)
     {
         if (Part1AnimationClipNames[cCode] != null && Part1AnimationClipNames[cCode][state] != null)
@@ -297,6 +316,14 @@ public class CharacterLoader : Loader
             Debug.Log("character " + cCode + " does not have part 1 state " + state);
         }
     }
+
+
+    /// <summary>
+    /// plays part II layer animation of a certain character
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="cCode"></param>
+    /// <param name="state"></param>
     public void playPart2Animation(Animator a, int cCode, int state)
     {
         if (Part2AnimationClipNames[cCode] != null && Part2AnimationClipNames[cCode][state] != null)
