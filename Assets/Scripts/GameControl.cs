@@ -296,6 +296,10 @@ public class GameControl : MonoBehaviour {
         }
     }
 
+    public void hideAllIcons() { foreach (GameObject icon in icons) { icon.SetActive(false); } }
+
+    public void showAllIcons() { foreach (GameObject icon in icons) { icon.SetActive(true); } }
+
     public void gameOver(){
         customEvents.levelScript.gameOver(GameOverC); //may differ based on levelscript
     }

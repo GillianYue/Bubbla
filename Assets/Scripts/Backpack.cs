@@ -27,7 +27,6 @@ public class Backpack : MonoBehaviour
     public bool backpackBtnActive = true,
         fullScreenMode; //if checked, affects num item listed in one row & size scale of displayed item image
 
-    // Start is called before the first frame update
     void Start()
     {
 
@@ -51,7 +50,6 @@ public class Backpack : MonoBehaviour
       //  StartCoroutine(Global.Chain(this, waitTilDone(), Global.Do(() => closeBackpackUI())));
     }
 
-    // Update is called once per frame
     void Update()
     {
 

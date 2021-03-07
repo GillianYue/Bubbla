@@ -63,6 +63,7 @@ public class Dialogue : MonoBehaviour
     private IEnumerator oneLine(string c_name, string content, string sprite_state, string display_spd, string not_found_param,
         string special_index, string param_1, string param_2, string param_3)
 	{
+		if (c_name == "") c_name = prevChaName; //inherit prev char name (assumes it's the same character) if c_name is not provided
 
 		//sprite fixes size of background square
 		AudioClip cVoiceClip = null;
@@ -155,6 +156,7 @@ public class Dialogue : MonoBehaviour
 		}
 
 
+		int endSentencePartIDefaultBack = 1;
 
 		for (int s = 0; s < store.Length; s++)
 		{
@@ -211,15 +213,31 @@ public class Dialogue : MonoBehaviour
 					/*
 					 * SPECIAL mode 2, the changing of motion states of the character's body parts (Part1, Part2, etc.)
 					 * -param 1: "which" state(s) to be set 
-					 * the same state can appear for multiple times (e.g. 0, 1, 0 will set, for example);
+					 *		- 1: part I layer
+					 *		- 2: part II layer
+					 * the same state can appear for multiple times (e.g. 1, 2, 1 will set, for example, part1 twice and part2 once);
                      * NOTE: this needs to match the number of items in param2/3; in other words, even "[1];[1]" is necessary
 					 * -param 2: value(s) to set those state(s), integer
-					 * -param 3: word count indices at which the state(s) are to be set
+					 * -param 3: word count indices at which the state(s) are to be set, at least 1
 					 * 
-					 * e.g. [0,1];[3,5];[2,3] sets part 1(0) to "3" at word 2, sets part 2(1) to "5" at word 3
+					 * e.g. [1,2];[3,5];[2,3] sets part 1 to "3" at word 2, sets part 2 to "5" at word 3
+					 * 
+					 * if part I state change happens at word -1 (should take place last), will change to provided state instead of recovering to default
+					 * part I layer state (only valid for this sentence). e.g. [1,1];[3,5];[2,-1] sets part 1 to "3" at word 2, sets part 1 to "5" after 
+					 * sentence ends
 					 */
 					case 2:
-						if (paramPointer[2]<PARAM3.Count &&
+						if (paramPointer[2] < PARAM3.Count && (int)PARAM3[paramPointer[2]] == -1) 
+						{ 
+							endSentencePartIDefaultBack = (int)PARAM2[paramPointer[2]];
+
+							if (paramPointer[2] <= PARAM3.Count - 1)
+							{
+								paramPointer[2]++;
+							}
+						}
+
+						while (paramPointer[2]<PARAM3.Count &&
 							wordCount == (int)PARAM3[paramPointer[2]]) //is at the right word and the first char
 						{
 							setPartLayerParam(cIndex, character, (int)PARAM1[paramPointer[2]],
@@ -310,7 +328,8 @@ public class Dialogue : MonoBehaviour
 		}
 
 		//character stop talking (default talking anim state)
-		setPartLayerParam(cIndex, character, 1, 1);
+		setPartLayerParam(cIndex, character, 1, endSentencePartIDefaultBack);
+
 		lineDone = true;
 		skipping = false;
 

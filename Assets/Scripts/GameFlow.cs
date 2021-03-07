@@ -128,17 +128,27 @@ public class GameFlow : MonoBehaviour {
                 if (ln != 0) setPointer(ln); else Debug.LogError("SPECIAL block end didn't specify goto line number");
                 yield break; //breaks out of the coroutine
             }
-            if (currMode == Mode.DLG) dialogue.disableDialogueBox(); //if transitioning from dlg to others
-                currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////the actual changing of mode
-            if (currMode == Mode.DLG) { dialogue.enableDialogueBox();
+            if (currMode == Mode.DLG)
+            {
+                dialogue.disableDialogueBox(); //if transitioning from dlg to others
+            }
+            
+            currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////the actual changing of mode
+
+
+            if (currMode == Mode.DLG) { 
+                dialogue.enableDialogueBox();
+                gameControl.hideAllIcons();
                 gameControl.bgManager.setBackgroundsActive(false); //pause
             } //if the new mode is actually dlg
             else if(currMode == Mode.IVS)
             {
+                gameControl.showAllIcons();
                 player.setNavigationMode(Player.Mode.TOUCH);
             }
             else if (currMode == Mode.GAME)
             {
+                gameControl.showAllIcons();
                 player.setNavigationMode(Player.Mode.ACCL);
             }
 
