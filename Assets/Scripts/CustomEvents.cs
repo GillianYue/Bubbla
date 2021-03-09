@@ -117,6 +117,9 @@ public class CustomEvents : MonoBehaviour
             case 12:
                 clearEnemiesOrPBs(done, prms);
                 break;
+            case 13:
+                scaleToInSecs(done, prms);
+                break;
             case 20:
                 StartCoroutine(fadeInOutToColor(done, prms));
                 break;
@@ -209,7 +212,7 @@ public class CustomEvents : MonoBehaviour
      * param 0: item code indicating which item we want to create
      * optional param 1: pos X,Y,Z, will use paintballSpawner.spawnValues if param is ""
      * optional param 2: size
-     * optional param 3: id
+     * optional param 3: identifier
      * optional param 4: additional param TODO
      */
     public void genItem(bool[] done, string[] prms)
@@ -656,6 +659,77 @@ public class CustomEvents : MonoBehaviour
     }
 
     /*
+     * event #13
+     * 
+     * param 0: GameObject identifier id
+     * param 1: target scale (local scale)
+     * param 2: time to complete the move in seconds   
+     */
+    public void scaleToInSecs(bool[] done, string[] prms)
+    {
+        GameObject target = findByIdentifier(prms[0]);
+
+        float scl;
+        float.TryParse(prms[1], out scl);
+
+        float secs;
+        float.TryParse(prms[3], out secs);
+
+        StartCoroutine(Global.scaleToInSecs(target, scl, secs, done)); //will set done[0] to true
+    }
+
+    /*
+     * event #14
+     * 
+     * waits until a GO no longer exists, and line pointer will be incremented by one, or conditions are not met and the game 
+     * will wait until condition is met
+     * 
+     * if GO not found in the first place, will log error and move on
+     * 
+     * param 0: identifier of GO
+     * optional param 1: line number to go to when conditions are met (if left blank, assumes is next line)
+     * optional param 2: 
+     *      -0 (default): do not yield control, will wait and prevent any other game logic from executing until condition met
+     *      -1: yields control to other events while waiting (by setting the done[0] var); when met, will redirect to desig line in conditionalSwitch
+     * 
+     */
+    public IEnumerator waitUntilDestroyed(bool[] done, string[] prms)
+    {
+        GameObject go = findByIdentifier(prms[0]);
+        if (!go)
+        {
+            Debug.LogError("GameObject of id " + prms[0] + " not found");
+        }
+        else
+        {
+
+            if (prms[2] == "1") // if yield control
+            {
+                done[0] = true; //will execute other lines while waiting for current condition to be met
+            }
+
+            while (go != null) //this done will not increment pointer 
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            //after go becomes null (destroyed)
+            int goToLine = -1;
+
+            if (int.TryParse(prms[1], out goToLine))
+            {
+                gameFlow.setPointer(goToLine);
+            }
+            else
+            {
+                done[0] = true;
+            }
+
+        }
+
+    }
+
+    /*
      * event #20
      * 
      * fade out/in into pure colored backgrounds
@@ -759,7 +833,6 @@ public class CustomEvents : MonoBehaviour
      * 
      * param 0: int, number of times flash takes place
      * optional param 1: interval time between flashes (if any) defaults to 0.5f seconds
-     * optional param 2: 
      */
     public IEnumerator screenFlash(bool[] done, string[] prms)
     {
@@ -795,7 +868,7 @@ public class CustomEvents : MonoBehaviour
     *      -2: string
     * param 1: string(s) to identify this variable, separated by comma
     * param 2: starting value(s) of this variable (type will be converted accordingly) OR value(s) to be mod into,
-    * separated by comma
+    * separated by comma (if bool, should be "true" or "false")
     * 
     */
     public void variable(bool[] done, string[] prms)

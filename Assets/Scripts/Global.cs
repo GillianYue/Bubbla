@@ -249,6 +249,31 @@ public class Global : MonoBehaviour
         return (p.x >= -sw / 2 && p.x <= sw / 2 && p.y >= -sh / 2 && p.y <= sh / 2);
     }
 
+    /// <summary>
+    /// changes an object's local scale to target scale in certain amount of time
+    /// </summary>
+    /// <param name="e"></param>
+    /// <param name="scl"></param>
+    /// <param name="sec"></param>
+    /// <param name="done"></param>
+    /// <returns></returns>
+    public static IEnumerator scaleToInSecs(GameObject e, float scl, float sec, bool[] done)
+    {
+        Vector3 originalScale = e.transform.localScale;
+        Vector3 destinationScale = new Vector3(scl, scl, scl);
+
+        float currentTime = 0.0f;
+
+        do
+        {
+            e.transform.localScale = Vector3.Lerp(originalScale, destinationScale, currentTime / sec);
+            currentTime += Time.deltaTime;
+            yield return null;
+        } while (currentTime <= sec);
+
+        done[0] = true;
+    }
+
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~game play logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

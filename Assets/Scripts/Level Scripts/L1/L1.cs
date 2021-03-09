@@ -186,6 +186,11 @@ public class L1 : LevelScript
         done[0] = true;
     }
 
+    /// <summary>
+    /// wait until absorbs pb
+    /// </summary>
+    /// <param name="done"></param>
+    /// <returns></returns>
     IEnumerator bulletGaugeTutorial(bool[] done)
     {
         while (Player.bulletGauge.Count == 0) //wait for player tapping on pb
