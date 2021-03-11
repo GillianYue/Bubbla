@@ -3755,7 +3755,7 @@ PrefabInstance:
     - target: {fileID: 5212616125501340030, guid: fe1ec531264345a4fb6ff045df505584,
         type: 3}
       propertyPath: useDialogueTester
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe1ec531264345a4fb6ff045df505584, type: 3}
@@ -6658,12 +6658,12 @@ PrefabInstance:
     - target: {fileID: 9219339533269405907, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -175
+      value: -174.99998
       objectReference: {fileID: 0}
     - target: {fileID: 9219339533269405907, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -19
+      value: -18.999985
       objectReference: {fileID: 0}
     - target: {fileID: 9219470914659307741, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}

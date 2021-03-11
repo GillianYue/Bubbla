@@ -22,7 +22,7 @@ public class QuestLoader : Loader
     public SaveLoad saveLoad;
 
     [Inject(InjectFrom.Anywhere)]
-    public QuestProgressTracker questProgressTracker;
+    public QuestConditionManager questConditionManager;
 
     public QuestStatusData questStatus; //stores (in)active statuses for all quests as well as activeQuestData
 

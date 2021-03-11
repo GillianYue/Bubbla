@@ -107,10 +107,13 @@ public class Dialogue : MonoBehaviour
 		}
 
 		int SpriteNum;
-		int.TryParse(sprite_state, out SpriteNum);
+		if (!int.TryParse(sprite_state, out SpriteNum)) SpriteNum = 0;
 
+		//display speed
 		float disp_spd;
 		if(!float.TryParse(display_spd, out disp_spd)) disp_spd = 1; //converts string to int
+
+		//format sentence
 		string[] store; ArrayList result = new ArrayList();
 		int[] tags = GetFormattedText(DIALOGUE, content, result);
 		store = result.ToArray(typeof(string)) as string[];
@@ -157,10 +160,10 @@ public class Dialogue : MonoBehaviour
 
 
 		int endSentencePartIDefaultBack = 1;
-
+		//loop through lines of this sentence
 		for (int s = 0; s < store.Length; s++)
 		{
-			for (int n = 0; n < store[s].Length; n++)
+			for (int n = 0; n < store[s].Length; n++) //loop through characters of each line
 			{
 				//tagging is for tags in rich text, not a part of the special effects system
 				if (n == tags[0]) //we're at the first letter that needs to be tagged
@@ -182,7 +185,7 @@ public class Dialogue : MonoBehaviour
 
 				}
 
-				if (store[s][n] == ' ') //new word
+				if (store[s][n] == ' ') //if new word
 				{
 					wordCount++;
 				}

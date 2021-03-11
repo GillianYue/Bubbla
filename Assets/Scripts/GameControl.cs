@@ -233,14 +233,14 @@ public class GameControl : MonoBehaviour {
 
                     if (Global.touching(new Vector2(Input.mousePosition.x,
                         Input.mousePosition.y), //screen 
-                  go, //screen
-            i.GetComponent<SpriteRenderer>().sprite.rect.width * i.transform.localScale.x,
-            i.GetComponent<SpriteRenderer>().sprite.rect.height * i.transform.localScale.y
-            ))
+                        go, //screen
+                        i.GetComponent<SpriteRenderer>().sprite.rect.width * i.transform.localScale.x,
+                        i.GetComponent<SpriteRenderer>().sprite.rect.height * i.transform.localScale.y
+                      ))
                     {
                         //if code reaches here, means that one sprite is clicked, get the ivs-related script & call function
                         interactable itr = i.GetComponent<interactable>();
-                        if (itr.closeEnough(player))
+                        if (itr.closeEnough(player)) //if within interactable distance
                         {
                             // player.GetComponent<Player>().setNavigationMode(Player.Mode.FREEZE);
                             //gFlow.setPointer(ivs.getIvsGoToLine());

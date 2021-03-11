@@ -7,15 +7,18 @@ public class ivsInteractable : interactable
     private int myGoToLine = -1;
     private int indexInArray = -1;
 
+    [Inject(InjectFrom.Anywhere)]
+    public ActionListenerManager actionListenerManager;
+
     //private int interactableDist; //from parent
 
-    // Start is called before the first frame update
     void Start()
     {
         interactableDist = 150;
+
+        if (!actionListenerManager) actionListenerManager = FindObjectOfType<ActionListenerManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -39,6 +42,13 @@ public class ivsInteractable : interactable
     public int getIvsGoToLine()
     {
         return myGoToLine;
+    }
+
+    public override void interact()
+    {
+        //trigger listener
+        actionListenerManager.onTriggerListener(ActionListener.Listener.interactWithObject);
+
     }
 
 }

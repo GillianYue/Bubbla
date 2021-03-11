@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class interactable : MonoBehaviour
+/// <summary>
+/// interactable GOs in non-battle situations (sceneType == Mode.TRAVEL)
+/// 
+/// parent of ivsInteractable 
+/// </summary>
+public abstract class interactable : MonoBehaviour
 {
     public int interactableDist; //default
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -32,4 +35,7 @@ public class interactable : MonoBehaviour
     {
         interactableDist = dist;
     }
+
+
+    public abstract void interact();
 }

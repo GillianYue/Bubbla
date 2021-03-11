@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// sets up a site with metadata
+/// </summary>
 public class LocationSetup : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         

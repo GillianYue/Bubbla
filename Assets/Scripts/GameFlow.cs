@@ -221,11 +221,15 @@ public class GameFlow : MonoBehaviour {
                 }
                 break;
             case Mode.IVS:
+                //ivs related actions encountered in csv files
                 int indexIVS = -1;
                 int.TryParse(data[1, pointer], out indexIVS);
                 switch(indexIVS)
                 {
-                    case 0: //setup; the current version of code requires all setup be done in one line b/c assignment of string[]
+                    case 0: //setup interactables 
+                        //the current version of code requires all setup be done in one line b/c assignment of string[]
+                        //TODO will make previous interactables invalid TODO might need to allow for setting up interactables in other scenes
+                        //through metadata... and the actual assigning of gameControl's interactables should be during location setup
                         string[] IDs = data[2, pointer].Split(',');
                         string[] linez = data[3, pointer].Split(',');
                         int[] lines = new int[linez.Length];
@@ -233,7 +237,7 @@ public class GameFlow : MonoBehaviour {
                         GameObject[] ivsGOs = new GameObject[linez.Length];
                         for(int l=0; l<linez.Length; l++)
                         {
-                            int.TryParse(linez[l], out lines[l]);
+                            if (!int.TryParse(linez[l], out lines[l])) Debug.LogError("parse line number failed in IVS");
                             ivsGOs[l] = customEvents.findByIdentifier(IDs[l]); //getting the ivs gameobject by id
                             ivsInteractable ivs = ivsGOs[l].AddComponent<ivsInteractable>();
                             ivs.setindexInArray(l);
