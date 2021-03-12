@@ -6,6 +6,9 @@ using System.Collections;
 
 public class SaveLoad : MonoBehaviour
 {
+    [Inject(InjectFrom.Anywhere)]
+    public LoadScene loadScene;
+
     string playerInfo = "/playerInfo.dat", allQuestsStatus = "/questStatus.dat";
 
     void Start()
@@ -16,6 +19,23 @@ public class SaveLoad : MonoBehaviour
     void Update()
     {
         
+    }
+
+    /// <summary>
+    /// loads things that need to be loaded in the beginning of the game TODO 
+    /// 
+    /// will wait for the csv loaders to be done first, then load in data from the file system
+    /// </summary>
+    public void LoadAllOnStart()
+    {
+        StartCoroutine(LoadAllOnStartCoroutine());
+    }
+
+    IEnumerator LoadAllOnStartCoroutine()
+    {
+        yield return loadScene.waitForLoadDone();
+
+        GlobalSingleton.Instance.questStatus = LoadQuestStatus(loadScene.questLoader.numOfQuests);
     }
 
     public void SavePlayerInfo(PlayerData playerData)
@@ -59,6 +79,7 @@ public class SaveLoad : MonoBehaviour
             return new QuestStatusData(numQuests);
         }
     }
+
 
     /// <summary>
     /// loads a file of type T, relativePath should be the name of the file to load. e.g. "/questStatus.dat"

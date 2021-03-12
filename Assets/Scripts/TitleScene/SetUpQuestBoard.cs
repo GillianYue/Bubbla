@@ -14,7 +14,6 @@ public class SetUpQuestBoard : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public GlobalSingleton globalSingleton;
 
-    QuestStatusData currentQuestStatus;
 
     public GameObject questGO; //the game object that can visualize quests
 
@@ -44,15 +43,13 @@ public class SetUpQuestBoard : MonoBehaviour {
     /// <returns></returns>
     private IEnumerator setupQuestBoard()
     {
-        QuestStatusData questStatus = questLoader.questStatus;
+        QuestStatusData currentQuestStatus = GlobalSingleton.Instance.questStatus;
         //questStatus is current player's progress on quests; questLoadDone is for loading all quests that exist
         yield return new WaitUntil(() => questLoader.isLoadDone());
         //so that the quest roster is ready to be compared
 
         //initialize questStatus if non-existent
-        if (questStatus == null) questStatus = new QuestStatusData(questLoader.getNumQuests());
-
-        currentQuestStatus = questStatus; //this instance is modified as game progresses, and will be taken to use for saving
+        if (currentQuestStatus == null) currentQuestStatus = new QuestStatusData(questLoader.getNumQuests());
 
         Quest currActive = null;
         //quest #0 doesn't exist, skipped
@@ -113,8 +110,4 @@ public class SetUpQuestBoard : MonoBehaviour {
 	}
 
 
-    public QuestStatusData getCurrentQuestStatus()
-    {
-        return currentQuestStatus;
-    }
 }

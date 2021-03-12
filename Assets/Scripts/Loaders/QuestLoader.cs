@@ -11,7 +11,7 @@ public class QuestLoader : Loader
 {
 
     public TextAsset questCsv; //contains info for quests
-    private string[,] questData;
+    private string[,] questsData;
     public int numOfQuests;
 
     private bool[] loadDone;
@@ -24,7 +24,7 @@ public class QuestLoader : Loader
     [Inject(InjectFrom.Anywhere)]
     public QuestConditionManager questConditionManager;
 
-    public QuestStatusData questStatus; //stores (in)active statuses for all quests as well as activeQuestData
+    
 
     protected override void Start()
     {
@@ -43,9 +43,9 @@ public class QuestLoader : Loader
 
     IEnumerator startLoad()
     {
-        yield return StartCoroutine(parseQuestData()); //will set the correct numOfQuests
+        yield return StartCoroutine(parseQuestsData()); //will set the correct numOfQuests
 
-        questStatus = saveLoad.LoadQuestStatus(numOfQuests);
+
     }
 
     /// <summary>
@@ -57,9 +57,9 @@ public class QuestLoader : Loader
         return questLoaderDone;
     }
 
-    public void setData(string[,] d)
+    public void setQuestsData(string[,] d)
     {
-        questData = d;
+        questsData = d;
     }
 
     //returns num of all quests available in loader
@@ -69,15 +69,15 @@ public class QuestLoader : Loader
     }
 
     /// <summary>
-    /// parses data for all quest entries 
+    /// parses data for all quest entries (general quests load, not setting up any of them)
     /// </summary>
     /// <returns></returns>
-    IEnumerator parseQuestData()
+    IEnumerator parseQuestsData()
     {
         //data[col,1] will be the first quest (tho in excel visually it's at line 2)
-        yield return LoadScene.processCSV(loadDone, questCsv, setData, false);
+        yield return LoadScene.processCSV(loadDone, questCsv, setQuestsData, false);
 
-        numOfQuests = questData.GetLength(1) - 1; //exclude title row; data[col, 1_to_numOfQuests] are the quests
+        numOfQuests = questsData.GetLength(1) - 1; //exclude title row; data[col, 1_to_numOfQuests] are the quests
 
         allQuests = new Quest[numOfQuests + 1]; //b/c 0 doesn't count; the first quest's index is 1
         allQuests[0] = null;
@@ -85,25 +85,25 @@ public class QuestLoader : Loader
         for(int q=1; q<=numOfQuests; q++)
         {
             Quest quest = new Quest(q);
-            quest.type = questData[0, q]; quest.description = questData[1, q];
-            quest.message = questData[2, q];
+            quest.type = questsData[0, q]; quest.description = questsData[1, q];
+            quest.message = questsData[2, q];
 
 
             int s = -1;
-            int.TryParse(questData[3, q], out s);
+            int.TryParse(questsData[3, q], out s);
             if(s != -1) quest.scene_to_load = s;
 
             int col1 = -1, col2 = -1, col3 = -1;
-            int.TryParse(questData[4, q], out col1); int.TryParse(questData[5, q], out col2);
-            int.TryParse(questData[6, q], out col3);
+            int.TryParse(questsData[4, q], out col1); int.TryParse(questsData[5, q], out col2);
+            int.TryParse(questsData[6, q], out col3);
             if(col1 == -1 || col2 == -1 || col3 == -1) { print("parse error"); }
 
             quest.message_color = new Color(col1/255.0f, col2 / 255.0f, col3 / 255.0f);
 
-            quest.specifics = questData[7, q]; 
-            quest.long_message = questData[8, q];
+            quest.specifics = questsData[7, q]; 
+            quest.long_message = questsData[8, q];
 
-            quest.setupFilePath = questData[9, q];
+            quest.setupFilePath = questsData[9, q];
 
 
             allQuests[q] = quest;
@@ -124,7 +124,7 @@ public class QuestLoader : Loader
         if (!setupCSV) Debug.LogError("invalid csv path: " + q.setupFilePath);
 
         bool[] done = new bool[1];
-        string[,] setupData;
+        string[,] setupData; //contains chunks of events to this quest
         yield return LoadScene.processCSV(done, setupCSV, (string[,] d) => { setupData = d; }, false);
 
         //TODO assign setupData to right places
@@ -194,7 +194,18 @@ public class QuestStatusData
     public QuestStatusData(int numQuests)
     {
         allQuestsStatus = new int[numQuests+1]; //[0] is null, since quest 0 doesn't exist
-        activeQuestData = new ActiveQuestData();
+        activeQuestData = new ActiveQuestData(); Debug.Log("new activeQuestData created");
+    }
+
+    /// <summary>
+    /// should be called when a quest is accepted, its setup file parsed and split into events with their conditions
+    /// </summary>
+    /// <param name="questIndex"></param>
+    /// <param name="questScript"></param>
+    public void onAcceptQuest(int questIndex, string[,] questScript, List<QuestEvent> questEvents)
+    {
+        allQuestsStatus[questIndex] = 2;
+        activeQuestData.setActiveQuest(questIndex, questScript, questEvents);
     }
 
     public int getSingleQuestStatus(int index) { if (index>=allQuestsStatus.Length) return -1; else return allQuestsStatus[index]; }
@@ -209,15 +220,26 @@ public class ActiveQuestData
 {
     public int activeQuestIndex; //quest id of the quest, if == -1, means not taking any quest at the moment
     public QuestProgress currQuestProgress;
+    public string[,] currQuestScript; //csv script for event chunks; line pointers of events refer to lines here
+    public List<QuestEvent> currQuestEvents;
 
     public ActiveQuestData()
     {
         activeQuestIndex = -1; //defaults to none
     }
 
-    public void setActiveQuestIndex(int i) { 
-        activeQuestIndex = i;
-        currQuestProgress = new QuestProgress(); //TODO might need to specialize based on quest
+    /// <summary>
+    /// mark a new active quest upon taking it
+    /// </summary>
+    /// <param name="index"></param>
+    public void setActiveQuest(int index, string[,] questScript, List<QuestEvent> questEvents) { 
+        activeQuestIndex = index;
+
+        currQuestProgress = new QuestProgress(); //TODO might need to specialize based on quest 
+        Debug.Log("new QuestProgress created");
+
+        currQuestScript = questScript;
+        currQuestEvents = questEvents;
     }
 
     //TODO etc etc
@@ -228,4 +250,17 @@ public class ActiveQuestData
 public class QuestProgress
 {
     //TODO
+}
+
+/// <summary>
+/// corresponds to a block of event in a csv file (but only stores pointers to start and end line), has trigger conditions
+/// </summary>
+[Serializable]
+public struct QuestEvent
+{
+    public Func<bool> conditionsMet; //TODO make this serializable, or think of alternative way to solve this
+    public string eventName; //tag
+    public int startLineNumber;
+    public bool canBeTriggered;
+
 }

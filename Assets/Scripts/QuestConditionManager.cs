@@ -6,7 +6,8 @@ using System;
 /// <summary>
 /// stores and manages conditions and transitions for sub-events within a single quest
 /// 
-/// kept in globalSingleton
+/// kept in globalSingleton; persists but does not contain data that needs to be saved
+/// 
 /// </summary>
 public class QuestConditionManager : MonoBehaviour
 {
@@ -17,10 +18,6 @@ public class QuestConditionManager : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public GlobalSingleton globalSingleton; //data persist
 
-    public bool active;
-
-    public Quest questTracking; //the quest that's being tracked
-    public List<QuestEvent> currQuestEvents;
 
     void Start()
     {
@@ -33,9 +30,13 @@ public class QuestConditionManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// go through events and see if anything meets condition
+    /// </summary>
+    /// <param name="listener"></param>
     public void checkForEventConditions(ActionListener.Listener listener) //TODO more params
     {
-        foreach(QuestEvent qEvent in currQuestEvents)
+        foreach(QuestEvent qEvent in GlobalSingleton.Instance.questStatus.activeQuestData.currQuestEvents)
         {
             if (qEvent.conditionsMet()) //might need parameters here too
             {
@@ -46,13 +47,4 @@ public class QuestConditionManager : MonoBehaviour
     }
 }
 
-/// <summary>
-/// corresponds to a block of event in a csv file, has trigger conditions
-/// </summary>
-public struct QuestEvent
-{
-    public Func<bool> conditionsMet;
-    public string eventName; //tag
-    //TODO store pointer to csv file & line number
 
-}

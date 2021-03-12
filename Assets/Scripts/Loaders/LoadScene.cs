@@ -5,15 +5,18 @@ using System.Collections;
 public delegate void setterDelegate(string[,] data);
 public delegate void setterDelegateD(string[,] data, bool[] sd);
 
-//script in charge of all loading-related functionalities
+//script in charge of all loader-related functionalities, should happen once on start of each game session?
 public class LoadScene : MonoBehaviour {
 
+    //TODO check if all loaders are placed here
     [Inject(InjectFrom.Anywhere)]
     public EnemyLoader enemyLoader;
     [Inject(InjectFrom.Anywhere)]
     public CharacterLoader characterLoader;
     [Inject(InjectFrom.Anywhere)]
     public ItemLoader itemLoader;
+    [Inject(InjectFrom.Anywhere)]
+    public QuestLoader questLoader;
 
 
     [Inject(InjectFrom.Anywhere)]

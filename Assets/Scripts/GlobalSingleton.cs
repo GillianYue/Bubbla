@@ -10,7 +10,13 @@ using UnityEngine;
 public class GlobalSingleton : MonoBehaviour
 {
     public static GlobalSingleton Instance;
+
+    public QuestStatusData questStatus; //stores (in)active statuses for all quests as well as activeQuestData
     public QuestConditionManager questConditionManager; //stored event conditions for a quest should persist through scenes
+
+    [Inject(InjectFrom.Anywhere)]
+    public SaveLoad saveLoad;
+
     //TODO temp cache data on current quest progress
 
     void Awake()
@@ -25,5 +31,12 @@ public class GlobalSingleton : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+
+    void Start()
+    {
+
+        saveLoad.LoadAllOnStart();
     }
 }
