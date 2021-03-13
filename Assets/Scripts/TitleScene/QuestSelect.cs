@@ -8,12 +8,13 @@ using System;
 /// </summary>
 public class QuestSelect : MonoBehaviour {
 
-	public GlobalSingleton globalSingleton;
+	public QuestLoader questLoader;
 
 	private Button btn;
 	private int goToSceneNO = -1;
 	private String longDesc, longMSG;
 	public GameObject questDetails;
+	public int questIndex;
 
 	void Start()
 	{
@@ -39,8 +40,10 @@ public class QuestSelect : MonoBehaviour {
 
 		qd.SetActive (true);
 
-		qd.GetComponent<QuestDetail> ().setGoToScene (goToSceneNO);
-		qd.GetComponent<QuestDetail>().globalSingleton = globalSingleton;
+		QuestDetail qDetail = qd.GetComponent<QuestDetail>();
+
+		qDetail.questLoader = questLoader;
+		qDetail.questIndex = questIndex;
 		/*
 		foreach (Button b in transform.parent.GetComponentsInChildren<Button>()) {
 			b.interactable = false;
@@ -48,13 +51,10 @@ public class QuestSelect : MonoBehaviour {
 		*/
 	}
 
-	public void setGoToScene(int no){
-		goToSceneNO = no;
-	}
-
-	public void setQuestSpecifics(String longD, String longM){
+	public void setQuestSpecifics(int qIndex, String longD, String longM){
 		longDesc = longD;
 		longMSG = longM;
+		questIndex = qIndex;
 	}
 
 }

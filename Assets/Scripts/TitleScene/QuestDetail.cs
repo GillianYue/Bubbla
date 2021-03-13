@@ -7,13 +7,14 @@ using System.Collections;
 /// </summary>
 public class QuestDetail : MonoBehaviour {
 
-	public GlobalSingleton globalSingleton;
+	public QuestLoader questLoader;
 
 	public GameObject cancelScnPrefab;
 	private GameObject cancel;
 	private Button cclB;
 	public Button go;
-	private int go_to_scene = -1;
+	public int questIndex;
+
 
 	void Start () {
 		//cancel will block interaction w background UIs
@@ -26,7 +27,7 @@ public class QuestDetail : MonoBehaviour {
 		cclB = cancel.GetComponent<Button>();
 		cclB.onClick.AddListener(cancelClicked);
 
-		go.onClick.AddListener (startQuest);
+		go.onClick.AddListener (acceptQuest);
 	}
 		
 	void Update () {
@@ -38,13 +39,16 @@ public class QuestDetail : MonoBehaviour {
 		GameObject.Destroy (gameObject);
 	}
 
-	void startQuest(){
+	/// <summary>
+	/// upon taking a quest, 
+	/// </summary>
+	void acceptQuest(){
 
-		Global.Scene_To_Load = go_to_scene;
-		StartCoroutine(Global.LoadAsyncScene (1)); //TODO revise
+		//Global.Scene_To_Load = go_to_scene;
+		//StartCoroutine(Global.LoadAsyncScene (1)); //TODO revise
+
+		questLoader.acceptQuest(questIndex);
+
 	}
 
-	public void setGoToScene(int s){ //individual quests will transfer this info to quest detail
-		go_to_scene = s;
-	}
 }

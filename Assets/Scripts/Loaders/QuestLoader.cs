@@ -113,27 +113,91 @@ public class QuestLoader : Loader
         questLoaderDone = true; //data loaded and parsed
     }
 
+    public void acceptQuest(int qIndex)
+    {
+        StartCoroutine(acceptQuestCoroutine(qIndex));
+    }
+
     /// <summary>
-    /// parses setup data for a single quest, assumes quest's setupFilePath is a valid csv
+    /// 
+    /// </summary>
+    /// <param name="qIndex"></param>
+    /// <param name="setupDataRef"></param>
+    /// <returns></returns>
+    IEnumerator acceptQuestCoroutine(int qIndex)
+    {
+        //gets the setup csv content to questScript of active quest
+        string[,] setupScript = new string[1, 1];
+        yield return assignQuestSetupData(allQuests[qIndex], setupScript);
+
+        //parse events of the quest
+        List<QuestEvent> qes = parseQuestEvents(setupScript);
+
+        //assign, mark the accept status in save file
+        GlobalSingleton.Instance.questStatus.onAcceptQuest(qIndex, setupScript, qes);
+    }
+
+    /// <summary>
+    /// assumes quest's setupFilePath is a valid csv
+    /// 
+    /// setupDataRef is a double array that contains chunks of events to this quest
     /// </summary>
     /// <returns></returns>
-    IEnumerator parseAndAssignQuestSetupData(Quest q)
+    IEnumerator assignQuestSetupData(Quest q, string[,] setupDataRef)
     {
 
         TextAsset setupCSV = Resources.Load(q.setupFilePath) as TextAsset;
         if (!setupCSV) Debug.LogError("invalid csv path: " + q.setupFilePath);
 
         bool[] done = new bool[1];
-        string[,] setupData; //contains chunks of events to this quest
-        yield return LoadScene.processCSV(done, setupCSV, (string[,] d) => { setupData = d; }, false);
 
-        //TODO assign setupData to right places
+        yield return LoadScene.processCSV(done, setupCSV, (string[,] d) => { setupDataRef = d; }, false);
+
+    }
+
+    List<QuestEvent> parseQuestEvents(string[,] questScript)
+    {
+        List<QuestEvent> questEvents = new List<QuestEvent>();
+
+        int numRows = questScript.GetLength(1); bool toggle = false;
+        for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
+        {
+            if (questScript[0, r].Substring(0, 2).Equals("##"))
+            {
+                if (!toggle) //start of event
+                {
+                    QuestEvent qe = new QuestEvent();
+                    qe.eventName = questScript[0, r].Substring(2); //from the third character to end
+                    qe.startLineNumber = r; 
+                    qe.canBeTriggered = true;
+                    qe.retriggerable = false; //TODO set based on event params
+
+                    //TODO conditioning
+                    string[] conditionStrings = questScript[2, r].Split(',');
+                    foreach(string conditionString in conditionStrings)
+                    {
+                        //
+                    }
+
+                    questEvents.Add(qe);
+                }
+                else
+                {
+                    QuestEvent qe = questEvents[questEvents.Count - 1];
+                    qe.endLineNumber = r;
+                }
+                toggle = !toggle;
+            }
+        }
+
+        return questEvents;
     }
 
     public Quest getQuest(int index)
     {
         return allQuests[index];
     }
+
 
 
     /// <summary>
@@ -220,8 +284,8 @@ public class ActiveQuestData
 {
     public int activeQuestIndex; //quest id of the quest, if == -1, means not taking any quest at the moment
     public QuestProgress currQuestProgress;
-    public string[,] currQuestScript; //csv script for event chunks; line pointers of events refer to lines here
-    public List<QuestEvent> currQuestEvents;
+    [SerializeField] private string[,] currQuestScript; //csv script for event chunks; line pointers of events refer to lines here
+    [SerializeField] private List<QuestEvent> currQuestEvents;
 
     public ActiveQuestData()
     {
@@ -242,6 +306,10 @@ public class ActiveQuestData
         currQuestEvents = questEvents;
     }
 
+    public List<QuestEvent> getQuestEvents() { return currQuestEvents; }
+
+    public string[,] getQuestScript() { return currQuestScript; }
+
     //TODO etc etc
 }
 
@@ -260,7 +328,7 @@ public struct QuestEvent
 {
     public Func<bool> conditionsMet; //TODO make this serializable, or think of alternative way to solve this
     public string eventName; //tag
-    public int startLineNumber;
-    public bool canBeTriggered;
+    public int startLineNumber, endLineNumber;
+    public bool canBeTriggered, retriggerable;
 
 }

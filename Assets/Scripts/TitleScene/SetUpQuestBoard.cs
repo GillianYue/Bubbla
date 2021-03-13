@@ -101,10 +101,9 @@ public class SetUpQuestBoard : MonoBehaviour {
 			msg.text = quest.message;
         msg.color = quest.message_color;
         QuestSelect qs = q.GetComponent<QuestSelect>();
-        qs.setGoToScene(quest.scene_to_load);
-		qs.setQuestSpecifics (quest.specifics,
+		qs.setQuestSpecifics (which, quest.specifics,
 			quest.long_message);
-        qs.globalSingleton = globalSingleton;
+        qs.questLoader = questLoader;
 
         if (quest.ongoing) q.GetComponent<Image>().color = Color.cyan; //diff color for ongoing quest
 	}

@@ -36,7 +36,7 @@ public class QuestConditionManager : MonoBehaviour
     /// <param name="listener"></param>
     public void checkForEventConditions(ActionListener.Listener listener) //TODO more params
     {
-        foreach(QuestEvent qEvent in GlobalSingleton.Instance.questStatus.activeQuestData.currQuestEvents)
+        foreach(QuestEvent qEvent in GlobalSingleton.Instance.questStatus.activeQuestData.getQuestEvents())
         {
             if (qEvent.conditionsMet()) //might need parameters here too
             {
