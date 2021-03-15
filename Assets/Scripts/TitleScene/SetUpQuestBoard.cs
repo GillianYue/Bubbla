@@ -11,9 +11,6 @@ public class SetUpQuestBoard : MonoBehaviour {
     public QuestLoader questLoader;
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
-    [Inject(InjectFrom.Anywhere)]
-    public GlobalSingleton globalSingleton;
-
 
     public GameObject questGO; //the game object that can visualize quests
 
@@ -29,12 +26,18 @@ public class SetUpQuestBoard : MonoBehaviour {
         //the "height" of the rect in RectTransform of quests should always be 80
         //NOTE: this MUST be done before quests are generated
 
-        StartCoroutine(setupQuestBoard()); //eventually this is called during scene load
+        StartCoroutine(startSetup());
 	}
 	
 	void Update () {
 		
 	}
+
+    IEnumerator startSetup()
+    {
+        yield return new WaitUntil(() => GlobalSingleton.Instance.loadAllDone);
+        StartCoroutine(setupQuestBoard()); //eventually this is called during scene load
+    }
 
     /// <summary>
     /// compares player progress with the conditions of all quests to determine what should be rendered/not

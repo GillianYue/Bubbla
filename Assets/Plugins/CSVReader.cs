@@ -40,8 +40,8 @@ public class CSVReader : MonoBehaviour
 
 		// finds the max width of row
 		int width = 0; 
-			string[] firstRow = SplitCsvLine( lines[0] ); 
-			width = Mathf.Max(width, firstRow.Length);
+		string[] firstRow = SplitCsvLine( lines[0] ); 
+		width = Mathf.Max(width, firstRow.Length);
 
 		// creates new 2D string grid to output to
 		string[,] outputGrid = new string[width, matchLineWithExcel? lines.Length : lines.Length-1];
@@ -52,7 +52,7 @@ public class CSVReader : MonoBehaviour
 		for (int r = 0; r < lines.Length-1; r++)
 		{
 			string[] row = SplitCsvLine( lines[r] );
-			// Debug.Log("row length: " + row.Length+" "+lines[r]);
+			//Debug.Log("row length: " + row.Length+" "+lines[r]);
 			for (int c = 0; c < row.Length; c++) 
 			{
                 if(matchLineWithExcel)

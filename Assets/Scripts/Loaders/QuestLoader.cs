@@ -23,8 +23,9 @@ public class QuestLoader : Loader
 
     [Inject(InjectFrom.Anywhere)]
     public QuestConditionManager questConditionManager;
+    [Inject(InjectFrom.Anywhere)]
+    public ActionListenerManager actionListenerManager;
 
-    
 
     protected override void Start()
     {
@@ -135,6 +136,9 @@ public class QuestLoader : Loader
 
         //assign, mark the accept status in save file
         GlobalSingleton.Instance.questStatus.onAcceptQuest(qIndex, setupScript, qes);
+
+        //trigger on start event
+        actionListenerManager.onTriggerListener(ActionListener.Listener.onStart, new string[1]);
     }
 
     /// <summary>
@@ -209,11 +213,13 @@ public class QuestLoader : Loader
                     QuestEvent qe = new QuestEvent(eventName, startLineNumber, endLineNumber, retriggerable, conditions);
 
                     questEvents.Add(qe);
+                    print("start of event " + eventName + " at " + startLineNumber);
                 }
                 else //end of event
                 {
                     QuestEvent qe = questEvents[questEvents.Count - 1];
                     qe.endLineNumber = r;
+                    print("end of event at " + r);
                 }
                 toggle = !toggle;
             }
@@ -391,7 +397,11 @@ public class QuestEvent
             string[] conditionParams = conditionItem.Item2;
 
             switch (condition)
-            { 
+            {
+                case QuestCondition.onStart:
+                    if (listener != ActionListener.Listener.onStart) return false;
+                    Debug.Log("on start event triggered!");
+                    break;
                 case QuestCondition.tap: //conditionParam: (objIdentifier)
                     if (listener == ActionListener.Listener.interactWithCharacter ||
                         listener == ActionListener.Listener.interactWithObject)

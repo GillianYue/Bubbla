@@ -31,7 +31,7 @@ public class GameFlow : MonoBehaviour {
     public Mode currMode;
 
     //row 0 are names of the categories
-    private int pointer = 2; //indicates which line of script the game is at; starting at 2 b/c of format
+    private int pointer = -1; //indicates which line of script the game is at; starting at 2 b/c of format
     private bool pointerCheck = true;
     private bool[] loadDone;  //this bool is only for the level progress file, not everything
     public bool canMovePointer = true; //canMovePointer MUST be set to true on start
@@ -48,6 +48,7 @@ public class GameFlow : MonoBehaviour {
     void Awake()
     {
         specialDLGstarts = new ArrayList(); specialDLGends = new ArrayList();
+        currMode = Mode.GAME;
     }
 
     void Start() {
@@ -118,6 +119,7 @@ public class GameFlow : MonoBehaviour {
      * in pointer, this function is invoked.    
      */   
     private IEnumerator processCurrentLineCoroutine() { //current being where the pointer is
+        print("running line " + pointer);
 
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
             if (data[0, pointer].Equals("SPECIAL")) //this will only happen to the ending SPECIAL tags
@@ -360,6 +362,7 @@ public class GameFlow : MonoBehaviour {
     public void setPointer(int p)
     {
         pointer = p;
+        print("pointer set to " + p);
     }
 
     public void setPointerToSpecial(int index)

@@ -371,7 +371,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &135423464
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3642,6 +3642,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 23789271091681722, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: test
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 23789271091681723, guid: fe1ec531264345a4fb6ff045df505584,
         type: 3}
       propertyPath: m_Name
@@ -6525,6 +6530,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1072028089}
+    - target: {fileID: 477955644766766997, guid: 668bc50e1a491954abf8bb8e42167bfe,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 32.13965
+      objectReference: {fileID: 0}
     - target: {fileID: 5290862241748158154, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: gameControl
@@ -6655,15 +6665,25 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 1162923533
       objectReference: {fileID: 0}
+    - target: {fileID: 9219339526824295531, guid: 668bc50e1a491954abf8bb8e42167bfe,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -122.40039
+      objectReference: {fileID: 0}
     - target: {fileID: 9219339533269405907, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -174.99998
+      value: -175
       objectReference: {fileID: 0}
     - target: {fileID: 9219339533269405907, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -18.999985
+      value: -19
+      objectReference: {fileID: 0}
+    - target: {fileID: 9219339534325014367, guid: 668bc50e1a491954abf8bb8e42167bfe,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.001953125
       objectReference: {fileID: 0}
     - target: {fileID: 9219470914659307741, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}

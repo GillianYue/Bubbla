@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[SerializeField] public enum QuestCondition { tap, varEqual, varOver, varUnder }
+[SerializeField] public enum QuestCondition { onStart, tap, varEqual, varOver, varUnder }
 
 /// <summary>
 /// stores and manages conditions and transitions for sub-events within a single quest

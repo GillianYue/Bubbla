@@ -16,12 +16,12 @@ public class GameTestBehavior : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public SetUpQuestBoard qb;
 
-    public bool test, invincible;
+    public bool test, invincible, goToLineOnStart;
     public int speedUpRate;
 
     void Start()
     {
-        if (test && gf!=null)
+        if (goToLineOnStart && gf!=null)
         {
             gf.setPointer(startLine); //for testing I'm putting in what line I'm seeing in the csv file
         }

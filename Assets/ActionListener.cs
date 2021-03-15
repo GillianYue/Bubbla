@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class ActionListener : MonoBehaviour
 {
-    public enum Listener { enterSite, enterArea, interactWithObject, interactWithCharacter, hitCollider };
+    public enum Listener { onStart, enterSite, enterArea, interactWithObject, interactWithCharacter, hitCollider };
     public Listener myListenerType;
 
     [Inject(InjectFrom.Anywhere)]

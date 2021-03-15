@@ -31,6 +31,10 @@ public class ActionListenerManager : MonoBehaviour
     {
         switch (listener)
         {
+            case ActionListener.Listener.onStart:
+                questConditionManager.checkForEventConditions(listener, eventParams);
+                break;
+
             case ActionListener.Listener.enterSite:
                 //extract info specific to this type of listener
                 break;

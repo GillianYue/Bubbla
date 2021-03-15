@@ -26,12 +26,7 @@ public class SaveLoad : MonoBehaviour
     /// 
     /// will wait for the csv loaders to be done first, then load in data from the file system
     /// </summary>
-    public void LoadAllOnStart()
-    {
-        StartCoroutine(LoadAllOnStartCoroutine());
-    }
-
-    IEnumerator LoadAllOnStartCoroutine()
+    public IEnumerator LoadAllOnStartCoroutine()
     {
         yield return loadScene.waitForLoadDone();
 

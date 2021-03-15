@@ -10,7 +10,7 @@ public class TitleBGanim : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public GameFlow gameFlow;
 
-    [Inject(InjectFrom.Anywhere)]
+    //manually assign
     public Dialogue dialogue;
 
     public Sprite[] tt0To14;
