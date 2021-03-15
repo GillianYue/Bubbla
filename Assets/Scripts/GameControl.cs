@@ -61,7 +61,7 @@ public class GameControl : MonoBehaviour {
     public PaintballSpawner pSpawner;
 
     [Inject(InjectFrom.Anywhere)]
-    public GameFlow gFlow;
+    public GameFlow gameFlow;
     //Manually assign the right one
     public Dialogue dialogue;
 
@@ -125,7 +125,7 @@ public class GameControl : MonoBehaviour {
 
         if (sceneType == Mode.GAME) 
         {
-            switch (gFlow.currMode)
+            switch (gameFlow.currMode)
             {
                 case GameFlow.Mode.DLG:
                     //mouseclick
@@ -134,7 +134,7 @@ public class GameControl : MonoBehaviour {
 
                         if (dialogue.checkCurrentLineDone())
                         {//time to move pointer and print new line
-                            StartCoroutine(gFlow.movePointer()); //move to next line in script
+                            StartCoroutine(gameFlow.movePointer()); //move to next line in script
                         }
                         else if (dialogue.Skippable())
                         { //skip time
@@ -245,6 +245,7 @@ public class GameControl : MonoBehaviour {
                             // player.GetComponent<Player>().setNavigationMode(Player.Mode.FREEZE);
                             //gFlow.setPointer(ivs.getIvsGoToLine());
                             //TODO
+                            itr.interact();
                             Debug.Log("interacting with GO");
                             //non-linear way of displaying message
                         }
@@ -275,20 +276,20 @@ public class GameControl : MonoBehaviour {
             int gfP; //game flow pointer
             do
             {//once code gets here, should be ready to start gameFlow
-                if (tempPT != (gfP = gFlow.getCurrentLineNumber()))
+                if (tempPT != (gfP = gameFlow.getCurrentLineNumber()))
                 { //avoid redundant work; only rerender if changed
                     tempPT = gfP;
-                    gFlow.processCurrentLine();
+                    gameFlow.processCurrentLine();
                 }
                 yield return new WaitForSeconds(0.1f); //essentially check dialogue status every one s
-            } while (!gFlow.checkIfEnded()); //as long as there's still something to be done
+            } while (!gameFlow.checkIfEnded()); //as long as there's still something to be done
         }
     }
         
     public void startEnemyWaves(int[] w, int[] e, int[] wvwt, float[] intv, int[] spnm){
         bool[] esDone = new bool[1]; //a bool[] shared to ps and es so that they can be in sync
        pSpawner.StartSpawn (esDone);  //will end when enemySpawnerDone
-        eSpawner.StartSpawn(gFlow, w, e, wvwt, intv, spnm, esDone);
+        eSpawner.StartSpawn(gameFlow, w, e, wvwt, intv, spnm, esDone);
         bgManager.setBackgroundsActive(true);
         player.GetComponent<Player> ().enabled = true; //generation of heart, updates, etc. 
         foreach (GameObject g in gadgets) {

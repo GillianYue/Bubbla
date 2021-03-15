@@ -21,9 +21,13 @@ public class ActionListenerManager : MonoBehaviour
     /// during game, relevant listeners will call this function to indicate that the condition being listened to has happened
     /// 
     /// will talk to quest condition manager 
+    /// 
+    /// eventParams:
+    /// -[0]: id of the object triggering the action
+    /// 
     /// </summary>
     /// <param name="listener"></param>
-    public void onTriggerListener(ActionListener.Listener listener)
+    public void onTriggerListener(ActionListener.Listener listener, string[] eventParams)
     {
         switch (listener)
         {
@@ -34,7 +38,7 @@ public class ActionListenerManager : MonoBehaviour
 
                 break;
             case ActionListener.Listener.interactWithObject:
-
+                questConditionManager.checkForEventConditions(listener, eventParams);
                 break;
             //TODO more
         }

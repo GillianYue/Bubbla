@@ -17,7 +17,7 @@ public class ButtonUseScripts : MonoBehaviour
     }
 
     public void setBoolToTrue(string boolName) {
-        string[] prms = LevelScript.makeParamString("0", boolName, "true");
+        string[] prms = Global.makeParamString("0", boolName, "true");
         
         customEvents.customEvent(30, prms); 
     }

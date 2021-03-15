@@ -166,22 +166,51 @@ public class QuestLoader : Loader
             {
                 if (!toggle) //start of event
                 {
-                    QuestEvent qe = new QuestEvent();
-                    qe.eventName = questScript[0, r].Substring(2); //from the third character to end
-                    qe.startLineNumber = r; 
-                    qe.canBeTriggered = true;
-                    qe.retriggerable = false; //TODO set based on event params
+                    
+                    string eventName = questScript[0, r].Substring(2); //from the third character to end
+                    int startLineNumber = r, endLineNumber = -1; //endline will be set later
+                    bool retriggerable = false; //defaults to false
+                    bool.TryParse(questScript[1, r], out retriggerable);
 
-                    //TODO conditioning
                     string[] conditionStrings = questScript[2, r].Split(',');
-                    foreach(string conditionString in conditionStrings)
+                    List<(QuestCondition, string[])> conditions = new List<(QuestCondition, string[])>();
+
+                    //parse the conditions and store into list instantiated above
+                    foreach (string conditionString in conditionStrings)
                     {
-                        //
+                        int leftBracket = conditionString.IndexOf('['), rightBracket = conditionString.IndexOf(']');
+                        string conditionS = "", conditionParams = "";
+
+                        if (leftBracket != -1) //has params inside [ ]
+                        {
+                            conditionS = conditionString.Substring(0, leftBracket);
+                            conditionParams = conditionString.Substring(leftBracket, rightBracket - leftBracket);
+                        }
+                        else
+                        {
+                            conditionS = conditionString;
+                        }
+
+                        Debug.Log("condition: " + conditionS + " params: " + conditionParams);
+
+                        QuestCondition condition;
+                        if (Enum.TryParse<QuestCondition>(conditionS, out condition)) //parse condition
+                        {
+                            string[] eParams = conditionParams.Split(','); //parse condition params
+
+                            conditions.Add((condition, eParams));
+                        }
+                        else
+                        {
+                            Debug.LogError("parse condition failed: " + conditionString);
+                        }
                     }
+
+                    QuestEvent qe = new QuestEvent(eventName, startLineNumber, endLineNumber, retriggerable, conditions);
 
                     questEvents.Add(qe);
                 }
-                else
+                else //end of event
                 {
                     QuestEvent qe = questEvents[questEvents.Count - 1];
                     qe.endLineNumber = r;
@@ -192,6 +221,8 @@ public class QuestLoader : Loader
 
         return questEvents;
     }
+
+
 
     public Quest getQuest(int index)
     {
@@ -320,15 +351,80 @@ public class QuestProgress
     //TODO
 }
 
+
 /// <summary>
 /// corresponds to a block of event in a csv file (but only stores pointers to start and end line), has trigger conditions
 /// </summary>
 [Serializable]
-public struct QuestEvent
+public class QuestEvent
 {
-    public Func<bool> conditionsMet; //TODO make this serializable, or think of alternative way to solve this
+    //public Func<bool> conditionsMet; //TODO make this serializable, or think of alternative way to solve this
+    public List<(QuestCondition, string[])> conditions; //list of tuples (each with conditionType and params)
     public string eventName; //tag
     public int startLineNumber, endLineNumber;
     public bool canBeTriggered, retriggerable;
 
+    public QuestEvent(string sEventName, int startLine, int endLine, bool bRetriggerable, List<(QuestCondition, string[])> lConditions)
+    {
+        eventName = sEventName;
+        startLineNumber = startLine;
+        endLineNumber = endLine;
+        retriggerable = bRetriggerable;
+        conditions = lConditions;
+    }
+
+    /// <summary>
+    /// checks if all conditions are met for this event.
+    /// 
+    /// a condition's param comes from its quest setup file; each event has conditions that hold certain parameters
+    /// a listener's param comes from the object that triggers the listener
+    /// 
+    /// </summary>
+    /// <param name="listener"></param>
+    /// <param name="listenerParams"></param>
+    /// <returns></returns>
+    public bool conditionsMet(ActionListener.Listener listener, string[] listenerParams)
+    {
+        foreach((QuestCondition, string[]) conditionItem in conditions)
+        {
+            QuestCondition condition = conditionItem.Item1;
+            string[] conditionParams = conditionItem.Item2;
+
+            switch (condition)
+            { 
+                case QuestCondition.tap: //conditionParam: (objIdentifier)
+                    if (listener == ActionListener.Listener.interactWithCharacter ||
+                        listener == ActionListener.Listener.interactWithObject)
+                    {
+                        if (conditionParams.Length == 1 && conditionParams[0] == "") return false;
+                        //for now, tap only checks for one obj
+
+                        if (!conditionParams[0].Equals(listenerParams[0])) return false; //tapped obj identifier != condition required identifier
+                        //else, proceed to next condition
+
+                        Debug.Log("condition met, tapped on " + conditionParams[0]);
+                    }
+                    else
+                    {
+                        return false; //condition not met
+                    }
+                    break;
+                case QuestCondition.varEqual: //conditionParam: (varName, compareValue)
+
+                    break;
+                case QuestCondition.varOver: //same as above
+
+                    break;
+                case QuestCondition.varUnder: //same as above
+
+                    break;
+                default:
+                    Debug.LogError("condition not recognized: " + condition);
+                    break;
+
+            }
+        }
+
+        return true; //counts as condition met if all conditions to this event are met
+    }
 }

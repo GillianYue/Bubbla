@@ -99,13 +99,17 @@ public class GameFlow : MonoBehaviour {
 
     public void processCurrentLine()
     {
+
         if (processLineInstance != null)
         {
             StopCoroutine(processLineInstance);
         }
 
-        processLineInstance = processCurrentLineCoroutine();
-        StartCoroutine(processLineInstance);
+        if (pointer != -1) //when pointer is -1 and this function is called, do nothing and wait
+        {
+            processLineInstance = processCurrentLineCoroutine();
+            StartCoroutine(processLineInstance);
+        }
     }
 
     /**

@@ -32,25 +32,25 @@ public class L1 : LevelScript
 
         player.respawn();
 
-        string[] pauseMover = makeParamString("2", "0", "bg");
+        string[] pauseMover = Global.makeParamString("2", "0", "bg");
         customEvents.setScriptBoolean(new bool[1], pauseMover);
 
         customEvents.findByIdentifier("bg").GetComponent<BGMover>().revertToStartingPos();
 
         bool[] vfxDone = new bool[1];
-        string[] vfxPrms = makeParamString("1", "");
+        string[] vfxPrms = Global.makeParamString("1", "");
         StartCoroutine(customEvents.fadeInOutToColor(vfxDone, vfxPrms)); //fade in to black
 
         yield return new WaitUntil(() => vfxDone[0]); //will wait until vfx done
         yield return new WaitForSeconds(2);
 
-        string[] prms2 = makeParamString("ps", "0"); //setting ship inactive
+        string[] prms2 = Global.makeParamString("ps", "0"); //setting ship inactive
         StartCoroutine(customEvents.setGOActive(new bool[1], prms2));
 
         //clear scene, revert back to beginning bg
 
         bool[] vfxDone2 = new bool[1];
-        string[] vfxPrms2 = makeParamString("0", ""); //fade out to bg
+        string[] vfxPrms2 = Global.makeParamString("0", ""); //fade out to bg
         StartCoroutine(customEvents.fadeInOutToColor(vfxDone2, vfxPrms2));
         yield return new WaitUntil(() => vfxDone2[0]); //will wait until vfx done
 
@@ -94,8 +94,8 @@ public class L1 : LevelScript
             ps = customEvents.findByIdentifier("ps").GetComponent<PirateShip>();
 
         bool[] bossReady = new bool[1];
-        customEvents.loadAndPlayBGM(new bool[1], makeParamString("1", "sea_boss(temp)", "1", "1"));
-        StartCoroutine(customEvents.setGOActive(bossReady, makeParamString("ps", "1", "0")));
+        customEvents.loadAndPlayBGM(new bool[1], Global.makeParamString("1", "sea_boss(temp)", "1", "1"));
+        StartCoroutine(customEvents.setGOActive(bossReady, Global.makeParamString("ps", "1", "0")));
 
         yield return new WaitUntil(() => bossReady[0]);
         gameFlow.incrementPointer();
@@ -118,8 +118,8 @@ public class L1 : LevelScript
     IEnumerator bossFight()
     {
         bool[] bossReady = new bool[1];
-        customEvents.loadAndPlayBGM(new bool[1], makeParamString("1", "woods_boss", "1", "1"));
-        StartCoroutine(customEvents.setGOActive(bossReady, makeParamString("ps", "1", "0")));
+        customEvents.loadAndPlayBGM(new bool[1], Global.makeParamString("1", "woods_boss", "1", "1"));
+        StartCoroutine(customEvents.setGOActive(bossReady, Global.makeParamString("ps", "1", "0")));
 
         yield return new WaitUntil(() => bossReady[0]);
 
@@ -167,11 +167,11 @@ public class L1 : LevelScript
                 int r = Random.Range(100, 250);
                 int g = Random.Range(100, 250);
                 int b = Random.Range(100, 250);
-                string[] prms = makeParamString(r+","+g+","+b, "-220,660,0", "ball", "3", "0");
+                string[] prms = Global.makeParamString(r+","+g+","+b, "-220,660,0", "ball", "3", "0");
 
                 customEvents.genPaintball(new bool[1], prms); //genP is a void
 
-                string[] prms2 = makeParamString("ball", "-220", "250", "3");
+                string[] prms2 = Global.makeParamString("ball", "-220", "250", "3");
                 customEvents.moveToInSecs(new bool[1], prms2);
             }
 

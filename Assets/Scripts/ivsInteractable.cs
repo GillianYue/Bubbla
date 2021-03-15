@@ -46,9 +46,11 @@ public class ivsInteractable : interactable
 
     public override void interact()
     {
-        //trigger listener
-        actionListenerManager.onTriggerListener(ActionListener.Listener.interactWithObject);
+        string[] eventParams = Global.makeParamString(GetComponent<identifier>().id);
 
+        //trigger listener
+        actionListenerManager.onTriggerListener(ActionListener.Listener.interactWithObject, eventParams);
+        
     }
 
 }
