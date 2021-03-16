@@ -18,25 +18,30 @@ public class LoadScene : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public QuestLoader questLoader;
 
-
     [Inject(InjectFrom.Anywhere)]
     public GameFlow gameFlow;
     [Inject(InjectFrom.Anywhere)]
     public TravelSceneLoader travelSceneLoader;
+    [Inject(InjectFrom.Anywhere)]
+    public SaveLoad saveLoad;
 
     //allLoadersToCheck will be added loader from the subloaders separately
     public List<Loader> allLoadersToCheck;
 
     private int scn_to_load;
 
+    public bool allLoadersDone = false;
+
 	void Start () {
 		scn_to_load = Global.Scene_To_Load;
-	}
+        StartCoroutine(waitForLoadersDone()); //loaders will auto start, just wait til all done to set the variable right
+        
+    }
 	
 	void Update () {
 	}
 
-    public IEnumerator waitForLoadDone()
+    private IEnumerator waitForLoadersDone()
     {
         //wait until all loaders are ready for game
         bool allDone = false;
@@ -49,8 +54,15 @@ public class LoadScene : MonoBehaviour {
             if (!allDone || allLoadersToCheck.Count == 0) yield return new WaitForSeconds(0.5f);
         }
 
+        allLoadersDone = true;
         print("all loaders are loaded!");
     }
+
+    /// <summary>
+    /// checks if everything needed to be loaded are properly being done so, including the loaders and S/L stuff
+    /// </summary>
+    /// <returns></returns>
+    public bool isAllLoadDone() { return allLoadersDone && saveLoad.allSaveLoadDone; }
 
     public void loadScene()
     {

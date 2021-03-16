@@ -9,11 +9,13 @@ public class SaveLoad : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public LoadScene loadScene;
 
+    public bool allSaveLoadDone = false;
+
     string playerInfo = "/playerInfo.dat", allQuestsStatus = "/questStatus.dat";
 
     void Start()
     {
-        
+        StartCoroutine(LoadAllOnStartCoroutine());
     }
 
     void Update()
@@ -28,9 +30,12 @@ public class SaveLoad : MonoBehaviour
     /// </summary>
     public IEnumerator LoadAllOnStartCoroutine()
     {
-        yield return loadScene.waitForLoadDone();
+        yield return new WaitUntil(() => loadScene.allLoadersDone); //quest status creation needs numQuests, which needs questLoader
+        Debug.Log("load Scene all loaders done!");
 
         GlobalSingleton.Instance.questStatus = LoadQuestStatus(loadScene.questLoader.numOfQuests);
+
+        allSaveLoadDone = true;
     }
 
     public void SavePlayerInfo(PlayerData playerData)
@@ -65,6 +70,7 @@ public class SaveLoad : MonoBehaviour
     {
         QuestStatusData d;
         if((d = LoadFileOfType<QuestStatusData>(allQuestsStatus)) != null){
+            Debug.Log("old questStatusData found");
             return d;
         }
         else

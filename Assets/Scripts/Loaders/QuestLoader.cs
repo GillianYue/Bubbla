@@ -146,6 +146,25 @@ public class QuestLoader : Loader
     }
 
     /// <summary>
+    /// used to test quest scripts 
+    /// 
+    /// to use, assign quest setup script to DlgCsv in GameFlow, will call this command to parse the events within,
+    /// and register the quest as the currently active quest (with a false quest id)
+    /// </summary>
+    public void acceptQuestTestUse(string[,] setupScript)
+    {
+        List<QuestEvent> qes = parseQuestEvents(setupScript);
+
+        //assign, mark the accept status in save file
+        GlobalSingleton.Instance.questStatus.onAcceptQuest(0, setupScript, qes);
+        gameFlow.setData(setupScript, new bool[1]); //sets gameFlow's active script to the active quest's script
+
+        //trigger on start event
+        actionListenerManager.onTriggerListener(ActionListener.Listener.onStart, new string[1]);
+    }
+
+
+    /// <summary>
     /// assumes quest's setupFilePath is a valid csv
     /// 
     /// setupDataRef is a double array that contains chunks of events to this quest
@@ -170,10 +189,8 @@ public class QuestLoader : Loader
         int numRows = questScript.GetLength(1); bool toggle = false;
         for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
         {
-            print("parse quest one row: " + questScript[0, r]);
             if (questScript[0, r].Length >=2 && questScript[0, r].Substring(0, 2).Equals("##"))
             {
-                print("equals ##");
                 if (!toggle) //start of event
                 {
                     
@@ -195,7 +212,7 @@ public class QuestLoader : Loader
                         if (leftBracket != -1) //has params inside [ ]
                         {
                             conditionS = conditionString.Substring(0, leftBracket);
-                            conditionParams = conditionString.Substring(leftBracket, rightBracket - leftBracket);
+                            conditionParams = conditionString.Substring(leftBracket+1, rightBracket - leftBracket-1);
                         }
                         else
                         {

@@ -16,8 +16,12 @@ public class GameFlow : MonoBehaviour {
     public CustomEvents customEvents;
     [Inject(InjectFrom.Anywhere)]
     public Player player;
+    [Inject(InjectFrom.Anywhere)]
+    public LoadScene loadScene;
+
     //Manually assign dialogue, since can be duplicate testers
     public Dialogue dialogue;
+
 
     [Inject(InjectFrom.Anywhere)]
     public EnemyLoader enemyLoader;
@@ -25,6 +29,8 @@ public class GameFlow : MonoBehaviour {
     public CharacterLoader characterLoader;
     [Inject(InjectFrom.Anywhere)]
     public ItemLoader itemLoader;
+    [Inject(InjectFrom.Anywhere)]
+    public QuestLoader questLoader;
 
     //IVS stands for investigate
     public enum Mode { DLG, GAME, IVS, END };
@@ -52,12 +58,19 @@ public class GameFlow : MonoBehaviour {
     }
 
     void Start() {
+        StartCoroutine(initializeCoroutine());
+    }
+
+    IEnumerator initializeCoroutine()
+    {
         //TODO move this to separate loader
         loadDone = new bool[1];
         bool[] parseDone = new bool[1];
         if (DlgCsv != null) StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone, true));
         else parseDone[0] = true;
 
+        yield return new WaitUntil(()=>loadScene.isAllLoadDone());
+        questLoader.acceptQuestTestUse(data); //TODO only to test out quest scripts
     }
 
 
@@ -73,10 +86,10 @@ public class GameFlow : MonoBehaviour {
     public void setData(string[,] d, bool[] parseDone)
     {
         data = d;
-        StartCoroutine(parseDLGcsvData(parseDone));
+        //StartCoroutine(parseCsvSpecials(parseDone));
     }
 
-    IEnumerator parseDLGcsvData(bool[] parseDone)
+    IEnumerator parseCsvSpecials(bool[] parseDone)
     {
         yield return new WaitUntil(() => (data != null));
         int numRows = data.GetLength(1); bool toggle = false;
@@ -120,7 +133,6 @@ public class GameFlow : MonoBehaviour {
      * in pointer, this function is invoked.    
      */   
     private IEnumerator processCurrentLineCoroutine() { //current being where the pointer is
-        print("running line " + pointer);
 
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
             if (data[0, pointer].Equals("SPECIAL")) //this will only happen to the ending SPECIAL tags

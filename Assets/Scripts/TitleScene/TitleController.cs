@@ -87,7 +87,7 @@ public class TitleController : MonoBehaviour {
         loadDone = new bool[1];
         bool[] parseDone = new bool[1];
         yield return StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone, false)); //TODO this script is not a loader
-        yield return loadScene.waitForLoadDone();
+        yield return new WaitUntil(() => loadScene.isAllLoadDone());
 
         yield return StartCoroutine(startTitleScreenAnim());
         yield return StartCoroutine(moveGameFlowPointer());
@@ -172,7 +172,7 @@ public class TitleController : MonoBehaviour {
 
     IEnumerator moveGameFlowPointer()
     {
-        yield return loadScene.waitForLoadDone();
+        yield return new WaitUntil(() => loadScene.isAllLoadDone());
 
 
             int tempPT = -1; //temp pointer, is passive, updates as gFlow pointer updates

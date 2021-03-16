@@ -24,6 +24,7 @@ public class ScreenShake : MonoBehaviour
     // The initial position of the GameObject
     Vector3 initialPosition;
     public bool infiniteShake = false;
+    public bool active = false;
 
     void Awake()
     {
@@ -39,17 +40,21 @@ public class ScreenShake : MonoBehaviour
 
     void Update()
     {
-        if (infiniteShake || shakeDuration > 0)
+        if (active)
         {
-            Vector3 temp = initialPosition + Random.insideUnitSphere * shakeMagnitude;
-            shakeTransform.localPosition = new Vector3(Mathf.FloorToInt(temp.x), Mathf.FloorToInt(temp.y), Mathf.FloorToInt(temp.z));
+            if (infiniteShake || shakeDuration > 0)
+            {
+                Vector3 temp = initialPosition + Random.insideUnitSphere * shakeMagnitude;
+                shakeTransform.localPosition = new Vector3(Mathf.FloorToInt(temp.x), Mathf.FloorToInt(temp.y), Mathf.FloorToInt(temp.z));
 
-            if(!infiniteShake) shakeDuration -= Time.deltaTime * dampingSpeed;
-        }
-        else
-        {
-            shakeDuration = 0f;
-            shakeTransform.localPosition = initialPosition;
+                if (!infiniteShake) shakeDuration -= Time.deltaTime * dampingSpeed;
+            }
+            else
+            { //shake duration up, auto deactivate
+                shakeDuration = 0f;
+                shakeTransform.localPosition = initialPosition;
+                active = false;
+            }
         }
     }
 
@@ -62,10 +67,18 @@ public class ScreenShake : MonoBehaviour
         dampingSpeed = dampingSpd;
     }
 
-    public void StopInfiniteShake() { infiniteShake = false; }
+    public void StopInfiniteShake() { infiniteShake = false; active = false; }
 
+    /// <summary>
+    /// triggers a screenShake session, will activate the script. The script auto-deactivates upon completing the duration requirement
+    /// </summary>
+    /// <param name="duration"></param>
+    /// <param name="magnitude"></param>
+    /// <param name="dampingSpd"></param>
     public void TriggerShake(float duration, float magnitude, float dampingSpd)
     {
+        active = true;
+
         if (duration != -1)
         {
             shakeDuration = duration;

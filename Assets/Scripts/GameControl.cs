@@ -121,7 +121,6 @@ public class GameControl : MonoBehaviour {
     }
 
     void Update () {
-        print("ck touch is " + ckTouch);
 
         if (sceneType == Mode.GAME) 
         {
@@ -268,7 +267,7 @@ public class GameControl : MonoBehaviour {
 
     IEnumerator StartGame(){ 
 
-        yield return loadScene.waitForLoadDone();
+        yield return new WaitUntil(() => loadScene.isAllLoadDone());
 
         if (sceneType == Mode.GAME)
         {

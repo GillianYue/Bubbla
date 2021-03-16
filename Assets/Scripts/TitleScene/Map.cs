@@ -51,7 +51,7 @@ public class Map : MonoBehaviour
 
     IEnumerator Initialize()
     {
-        yield return loadScene.waitForLoadDone();
+        yield return new WaitUntil(() => loadScene.isAllLoadDone());
 
         SpawnSiteDots();
     }

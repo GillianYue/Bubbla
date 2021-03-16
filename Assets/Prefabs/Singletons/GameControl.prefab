@@ -15,8 +15,6 @@ GameObject:
   - component: {fileID: 1601733202741074699}
   - component: {fileID: 8532775518385008724}
   - component: {fileID: 8534146758958614026}
-  - component: {fileID: 8534146758958614021}
-  - component: {fileID: 8534146758958614020}
   - component: {fileID: 1664401428535043028}
   m_Layer: 0
   m_Name: GameControl
@@ -71,7 +69,7 @@ MonoBehaviour:
   customEvents: {fileID: 0}
   eSpawner: {fileID: 1622567455761119959}
   pSpawner: {fileID: 8534146758958614026}
-  gFlow: {fileID: 8532775518385008724}
+  gameFlow: {fileID: 0}
   dialogue: {fileID: 0}
   loadScene: {fileID: 0}
   backpack: {fileID: 0}
@@ -302,7 +300,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1664401428535043029}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2017e43e561624e95b41ccb093eded53, type: 3}
   m_Name: 
@@ -339,30 +337,6 @@ MonoBehaviour:
   pbSpawnSwitch: 0
   itemLoader: {fileID: 0}
   currProcessToggle: 
---- !u!114 &8534146758958614021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664401428535043029}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 636c57210ed6ae747a76e1d68f708313, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8534146758958614020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664401428535043029}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dcfd47b8784843e790f1ff1792de667, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1664401428535043028
 MonoBehaviour:
   m_ObjectHideFlags: 0

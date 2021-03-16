@@ -1,0 +1,287 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1961527694
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1961527696}
+  - component: {fileID: 1961527695}
+  - component: {fileID: 1961527697}
+  - component: {fileID: 1961527698}
+  - component: {fileID: 1961527699}
+  - component: {fileID: 8793986423284785346}
+  m_Layer: 0
+  m_Name: Loaders
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1961527696
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961527694}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -73.49879, y: -6.517193, z: -7840.41}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1078953683312498518}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1961527695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961527694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49003ebb7c1da464588dc946210fc619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadScene: {fileID: 0}
+  questCsv: {fileID: 4900000, guid: 5fbf344abca6c4d4e8da792403a05bb2, type: 3}
+  numOfQuests: 0
+  gameFlow: {fileID: 0}
+  saveLoad: {fileID: 0}
+  questConditionManager: {fileID: 0}
+  actionListenerManager: {fileID: 0}
+--- !u!114 &1961527697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961527694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62dcb1dc5db314fb586e548a5d51563a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadScene: {fileID: 0}
+  itemCsv: {fileID: 4900000, guid: 4831a8e7eb4434590a9c1f83b7721ad2, type: 3}
+  itemName: []
+  itemDescriptions: []
+  sizeScale: []
+  colliderScale: []
+  s0_anim: []
+  s1_anim: []
+  s2_anim: []
+  S0_ANIM: []
+  S1_ANIM: []
+  S2_ANIM: []
+  S0_SPRITE: []
+  itemType: 
+--- !u!114 &1961527698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961527694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73eb27d22fe65445b8e143af1ad10b0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadScene: {fileID: 0}
+  characterCsv: {fileID: 4900000, guid: 70c7380e75e8d4fd4b2f94b876026158, type: 3}
+  bgColor: []
+--- !u!114 &1961527699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961527694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdddfce2ab6086044a46ec4b6e191151, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadScene: {fileID: 0}
+  mapCsv: {fileID: 4900000, guid: b6381bccad30b47469c7f146d9f44ffe, type: 3}
+  siteLocations: []
+  siteNames: []
+  defaultSublocationSprite: {fileID: 0}
+--- !u!114 &8793986423284785346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961527694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86b8e0854a5214c129a705390c45d1b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadScene: {fileID: 0}
+  enemyCsv: {fileID: 4900000, guid: 150feddb12b884a71af1051de641b222, type: 3}
+  gameControl: {fileID: 0}
+  prefabHolder: {fileID: 0}
+--- !u!1 &1078953683312498512
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1078953683312498518}
+  - component: {fileID: 1078953683312498513}
+  - component: {fileID: 1078953683312498516}
+  - component: {fileID: 1078953683312498519}
+  - component: {fileID: 1078953683312498517}
+  - component: {fileID: 1078953683312498538}
+  - component: {fileID: 1078953683312498539}
+  - component: {fileID: 1070624056}
+  m_Layer: 0
+  m_Name: GlobalSingleton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1078953683312498518
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078953683312498512}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 148.27873, y: 57.065445, z: -532.7239}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1961527696}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1078953683312498513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078953683312498512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 827000fdf34a8df408b401f1ba717511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questStatus:
+    allQuestsStatus: 
+    activeQuestData:
+      activeQuestIndex: -1
+      currQuestEvents: []
+  questConditionManager: {fileID: 0}
+  loadScene: {fileID: 0}
+  saveLoad: {fileID: 0}
+--- !u!114 &1078953683312498516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078953683312498512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a84b6a681cf8bb84cbb22c79bc05d617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveLoad: {fileID: 0}
+  questLoader: {fileID: 0}
+  gameFlow: {fileID: 0}
+--- !u!114 &1078953683312498519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078953683312498512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ce31b61ad420f44098a09fc1ab57b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questConditionManager: {fileID: 0}
+--- !u!114 &1078953683312498517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078953683312498512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dcfd47b8784843e790f1ff1792de667, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadScene: {fileID: 0}
+  allSaveLoadDone: 0
+--- !u!114 &1078953683312498538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078953683312498512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f057fad55f3c42b4a6ea9e41f311bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyLoader: {fileID: 0}
+  characterLoader: {fileID: 0}
+  itemLoader: {fileID: 0}
+  questLoader: {fileID: 0}
+  gameFlow: {fileID: 0}
+  travelSceneLoader: {fileID: 0}
+  saveLoad: {fileID: 0}
+  allLoadersToCheck: []
+  allLoadersDone: 0
+--- !u!114 &1078953683312498539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078953683312498512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2017e43e561624e95b41ccb093eded53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameControl: {fileID: 0}
+  customEvents: {fileID: 0}
+  player: {fileID: 0}
+  loadScene: {fileID: 0}
+  dialogue: {fileID: 0}
+  enemyLoader: {fileID: 0}
+  characterLoader: {fileID: 0}
+  itemLoader: {fileID: 0}
+  questLoader: {fileID: 0}
+  currMode: 0
+  canMovePointer: 1
+  DlgCsv: {fileID: 4900000, guid: d919ebafb8312524093871f6e6ddc2ff, type: 3}
+--- !u!114 &1070624056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078953683312498512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 636c57210ed6ae747a76e1d68f708313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

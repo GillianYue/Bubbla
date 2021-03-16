@@ -22,8 +22,6 @@ public class GlobalSingleton : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
 
-    public bool loadAllDone = false;
-
     //TODO temp cache data on current quest progress
 
     void Awake()
@@ -43,12 +41,7 @@ public class GlobalSingleton : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(startLoad());
+
     }
 
-    IEnumerator startLoad()
-    {
-        yield return StartCoroutine(saveLoad.LoadAllOnStartCoroutine());
-        loadAllDone = true;
-    }
 }

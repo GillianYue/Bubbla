@@ -11,6 +11,8 @@ public class SetUpQuestBoard : MonoBehaviour {
     public QuestLoader questLoader;
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
+    [Inject(InjectFrom.Anywhere)]
+    public LoadScene loadScene;
 
     public GameObject questGO; //the game object that can visualize quests
 
@@ -35,7 +37,7 @@ public class SetUpQuestBoard : MonoBehaviour {
 
     IEnumerator startSetup()
     {
-        yield return new WaitUntil(() => GlobalSingleton.Instance.loadAllDone);
+        yield return new WaitUntil(() => loadScene.isAllLoadDone());
         StartCoroutine(setupQuestBoard()); //eventually this is called during scene load
     }
 

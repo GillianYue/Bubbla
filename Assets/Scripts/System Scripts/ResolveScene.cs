@@ -11,12 +11,18 @@ using System;
 /// </summary>
 public class ResolveScene : MonoBehaviour
 {
+    private DependencyResolver dependencyResolver;
     /// <summary>
     /// Resolve scene dependencies on awake.
     /// </summary>
     void Awake()
     {
-        var dependencyResolver = new DependencyResolver();
+        dependencyResolver = new DependencyResolver();
+        resolveScene();
+    }
+
+    public void resolveScene()
+    {
         dependencyResolver.ResolveScene();
     }
 }

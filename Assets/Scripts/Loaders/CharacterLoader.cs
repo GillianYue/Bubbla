@@ -94,7 +94,7 @@ public class CharacterLoader : Loader
             //bool1Name[r - 1] = data[2, r]; left blank for now
             //bool2Name[r - 1] = data[3, r];
 
-            pathName[r - 1] = data[4, r]; //col 4 is file path;
+            pathName[r - 1] = data[4, r]; //col 4 is file path for animator
             int R, G, B;
             int.TryParse(data[5, r], out R);
             int.TryParse(data[6, r], out G);
@@ -135,6 +135,7 @@ public class CharacterLoader : Loader
                 int.TryParse(d[2, i], out stateNum);
                 checkExpandList(Part1AnimationClipNames[cCode], stateNum, "");
                 Part1AnimationClipNames[cCode][stateNum] = animClipName;
+                //print("part 1 for char " + cCode + " state " + stateNum + " recorded: " + animClipName);
             } else if (d[3, i] != "") //PART 2 layer
             {
                 int.TryParse(d[3, i], out stateNum);
