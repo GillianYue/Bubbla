@@ -4625,6 +4625,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1712681500}
   - component: {fileID: 1712681499}
+  - component: {fileID: 1712681502}
+  - component: {fileID: 1712681501}
+  - component: {fileID: 1712681503}
+  - component: {fileID: 1712681504}
+  - component: {fileID: 1712681505}
   m_Layer: 0
   m_Name: GlobalSingleton
   m_TagString: Untagged
@@ -4650,6 +4655,7 @@ MonoBehaviour:
       activeQuestIndex: -1
       currQuestEvents: []
   questConditionManager: {fileID: 0}
+  loadScene: {fileID: 0}
   saveLoad: {fileID: 0}
   loadAllDone: 0
 --- !u!4 &1712681500
@@ -4666,6 +4672,88 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1712681501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712681498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ce31b61ad420f44098a09fc1ab57b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questConditionManager: {fileID: 0}
+--- !u!114 &1712681502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712681498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a84b6a681cf8bb84cbb22c79bc05d617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveLoad: {fileID: 0}
+  questLoader: {fileID: 0}
+  gameFlow: {fileID: 0}
+--- !u!114 &1712681503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712681498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dcfd47b8784843e790f1ff1792de667, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadScene: {fileID: 0}
+--- !u!114 &1712681504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712681498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f057fad55f3c42b4a6ea9e41f311bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyLoader: {fileID: 0}
+  characterLoader: {fileID: 0}
+  itemLoader: {fileID: 0}
+  questLoader: {fileID: 0}
+  gameFlow: {fileID: 0}
+  travelSceneLoader: {fileID: 0}
+  allLoadersToCheck: []
+--- !u!114 &1712681505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712681498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2017e43e561624e95b41ccb093eded53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameControl: {fileID: 0}
+  customEvents: {fileID: 0}
+  player: {fileID: 0}
+  dialogue: {fileID: 7803236160183312921}
+  enemyLoader: {fileID: 0}
+  characterLoader: {fileID: 0}
+  itemLoader: {fileID: 0}
+  currMode: 0
+  canMovePointer: 1
+  DlgCsv: {fileID: 0}
 --- !u!1 &1755090236
 GameObject:
   m_ObjectHideFlags: 0
@@ -5194,6 +5282,7 @@ MonoBehaviour:
   loadScene: {fileID: 0}
   questCsv: {fileID: 4900000, guid: 5fbf344abca6c4d4e8da792403a05bb2, type: 3}
   numOfQuests: 0
+  gameFlow: {fileID: 0}
   saveLoad: {fileID: 0}
   questConditionManager: {fileID: 0}
   actionListenerManager: {fileID: 0}
@@ -5663,6 +5752,16 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 2937260654583291516}
+    - target: {fileID: 4228194099439760995, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -175
+      objectReference: {fileID: 0}
+    - target: {fileID: 4228194099439760995, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -19
+      objectReference: {fileID: 0}
     - target: {fileID: 5212616125501340030, guid: fe1ec531264345a4fb6ff045df505584,
         type: 3}
       propertyPath: useDialogueTester
@@ -5864,7 +5963,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224000013425495797}
   - component: {fileID: 222000013873740887}
-  - component: {fileID: 114000010916564663}
   m_Layer: 0
   m_Name: Background
   m_TagString: Background
@@ -6009,8 +6107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4538050846976347}
   - component: {fileID: 7022139207735023327}
-  - component: {fileID: 7022139207735023326}
-  - component: {fileID: 1657387544998674}
+  - component: {fileID: 1657387544998673}
   m_Layer: 0
   m_Name: TitleGameControl
   m_TagString: GameController
@@ -6018,7 +6115,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1657387544998674
+--- !u!114 &1657387544998673
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6027,16 +6124,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 1657387544998671}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f057fad55f3c42b4a6ea9e41f311bb6, type: 3}
+  m_Script: {fileID: 11500000, guid: ddc824e5958e040bb9f5cf71e78cc6c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyLoader: {fileID: 0}
-  characterLoader: {fileID: 0}
-  itemLoader: {fileID: 0}
-  questLoader: {fileID: 0}
   gameFlow: {fileID: 0}
-  travelSceneLoader: {fileID: 0}
-  allLoadersToCheck: []
+  loadScene: {fileID: 0}
+  dialogue: {fileID: 7803236160183312921}
+  tt0To14:
+  - {fileID: 21300000, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300002, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300004, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300006, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300008, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300010, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300012, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300014, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300016, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300018, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300020, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300022, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300024, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300026, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  - {fileID: 21300028, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
+  UIBar1: {fileID: 1000011663317159, guid: c46c958f312a04a879549632313b625d, type: 3}
+  UIBar2: {fileID: 1000010502991189, guid: c46c958f312a04a879549632313b625d, type: 3}
+  spritesParent: {fileID: 1000010120952021}
+  texts:
+  - {fileID: 114000012455408782, guid: c46c958f312a04a879549632313b625d, type: 3}
+  - {fileID: 114000012117471124, guid: c46c958f312a04a879549632313b625d, type: 3}
+  clock: {fileID: 1000012399544030, guid: c46c958f312a04a879549632313b625d, type: 3}
+  startAnimWait: 0.04
+  DlgCsv: {fileID: 4900000, guid: 8beea174460c24bc792b666c7fcbbfd3, type: 3}
 --- !u!4 &4538050846976347
 Transform:
   m_ObjectHideFlags: 0
@@ -6080,44 +6198,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &114000010916564663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000010120952021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc824e5958e040bb9f5cf71e78cc6c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameFlow: {fileID: 0}
-  dialogue: {fileID: 7803236160183312921}
-  tt0To14:
-  - {fileID: 21300000, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300002, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300004, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300006, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300008, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300010, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300012, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300014, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300016, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300018, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300020, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300022, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300024, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300026, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  - {fileID: 21300028, guid: 2d8e56410fe6540aa9620d98004e2734, type: 3}
-  UIBar1: {fileID: 1000011663317159, guid: c46c958f312a04a879549632313b625d, type: 3}
-  UIBar2: {fileID: 1000010502991189, guid: c46c958f312a04a879549632313b625d, type: 3}
-  texts:
-  - {fileID: 114000012455408782, guid: c46c958f312a04a879549632313b625d, type: 3}
-  - {fileID: 114000012117471124, guid: c46c958f312a04a879549632313b625d, type: 3}
-  clock: {fileID: 1000012399544030, guid: c46c958f312a04a879549632313b625d, type: 3}
-  startAnimWait: 0.04
-  DlgCsv: {fileID: 4900000, guid: 8beea174460c24bc792b666c7fcbbfd3, type: 3}
 --- !u!114 &114000011614392152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9909,19 +9989,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7022139207735023326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1657387544998671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dcfd47b8784843e790f1ff1792de667, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  loadScene: {fileID: 0}
 --- !u!114 &7022139207735023327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10803,7 +10870,8 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 2937260654583291516}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5707735007541503171, guid: 355e0142abffa41a18398d46f1c60f2b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 355e0142abffa41a18398d46f1c60f2b, type: 3}
 --- !u!114 &7598917217823231398
 MonoBehaviour:

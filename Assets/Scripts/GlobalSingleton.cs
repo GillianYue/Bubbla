@@ -12,8 +12,13 @@ public class GlobalSingleton : MonoBehaviour
     public static GlobalSingleton Instance;
 
     public QuestStatusData questStatus; //stores (in)active statuses for all quests as well as activeQuestData
+
+
+    [Inject(InjectFrom.Anywhere)]
     public QuestConditionManager questConditionManager; //stored event conditions for a quest should persist through scenes
 
+    [Inject(InjectFrom.Anywhere)]
+    public LoadScene loadScene;
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
 

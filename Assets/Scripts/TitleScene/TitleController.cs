@@ -5,10 +5,12 @@ using System.Collections;
 /// <summary>
 /// animates starting scene UI
 /// </summary>
-public class TitleBGanim : MonoBehaviour {
+public class TitleController : MonoBehaviour {
 
     [Inject(InjectFrom.Anywhere)]
     public GameFlow gameFlow;
+    [Inject(InjectFrom.Anywhere)]
+    public LoadScene loadScene;
 
     //manually assign
     public Dialogue dialogue;
@@ -16,6 +18,7 @@ public class TitleBGanim : MonoBehaviour {
     public Sprite[] tt0To14;
 	//RGB of this background: r68 g135 b152
 	public GameObject UIBar1, UIBar2;
+    public GameObject spritesParent; //supposed to be the "Background" GO in title scene
 	public Text[] texts;
 
     public GameObject clock;
@@ -30,18 +33,19 @@ public class TitleBGanim : MonoBehaviour {
     public ArrayList specialDLGstarts, specialDLGends; //arraylist of ints
 
     void Start () {
+        StartCoroutine(initializeCoroutine());
+    }
 
-        loadDone = new bool[1];
-        bool[] parseDone = new bool[1];
-        StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone, false));
-
+    IEnumerator initializeCoroutine()
+    {
+        //first set up stuff needed for title animation
         canvas = GameObject.FindGameObjectWithTag("Canvas");
         //total sum of heights
-        var sh = canvas.GetComponent<RectTransform>().rect.height * 
+        var sh = canvas.GetComponent<RectTransform>().rect.height *
             canvas.transform.localScale.y;
 
         // set up the first row (exists already in prefab)
-        var sr_0 = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        var sr_0 = spritesParent.transform.GetChild(0).GetComponent<SpriteRenderer>();
         var width = sr_0.sprite.bounds.size.x;
         var screenWidth = canvas.GetComponent<RectTransform>().rect.width;
         // var screenHeight = canvas.GetComponent<RectTransform>().rect.height;
@@ -57,20 +61,20 @@ public class TitleBGanim : MonoBehaviour {
 
         sh -= sr_0.bounds.size.y;
 
-        numRows = (int)(sh / sr_0.bounds.size.y)+1;
+        numRows = (int)(sh / sr_0.bounds.size.y) + 1;
 
         // set up rest of the rows (including duplicating the first row)
         for (int r = 1; r <= numRows; r++)
         {
-            GameObject n = Instantiate(transform.GetChild(0).gameObject);
-            n.transform.SetParent(transform);
-            var sr = transform.GetChild(r).GetComponent<SpriteRenderer>();
+            GameObject n = Instantiate(spritesParent.transform.GetChild(0).gameObject);
+            n.transform.SetParent(spritesParent.transform);
+            var sr = spritesParent.transform.GetChild(r).GetComponent<SpriteRenderer>();
             width = sr.sprite.bounds.size.x;
             screenWidth = canvas.GetComponent<RectTransform>().rect.width;
             // var screenHeight = canvas.GetComponent<RectTransform>().rect.height;
             var tf = sr.gameObject.transform;
 
-           scale = new Vector3(1, 1, 1);
+            scale = new Vector3(1, 1, 1);
             scale.x = screenWidth / width;
             scale.y = scale.x;
             tf.localScale = scale;
@@ -79,10 +83,16 @@ public class TitleBGanim : MonoBehaviour {
             tf.localPosition = pos;
             sh -= sr.bounds.size.y;
         }
-        StartCoroutine (startTitleScreenAnim ());
-        }
+
+        loadDone = new bool[1];
+        bool[] parseDone = new bool[1];
+        yield return StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone, false)); //TODO this script is not a loader
+        yield return loadScene.waitForLoadDone();
+
+        yield return StartCoroutine(startTitleScreenAnim());
+        yield return StartCoroutine(moveGameFlowPointer());
+    }
 	
-	// Update is called once per frame
 	void Update () {
 	
 	}
@@ -147,7 +157,7 @@ public class TitleBGanim : MonoBehaviour {
 			v1.x += 0.008f;
 			v2.x += 0.008f;
 			StartCoroutine
-			(singleRowAnim (transform.GetChild (r).GetComponent<SpriteRenderer> ()));
+			(singleRowAnim (spritesParent.transform.GetChild (r).GetComponent<SpriteRenderer> ()));
 			yield return new WaitForSeconds (startAnimWait);
 		}
 		for (int r = 10; r>=0; r--) {
@@ -158,9 +168,26 @@ public class TitleBGanim : MonoBehaviour {
 			v2.x += 0.006f;
 			yield return new WaitForSeconds (startAnimWait);
 		}
-
-
 	}
+
+    IEnumerator moveGameFlowPointer()
+    {
+        yield return loadScene.waitForLoadDone();
+
+
+            int tempPT = -1; //temp pointer, is passive, updates as gFlow pointer updates
+            int gfP; //game flow pointer
+            do
+            {//once code gets here, should be ready to start gameFlow
+                if (tempPT != (gfP = gameFlow.getCurrentLineNumber()))
+                { //avoid redundant work; only rerender if changed
+                    tempPT = gfP;
+                    gameFlow.processCurrentLine();
+                }
+                yield return new WaitForSeconds(0.1f); //essentially check dialogue status every one s
+            } while (!gameFlow.checkIfEnded()); //as long as there's still something to be done
+
+    }
 
 	private IEnumerator singleRowAnim(SpriteRenderer sr){
 

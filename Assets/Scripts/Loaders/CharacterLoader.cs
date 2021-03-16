@@ -288,6 +288,7 @@ public class CharacterLoader : Loader
     /// <param name="state"></param>
     public void playBaseAnimation(Animator a, int cCode, int state)
     {
+        print("playing base anim for character " + cCode + " with state " + state);
         if (baseStateAnimationClipNames[cCode] != null && baseStateAnimationClipNames[cCode][state] != null)
         {
             a.Play(baseStateAnimationClipNames[cCode][state]);

@@ -19,6 +19,9 @@ public class QuestLoader : Loader
     private Quest[] allQuests;
 
     [Inject(InjectFrom.Anywhere)]
+    public GameFlow gameFlow;
+
+    [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
 
     [Inject(InjectFrom.Anywhere)]
@@ -129,13 +132,14 @@ public class QuestLoader : Loader
     {
         //gets the setup csv content to questScript of active quest
         string[,] setupScript = new string[1, 1];
-        yield return assignQuestSetupData(allQuests[qIndex], setupScript);
+        yield return assignQuestSetupData(allQuests[qIndex], (string[,] d)=> { setupScript = d; });
 
         //parse events of the quest
         List<QuestEvent> qes = parseQuestEvents(setupScript);
 
         //assign, mark the accept status in save file
         GlobalSingleton.Instance.questStatus.onAcceptQuest(qIndex, setupScript, qes);
+        gameFlow.setData(setupScript, new bool[1]); //sets gameFlow's active script to the active quest's script
 
         //trigger on start event
         actionListenerManager.onTriggerListener(ActionListener.Listener.onStart, new string[1]);
@@ -147,15 +151,15 @@ public class QuestLoader : Loader
     /// setupDataRef is a double array that contains chunks of events to this quest
     /// </summary>
     /// <returns></returns>
-    IEnumerator assignQuestSetupData(Quest q, string[,] setupDataRef)
+    IEnumerator assignQuestSetupData(Quest q, setterDelegate setter)
     {
 
-        TextAsset setupCSV = Resources.Load(q.setupFilePath) as TextAsset;
-        if (!setupCSV) Debug.LogError("invalid csv path: " + q.setupFilePath);
+        TextAsset setupCSV = Resources.Load<TextAsset>("Quests/Setup/"+q.setupFilePath);
+        if (!setupCSV) Debug.LogError("invalid csv path: " + "Quests/Setup/" + q.setupFilePath);
 
         bool[] done = new bool[1];
 
-        yield return LoadScene.processCSV(done, setupCSV, (string[,] d) => { setupDataRef = d; }, false);
+        yield return LoadScene.processCSV(done, setupCSV, setter, true); //keep same numbering as in excel sheet
 
     }
 
@@ -166,13 +170,15 @@ public class QuestLoader : Loader
         int numRows = questScript.GetLength(1); bool toggle = false;
         for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
         {
-            if (questScript[0, r].Substring(0, 2).Equals("##"))
+            print("parse quest one row: " + questScript[0, r]);
+            if (questScript[0, r].Length >=2 && questScript[0, r].Substring(0, 2).Equals("##"))
             {
+                print("equals ##");
                 if (!toggle) //start of event
                 {
                     
                     string eventName = questScript[0, r].Substring(2); //from the third character to end
-                    int startLineNumber = r, endLineNumber = -1; //endline will be set later
+                    int startLineNumber = r+1, endLineNumber = -1; //endline will be set later
                     bool retriggerable = false; //defaults to false
                     bool.TryParse(questScript[1, r], out retriggerable);
 
@@ -182,6 +188,7 @@ public class QuestLoader : Loader
                     //parse the conditions and store into list instantiated above
                     foreach (string conditionString in conditionStrings)
                     {
+
                         int leftBracket = conditionString.IndexOf('['), rightBracket = conditionString.IndexOf(']');
                         string conditionS = "", conditionParams = "";
 
@@ -218,7 +225,7 @@ public class QuestLoader : Loader
                 else //end of event
                 {
                     QuestEvent qe = questEvents[questEvents.Count - 1];
-                    qe.endLineNumber = r;
+                    qe.endLineNumber = r-1;
                     print("end of event at " + r);
                 }
                 toggle = !toggle;

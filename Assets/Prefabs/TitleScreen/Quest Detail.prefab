@@ -382,8 +382,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1925460d4d4246ccb8f4b84f39a6f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cancelScn: {fileID: 1000013005674284, guid: 1a3e40824031d4a2cbe515896cedd312, type: 3}
+  questLoader: {fileID: 0}
+  cancelScnPrefab: {fileID: 1000013005674284, guid: 1a3e40824031d4a2cbe515896cedd312,
+    type: 3}
   go: {fileID: 114000012516278424}
+  questIndex: 0
 --- !u!223 &8190647538462989577
 Canvas:
   m_ObjectHideFlags: 0

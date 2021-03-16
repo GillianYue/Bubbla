@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// QuestConditions are the input conditions from a csv file (event line, column 2)
+/// To edit the exact condition in the game's context, go to QuestEvent.conditionsMet()
+/// </summary>
 [SerializeField] public enum QuestCondition { onStart, tap, varEqual, varOver, varUnder }
 
 /// <summary>
@@ -17,8 +21,6 @@ public class QuestConditionManager : MonoBehaviour
     public SaveLoad saveLoad;
     [Inject(InjectFrom.Anywhere)]
     public QuestLoader questLoader;
-    [Inject(InjectFrom.Anywhere)]
-    public GlobalSingleton globalSingleton; //data persist
 
     [Inject(InjectFrom.Anywhere)]
     public GameFlow gameFlow;

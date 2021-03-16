@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ActionListenerManager : MonoBehaviour
 {
+    [Inject(InjectFrom.Anywhere)]
     public QuestConditionManager questConditionManager;
 
     void Start()
