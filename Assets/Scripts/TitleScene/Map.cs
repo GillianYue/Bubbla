@@ -61,30 +61,24 @@ public class Map : MonoBehaviour
     /// </summary>
     public void SpawnSiteDots()
     {
-        int numSites = mapLoader.siteNames.Length; //e.g. 24 sites, site 1-24 data found in array[0-23]
+        int numSites = mapLoader.getNumSites(); //e.g. 24 sites, site 1-24 data found in array[0-23]
         dots = new Button[numSites]; //starts with 0, so dots[s] is for site index s+1
 
-        for (int s=0; s<numSites; s++)
+        for (int s=0; s<numSites; s++) //in sync with siteIndex
         {
             GameObject dot = Instantiate(dotPrefab);
             dot.transform.parent = transform; //Map object's transform should be parent
             dots[s] = dot.GetComponent<Button>();
 
-            var sIndex = s;
-
-            SiteInfo info = dot.GetComponent<SiteInfo>();
-            info.siteIndex = sIndex+1; //since first site index starts at 1
-            info.siteName = mapLoader.getSiteNameOfIndex(info.siteIndex);
-            info.sublocationImages = mapLoader.getSublocationSpritesOfIndex(info.siteIndex);
-            info.sublocationNames = mapLoader.getSublocationNamesOfIndex(info.siteIndex);
+            var sIndex = s+1;
 
             //sets local position of dot
-            dot.transform.localPosition = mapLoader.getSiteLocationOfIndex(info.siteIndex);
+            dot.transform.localPosition = mapLoader.getSiteLocationOfIndex(sIndex);
             dot.transform.localScale = Vector3.one;
 
             //add onclick event to button
             dot.GetComponent<Button>().onClick.AddListener(() => {
-                onClickSiteDot(info.siteIndex);
+                onClickSiteDot(sIndex);
             });
         }
     }
@@ -131,9 +125,9 @@ public class Map : MonoBehaviour
     /// </summary>
     /// <param name="listItem"></param>
     /// <param name="index"></param>
-    void setSiteSublocationData(GameObject listItem, int index, List<string> namesList, List<Sprite> spritesList)//TODO
+    void setSiteSublocationData(GameObject listItem, int index, string sublocationName, Sprite displayImage)//TODO
     {
-        listItem.transform.GetChild(0).GetComponent<Text>().text = namesList[index];
+        listItem.transform.GetChild(0).GetComponent<Text>().text = sublocationName;
         //listItem.transform.GetChild(1).GetComponent<Image>().sprite = TODO Load in some sprite here;
         //TODO set list item thing based on curr site info 
 
@@ -145,13 +139,12 @@ public class Map : MonoBehaviour
     /// <param name="dotIndex"></param>
     public void onClickSiteDot(int siteIndex)
     {
-
-        List<string> namesList = mapLoader.getSublocationNamesOfIndex(siteIndex);
-        List<Sprite> spritesList = mapLoader.getSublocationSpritesOfIndex(siteIndex);
+        List<Sublocation> sublocationList = mapLoader.getSublocationsOfSite(siteIndex);
 
         //set up site detail for new site
-        ListScroller.setupList(siteDetailListRect, siteListItemPrefab, mapLoader.getSublocationNamesOfIndex(siteIndex).Count, 
-            (GameObject listItem, int index) => { setSiteSublocationData(listItem, index, namesList, spritesList); });
+        ListScroller.setupList(siteDetailListRect, siteListItemPrefab, sublocationList.Count, 
+            (GameObject listItem, int index) => { setSiteSublocationData(listItem, index, sublocationList[index].sublocationName, 
+                sublocationList[index].displayImage); });
 
         //pan & zoom to site, and then open up site detail panel
         panToSite(dots[siteIndex-1].transform.position, openSiteDetailPanel);

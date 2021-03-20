@@ -274,6 +274,23 @@ public class Global : MonoBehaviour
         done[0] = true;
     }
 
+    /// <summary>
+    /// pauses the game for given duration
+    /// </summary>
+    /// <param name="runOnScript"></param>
+    /// <param name="duration"></param>
+    public static void hitPause(MonoBehaviour runOnScript, float duration)
+    {
+        runOnScript.StartCoroutine(pauseForSeconds(duration));
+    }
+
+    static IEnumerator pauseForSeconds(float duration)
+    {
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1;
+    }
+
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~game play logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -36,7 +36,7 @@ public class Dialogue : MonoBehaviour
 
 	void Start()
     {
-		if (ArcadeClassic != null) NAME.font = ArcadeClassic;
+		if (ArcadeClassic != null && NAME) NAME.font = ArcadeClassic;
 
 		cVoiceSource = character.GetComponent<AudioSource>(); //audioSource for the voice blips
 
@@ -69,22 +69,23 @@ public class Dialogue : MonoBehaviour
 		AudioClip cVoiceClip = null;
 
 		lineDone = false; //dialogue is shown one char at a time
-		NAME.text = c_name;
+		if(NAME)NAME.text = c_name;
 		
 
-		if (!prevChaName.Equals(NAME.text)) //if equal, no need to change animator
+		if (!prevChaName.Equals(c_name)) //if equal, no need to change animator
 		{
 			cIndex = -1; //cCode of the upcoming character
-			cIndex = characterLoader.getIndex(NAME.text);
+			cIndex = characterLoader.getIndex(c_name);
+			print("cIndex got from loader for " + c_name + ": " + cIndex);
 
 			if (cIndex == -1) //not found, check for special param instructing which Animator to use
 			{
-				if (Invasion2000 != null) NAME.font = Invasion2000;
+				if (Invasion2000 != null && NAME) NAME.font = Invasion2000;
 				int.TryParse(not_found_param, out cIndex); //if success, assign animator accordingly
 			}
 			else
 			{
-				if (ArcadeClassic != null) NAME.font = ArcadeClassic;
+				if (ArcadeClassic != null && NAME) NAME.font = ArcadeClassic;
 			}
 
 			if (cIndex == -1) //not assigned, no animator
@@ -103,7 +104,7 @@ public class Dialogue : MonoBehaviour
 				bgBox.color = new Color(c.r, c.g, c.b);
 			}
 
-			prevChaName = NAME.text;
+			prevChaName = c_name;
 		}
 
 		int SpriteNum;
@@ -562,19 +563,19 @@ public class Dialogue : MonoBehaviour
 
 	//** TITLE
 
-	public IEnumerator displayTitleDLG(string[,] data) //TODO need to refactor
+	public void displayTitleDLG(string[,] data) //TODO need to refactor
 	{ //ONLY applies to the special csv file of title
 
 		//randomly chooses dialogue for bunny to say
 		int ttlWeight = 0; int line = -1;
 		for (int r = 1; r < data.GetLength(1); r++)
 		{
-			ttlWeight += int.Parse(data[4, r]);
+			ttlWeight += int.Parse(data[11, r]);
 		}
 		float rdm = UnityEngine.Random.Range(0, ttlWeight);
 		for (int r = 1; r < data.GetLength(1); r++)
 		{
-			rdm -= int.Parse(data[4, r]);
+			rdm -= int.Parse(data[11, r]);
 			if (rdm < 0)
 			{
 				line = r;
@@ -582,9 +583,14 @@ public class Dialogue : MonoBehaviour
 			}
 		}
 
-		//Assumes character is already given, TODO set this based on data
-		Global.resizeSpriteToDLG(character, character.transform.parent.gameObject);
+		//Note: this should be consistent with normal dialogue use
+		displayOneLine(data[1, line], data[2, line], data[3, line], data[4, line], data[5, line],
+					data[7, line], data[8, line], data[9, line], data[10, line]);
 
+		//Assumes character is already given, TODO set this based on data
+		//Global.resizeSpriteToDLG(character, character.transform.parent.gameObject);
+
+			/**
 		int SpriteNum;
 		int.TryParse(data[2, line], out SpriteNum);
 
@@ -615,6 +621,7 @@ public class Dialogue : MonoBehaviour
 		}
 
 		setPartLayerParam(index, character, 1, 1); //end talking
+			**/
 	}
 
 }

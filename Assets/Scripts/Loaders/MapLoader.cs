@@ -10,10 +10,7 @@ public class MapLoader : Loader
     private string[,] data; //double array that stores all info 
 
     //all of the lists below start count at 0, which means item s will keep track of info for site s+1
-    public Vector2[] siteLocations;
-    public string[] siteNames;
-    public List<List<string>> sublocationNames;
-    public List<List<Sprite>> sublocationImages;
+    private List<Site> sites;
 
     private bool mapLoaderDone; //this will be set to true once is ready for usage
     public Sprite defaultSublocationSprite; //placeholder for sublocation image
@@ -46,10 +43,11 @@ public class MapLoader : Loader
     }
 
     //functions below return info on a site with given site index
-    public string getSiteNameOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, siteNames.Length); return siteNames[idx-1]; }
-    public Vector2 getSiteLocationOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, siteNames.Length); return siteLocations[idx-1]; }
-    public List<string> getSublocationNamesOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, siteNames.Length); return sublocationNames[idx-1]; }
-    public List<Sprite> getSublocationSpritesOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, siteNames.Length); return sublocationImages[idx-1]; }
+    public string getSiteNameOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, sites.Count-1); return sites[idx].siteName; }
+    public Vector2 getSiteLocationOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, sites.Count - 1); return sites[idx].coordinateOnMap; }
+    public List<Sublocation> getSublocationsOfSite(int siteIdx) { siteIdx = Mathf.Clamp(siteIdx, 1, sites.Count - 1); return sites[siteIdx].sublocations; }
+
+    public int getNumSites() { return sites.Count; }
 
     IEnumerator parseMapData()
     {
@@ -58,10 +56,7 @@ public class MapLoader : Loader
         int numSites = -1;
         int.TryParse(data[0, data.GetLength(1)-1], out numSites); //get last site's index (=total num of sites)
 
-        siteNames = new string[numSites]; //num rows, int[] is for the entire column
-        siteLocations = new Vector2[numSites];
-        sublocationNames = new List<List<string>>();
-        sublocationImages = new List<List<Sprite>>();
+        sites = new List<Site>();
 
         int currSiteIdx = -1;
         //skip row 0 because those are all descriptors
@@ -73,35 +68,41 @@ public class MapLoader : Loader
 
             if (sidx != currSiteIdx) //arrived at a new site row (if same, means this is a sublocation)
             {
-                List<Sprite> currSiteSublocationSprites = new List<Sprite>();
-                List<string> currSiteSublocationNames = new List<string>();
-                sublocationImages.Add(currSiteSublocationSprites);
-                sublocationNames.Add(currSiteSublocationNames);
+                List<Sublocation> currSiteSublocations = new List<Sublocation>();
+                Site site = new Site();
+                sites.Add(site);
 
-                siteNames[sidx - 1] = data[2, r];
+                site.sublocations = currSiteSublocations;
+                site.siteName = data[2, r];
 
-                siteLocations[sidx-1] = new Vector2();
-                Global.parseVector2Parameter(data[4, r], ref siteLocations[sidx - 1]);
+                Vector2 siteLocation = new Vector2();
+                Global.parseVector2Parameter(data[4, r], ref siteLocation);
+                site.coordinateOnMap = siteLocation;
 
                 currSiteIdx = sidx;
             }
             else //is a sublocation row, needs to load in sublocation name and image
             {
-                sublocationNames[sublocationNames.Count - 1].Add(data[2, r]);
+                Sublocation sub = new Sublocation();
+                sites[sites.Count - 1].sublocations.Add(sub);
+                sub.sublocationName = data[2, r];
 
-                if (data[3, r] != "")
+                sub.prefabName = data[5, r];
+
+                bool showOnMap = bool.Parse(data[6, r]);
+                sub.showOnMap = showOnMap;
+
+                if (data[3, r] != "" && showOnMap)
                 {
                     var spr = Resources.Load<Sprite>("Images/Sites/" + data[3, r]);
-                    if (spr != null) sublocationImages[sublocationImages.Count - 1].Add(spr); //add sublocation image to "this site"'s group
+                    if (spr != null) sub.displayImage = spr; //add sublocation image to "this site"'s group
                     else { 
                         Debug.LogError("load sublocation image failed: at " + "Images/Sites/" + data[3, r]);
-                        sublocationImages[sublocationImages.Count - 1].Add(defaultSublocationSprite);
+                        sub.displayImage = defaultSublocationSprite;
                     }
-                }
-                else
-                {//add in default spaceholder if 
-                    sublocationImages[sublocationImages.Count - 1].Add(defaultSublocationSprite);
-                }
+                }//else, no displayImage is needed, since won't show on map
+
+
             }
 
         }
@@ -116,5 +117,20 @@ public class MapLoader : Loader
     }
 
 
+}
+
+public class Site
+{
+    public Vector2 coordinateOnMap;
+    public string siteName;
+    public List<Sublocation> sublocations;
+
+}
+
+public class Sublocation
+{
+    public string sublocationName, prefabName;
+    public Sprite displayImage;
+    public bool showOnMap;
 }
 

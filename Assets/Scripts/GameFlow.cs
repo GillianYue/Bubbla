@@ -48,7 +48,7 @@ public class GameFlow : MonoBehaviour {
 
     public IEnumerator processLineInstance;
 
-
+    public bool useTestScript = false;
     public ArrayList specialDLGstarts, specialDLGends; //arraylist of ints
 
     void Awake()
@@ -70,7 +70,7 @@ public class GameFlow : MonoBehaviour {
         else parseDone[0] = true;
 
         yield return new WaitUntil(()=>loadScene.isAllLoadDone());
-        questLoader.acceptQuestTestUse(data); //TODO only to test out quest scripts
+        if(useTestScript) questLoader.acceptQuestTestUse(data); //TODO only to test out quest scripts
     }
 
 
@@ -157,8 +157,10 @@ public class GameFlow : MonoBehaviour {
 
             if (currMode == Mode.DLG) { 
                 dialogue.enableDialogueBox();
-                gameControl.hideAllIcons();
-                gameControl.bgManager.setBackgroundsActive(false); //pause
+                if (gameControl) { 
+                    gameControl.hideAllIcons();
+                    gameControl.bgManager.setBackgroundsActive(false); //pause
+                }
             } //if the new mode is actually dlg
             else if(currMode == Mode.IVS)
             {
@@ -375,7 +377,6 @@ public class GameFlow : MonoBehaviour {
     public void setPointer(int p)
     {
         pointer = p;
-        print("pointer set to " + p);
     }
 
     public void setPointerToSpecial(int index)

@@ -2419,6 +2419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questLoader: {fileID: 0}
   saveLoad: {fileID: 0}
+  loadScene: {fileID: 0}
   questGO: {fileID: 0}
 --- !u!1 &728350227976495516
 GameObject:
@@ -2579,13 +2580,16 @@ MonoBehaviour:
   gameControl: {fileID: 0}
   customEvents: {fileID: 0}
   player: {fileID: 0}
+  loadScene: {fileID: 0}
   dialogue: {fileID: 0}
   enemyLoader: {fileID: 0}
   characterLoader: {fileID: 0}
   itemLoader: {fileID: 0}
+  questLoader: {fileID: 0}
   currMode: 0
   canMovePointer: 1
   DlgCsv: {fileID: 0}
+  useTestScript: 0
 --- !u!1 &2603561653132235643
 GameObject:
   m_ObjectHideFlags: 0

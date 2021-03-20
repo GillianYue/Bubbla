@@ -219,7 +219,7 @@ public class QuestLoader : Loader
                             conditionS = conditionString;
                         }
 
-                        Debug.Log("condition: " + conditionS + " params: " + conditionParams);
+                        //Debug.Log("condition: " + conditionS + " params: " + conditionParams);
 
                         QuestCondition condition;
                         if (Enum.TryParse<QuestCondition>(conditionS, out condition)) //parse condition
@@ -237,13 +237,13 @@ public class QuestLoader : Loader
                     QuestEvent qe = new QuestEvent(eventName, startLineNumber, endLineNumber, retriggerable, conditions);
 
                     questEvents.Add(qe);
-                    print("start of event " + eventName + " at " + startLineNumber);
+                    //print("start of event " + eventName + " at " + startLineNumber);
                 }
                 else //end of event
                 {
                     QuestEvent qe = questEvents[questEvents.Count - 1];
                     qe.endLineNumber = r-1;
-                    print("end of event at " + r);
+                    //print("end of event at " + r);
                 }
                 toggle = !toggle;
             }

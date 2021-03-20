@@ -138,18 +138,20 @@ public class TitleController : MonoBehaviour {
             yield return null;
 		}
         //gameFlow dlg has access to the csv containing scripts of dialogue
-		StartCoroutine (dialogue.displayTitleDLG(data)); 
+		dialogue.displayTitleDLG(data); 
 
+        //UI Bars
 		Vector3 v1 = UIBar1.GetComponent<RectTransform> ().localScale;
 		Vector3 v2 = UIBar2.GetComponent<RectTransform> ().localScale;
 		v1.x = 0f; v2.x = 0f;
 
+        //UI Texts
 		for (int i = 0; i < texts.Length; i++) {
 			StartCoroutine (showText (texts[i]));
 		}
 		StartCoroutine (showClockText(clock, clock.GetComponent<Text>()));
 
-        // There is 21 rows in total
+        // UI animation; 21 rows in total
 		for (int r = numRows; r>=0; r--) {
             //slowly extend the 2 UI bars around dialogue
 			UIBar1.GetComponent<RectTransform> ().localScale = v1;

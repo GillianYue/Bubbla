@@ -148,6 +148,13 @@ public class CharacterLoader : Loader
         }
     }
 
+    /// <summary>
+    /// expands a list to a certain size (fills new spaces with default value)
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    /// <param name="insertIndex"></param>
+    /// <param name="defaultVal"></param>
     private void checkExpandList<T>(List<T> list, int insertIndex, T defaultVal)
     {
         if (insertIndex >= list.Count)
@@ -157,7 +164,6 @@ public class CharacterLoader : Loader
             {
                 list.Add(defaultVal);
             }
-            print("expanded list, list current size: " + list.Count);
         }
     }
 
@@ -289,7 +295,7 @@ public class CharacterLoader : Loader
     /// <param name="state"></param>
     public void playBaseAnimation(Animator a, int cCode, int state)
     {
-        print("playing base anim for character " + cCode + " with state " + state);
+        //print("playing base anim for character " + cCode + " with state " + state);
         if (baseStateAnimationClipNames[cCode] != null && baseStateAnimationClipNames[cCode][state] != null)
         {
             a.Play(baseStateAnimationClipNames[cCode][state]);
@@ -309,6 +315,7 @@ public class CharacterLoader : Loader
     /// <param name="state"></param>
     public void playPart1Animation(Animator a, int cCode, int state)
     {
+        //int("ccode " + cCode);
         if (Part1AnimationClipNames[cCode] != null && Part1AnimationClipNames[cCode][state] != null)
         {
             a.Play(Part1AnimationClipNames[cCode][state]);

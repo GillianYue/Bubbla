@@ -141,6 +141,8 @@ public class CustomEvents : MonoBehaviour
             case 33:
                 loadAndPlayBGM(done, prms);
                 break;
+            case 50:
+                
             case 99:
                 levelScriptEvent(done, prms);
                 break;
