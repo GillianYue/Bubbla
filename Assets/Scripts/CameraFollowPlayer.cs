@@ -11,7 +11,7 @@ public class CameraFollowPlayer : MonoBehaviour
     public GameObject moveAlong; //parent of group of GOs that should move along with the camera
     public GameObject Boundary;
 
-    public int startCameraZ = -700;
+    public int startCameraZ;
     private int spaceBeyond = 50; //some space beyond edge of background will show for a more natural look
 
     private CapsuleCollider2D playerCollider;
@@ -19,7 +19,6 @@ public class CameraFollowPlayer : MonoBehaviour
 
     private RaycastHit2D[] upHits, downHits, leftHits, rightHits;
 
-    // Start is called before the first frame update
     void Start()
     {
         playerCollider = player.GetComponent<CapsuleCollider2D>();
@@ -33,7 +32,6 @@ public class CameraFollowPlayer : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y, startCameraZ);
     }
 
-    // Update is called once per frame
     void Update()
     {
         Vector3 target = player.gameObject.transform.position;
@@ -84,7 +82,7 @@ public class CameraFollowPlayer : MonoBehaviour
         transform.position += (Vector3)delta; //delta might/not be edited up above, depending on the situation
         //camera needs to be at a certain distance from canvas
 
-        moveAlong.transform.position = new Vector3(transform.position.x, transform.position.y, 0); 
+        if(moveAlong) moveAlong.transform.position = new Vector3(transform.position.x, transform.position.y, 0); 
 
 
     }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1961527698}
   - component: {fileID: 1961527699}
   - component: {fileID: 8793986423284785346}
+  - component: {fileID: 1078953684821714252}
   m_Layer: 0
   m_Name: Loaders
   m_TagString: Untagged
@@ -109,8 +110,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadScene: {fileID: 0}
   mapCsv: {fileID: 4900000, guid: b6381bccad30b47469c7f146d9f44ffe, type: 3}
-  siteLocations: []
-  siteNames: []
   defaultSublocationSprite: {fileID: 0}
 --- !u!114 &8793986423284785346
 MonoBehaviour:
@@ -128,6 +127,21 @@ MonoBehaviour:
   enemyCsv: {fileID: 4900000, guid: 150feddb12b884a71af1051de641b222, type: 3}
   gameControl: {fileID: 0}
   prefabHolder: {fileID: 0}
+--- !u!114 &1078953684821714252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961527694}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 036705ac4d4a44b79a8769e7a933c9f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadScene: {fileID: 0}
+  sceneCsv: {fileID: 0}
+  BG: {fileID: 0}
 --- !u!1 &1078953683312498512
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,6 +287,7 @@ MonoBehaviour:
   currMode: 0
   canMovePointer: 1
   DlgCsv: {fileID: 4900000, guid: d919ebafb8312524093871f6e6ddc2ff, type: 3}
+  useTestScript: 0
 --- !u!114 &1070624056
 MonoBehaviour:
   m_ObjectHideFlags: 0

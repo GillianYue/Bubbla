@@ -207,7 +207,6 @@ public class GameControl : MonoBehaviour {
 
                             }
 
-
                         }
                         else
                         {

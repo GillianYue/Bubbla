@@ -11,6 +11,7 @@ public class PanZoom : MonoBehaviour
     Vector3 touchStart;
     public RectTransform moveAroundGO; //pos will change as mouse drag
     Vector3 moveGOstartPos;
+    public Camera camera;
 
     Vector2 extentsX, extentsY = new Vector2(9999, 9999);
 
@@ -171,13 +172,13 @@ public class PanZoom : MonoBehaviour
     {
 
         Vector2 mouseScreenPos = center;
-        Ray mouseWorldRay = Camera.main.ScreenPointToRay(mouseScreenPos);
+        Ray mouseWorldRay = camera.ScreenPointToRay(mouseScreenPos);
 
         Vector3 newPos = mouseWorldRay.origin + (mouseWorldRay.direction * increment * 3000);
 
-        Vector3 newSetPos = Vector3.MoveTowards(Camera.main.transform.position,
+        Vector3 newSetPos = Vector3.MoveTowards(camera.transform.position,
             newPos, increment * 30000f * Time.deltaTime);
-        Vector3 deltaPos = Camera.main.transform.position - newSetPos;
+        Vector3 deltaPos = camera.transform.position - newSetPos;
 
         Vector3 finalDest = moveAroundGO.transform.position + deltaPos * (increment > 0 ? 1 : -1);
 

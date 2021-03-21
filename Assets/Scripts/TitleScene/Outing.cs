@@ -8,12 +8,14 @@ public class Outing : MonoBehaviour
 
     public GameObject outing;
     [Inject(InjectFrom.Anywhere)]
-    public Dialogue dialogue;
+    public TitleController titleControl;
 
     public Vector3 startPos;
     public PanZoom panZoomControl;
     [Inject(InjectFrom.Anywhere)]
     public Map map;
+
+
 
     void Start()
     {
@@ -36,6 +38,8 @@ public class Outing : MonoBehaviour
 
             outing.SetActive(true);
             map.openUI();
+
+            if (titleControl) titleControl.dialogue.gameObject.SetActive(false);
         }
     }
 
@@ -46,7 +50,7 @@ public class Outing : MonoBehaviour
             Global.changePos(outing, (int)startPos.x, (int)startPos.y);
 
             outing.SetActive(false);
-            dialogue.gameObject.SetActive(true);
+            titleControl.dialogue.gameObject.SetActive(true);
             map.closeUI();
         }
     }

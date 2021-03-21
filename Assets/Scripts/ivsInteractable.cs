@@ -51,6 +51,8 @@ public class ivsInteractable : interactable
         //trigger listener
         actionListenerManager.onTriggerListener(ActionListener.Listener.interactWithObject, eventParams);
         
+        //TODO if triggers event related thing, do that
+        //else, check if local has content??? or maybe put base layer local interactions in the global space through metafile too. DK
     }
 
 }

@@ -1615,6 +1615,7 @@ MonoBehaviour:
   qb: {fileID: 0}
   test: 1
   invincible: 0
+  goToLineOnStart: 0
   speedUpRate: 15
 --- !u!114 &8721781012039891283
 MonoBehaviour:
@@ -1720,7 +1721,7 @@ MonoBehaviour:
   charBG: {fileID: 4045178712118331211}
   characterLoader: {fileID: 0}
   dialogue: {fileID: 4158615704818813165}
-  useDialogueTester: 1
+  useDialogueTester: 0
   gameControl: {fileID: 0}
 --- !u!222 &1033338887366884985
 CanvasRenderer:

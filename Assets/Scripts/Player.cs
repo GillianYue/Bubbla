@@ -59,7 +59,6 @@ public class Player : MonoBehaviour
 
 	//bulletSpeed is the absolute distance travelled per sec
 
-	// Use this for initialization
 	void Start ()
 	{
 
@@ -96,7 +95,7 @@ public class Player : MonoBehaviour
 
 		anim = GetComponent<Animator>();
 
-		bulletGaugeMaskMaxScaleY = bulletGaugeMasks[0].transform.localScale.y;
+		if(bulletGaugeMasks.Length>0) bulletGaugeMaskMaxScaleY = bulletGaugeMasks[0].transform.localScale.y;
 
 		foreach(GameObject m in bulletGaugeMasks)
         {
@@ -111,8 +110,7 @@ public class Player : MonoBehaviour
 
 
 	}
-	
-	// Update is called once per frame
+
 	void Update ()
 	{
 
@@ -208,6 +206,10 @@ public class Player : MonoBehaviour
         StartCoroutine(nudgeWhilePressed()); //once this process starts, it checks for complete (mouse up) on it own
     }
 
+	/// <summary>
+	/// nudge towards pressed position until finger lifts up
+	/// </summary>
+	/// <returns></returns>
     private IEnumerator nudgeWhilePressed()
     {
         yield return new WaitUntil(() => //delegate called after each Update()
