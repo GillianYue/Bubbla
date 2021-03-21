@@ -41,8 +41,8 @@ public class TitleController : MonoBehaviour {
         //first set up stuff needed for title animation
         canvas = GameObject.FindGameObjectWithTag("Canvas");
         //total sum of heights
-        var sh = canvas.GetComponent<RectTransform>().rect.height *
-            canvas.transform.localScale.y;
+        var sh = canvas.GetComponent<RectTransform>().rect.height;
+        print("sh: " + sh);
 
         // set up the first row (exists already in prefab)
         var sr_0 = spritesParent.transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -59,9 +59,10 @@ public class TitleController : MonoBehaviour {
         Vector3 pos = new Vector3(0, sh, 1);
         tf_0.localPosition = pos;
 
-        sh -= sr_0.bounds.size.y;
+        var singleHeight = sr_0.GetComponent<RectTransform>().rect.height * sr_0.transform.localScale.y;
+        sh -= singleHeight;
 
-        numRows = (int)(sh / sr_0.bounds.size.y) + 1;
+        numRows = (int)(sh / (singleHeight)) + 1;
 
         // set up rest of the rows (including duplicating the first row)
         for (int r = 1; r <= numRows; r++)
@@ -81,7 +82,7 @@ public class TitleController : MonoBehaviour {
 
             pos = new Vector3(0, sh, 1);
             tf.localPosition = pos;
-            sh -= sr.bounds.size.y;
+            sh -= singleHeight;
         }
 
         loadDone = new bool[1];
@@ -151,7 +152,7 @@ public class TitleController : MonoBehaviour {
 		}
 		StartCoroutine (showClockText(clock, clock.GetComponent<Text>()));
 
-        // UI animation; 21 rows in total
+        // UI Bar + bg animation; 21 rows in total
 		for (int r = numRows; r>=0; r--) {
             //slowly extend the 2 UI bars around dialogue
 			UIBar1.GetComponent<RectTransform> ().localScale = v1;
