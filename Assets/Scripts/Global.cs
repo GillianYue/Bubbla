@@ -134,10 +134,31 @@ public class Global : MonoBehaviour
         e.transform.position = new Vector3(x, y, e.transform.position.z); 
     }
 
-    /*
-     * moves a GO with Rigidbody2D towards a target destination while checking for raycast collisions
-     */
+    /// <summary>
+    /// (no layerMask - common collider check)
+    /// moves a GO with Rigidbody2D towards a target destination while checking for raycast collisions, requires rigidbody2D on the GO
+    /// 
+    /// spd is the fixed distance of each step (enforced)
+    /// </summary>
+    /// <param name="e"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="spd"></param>
     public static void nudgeTowards(GameObject e, int x, int y, float spd)
+    {
+        nudgeTowards(e, x, y, spd, -1);
+    }
+
+    /// <summary>
+    /// moves a GO with Rigidbody2D towards a target destination while checking for raycast collisions, requires rigidbody2D on the GO
+    /// 
+    /// spd is the enforced fixed distance (approx) of each step 
+    /// </summary>
+    /// <param name="e"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="spd"></param>
+    public static void nudgeTowards(GameObject e, int x, int y, float spd, int layerMask)
     {
         Rigidbody2D rb = e.GetComponent<Rigidbody2D>();
 
@@ -146,17 +167,18 @@ public class Global : MonoBehaviour
         float ratio = xDist / yDist;
         if (Math.Abs(xDist) > 1 && Math.Abs(yDist) > 1)
         {
-            float dy = ((yDist > 0) ? 1 : -1) * (float)Math.Sqrt((Math.Pow(spd, 2) / (Math.Pow(ratio, 2) + 1)));
-            float dx = ((xDist > 0) ? 1 : -1) * (float)Math.Sqrt(Math.Pow(spd, 2) - Math.Pow(dy, 2));
+            float dy = ((yDist > 0) ? 1 : -1) * (float)Math.Sqrt((100 / (Math.Pow(ratio, 2) + 1)));
+            float dx = ((xDist > 0) ? 1 : -1) * (float)Math.Sqrt(100 - Math.Pow(dy, 2));
 
-            Vector3 deltaPos = new Vector3(dx * 100, dy * 100, 0) * Time.deltaTime;
+            Vector3 deltaPos = (new Vector3(dx, dy, 0).normalized) * spd;
             double r = Math.Sqrt(Math.Pow(deltaPos.x, 2) + Math.Pow(deltaPos.y, 2));
 
             RaycastHit2D[] hits = new RaycastHit2D[5];
             ///////collision checking with raycast
-            e.GetComponent<Collider2D>().Raycast(new Vector2(dx, dy), hits);
+            if(layerMask!=-1) e.GetComponent<Collider2D>().Raycast(new Vector2(dx, dy), hits, layerMask);
+            else e.GetComponent<Collider2D>().Raycast(new Vector2(dx, dy), hits);
 
-            if(hits[0].collider != null)
+            if (hits[0].collider != null) //if in move direction exists collider
             {
                 float halfSprite = e.GetComponent<Collider2D>().bounds.extents.y; // edge of sprite, not center of sprite counts
                 if ((hits[0].distance - halfSprite) < r) //can not go as much as usual b/c of collider
@@ -173,12 +195,13 @@ public class Global : MonoBehaviour
         if ((xDistNew / xDist < 0) || (yDistNew / yDist < 0))
         //projected newPos went over mouse input point, the target direction has changed; don't go as far, only as much as needed
         {
-            rb.MovePosition(new Vector2(x, y)); //not for collision
+                rb.MovePosition(new Vector2(x, y)); //not for collision
+                //e.transform.position = new Vector2(x, y);
         }
         else
         {
-            rb.MovePosition(newPos);
-               
+                 rb.MovePosition(newPos);
+                //e.transform.position = newPos;
         }
 
         } //close enough

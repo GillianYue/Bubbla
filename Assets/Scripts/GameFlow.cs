@@ -161,16 +161,16 @@ public class GameFlow : MonoBehaviour {
                     gameControl.hideAllIcons();
                     gameControl.bgManager.setBackgroundsActive(false); //pause
                 }
-            } //if the new mode is actually dlg
+            } 
             else if(currMode == Mode.IVS)
             {
                 gameControl.showAllIcons();
-                player.setNavigationMode(Player.Mode.TOUCH);
+                player.setNavigationMode(Player.NavMode.TOUCH);
             }
             else if (currMode == Mode.GAME)
             {
                 gameControl.showAllIcons();
-                player.setNavigationMode(Player.Mode.ACCL);
+                player.setNavigationMode(Player.NavMode.ACCL);
             }
 
             if (currMode != Mode.GAME)

@@ -26,7 +26,7 @@ public class GameTestBehavior : MonoBehaviour
             gf.setPointer(startLine); //for testing I'm putting in what line I'm seeing in the csv file
         }
 
-        if (invincible) player.setInvincible(true);
+        if (invincible) player.invincible = true;
     }
 
     void Update()

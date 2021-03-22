@@ -78,7 +78,7 @@ public class GameControl : MonoBehaviour {
     public bool ckTouch = true;
     private float touchCooler = 0.5f; //half a second before reset; used for checking for fast double tap
     private int touchCount = 0; 
-    public enum Mode { QUEST, GAME, TRAVEL }; //scene type
+    public enum Mode { QUEST_SELECT, GAME, TRAVEL }; //scene type
     public Mode sceneType;
 
     public AudioSource bgmSource;
@@ -86,9 +86,12 @@ public class GameControl : MonoBehaviour {
     void Awake()
     {
         //locate prefabs
-        HeartPopVFX = prefabHolder.heartPop;
-        hearts = prefabHolder.hearts;
-        aim = prefabHolder.aim;
+        if (sceneType == Mode.GAME)
+        {
+            HeartPopVFX = prefabHolder.heartPop;
+            hearts = prefabHolder.hearts;
+            aim = prefabHolder.aim;
+        }
     }
 
     void Start () {
@@ -97,26 +100,33 @@ public class GameControl : MonoBehaviour {
         if(vfxCanvas) vfxCanvas.SetActive(false); //to prevent blocking of buttons
         //player.GetComponent<Player> ().enabled = false;
 
-        //gadgets are GOs like life container that are needed in game play but not in DLG mode
-        if(gadgets != null)
-        foreach (GameObject g in gadgets) {
-            g.SetActive (false);
-        }
+        if (sceneType == Mode.GAME) { 
+            //gadgets are GOs like life container that are needed in game play but not in DLG mode
+            if (gadgets != null)
+            foreach (GameObject g in gadgets) {
+                g.SetActive (false);
+            }
 
-        //setting mask to the right dimension
-        GameObject BGMask = GameObject.FindWithTag("BGMask");
-        if (BGMask != null)
+            //setting mask to the right dimension
+            GameObject BGMask = GameObject.FindWithTag("BGMask");
+            if (BGMask != null)
+            {
+
+                Vector3 sSize = BGMask.GetComponent<SpriteMask>().sprite.bounds.size;
+                var ratioX = BGMask.GetComponent<RectTransform>().rect.width / sSize.x;
+                var ratioY = BGMask.GetComponent<RectTransform>().rect.height / sSize.y;
+                Vector3 scale = new Vector3(ratioX, ratioY-0.04f, 1);
+                BGMask.GetComponent<RectTransform>().localScale = scale;
+            }
+
+            p.navigationMode = Player.NavMode.ACCL;
+        }
+        else
         {
-
-            Vector3 sSize = BGMask.GetComponent<SpriteMask>().sprite.bounds.size;
-            var ratioX = BGMask.GetComponent<RectTransform>().rect.width / sSize.x;
-            var ratioY = BGMask.GetComponent<RectTransform>().rect.height / sSize.y;
-            Vector3 scale = new Vector3(ratioX, ratioY-0.04f, 1);
-            BGMask.GetComponent<RectTransform>().localScale = scale;
+            p.navigationMode = Player.NavMode.TOUCH;
         }
 
-        p = player.GetComponent<Player>();
-
+        player = p.gameObject;
         StartCoroutine(StartGame());
     }
 
@@ -250,12 +260,17 @@ public class GameControl : MonoBehaviour {
                         return;
                     }
                 }//end foreach
-                p.nudge(); //start the moving coroutine only when not clicking on an ivs obj
+               
+                p.startNudge(); //notifies player to start moving toward dest
+            }
+            else if(Input.GetMouseButtonUp(0) && ckTouch)
+            {
+                p.stopNudge();
             }
 
 
         }
-        else if (sceneType == Mode.QUEST)
+        else if (sceneType == Mode.QUEST_SELECT)
         {
             //in title scene
 

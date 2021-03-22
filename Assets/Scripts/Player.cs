@@ -3,12 +3,14 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour
+public class Player : MovingObject
 {
 
-	//Mode in which player's position is updated. ACCL refers to in-game movement, while touch refers to clicking on screen and play would move towards that direction in some velocity; freeze is self explanatory
-    public enum Mode { ACCL, TOUCH, FREEZE };
-    public Mode navigationMode;
+	//Mode in which player's position is updated. ACCL refers to in-game movement, while touch refers to clicking on screen and play would move towards 
+	//that direction in some velocity; freeze is self explanatory
+    public enum NavMode { ACCL, TOUCH, FREEZE };
+    public NavMode navigationMode;
+	public Coroutine movementCoroutine; //only one happening at the same time
 
     public static List<PaintballBehavior.ColorMode> bulletGauge;
 	public Text lifeText;
@@ -25,9 +27,9 @@ public class Player : MonoBehaviour
 	public int bulletGaugeCapacity; // *number* of pbs allowed in the container
 	public int bulletGaugeSelected = -1; //-1 == unselected; 0-2 corresponding to the slots
 	public int[] bulletGaugeLimits, bulletGaugeContent; //upper bounds for gauge, and their current holding count
-	//NOTE: for now, bulletGaugeLimits is an array of 60s, meaning that all slots have the same capacity
+														//NOTE: for now, bulletGaugeLimits is an array of 60s, meaning that all slots have the same capacity
 
-	public int maxLife;
+	public int maxLife = 20;
     public Rigidbody2D playerRB;
 	public bool canShoot = true, //bool for firing at a rate
 		canSelect = true, 
@@ -49,7 +51,7 @@ public class Player : MonoBehaviour
 	private Animator anim;
 
 	public bool checkForUpdates = true;
-	private bool invincible; //updates life UI and checks for life if true
+	public bool invincible { get; set; } //updates life UI and checks for life if true
 
 
 	//those are relative to player, since Cannon(player's cannon) is a child of player
@@ -59,20 +61,46 @@ public class Player : MonoBehaviour
 
 	//bulletSpeed is the absolute distance travelled per sec
 
-	void Start ()
+
+	//TRAVEL//
+	//override parent's abstract so we know those properties exist and need to be dealt with in child script
+	public override Collider2D objCollider { get; set; }
+	public override string layerMaskName { get; set; }
+
+	public override Vector3 destPos { get; set; }
+
+	public override MovementMode movementMode { get; set; }
+
+	public override bool active { get; set; }
+
+	public override float followSpeedPercent { get; set; }
+
+	public override float linearSpeed { get; set; }
+
+	//TRAVEL//
+
+	protected override void FixedUpdate()
+    {
+		Vector2 mouseInWorld = Global.ScreenToWorld(Input.mousePosition);
+		destPos = mouseInWorld;
+
+		base.FixedUpdate();
+    }
+
+    protected override void Start()
 	{
 
-		if(life == 0) life = maxLife;
-		bulletGauge = new List<PaintballBehavior.ColorMode> ();
-		PaintSprites = new List<GameObject> ();
+		if (life == 0) life = maxLife;
+		bulletGauge = new List<PaintballBehavior.ColorMode>();
+		PaintSprites = new List<GameObject>();
 
 		slotPositions = new Vector3[bulletGaugeCapacity];
 		bulletGaugeLimits = new int[bulletGaugeCapacity];
 
 
 
-		for(int i = 0; i < bulletGaugeCapacity; i++)
-        {
+		for (int i = 0; i < bulletGaugeCapacity; i++)
+		{
 			bulletGaugeLimits[i] = 60;
 			slotPositions[i] = new Vector3(12.8f,
 					//to ensure pbSprite appears BELOW cannon img
@@ -84,24 +112,26 @@ public class Player : MonoBehaviour
 		ouch = new AudioSource[3];
 
 		for (int i = 0; i < 5; i++) {
-				fire.SetValue (GetComponents<AudioSource> ()[i], i);
-			} 
+			fire.SetValue(GetComponents<AudioSource>()[i], i);
+		}
 
-		for(int i = 0; i<3; i++) {
-				ouch.SetValue (GetComponents<AudioSource> ()[i+5], i);
-			}
+		for (int i = 0; i < 3; i++) {
+			ouch.SetValue(GetComponents<AudioSource>()[i + 5], i);
+		}
 
-        playerRB = GetComponent<Rigidbody2D>();
+		playerRB = GetComponent<Rigidbody2D>();
 
 		anim = GetComponent<Animator>();
 
-		if(bulletGaugeMasks.Length>0) bulletGaugeMaskMaxScaleY = bulletGaugeMasks[0].transform.localScale.y;
+		if (bulletGaugeMasks != null && bulletGaugeMasks.Length > 0 && bulletGaugeMasks[0] != null) { 
+		bulletGaugeMaskMaxScaleY = bulletGaugeMasks[0].transform.localScale.y;
 
-		foreach(GameObject m in bulletGaugeMasks)
-        {
+		foreach (GameObject m in bulletGaugeMasks)
+		{
 			m.transform.localScale = new Vector3(m.transform.localScale.x, 0.0001f, m.transform.localScale.z);
-        }
+		}
 
+		}
 
 		//locate prefabs
 		PaintSpritePrefab = prefabHolder.gaugePaintSprite;
@@ -109,6 +139,14 @@ public class Player : MonoBehaviour
 		BulletPrefabs = prefabHolder.pallets;
 
 
+		//TRAVEL
+		objCollider = GetComponent<CapsuleCollider2D>();
+		layerMaskName = "";
+		movementMode = MovementMode.LINEAR;
+		active = (navigationMode == NavMode.TOUCH); //TODO player's navMode is set in GameControl, should wait for that first, work on this later
+
+		base.Start();
+		//TRAVEL
 	}
 
 	void Update ()
@@ -124,36 +162,16 @@ public class Player : MonoBehaviour
             }
             else
             {
-                if(navigationMode == Mode.ACCL)
+                if(navigationMode == NavMode.ACCL)
                 {
                     transform.Translate(Input.acceleration.x, 0, 0);
                 }
-                else if(navigationMode == Mode.TOUCH)
+                else if(navigationMode == NavMode.TOUCH)
                 {
                     //GameControl will send touch along if it's valid, nudge() will be called
                 }
                 if(gameControl.sceneType == GameControl.Mode.GAME) //TODO iffy way of dealing with this here
                 gameControl.updateLife(life);
-
-
-                ////////// just for testing purposes
-                if (Input.GetKeyDown(KeyCode.RightArrow))
-                {
-                    transform.position += new Vector3(20, 0, 0);
-                }
-                if (Input.GetKeyDown(KeyCode.LeftArrow))
-                {
-                    transform.position += new Vector3(-20, 0, 0);
-                }
-                if (Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    transform.position += new Vector3(0, 20, 0);
-                }
-                if (Input.GetKeyDown(KeyCode.DownArrow))
-                {
-                    transform.position += new Vector3(0, -20, 0);
-                }
-                //////////
 
             }
         }
@@ -200,24 +218,38 @@ public class Player : MonoBehaviour
 		StartCoroutine(shortPauseOnMoveTo());
     }
 
-    public void nudge()
+	/// <summary>
+	/// notifies player that it should start moving towards dest as a movingObject
+	/// 
+	/// Player will update its own target to the pressed location in addition in its own FixedUpdate
+	/// for now, player movement is linear
+	/// </summary>
+    public void startNudge()
     {
-        if(navigationMode == Mode.TOUCH)
-        StartCoroutine(nudgeWhilePressed()); //once this process starts, it checks for complete (mouse up) on it own
+		active = true;
+
     }
 
+	public void stopNudge()
+	{
+		active = false;
+	}
+
 	/// <summary>
-	/// nudge towards pressed position until finger lifts up
+	/// nudge towards pressed position (mouse to world) until finger lifts up
+	/// 
+	/// will end when press is null
 	/// </summary>
 	/// <returns></returns>
-    private IEnumerator nudgeWhilePressed()
+	private IEnumerator nudgeWhilePressed()
     {
         yield return new WaitUntil(() => //delegate called after each Update()
         {
             Vector2 mouseInWorld = Global.ScreenToWorld(Input.mousePosition);
-            Global.nudgeTowards(gameObject, (int)mouseInWorld.x, (int)mouseInWorld.y, 5);
+            Global.nudgeTowards(gameObject, (int)mouseInWorld.x, (int)mouseInWorld.y, 10);
             if (Input.GetMouseButtonUp(0))
             {
+				movementCoroutine = null;
                 return true;
             }
             else
@@ -559,13 +591,7 @@ public class Player : MonoBehaviour
         }
 	}
 
-
-
-	public int getMaxLife(){
-		return maxLife;
-	}
-
-    public void setNavigationMode(Mode mode)
+    public void setNavigationMode(NavMode mode)
     {
             navigationMode = mode;
     }
@@ -681,11 +707,6 @@ public class Player : MonoBehaviour
 		canMove = false;
 		yield return new WaitForSeconds(0.1f);
 		canMove = true;
-    }
-
-	public void setInvincible(bool to)
-    {
-		invincible = to;
     }
 
 
