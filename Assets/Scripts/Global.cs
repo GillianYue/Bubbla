@@ -16,9 +16,6 @@ public class Global : MonoBehaviour
 
     public static float orthographicSize; //entered manually by ME, here
 
-    public static float aspectRatio = (640.0f / 1136.0f);
-    public static float MainCanvasWidth = 640.0f;
-    public static float MainCanvasHeight = 1136.0f;
     /**
      * world is consistently 640*1136; screen depends on resolution. 
      * So for XR screen (828*1792), WTSfactor would allow world * WTSfactor = screen.
@@ -170,7 +167,7 @@ public class Global : MonoBehaviour
             float dy = ((yDist > 0) ? 1 : -1) * (float)Math.Sqrt((100 / (Math.Pow(ratio, 2) + 1)));
             float dx = ((xDist > 0) ? 1 : -1) * (float)Math.Sqrt(100 - Math.Pow(dy, 2));
 
-            Vector3 deltaPos = (new Vector3(dx, dy, 0).normalized) * spd;
+            Vector3 deltaPos = ((new Vector3(dx * 100, dy * 100, 0)).normalized) * spd;
             double r = Math.Sqrt(Math.Pow(deltaPos.x, 2) + Math.Pow(deltaPos.y, 2));
 
             RaycastHit2D[] hits = new RaycastHit2D[5];
@@ -197,12 +194,12 @@ public class Global : MonoBehaviour
         {
                 rb.MovePosition(new Vector2(x, y)); //not for collision
                 //e.transform.position = new Vector2(x, y);
-        }
+            }
         else
         {
                  rb.MovePosition(newPos);
                 //e.transform.position = newPos;
-        }
+            }
 
         } //close enough
     }

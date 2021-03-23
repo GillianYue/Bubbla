@@ -58,6 +58,7 @@ public abstract class MovingObject : MonoBehaviour
             switch (movementMode)
             {
                 case MovementMode.LINEAR:
+                    //print("linear move object: " + destPos);
                     Global.nudgeTowards(gameObject, (int)destPos.x, (int)destPos.y, linearSpeed, layerMaskIndex);
                     break;
                 case MovementMode.DEST_BASED:

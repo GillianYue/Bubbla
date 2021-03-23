@@ -143,7 +143,7 @@ public class Player : MovingObject
 		objCollider = GetComponent<CapsuleCollider2D>();
 		layerMaskName = "";
 		movementMode = MovementMode.LINEAR;
-		active = (navigationMode == NavMode.TOUCH); //TODO player's navMode is set in GameControl, should wait for that first, work on this later
+		linearSpeed = 30; //adjust player movement speed here
 
 		base.Start();
 		//TRAVEL
@@ -226,13 +226,13 @@ public class Player : MovingObject
 	/// </summary>
     public void startNudge()
     {
+		if(navigationMode == NavMode.TOUCH)
 		active = true;
-
     }
 
 	public void stopNudge()
 	{
-		active = false;
+		if (navigationMode == NavMode.TOUCH) active = false;
 	}
 
 	/// <summary>
