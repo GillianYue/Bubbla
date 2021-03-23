@@ -142,8 +142,9 @@ public class Player : MovingObject
 		//TRAVEL
 		objCollider = GetComponent<CapsuleCollider2D>();
 		layerMaskName = "";
-		movementMode = MovementMode.LINEAR;
+		movementMode = MovementMode.DEST_BASED;
 		linearSpeed = 30; //adjust player movement speed here
+		followSpeedPercent = 0.1f;
 
 		base.Start();
 		//TRAVEL
