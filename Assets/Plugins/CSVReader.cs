@@ -36,7 +36,7 @@ public class CSVReader : MonoBehaviour
 	static public string[,] SplitCsvGrid(string csvText, bool matchLineWithExcel)
 	{
 
-		string[] lines = csvText.Split(new string[] { "\r" }, System.StringSplitOptions.None);
+		string[] lines = csvText.Split(new string[] { "\n" }, System.StringSplitOptions.None);
 
 		// finds the max width of row
 		int width = 0; 
@@ -74,4 +74,6 @@ public class CSVReader : MonoBehaviour
 			System.Text.RegularExpressions.RegexOptions.ExplicitCapture)
 			select m.Groups[1].Value).ToArray();
 	}
+
+
 }

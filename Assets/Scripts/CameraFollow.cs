@@ -107,4 +107,11 @@ public class CameraFollow : MovingObject
         timestepToggle = !timestepToggle;
     }
 
+    /// <summary>
+    /// refocuses on player
+    /// </summary>
+    public void resetPosition()
+    {
+        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, startCameraZ);
+    }
 }

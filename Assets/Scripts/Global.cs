@@ -150,12 +150,15 @@ public class Global : MonoBehaviour
     /// moves a GO with Rigidbody2D towards a target destination while checking for raycast collisions, requires rigidbody2D on the GO
     /// 
     /// spd is the enforced fixed distance (approx) of each step 
+    /// 
+    /// will not check collision with trigger colliders
+    /// 
     /// </summary>
     /// <param name="e"></param>
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <param name="spd"></param>
-    public static void nudgeTowards(GameObject e, int x, int y, float spd, int layerMask)
+    public static void nudgeTowards(GameObject e, int x, int y, float spd, int colliderLayerMask)
     {
         Rigidbody2D rb = e.GetComponent<Rigidbody2D>();
 
@@ -171,9 +174,18 @@ public class Global : MonoBehaviour
             double r = Math.Sqrt(Math.Pow(deltaPos.x, 2) + Math.Pow(deltaPos.y, 2));
 
             RaycastHit2D[] hits = new RaycastHit2D[5];
+
+            ContactFilter2D filter2D = new ContactFilter2D
+            {
+                //Ignore trigger colliders
+                useTriggers = false,
+                //Use a layer mask
+                useLayerMask = (colliderLayerMask != -1), 
+                layerMask = colliderLayerMask,
+            };
+
             ///////collision checking with raycast
-            if(layerMask!=-1) e.GetComponent<Collider2D>().Raycast(new Vector2(dx, dy), hits, layerMask);
-            else e.GetComponent<Collider2D>().Raycast(new Vector2(dx, dy), hits);
+            e.GetComponent<Collider2D>().Raycast(new Vector2(dx, dy), filter2D, hits, Mathf.Infinity);
 
             if (hits[0].collider != null) //if in move direction exists collider
             {

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public class MapLoader : Loader
 {
 
@@ -45,7 +45,7 @@ public class MapLoader : Loader
     //functions below return info on a site with given site index
     public string getSiteNameOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, sites.Count-1); return sites[idx].siteName; }
     public Vector2 getSiteLocationOfIndex(int idx) { idx = Mathf.Clamp(idx, 1, sites.Count - 1); return sites[idx].coordinateOnMap; }
-    public List<Sublocation> getSublocationsOfSite(int siteIdx) { siteIdx = Mathf.Clamp(siteIdx, 1, sites.Count - 1); return sites[siteIdx].sublocations; }
+    public List<Sublocation> getSublocationsOfSite(int siteIdx) { siteIdx = Mathf.Clamp(siteIdx, 1, sites.Count - 1); return sites[siteIdx].sublocations.Values.ToList(); }
 
     public int getNumSites() { return sites.Count; }
 
@@ -68,7 +68,7 @@ public class MapLoader : Loader
 
             if (sidx != currSiteIdx) //arrived at a new site row (if same, means this is a sublocation)
             {
-                List<Sublocation> currSiteSublocations = new List<Sublocation>();
+                Dictionary<int, Sublocation> currSiteSublocations = new Dictionary<int, Sublocation>();
                 Site site = new Site();
                 sites.Add(site);
 
@@ -84,8 +84,11 @@ public class MapLoader : Loader
             else //is a sublocation row, needs to load in sublocation name and image
             {
                 Sublocation sub = new Sublocation();
-                sites[sites.Count - 1].sublocations.Add(sub);
+                int subIndex = int.Parse(data[1, r]);
+
+                sites[sites.Count - 1].sublocations.Add(subIndex, sub);
                 sub.sublocationName = data[2, r];
+                sub.sublocationIndex = subIndex;
 
                 sub.prefabName = data[5, r];
 
@@ -123,7 +126,7 @@ public class Site
 {
     public Vector2 coordinateOnMap;
     public string siteName;
-    public List<Sublocation> sublocations;
+    public Dictionary<int, Sublocation> sublocations;
 
 }
 
@@ -132,5 +135,6 @@ public class Sublocation
     public string sublocationName, prefabName;
     public Sprite displayImage;
     public bool showOnMap;
+    public int sublocationIndex;
 }
 

@@ -101,7 +101,7 @@ DLG,BUNNY,And now you're outside of IVS mode. ,0,1,,,,,,,
 GAME,99,30,0,npc1,TRUE,,,,,,//mod bool
 DLG,BUNNY,You're talking to npc 1.,0,1,,,6,93,,,
 GAME,99,30,0,npc2,TRUE,,,,,,
-DLG,CAPTAIN BUNS,"THAT""S NPC 2",2,1,,,6,93,,,
+DLG,CAPTAIN BUNS,THAT"S NPC 2,2,1,,,6,93,,,
 GAME,99,30,0,npc3,TRUE,,,,,,
 DLG,CAPTAIN BUNS,npc 3!!!,3,1,,,6,93,,,
 ,,,,,,,,,,,

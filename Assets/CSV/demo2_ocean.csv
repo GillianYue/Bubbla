@@ -1,1 +1,22 @@
-MODE,NAME(DLG); WAVE_TYPE(GAME),TEXT(DLG); ENEMY_TYPE(GAME),SPRITE_STATE(DLG); WAVE_SPAWN_WAIT(GAME),DISP_SPD(DLG); SPAWN_INTERVAL(GAME),VOICE_NO(DLG);  SPAWN_NUM(GAME),ANIM_SPD,SPECIAL; COL_DISTRIB(GAME),SPE_PARAM_1,SPE_PARAM_2,SPE_PARAM_3,NOTEGAME,99,7,ps,0,,,,,,,,99,8,3,0,,,,,,,DLG,BUNNY,"Won't you look at that, now we're on the sea!",0,1,,,,,,,,BUNNY,"wait. Then what are you standing on, player?",2,0.97,,,2,0,0,1,,CAPTAIN BUNS,Don't mind those details.,1,1,,,,,,,GAME,"11,6","0,1","0,5","1,1","6,7","RED,BLUE","0.8,1",,,,GAME,99,8,3,1,,,,,,,,99,30,0,,,,,,,,GAME,"5,11,7,11,9,10,12, 6, 8","0,0,1,0,1,1,0,1,0","0,4,-1,3,4,-1,4,3,3","1,1,1,1,1,0.8,0.8,0.7,0.7","8,7,6,6,8,7,8,5,6","RED,BLUE","0.5,1",,,,,"7,11,9,10,12","0,0,1,0,1","4,-1,4,3,-1","1,1,0.8,0.8,0.7","8,7,8,5,6","RED,BLUE","0.5,1",,,,,99,8,2,0,bg,,,,,,,99,99,4,,,,,,,,DLG,BUNNY,That is!! What is that!,0,1,,,,,,,DLG,CAPTAIN BUNS,That is my ship. Why is it empty? What happened to the crew?,2,0.97,,,,,,,GAME,99,99,2,,,,,,,,//boss attack vfxGAME,99,11,player,-100,-440,0.8,,,,,//player dodgeDLG,BUNNY,Agent! Watch out!,6,1,,,3,2,,,GAME,99,5,3,,,,,,,,//wait for three secGAME,99,11,player,0,-440,3,,,,,//player get back,99,99,5,,,,,,,,DLG,BUNNY,More stuff was supposed to go into that;  still a work in progress!!,0,1,,,,,,,
+MODE,NAME(DLG); WAVE_TYPE(GAME),TEXT(DLG); ENEMY_TYPE(GAME),SPRITE_STATE(DLG); WAVE_SPAWN_WAIT(GAME),DISP_SPD(DLG); SPAWN_INTERVAL(GAME),VOICE_NO(DLG);  SPAWN_NUM(GAME),ANIM_SPD,SPECIAL; COL_DISTRIB(GAME),SPE_PARAM_1,SPE_PARAM_2,SPE_PARAM_3,NOTE
+GAME,99,7,ps,0,,,,,,,
+,99,8,3,0,,,,,,,
+DLG,BUNNY,"Won't you look at that, now we're on the sea!",0,1,,,,,,,
+,BUNNY,"wait. Then what are you standing on, player?",2,0.97,,,2,0,0,1,
+,CAPTAIN BUNS,Don't mind those details.,1,1,,,,,,,
+GAME,"11,6","0,1","0,5","1,1","6,7","RED,BLUE","0.8,1",,,,
+GAME,99,8,3,1,,,,,,,
+,99,30,0,,,,,,,,
+GAME,"5,11,7,11,9,10,12, 6, 8","0,0,1,0,1,1,0,1,0","0,4,-1,3,4,-1,4,3,3","1,1,1,1,1,0.8,0.8,0.7,0.7","8,7,6,6,8,7,8,5,6","RED,BLUE","0.5,1",,,,
+,"7,11,9,10,12","0,0,1,0,1","4,-1,4,3,-1","1,1,0.8,0.8,0.7","8,7,8,5,6","RED,BLUE","0.5,1",,,,
+,99,8,2,0,bg,,,,,,
+,99,99,4,,,,,,,,
+DLG,BUNNY,That is!! What is that!,0,1,,,,,,,
+DLG,CAPTAIN BUNS,That is my ship. Why is it empty? What happened to the crew?,2,0.97,,,,,,,
+GAME,99,99,2,,,,,,,,//boss attack vfx
+GAME,99,11,player,-100,-440,0.8,,,,,//player dodge
+DLG,BUNNY,Agent! Watch out!,6,1,,,3,2,,,
+GAME,99,5,3,,,,,,,,//wait for three sec
+GAME,99,11,player,0,-440,3,,,,,//player get back
+,99,99,5,,,,,,,,
+DLG,BUNNY,More stuff was supposed to go into that;  still a work in progress!!,0,1,,,,,,,

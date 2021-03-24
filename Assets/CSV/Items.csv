@@ -1,1 +1,4 @@
-ITEM_CODE,ITEM_NAME,ITEM_DESCRIPTION,SIZE_SCALE,COLLIDER_SCALE,S0_ANIM,S1_ANIM,S2_ANIM,TYPE0,TRUSTY CANNON,Assigned weapon. Can shoot bullets at enemies.,2.3,,player_cannon_item,,,01,apple,crunchy and juicy,2.3,,test_item,,,02,potion,in-game health boost,2,2,potion,,,0
+ITEM_CODE,ITEM_NAME,ITEM_DESCRIPTION,SIZE_SCALE,COLLIDER_SCALE,S0_ANIM,S1_ANIM,S2_ANIM,TYPE
+0,TRUSTY CANNON,Assigned weapon. Can shoot bullets at enemies.,2.3,,player_cannon_item,,,0
+1,apple,crunchy and juicy,2.3,,test_item,,,0
+2,potion,in-game health boost,2,2,potion,,,0

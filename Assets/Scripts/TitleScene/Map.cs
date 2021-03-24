@@ -125,9 +125,11 @@ public class Map : MonoBehaviour
     /// </summary>
     /// <param name="listItem"></param>
     /// <param name="index"></param>
-    void setSiteSublocationData(GameObject listItem, int index, string sublocationName, Sprite displayImage)//TODO
+    void setSiteSublocationData(GameObject listItem, int siteIndex, string sublocationName, Sprite displayImage)//TODO
     {
         listItem.transform.GetChild(0).GetComponent<Text>().text = sublocationName;
+        listItem.transform.Find("siteIndex").GetComponent<Text>().text = siteIndex.ToString();
+
         //listItem.transform.GetChild(1).GetComponent<Image>().sprite = TODO Load in some sprite here;
         //TODO set list item thing based on curr site info 
 
@@ -143,7 +145,7 @@ public class Map : MonoBehaviour
 
         //set up site detail for new site
         ListScroller.setupList(siteDetailListRect, siteListItemPrefab, sublocationList.Count, 
-            (GameObject listItem, int index) => { setSiteSublocationData(listItem, index, sublocationList[index].sublocationName, 
+            (GameObject listItem, int index) => { setSiteSublocationData(listItem, sublocationList[index].sublocationIndex, sublocationList[index].sublocationName, 
                 sublocationList[index].displayImage); });
 
         //pan & zoom to site, and then open up site detail panel
