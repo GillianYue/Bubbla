@@ -29,7 +29,7 @@ SiteIdx,SublocationIdx,Name,ImagePath(under Resources/Images/Sites) note: this i
 15,2,Flower Shop,,,,TRUE,,,,
 16,,Bloomberry Flowerfield,flowerfield,"-29.2,-351.4",,TRUE,,,,
 17,,Pond,,"-55,-364.9",,TRUE,,,,
-18,,Mapleville,,"196.5,-285.5",,TRUE,,,,
+18,,Mapleville,,"196.5,-285.5",Mapleville,TRUE,,,,
 18,1,Mapleville Town,,,,TRUE,,,,
 18,2,Mapleville Cafe,,,,FALSE,,,,
 18,3,Mapleville Clinic,,,,FALSE,,,,

@@ -30,6 +30,9 @@ public class CustomEvents : MonoBehaviour
     protected GameObject vfxCanvas;
     public LevelScript levelScript;
 
+    [Inject(InjectFrom.Anywhere)]
+    public SublocationTransitionManager sublocationTransitionManager;
+
     //protected string[,] data;
     /*
      * identified is a List that keeps track of all existing GOs with an identifier script attached
@@ -142,7 +145,11 @@ public class CustomEvents : MonoBehaviour
                 loadAndPlayBGM(done, prms);
                 break;
             case 50:
-                
+                transitionToSite(done, prms);
+                break;
+            case 51:
+                transitionToSublocation(done, prms);
+                break;
             case 99:
                 levelScriptEvent(done, prms);
                 break;
@@ -338,10 +345,10 @@ public class CustomEvents : MonoBehaviour
         float.TryParse(prms[0], out secs);
 
         bool inc = true;
-        if(prms[1] != "") bool.TryParse(prms[1], out inc);
+        if (prms[1] != "") bool.TryParse(prms[1], out inc);
 
         yield return new WaitForSeconds(secs);
-        if(inc) done[0] = true;
+        if (inc) done[0] = true;
     }
 
     /*
@@ -808,7 +815,8 @@ public class CustomEvents : MonoBehaviour
         if (prms[2] == "" && prms[1] == "")
         {
             shake.TriggerShake(duration);
-        }else if(prms[2] == "")
+        }
+        else if (prms[2] == "")
         {
             float mag;
             float.TryParse(prms[1], out mag);
@@ -847,7 +855,7 @@ public class CustomEvents : MonoBehaviour
         Image img = vfxCanvas.GetComponent<Image>();
         img.color = Color.white;
 
-        for(int t=0; t<times; t++)
+        for (int t = 0; t < times; t++)
         {
             vfxCanvas.SetActive(true);
             yield return new WaitForSeconds(0.05f); //for now, hard coded in linger time 
@@ -1073,7 +1081,8 @@ public class CustomEvents : MonoBehaviour
             string[] varNames = varName.Split(',');
             for (int v = 0; v < varNames.Length; v++)
             {
-                switch (varTypes[v]) {
+                switch (varTypes[v])
+                {
                     case 0:
                         if (!Global.boolVariables.ContainsKey(varNames[v]))
                         {
@@ -1167,19 +1176,52 @@ public class CustomEvents : MonoBehaviour
     public void loadAndPlayBGM(bool[] done, string[] prms)
     {
         bool[] parms = new bool[4];
-        for(int i=0; i<4; i++)
+        for (int i = 0; i < 4; i++)
         {
             parms[i] = !(prms[i] == "" || prms[i] == "0"); //parms[1] obviously has no use
         }
 
-        if (parms[0]) { 
+        if (parms[0])
+        {
             gameControl.bgmSource.clip = (AudioClip)Resources.Load("BGM/" + prms[1]);
-           // Debug.Log("load result: " + gameControl.bgmSource.clip.name);
+            // Debug.Log("load result: " + gameControl.bgmSource.clip.name);
         }
         gameControl.bgmSource.loop = parms[2];
         if (parms[3]) gameControl.bgmSource.Play(); else gameControl.bgmSource.Stop();
 
         done[0] = true;
+    }
+
+    /*
+     * event #50
+     * 
+     * transitions to a site
+     * 
+     * param 0: siteIndex
+     * optional param 1: sublocation index (if left blank, will go to first sublocation of the site)
+     * 
+     */
+    public void transitionToSite(bool[] done, string[] prms)
+    {
+        //TODO load prefab according to site index
+    }
+
+    /*
+     * event #51
+     * 
+     * transitions to a given sublocation in the current site
+     * 
+     * param 0: target sublocation index 
+     * optional param 1: from sublocation index
+     * 
+     */
+    public void transitionToSublocation(bool[] done, string[] prms)
+    {
+        int to = int.Parse(prms[0]);
+        int from = -1;
+        int.TryParse(prms[1], out from);
+
+        sublocationTransitionManager.triggerSublocationTransition(to, from);
     }
 
 
