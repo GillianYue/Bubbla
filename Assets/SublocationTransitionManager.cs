@@ -18,6 +18,9 @@ public class SublocationTransitionManager : MonoBehaviour
     [HideInInspector]
     public CameraFollow camFollow;
 
+    [Inject(InjectFrom.Anywhere)]
+    public CustomEvents customEvents;
+
     void Awake()
     {
         sublocations = new Dictionary<int, GameObject>();
@@ -58,7 +61,7 @@ public class SublocationTransitionManager : MonoBehaviour
     /// <param name="player"></param>
     /// <param name="transitionTo"></param>
     /// <param name="fromSublocation"></param>
-    public void triggerSublocationTransition(int transitionTo, int fromSublocation)
+    public IEnumerator triggerSublocationTransition(int transitionTo, int fromSublocation)
     {
         GameObject player = p.gameObject;
 
@@ -80,8 +83,16 @@ public class SublocationTransitionManager : MonoBehaviour
 
         if (startSpot == null) startSpot = sublocations[transitionTo].transform.Find("TransitionEnterSpot").gameObject;
 
+        yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("0"));
+
         player.transform.position = startSpot.transform.position;
         camFollow.resetPosition();
 
+        yield return new WaitForSeconds(1f);
+
+        yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("0"));
+
     }
+
+
 }

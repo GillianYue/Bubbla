@@ -33,6 +33,9 @@ public class CustomEvents : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public SublocationTransitionManager sublocationTransitionManager;
 
+    [Inject(InjectFrom.Anywhere)]
+    public MapLoader mapLoader;
+
     //protected string[,] data;
     /*
      * identified is a List that keeps track of all existing GOs with an identifier script attached
@@ -132,6 +135,9 @@ public class CustomEvents : MonoBehaviour
             case 22:
                 StartCoroutine(screenFlash(done, prms));
                 break;
+            case 23:
+                StartCoroutine(cameraMovement(done, prms));
+                break;
             case 30:
                 variable(done, prms);
                 break;
@@ -145,10 +151,10 @@ public class CustomEvents : MonoBehaviour
                 loadAndPlayBGM(done, prms);
                 break;
             case 50:
-                transitionToSite(done, prms);
+                StartCoroutine(transitionToSite(done, prms));
                 break;
             case 51:
-                transitionToSublocation(done, prms);
+                StartCoroutine(transitionToSublocation(done, prms));
                 break;
             case 99:
                 levelScriptEvent(done, prms);
@@ -210,6 +216,7 @@ public class CustomEvents : MonoBehaviour
         {
             setIdentifier(e, prms[4]);
         }
+
         done[0] = true;
     }
 
@@ -745,7 +752,7 @@ public class CustomEvents : MonoBehaviour
      * 
      * param 0: vfx index
      *      -0: black fade in
-     *      -1: black fade out to screen    
+     *      -1: black fade out to screen content
      *      -2
      * optional param 1: alternative color in the form of "rValue,gValue,bValue"   
      */
@@ -758,7 +765,7 @@ public class CustomEvents : MonoBehaviour
         Image img = vfxCanvas.GetComponent<Image>();
 
         Color col = Color.black;
-        Global.parseColorParameter(prms[1], ref col);
+        if(prms.Length > 1) Global.parseColorParameter(prms[1], ref col);
 
         switch (index)
         {
@@ -849,8 +856,8 @@ public class CustomEvents : MonoBehaviour
         int times;
         if (!int.TryParse(prms[0], out times)) times = 1;
 
-        float interval;
-        if (!float.TryParse(prms[1], out interval)) interval = 0.2f;
+        float interval = 0.2f;
+        if (prms.Length > 1) float.TryParse(prms[1], out interval);
 
         Image img = vfxCanvas.GetComponent<Image>();
         img.color = Color.white;
@@ -866,6 +873,62 @@ public class CustomEvents : MonoBehaviour
         done[0] = true;
     }
 
+    /*
+     * event #23
+     * 
+     * moves the camera in a certain manner
+     * 
+     * param 0: move mode
+     *  -0: delta position (change in position)
+     *  -1: absolute local position of the camera
+     * param 1: x coordinate(s) of position(s), separated by comma if multiple
+     * param 2: y coordinate(s) of position(s), ...
+     * param 3: duration(s) of each movement, in seconds
+     * optional param 4: wait mode
+     *  -0: wait until camera movement done
+     *  -1: go to next line immediately
+     * 
+     */
+    public IEnumerator cameraMovement(bool[] done, string[] prms)
+    {
+        int moveMode = int.Parse(prms[0]);
+
+        int[] xVals = Global.parseMultipleIntParameter(prms[1]),
+            yVals = Global.parseMultipleIntParameter(prms[2]),
+            durations = Global.parseMultipleIntParameter(prms[3]);
+
+        int waitMode = 0;
+        int.TryParse(prms[4], out waitMode);
+
+        for(int i=0; i<xVals.Length; i++)
+        {
+            Vector3 dest = gameControl.mainCamera.transform.localPosition;
+
+            switch (moveMode)
+            {
+                case 0:
+                    dest = new Vector3(dest.x + xVals[i], dest.y + yVals[i], dest.z);
+                    break;
+                case 1:
+                    dest = new Vector3(xVals[i], yVals[i], dest.z);
+                    break;
+            }
+
+            switch (waitMode)
+            {
+                case 0: //wait
+                    yield return Global.moveToLocalPositionInSecs(gameControl.mainCamera.gameObject, dest, durations[i], new bool[1]);
+                    done[0] = true;
+                    break;
+                case 1: //don't wait
+                    StartCoroutine(Global.moveToLocalPositionInSecs(gameControl.mainCamera.gameObject, dest, durations[i], new bool[1]));
+                    done[0] = true;
+                    break;
+            }
+        }
+
+        
+    }
 
     /*
     * event #30
@@ -883,13 +946,7 @@ public class CustomEvents : MonoBehaviour
     */
     public void variable(bool[] done, string[] prms)
     {
-
-        string[] varTypez = prms[0].Split(',');
-        int[] varTypes = new int[varTypez.Length];
-        for (int t = 0; t < varTypez.Length; t++)
-        {
-            int.TryParse(varTypez[t], out varTypes[t]);
-        }
+        int[] varTypes = Global.parseMultipleIntParameter(prms[0]);
 
         string[] varNames = prms[1].Split(',');
 
@@ -958,12 +1015,7 @@ public class CustomEvents : MonoBehaviour
 
     public bool conditionalSwitch(bool[] done, string[] prms)
     {
-        string[] varTypez = prms[0].Split(',');
-        int[] varTypes = new int[varTypez.Length];
-        for (int t = 0; t < varTypez.Length; t++)
-        {
-            int.TryParse(varTypez[t], out varTypes[t]);
-        }
+        int[] varTypes = Global.parseMultipleIntParameter(prms[0]);
 
         string varName = prms[1];
 
@@ -1201,9 +1253,34 @@ public class CustomEvents : MonoBehaviour
      * optional param 1: sublocation index (if left blank, will go to first sublocation of the site)
      * 
      */
-    public void transitionToSite(bool[] done, string[] prms)
+    public IEnumerator transitionToSite(bool[] done, string[] prms)
     {
-        //TODO load prefab according to site index
+        
+        int site = int.Parse(prms[0]);
+
+        int sub = 1;
+        int.TryParse(prms[1], out sub);
+
+        //TODO fadeOut, maybe to loading screen
+        yield return fadeInOutToColor(new bool[1], Global.makeParamString("0")); //fade out
+        if (GlobalSingleton.Instance.siteInstance != null) Destroy(GlobalSingleton.Instance.siteInstance); //destroy prev site if exists
+
+        string sitePrefabPath = "Sites/" + mapLoader.getSiteAtIndex(site).prefabName;
+        GameObject sitePrefab = Resources.Load(sitePrefabPath) as GameObject;
+        if (sitePrefab == null) Debug.LogError("prefab for site doesn't exist at " + sitePrefabPath);
+        GlobalSingleton.Instance.siteInstance = Instantiate(sitePrefab);
+
+        GlobalSingleton.Instance.siteInstance.transform.parent = gameControl.mainCanvas.transform;
+
+        //TODO might need to reassign references to SublocationTransitionManager, etc.
+        sublocationTransitionManager = GlobalSingleton.Instance.siteInstance.GetComponent<SublocationTransitionManager>();
+        
+        yield return sublocationTransitionManager.triggerSublocationTransition(sub, -1);
+
+        yield return fadeInOutToColor(new bool[1], Global.makeParamString("1"));
+        yield return new WaitForSeconds(0.5f);
+
+        done[0] = true;
     }
 
     /*
@@ -1215,13 +1292,14 @@ public class CustomEvents : MonoBehaviour
      * optional param 1: from sublocation index
      * 
      */
-    public void transitionToSublocation(bool[] done, string[] prms)
+    public IEnumerator transitionToSublocation(bool[] done, string[] prms)
     {
         int to = int.Parse(prms[0]);
         int from = -1;
-        int.TryParse(prms[1], out from);
+        if(prms.Length > 1) int.TryParse(prms[1], out from);
 
-        sublocationTransitionManager.triggerSublocationTransition(to, from);
+        yield return sublocationTransitionManager.triggerSublocationTransition(to, from);
+        done[0] = true;
     }
 
 

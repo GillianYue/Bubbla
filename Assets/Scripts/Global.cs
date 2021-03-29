@@ -266,6 +266,26 @@ public class Global : MonoBehaviour
         return moveToInSecs(e, (int)dest.x, (int)dest.y, sec, done);
     }
 
+    public static IEnumerator moveToLocalPositionInSecs(GameObject e, int x, int y, float sec, bool[] done)
+    {
+        float xDist = x - e.transform.localPosition.x;
+        float yDist = y - e.transform.localPosition.y;
+        float dx = xDist / sec;
+        float dy = yDist / sec;
+
+        e.GetComponent<Rigidbody2D>().velocity = new Vector2(dx, dy);
+
+        yield return new WaitForSeconds(sec);
+
+        e.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0); //stops the GO at dest
+        done[0] = true;
+    }
+
+    public static IEnumerator moveToLocalPositionInSecs(GameObject e, Vector2 localPosDest, float sec, bool[] done)
+    {
+        return moveToLocalPositionInSecs(e, (int)localPosDest.x, (int)localPosDest.y, sec, done);
+    }
+
     /// <summary>
     /// 
     /// checks whether a gameobject's position is within screen view
@@ -780,6 +800,26 @@ public class Global : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    public static int[] parseMultipleIntParameter(string param)
+    {
+        string[] vars = param.Split(',');
+
+        if (!param.Equals(""))
+        {
+            int[] varInts = new int[vars.Length];
+            for (int t = 0; t < vars.Length; t++)
+            {
+                int.TryParse(vars[t], out varInts[t]);
+            }
+            return varInts;
+        }
+        else
+        {
+            Debug.LogError("invalid param: " + param);
+            return null;
         }
     }
 

@@ -22,6 +22,8 @@ public class GlobalSingleton : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
 
+    public GameObject siteInstance; //holds the instantiated site instance if in travel mode (from site prefabs)
+
     //TODO temp cache data on current quest progress
 
     void Awake()

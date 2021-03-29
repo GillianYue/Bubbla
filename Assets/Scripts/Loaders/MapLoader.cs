@@ -48,6 +48,7 @@ public class MapLoader : Loader
     public List<Sublocation> getSublocationsOfSite(int siteIdx) { siteIdx = Mathf.Clamp(siteIdx, 1, sites.Count - 1); return sites[siteIdx].sublocations.Values.ToList(); }
 
     public int getNumSites() { return sites.Count; }
+    public Site getSiteAtIndex(int index) { index = Mathf.Clamp(index, 0, sites.Count-1); return sites[index - 1]; }
 
     IEnumerator parseMapData()
     {
@@ -74,6 +75,7 @@ public class MapLoader : Loader
 
                 site.sublocations = currSiteSublocations;
                 site.siteName = data[2, r];
+                site.prefabName = data[5, r];
 
                 Vector2 siteLocation = new Vector2();
                 Global.parseVector2Parameter(data[4, r], ref siteLocation);
@@ -89,8 +91,6 @@ public class MapLoader : Loader
                 sites[sites.Count - 1].sublocations.Add(subIndex, sub);
                 sub.sublocationName = data[2, r];
                 sub.sublocationIndex = subIndex;
-
-                sub.prefabName = data[5, r];
 
                 bool showOnMap = bool.Parse(data[6, r]);
                 sub.showOnMap = showOnMap;
@@ -125,14 +125,14 @@ public class MapLoader : Loader
 public class Site
 {
     public Vector2 coordinateOnMap;
-    public string siteName;
+    public string siteName, prefabName;
     public Dictionary<int, Sublocation> sublocations;
 
 }
 
 public class Sublocation
 {
-    public string sublocationName, prefabName;
+    public string sublocationName;
     public Sprite displayImage;
     public bool showOnMap;
     public int sublocationIndex;

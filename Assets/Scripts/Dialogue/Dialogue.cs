@@ -30,7 +30,6 @@ public class Dialogue : MonoBehaviour
 
 	private bool lineDone = true, skipping = false;
 	public bool canSkip = true;
-	private string openTag, endTag; //those two variables are used for dialogue tag processing
 
 	private bool[] loadDone; //TODO related to title, debug
 
@@ -116,7 +115,7 @@ public class Dialogue : MonoBehaviour
 
 		//format sentence
 		string[] store; ArrayList result = new ArrayList();
-		int[] tags = GetFormattedText(DIALOGUE, content, result);
+		List<(int[], string, string)> tags = GetFormattedText(DIALOGUE, content, result);
 		store = result.ToArray(typeof(string)) as string[];
 		Canvas.ForceUpdateCanvases();
 		DIALOGUE.text = "";
@@ -161,20 +160,31 @@ public class Dialogue : MonoBehaviour
 
 
 		int endSentencePartIDefaultBack = 1;
+		int currOpenTagIndex = -1, currEndTagIndex = -1;
+		string currOpenTag = "", currEndTag = "";
+
+		int currTagIndex = 0; //which tag are we adding in the tagsList
+		if (tags.Count > currTagIndex + 1) //if has tags at all
+		{
+			currOpenTagIndex = tags[currTagIndex].Item1[0]; currEndTagIndex = tags[currTagIndex].Item1[2];
+			currOpenTag = tags[currTagIndex].Item2; currEndTag = tags[currTagIndex].Item3;
+		}
+
 		//loop through lines of this sentence
 		for (int s = 0; s < store.Length; s++)
 		{
 			for (int n = 0; n < store[s].Length; n++) //loop through characters of each line
 			{
 				//tagging is for tags in rich text, not a part of the special effects system
-				if (n == tags[0]) //we're at the first letter that needs to be tagged
+				if (n == currOpenTagIndex) //we're at the first letter that needs to be tagged
 				{
-					DIALOGUE.text += openTag;
+					DIALOGUE.text += currOpenTag;
 				}
-				else if (tags[0] != -1 && n > tags[0] && n <= tags[2])
+				else if (currOpenTagIndex != -1 && n > currOpenTagIndex && n <= currEndTagIndex)
+					//remove previously added temp end tag, the last one won't be removed
 				{
 					DIALOGUE.text = DIALOGUE.text.Remove
-						(DIALOGUE.text.Length - (endTag.Length)); //remove temp ending tag
+						(DIALOGUE.text.Length - (currEndTag.Length)); 
 				}
 
 				DIALOGUE.text += store[s][n]; //the actual adding of the char
@@ -191,9 +201,24 @@ public class Dialogue : MonoBehaviour
 					wordCount++;
 				}
 
-				if (tags[0] != -1 && n >= tags[0] && n <= tags[2])
+				if (currOpenTagIndex != -1 && n >= currOpenTagIndex && n <= currEndTagIndex)
 				{
-					DIALOGUE.text += endTag; //add temp ending tag
+					DIALOGUE.text += currEndTag; //add temp ending tag
+				}
+
+				if(n == currEndTagIndex)
+                {
+					currTagIndex++; //move on to next tag
+					if (tags.Count > currTagIndex + 1) //see if next tag even exists
+					{
+						currOpenTagIndex = tags[currTagIndex].Item1[0]; currEndTagIndex = tags[currTagIndex].Item1[2];
+						currOpenTag = tags[currTagIndex].Item2; currEndTag = tags[currTagIndex].Item3;
+                    }
+                    else
+                    {
+						currOpenTagIndex = -1; currEndTagIndex = -1;
+						currOpenTag = ""; currEndTag = "";
+					}
 				}
 
 				switch (special)
@@ -437,22 +462,25 @@ public class Dialogue : MonoBehaviour
 	}
 
 	/*
+	 * returns a List of structs containing a tagPos int[], string openTag, string endTag
+	 * 
 	 * prevents long words at end of line from jumping to the next when rendering
-	 *     
-	 * adds the parsed sentences to ArrayList result one by one.
+	 * adds the parsed sentences to ArrayList result one by one (reflected in a modified result)
 	 *     
 	 * Checks if there are tags first. 
 	 * If yes, stores the positions of the opening and ending tags in an int array that's returned.
 	 * If no, the returned array[0] will be -1, indicating that there's no tags in this sentence.
 	 * 
 	 */
-	private int[] GetFormattedText(Text textUI, string text, ArrayList result)
+	private List<(int[], string, string)> GetFormattedText(Text textUI, string text, ArrayList result)
 	{
+		List<(int[], string, string)> tagsList = new List<(int[], string, string)>(); //(tagPos, openTag, endTag)
 
-		int[] tagPos = new int[4];
-
-		if (text.Contains("<")) //check if there's tag in this sentence
+		while (text.Contains("<")) //check if there's tag in this sentence
 		{
+
+			int[] tagPos = new int[4]; string openTag, endTag;
+			
 			tagPos[0] = text.IndexOf('<'); //the starting pos of the opening tag
 			tagPos[1] = text.IndexOf('>'); //the ending pos of the opening tag
 
@@ -465,12 +493,21 @@ public class Dialogue : MonoBehaviour
 			endTag = text.Substring(tagPos[2], tagPos[3] - tagPos[2] + 1);
 			text = text.Remove(tagPos[2], tagPos[3] - tagPos[2] + 1);
 
-		}
-		else
-		{
-			tagPos[0] = -1;
+			tagsList.Add((tagPos, openTag, endTag));
 		}
 
+		//keyword replacements
+		while (text.Contains("["))
+        {
+			int[] bracketPos = new int[2];
+			bracketPos[0] = text.IndexOf('[');
+			bracketPos[1] = text.IndexOf(']');
+
+			int key_length = bracketPos[1] - bracketPos[0] + 1;
+			string key = text.Substring(bracketPos[0], key_length);
+			text = text.Remove(bracketPos[0], key_length);
+			text.Insert(bracketPos[0], Strings.Get(key));
+        }
 
 		string[] words = text.Split(' ');
 
@@ -514,7 +551,7 @@ public class Dialogue : MonoBehaviour
 			}
 		}
 		result.Add(newText);
-		return tagPos; //result.length is how many "pages" there are, each with multiple '\n' within
+		return tagsList; //result.length is how many "pages" there are, each with multiple '\n' within
 	}
 
 	private int GetWordSize(Text textUI, string word, Font font, int fontSize)
