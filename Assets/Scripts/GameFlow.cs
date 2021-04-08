@@ -164,13 +164,13 @@ public class GameFlow : MonoBehaviour {
             } 
             else if(currMode == Mode.IVS)
             {
-                gameControl.showAllIcons();
-                player.setNavigationMode(Player.NavMode.TOUCH);
+                if (gameControl) gameControl.showAllIcons();
+                if(player) player.setNavigationMode(Player.NavMode.TOUCH);
             }
             else if (currMode == Mode.GAME)
             {
-                gameControl.showAllIcons();
-                player.setNavigationMode(Player.NavMode.ACCL);
+                if(gameControl) gameControl.showAllIcons();
+                if(player) player.setNavigationMode(Player.NavMode.ACCL);
             }
 
             if (currMode != Mode.GAME)

@@ -1,1 +1,89 @@
-MODE,NAME(DLG); WAVE_TYPE(GAME),TEXT(DLG); ENEMY_TYPE(GAME),SPRITE_STATE(DLG); STD_COL(GAME),DISP_SPD(DLG); COL_DISTRIB(GAME),VOICE_NO(DLG); LOOP(GAME),ANIM_SPD;,SPECIAL,SPE_PARAM_1,SPE_PARAM_2,SPE_PARAM3,NOTE,,,,,,,,,,,##event 1,FALSE,onStart,,,,,,,,,DLG,BUNNY,"Alright-- Agent Bubbles, are you ready?",0,1,,,,,,,,,Time to get started with your training mission.,0,,,,,,,,,,The objective today is to familiarize you with fighting in real life.,0,,,,2,2,2,1,,,"After all, you've been off from work for quite a while!",0,,,8,2,"1,2,1","6,1,5","1,1,-1",,,We'll train you here until you feel ready to go.,0,,,,2,"1,1","6,5","1,-1",//smile talk and continue smilingGAME,99,8,0,0,,,,,,,//disable in-game touch check,99,1,0,,,,tutorialEnemy,,,,//gen Enemy with tag,99,5,2,,,,,,,,//wait for 2 seconds,99,10,tutorialEnemy,0,200,180,,,,,//move go to pos with spdGAME,99,8,0,1,,,,,,,//enable touch check againDLG,BUNNY,Hey! That's an enemy right there.,0,,,,,,,,,,"Why don't you take care of it, Agent?",0,,,,,,,,,BUNNY,. . . . . .,0,0.4,,,2,"1,1,1","1,3,3","1,3,-1",,BUNNY,Don't tell me...You forgot how to do it?,13,1,,,,,,,,BUNNY,"You are so forgetful! Well, I guess I'll have to teach you how it works!",0,1,,,2,"1,1","6,5","1,-1",,BUNNY,"When you see an enemy, either move away or attack.",0,1,,,,,,,GAME,99,7,tutorial_image,1,0,,,,,,//show tutorial image,99,30,0,close_tutorial,FALSE,,,,,,//create bool that will be set to true on tutorial close (button script in editor)GAME,99,8,0,0,,,,,,,//disable in-game touch check,99,9,0,close_tutorial,0,TRUE,,,,,//wait until tutorial close (do not yield control),BUNNY,"Now, finish the enemy!",0,1,,,,,,,,99,14,tutorialEnemy,,,,,,,,//wait until enemy destroyed,BUNNY,Good job!,0,1,,,2,"1,1","6,5","1,-1",,BUNNY,"When you see an enemy like this, make sure don't let it get too close.",0,1,,,,,,,,BUNNY,Now go on ahead! Let's take down some more.,0,1,,,,,,,GAME,"1,2,3,4,1,2,4,4,3,1","0,1,1,0,0,1,0,0,1,0","RED,BLUE","0.5,1",,,,,,,//waveDLG,BUNNY,Good. Think you've got it?,0,1,,,,,,,,,"Now, let's add in [paintball]s!",0,,,,,,,,,,"What are [paintball]s, you say?",0,,,,,,,,,,"Well, they are colorful little circles that sometimes appear out of nowhere.",0,,,,,,,,,,Bumping into them fills you with mysterious powers!,0,,,,,,,,,,"Although, I'm not completely sure how that works...",0,,,,,,,,DLG,BUNNY,"Anyway! When you see one, you know it's good for you!",0,,,,,,,,GAME,99,3,RED,"-220,660,0",ball,2,0,,,,//gen pb,99,8,0,0,,,,,,,//disable in-game touch check,99,11,ball,-220,250,3,,,,,//move pb to posDLG,BUNNY,Here is a [paintball]. Try bump into it!,0,,,,,,,,GAME,99,8,0,1,,,,,,,//enable touch check again,99,99,1,,,,,,,,"//pb tutorial, wait until pb absorbed"DLG,BUNNY,"Nice, now you have accumulated some [paintball] energy.",0,,,,,,,,,,See the container thing on the bottom right? That is your [bullet gauge].,0,,,,,,,,,,Now hold your finger on the screen to shoot some bullets.,0,,,,,,,,GAME,99,5,2,,,,,,,,//wait for 2 secondsDLG,BUNNY,"You get an extra boost to your attack, thanks to the [paintball] power.",0,,,,,,,,,,The effect of the boost depends on the type of the [paintball].,0,,,,,,,,,,"Depending on where you are, you will find different [paintball]s.",0,,,,,,,,,,Try out different [paintball]s to find out what they do!,0,1,,,2,"1,1","6,5","1,-1",,,"Ok, agent. Let's do some more training.",,,,,,,,,//wave 2GAME,"2,2,3,4,3,2,1,1,1,3","1,1,1,0,1,1,0,0,0,1","BLUE,YELLOW","0.2,1",,,,,,,DLG,BUNNY,"I think you are ready, [agent]!",0,1,,,2,"1,1","6,5","1,-1",,,Now you can enter certain areas of danger.,0,,,,,,,,,,Alright. You're almost done with the mission.,0,,,,,,,,,,The last task on the list is... let me see...,0,,,,2,2,2,1,,,You just need to recycle your earpiece in the backyard of this building.,0,,,,,,,,,,That's it. Easy enough.,0,,,,,,,,,,Don't worry - the Corp will equip you with a newer model soon.,0,,,,,,,,,,"Now give me a sec, let me log you out of the training program...",0,,,,2,2,2,1,,,"[screen fades out, enters backyard scene]",,,,,,,,,DLG,BUNNY,"... My, it's night time already.",0,1,,,,,,,,,"It's hard to keep track of time when you're in the training rooms, huh?",0,,,,,,,,GAME,99,5,1,,,,,,,,//one second silenceDLG,BUNNY,"You seem confused, agent.",0,,,,,,,,,,"You were in a simulation environment. Well, supported by our training devices, that is.",0,,,,,,,,,,"Did it seem like the ""room"" was infinitely long?",0,,,,,,,,,,All I can say is -- computer programs made you think that way!,0,,,,,,,,,,"Technology sure is crazy nowadays, especially with the power of the [somastone]...",0,,,,,,,,,,Anyway. Right now you're back in the real world.,0,,,,,,,,,,[open map UI],,,,,,,,,,,"This is where you're at currently, in the Academy.",,,,,,,,,,,It's where Xyclop agents do their regular training missions.,,,,,,,,,,,And right now you are in the backyard of the Academy.,,,,,,,,,,,[close map UI],,,,,,,,,,,[camera move to trash cans],,,,,,,,,,,See those two trash cans? Just dispose your earpiece over there.,,,,,,,,,,,[camera move back],,,,,,,,,##event 1,,,,,,,,,,,,,//event 2 triggers when player taps on trash can,,,,,,,,,,,"//trash can should have ivsInteractable && identifier ""trashcan""",,,,,,,,,,"//events, this col stores retriggerable","//for events, this column stores the trigger conditions",,,,,,,,,,,,,,,,,,,,##event 2,FALSE,tap[trashcan],,,,,,,,,DLG,BUNNY,"Well, now it's event 2",0,1,,,,,,,,,Heehee. ,,,,,,,,,##event 2,,,,,,,,,,,
+MODE,NAME(DLG); WAVE_TYPE(GAME),TEXT(DLG); ENEMY_TYPE(GAME),SPRITE_STATE(DLG); STD_COL(GAME),DISP_SPD(DLG); COL_DISTRIB(GAME),VOICE_NO(DLG); LOOP(GAME),ANIM_SPD;,SPECIAL,SPE_PARAM_1,SPE_PARAM_2,SPE_PARAM3,NOTE
+,,,,,,,,,,,
+##event 1,FALSE,onStart,,,,,,,,,
+DLG,BUNNY,"Alright-- Agent Bubbles, are you ready?",0,1,,,3,3,,,
+GAME,99,50,18,,,,,,,,
+,,Time to get started with your training mission.,0,,,,,,,,
+,,The objective today is to familiarize you with fighting in real life.,0,,,,2,2,2,1,
+,,"After all, you've been off from work for quite a while!",0,,,8,2,"1,2,1","6,1,5","1,1,-1",
+,,We'll train you here until you feel ready to go.,0,,,,2,"1,1","6,5","1,-1",//smile talk and continue smiling
+GAME,99,8,0,0,,,,,,,//disable in-game touch check
+,99,1,0,,,,tutorialEnemy,,,,//gen Enemy with tag
+,99,5,2,,,,,,,,//wait for 2 seconds
+,99,10,tutorialEnemy,0,200,180,,,,,//move go to pos with spd
+GAME,99,8,0,1,,,,,,,//enable touch check again
+DLG,BUNNY,Hey! That's an enemy right there.,0,,,,,,,,
+,,"Why don't you take care of it, Agent?",0,,,,,,,,
+,BUNNY,. . . . . .,0,0.4,,,2,"1,1,1","1,3,3","1,3,-1",
+,BUNNY,Don't tell me...You forgot how to do it?,13,1,,,,,,,
+,BUNNY,"You are so forgetful! Well, I guess I'll have to teach you how it works!",0,1,,,2,"1,1","6,5","1,-1",
+,BUNNY,"When you see an enemy, either move away or attack.",0,1,,,,,,,
+GAME,99,7,tutorial_image,1,0,,,,,,//show tutorial image
+,99,30,0,close_tutorial,FALSE,,,,,,//create bool that will be set to true on tutorial close (button script in editor)
+GAME,99,8,0,0,,,,,,,//disable in-game touch check
+,99,9,0,close_tutorial,0,TRUE,,,,,//wait until tutorial close (do not yield control)
+,BUNNY,"Now, finish the enemy!",0,1,,,,,,,
+,99,14,tutorialEnemy,,,,,,,,//wait until enemy destroyed
+,BUNNY,Good job!,0,1,,,2,"1,1","6,5","1,-1",
+,BUNNY,"When you see an enemy like this, make sure don't let it get too close.",0,1,,,,,,,
+,BUNNY,Now go on ahead! Let's take down some more.,0,1,,,,,,,
+GAME,"1,2,3,4,1,2,4,4,3,1","0,1,1,0,0,1,0,0,1,0","RED,BLUE","0.5,1",,,,,,,//wave
+DLG,BUNNY,Good. Think you've got it?,0,1,,,,,,,
+,,"Now, let's add in [paintball]s!",0,,,,,,,,
+,,"What are [paintball]s, you say?",0,,,,,,,,
+,,"Well, they are colorful little circles that sometimes appear out of nowhere.",0,,,,,,,,
+,,Bumping into them fills you with mysterious powers!,0,,,,,,,,
+,,"Although, I'm not completely sure how that works...",0,,,,,,,,
+DLG,BUNNY,"Anyway! When you see one, you know it's good for you!",0,,,,,,,,
+GAME,99,3,RED,"-220,660,0",ball,2,0,,,,//gen pb
+,99,8,0,0,,,,,,,//disable in-game touch check
+,99,11,ball,-220,250,3,,,,,//move pb to pos
+DLG,BUNNY,Here is a [paintball]. Try bump into it!,0,,,,,,,,
+GAME,99,8,0,1,,,,,,,//enable touch check again
+,99,99,1,,,,,,,,"//pb tutorial, wait until pb absorbed"
+DLG,BUNNY,"Nice, now you have accumulated some [paintball] energy.",0,,,,,,,,
+,,See the container thing on the bottom right? That is your [bullet gauge].,0,,,,,,,,
+,,Now hold your finger on the screen to shoot some bullets.,0,,,,,,,,
+GAME,99,5,2,,,,,,,,//wait for 2 seconds
+DLG,BUNNY,"You get an extra boost to your attack, thanks to the [paintball] power.",0,,,,,,,,
+,,The effect of the boost depends on the type of the [paintball].,0,,,,,,,,
+,,"Depending on where you are, you will find different [paintball]s.",0,,,,,,,,
+,,Try out different [paintball]s to find out what they do!,0,1,,,2,"1,1","6,5","1,-1",
+,,"Ok, agent. Let's do some more training.",,,,,,,,,//wave 2
+GAME,"2,2,3,4,3,2,1,1,1,3","1,1,1,0,1,1,0,0,0,1","BLUE,YELLOW","0.2,1",,,,,,,
+DLG,BUNNY,"I think you are ready, [agent]!",0,1,,,2,"1,1","6,5","1,-1",
+,,Now you can enter certain areas of danger.,0,,,,,,,,
+,,Alright. You're almost done with the mission.,0,,,,,,,,
+,,The last task on the list is... let me see...,0,,,,2,2,2,1,
+,,You just need to recycle your earpiece in the backyard of this building.,0,,,,,,,,
+,,That's it. Easy enough.,0,,,,,,,,
+,,Don't worry - the Corp will equip you with a newer model soon.,0,,,,,,,,
+,,"Now give me a sec, let me log you out of the training program...",0,,,,2,2,2,1,
+,,"[screen fades out, enters backyard scene]",,,,,,,,,
+DLG,BUNNY,"... My, it's night time already.",0,1,,,,,,,
+,,"It's hard to keep track of time when you're in the training rooms, huh?",0,,,,,,,,
+GAME,99,5,1,,,,,,,,//one second silence
+DLG,BUNNY,"You seem confused, agent.",0,,,,,,,,
+,,"You were in a simulation environment. Well, supported by our training devices, that is.",0,,,,,,,,
+,,Did it seem like the "room" was infinitely long?,0,,,,,,,,
+,,All I can say is -- computer programs made you think that way!,0,,,,,,,,
+,,"Technology sure is crazy nowadays, especially with the power of the [somastone]...",0,,,,,,,,
+,,Anyway. Right now you're back in the real world.,0,,,,,,,,
+,,[open map UI],,,,,,,,,
+,,"This is where you're at currently, in the Academy.",,,,,,,,,
+,,It's where Xyclop agents do their regular training missions.,,,,,,,,,
+,,And right now you are in the backyard of the Academy.,,,,,,,,,
+,,[close map UI],,,,,,,,,
+,,[camera move to trash cans],,,,,,,,,
+,,See those two trash cans? Just dispose your earpiece over there.,,,,,,,,,
+,,[camera move back],,,,,,,,,
+##event 1,,,,,,,,,,,
+,,//event 2 triggers when player taps on trash can,,,,,,,,,
+,,//trash can should have ivsInteractable && identifier "trashcan",,,,,,,,,
+,"//events, this col stores retriggerable","//for events, this column stores the trigger conditions",,,,,,,,,
+##event 2,FALSE,tap[trashcan],,,,,,,,,
+DLG,BUNNY,"Well, now it's event 2",0,1,,,,,,,
+,,Heehee. ,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+##event 2,,,,,,,,,,,

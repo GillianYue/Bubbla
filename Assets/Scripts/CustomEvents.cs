@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SceneManagement;
 
 /*
  * this class is in charge of carrying out the custom events (indicated by a code of 99 in game mode)
@@ -71,7 +72,7 @@ public class CustomEvents : MonoBehaviour
 
     public void customEvent(int index, string[] prms)
     {
-        StartCoroutine(CustomEvent(index, prms));
+        StartCoroutine(customEventCoroutine(index, prms));
     }
 
 
@@ -82,7 +83,7 @@ public class CustomEvents : MonoBehaviour
      * contains a switch statement for different custom events
      * the custom events all use the params parsed and the done bool array instantiated at the start
      */
-    IEnumerator CustomEvent(int index, string[] prms)
+    public IEnumerator customEventCoroutine(int index, string[] prms)
     {
 
         bool[] done = new bool[1];
@@ -1255,30 +1256,16 @@ public class CustomEvents : MonoBehaviour
      */
     public IEnumerator transitionToSite(bool[] done, string[] prms)
     {
-        
+
+
         int site = int.Parse(prms[0]);
 
         int sub = 1;
         int.TryParse(prms[1], out sub);
 
-        //TODO fadeOut, maybe to loading screen
-        yield return fadeInOutToColor(new bool[1], Global.makeParamString("0")); //fade out
-        if (GlobalSingleton.Instance.siteInstance != null) Destroy(GlobalSingleton.Instance.siteInstance); //destroy prev site if exists
+        yield return Global.LoadTravelSceneWithSiteCoroutine(site, sub, mapLoader, gameControl);
 
-        string sitePrefabPath = "Sites/" + mapLoader.getSiteAtIndex(site).prefabName;
-        GameObject sitePrefab = Resources.Load(sitePrefabPath) as GameObject;
-        if (sitePrefab == null) Debug.LogError("prefab for site doesn't exist at " + sitePrefabPath);
-        GlobalSingleton.Instance.siteInstance = Instantiate(sitePrefab);
-
-        GlobalSingleton.Instance.siteInstance.transform.parent = gameControl.mainCanvas.transform;
-
-        //TODO might need to reassign references to SublocationTransitionManager, etc.
-        sublocationTransitionManager = GlobalSingleton.Instance.siteInstance.GetComponent<SublocationTransitionManager>();
-        
-        yield return sublocationTransitionManager.triggerSublocationTransition(sub, -1);
-
-        yield return fadeInOutToColor(new bool[1], Global.makeParamString("1"));
-        yield return new WaitForSeconds(0.5f);
+        print("transitioned to site " + site);
 
         done[0] = true;
     }

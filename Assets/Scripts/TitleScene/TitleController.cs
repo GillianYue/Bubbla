@@ -42,7 +42,6 @@ public class TitleController : MonoBehaviour {
         canvas = GameObject.FindGameObjectWithTag("Canvas");
         //total sum of heights
         var sh = canvas.GetComponent<RectTransform>().rect.height;
-        print("sh: " + sh);
 
         // set up the first row (exists already in prefab)
         var sr_0 = spritesParent.transform.GetChild(0).GetComponent<SpriteRenderer>();

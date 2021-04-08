@@ -16,6 +16,8 @@ public class GlobalSingleton : MonoBehaviour
 
     [Inject(InjectFrom.Anywhere)]
     public QuestConditionManager questConditionManager; //stored event conditions for a quest should persist through scenes
+    [Inject(InjectFrom.Anywhere)]
+    public CustomEvents customEvents;
 
     [Inject(InjectFrom.Anywhere)]
     public LoadScene loadScene;

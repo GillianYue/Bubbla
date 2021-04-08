@@ -12,7 +12,7 @@ public class QuestDetail : MonoBehaviour {
 	public GameObject cancelScnPrefab;
 	private GameObject cancel;
 	private Button cclB;
-	public Button go;
+	public Button register, go;
 	public int questIndex;
 
 
@@ -27,7 +27,8 @@ public class QuestDetail : MonoBehaviour {
 		cclB = cancel.GetComponent<Button>();
 		cclB.onClick.AddListener(cancelClicked);
 
-		go.onClick.AddListener (acceptQuest);
+		register.onClick.AddListener (acceptQuest);
+		go.onClick.AddListener(goToQuestDefaultSite);
 	}
 		
 	void Update () {
@@ -40,7 +41,7 @@ public class QuestDetail : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// upon taking a quest, 
+	/// upon taking a quest
 	/// </summary>
 	void acceptQuest(){
 
@@ -49,6 +50,10 @@ public class QuestDetail : MonoBehaviour {
 
 		questLoader.acceptQuest(questIndex);
 
+	}
+
+	void goToQuestDefaultSite() {
+		StartCoroutine(LoadTravelSceneWithSiteCoroutine(int siteIndex)
 	}
 
 }

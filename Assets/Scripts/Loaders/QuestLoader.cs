@@ -83,7 +83,7 @@ public class QuestLoader : Loader
 
         numOfQuests = questsData.GetLength(1) - 1; //exclude title row; data[col, 1_to_numOfQuests] are the quests
 
-        allQuests = new Quest[numOfQuests + 1]; //b/c 0 doesn't count; the first quest's index is 1
+        allQuests = new Quest[numOfQuests]; //b/c 0 doesn't count; the first quest's index is 1
         allQuests[0] = null;
 
         for(int q=1; q<=numOfQuests; q++)
@@ -95,7 +95,7 @@ public class QuestLoader : Loader
 
             int s = -1;
             int.TryParse(questsData[3, q], out s);
-            if(s != -1) quest.scene_to_load = s;
+            if(s != -1) quest.defaultSite = s;
 
             int col1 = -1, col2 = -1, col3 = -1;
             int.TryParse(questsData[4, q], out col1); int.TryParse(questsData[5, q], out col2);
@@ -110,10 +110,10 @@ public class QuestLoader : Loader
             quest.setupFilePath = questsData[9, q];
 
 
-            allQuests[q] = quest;
+            allQuests[q-1] = quest; //so quest on questsData[row 1] will be quest 0 in allQuests, and will be assigned a questIndex of 0
         }
 
-        print("quest loader done");
+        print("quest loader done, "+numOfQuests);
         questLoaderDone = true; //data loaded and parsed
     }
 
@@ -132,6 +132,7 @@ public class QuestLoader : Loader
     {
         //gets the setup csv content to questScript of active quest
         string[,] setupScript = new string[1, 1];
+        print("qIndex: " + qIndex + " quests " + allQuests.Length);
         yield return assignQuestSetupData(allQuests[qIndex], (string[,] d)=> { setupScript = d; });
 
         //parse events of the quest
@@ -172,6 +173,7 @@ public class QuestLoader : Loader
     /// <returns></returns>
     IEnumerator assignQuestSetupData(Quest q, setterDelegate setter)
     {
+        print("quest setup " + q.description);
 
         TextAsset setupCSV = Resources.Load<TextAsset>("Quests/Setup/"+q.setupFilePath);
         if (!setupCSV) Debug.LogError("invalid csv path: " + "Quests/Setup/" + q.setupFilePath);
@@ -276,18 +278,18 @@ public class QuestLoader : Loader
 [Serializable]
 public class Quest
 {
-    public int index, scene_to_load; //the official index of the quest
+    public int index, defaultSite; //the official index of the quest
     public string type, description, message, specifics, long_message;
     public string setupFilePath; //TODO csv to ready the quest in game (setups, file writeups, etc.)
     public SerializableColor message_color; 
     public SerializableVector2 location; //coordinate on map; convertable between location name (string) and location coordinates
     public bool ongoing = false; //defaults to false upon parsed, will be set to true if indicated by questStatus
 
-    public Quest(int INDEX, string TYPE, string DESCRIPTION, string MSG, int SCENE_TO_LOAD, string SPECIFICS, string LONG_MSG,
+    public Quest(int INDEX, string TYPE, string DESCRIPTION, string MSG, string SPECIFICS, string LONG_MSG,
         Color MSG_COLOR, Vector2 LOCATION) //need not be serializable in params b/c of implicit operator casting
     {
         index = INDEX;
-        type = TYPE; description = DESCRIPTION; message = MSG; scene_to_load = SCENE_TO_LOAD;
+        type = TYPE; description = DESCRIPTION; message = MSG; 
         specifics = SPECIFICS; long_message = LONG_MSG;
         message_color = MSG_COLOR;
         location = LOCATION;

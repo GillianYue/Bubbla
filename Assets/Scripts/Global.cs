@@ -352,7 +352,12 @@ public class Global : MonoBehaviour
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~load scene logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    public static IEnumerator LoadAsyncScene(int sceneNO)
+    public static void LoadAsyncScene(int sceneNO)
+    {
+        GlobalSingleton.Instance.StartCoroutine(LoadAsyncSceneCoroutine(sceneNO));
+    }
+
+    public static IEnumerator LoadAsyncSceneCoroutine(int sceneNO)
     {
         // The Application loads the Scene in the background as the current Scene runs.
         // This is particularly good for creating loading screens.
@@ -367,6 +372,41 @@ public class Global : MonoBehaviour
         {
             yield return null;
         }
+    }
+
+    public static void LoadTravelSceneWithSite(int siteIndex, int subIndex, MapLoader mapLoader, GameControl gameControl)
+    {
+        GlobalSingleton.Instance.StartCoroutine(LoadTravelSceneWithSiteCoroutine(siteIndex, subIndex, mapLoader, gameControl));
+    }
+
+    //TODO might need loading screen here
+    public static IEnumerator LoadTravelSceneWithSiteCoroutine(int siteIndex, int subIndex, MapLoader mapLoader, GameControl gameControl)
+    {
+        //if within travel scene, just switch the site; else alter scene first
+        int currScene = SceneManager.GetActiveScene().buildIndex;
+        if (currScene != 2)//TODO change this to static var
+            yield return LoadAsyncSceneCoroutine(2);
+
+        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(50, Global.makeParamString(siteIndex.ToString()));
+
+        //TODO fadeOut, maybe to loading screen
+        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(20, Global.makeParamString("0")); //fade out
+        if (GlobalSingleton.Instance.siteInstance != null) Destroy(GlobalSingleton.Instance.siteInstance); //destroy prev site if exists
+
+        string sitePrefabPath = "Sites/" + mapLoader.getSiteAtIndex(siteIndex).prefabName;
+        GameObject sitePrefab = Resources.Load(sitePrefabPath) as GameObject;
+        if (sitePrefab == null) Debug.LogError("prefab for site doesn't exist at " + sitePrefabPath);
+        GlobalSingleton.Instance.siteInstance = Instantiate(sitePrefab);
+
+        GlobalSingleton.Instance.siteInstance.transform.parent = gameControl.mainCanvas.transform;
+
+
+        yield return GlobalSingleton.Instance.siteInstance.GetComponent<SublocationTransitionManager>().triggerSublocationTransition(subIndex, -1);
+
+        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(20, Global.makeParamString("1"));
+        yield return new WaitForSeconds(0.5f);
+
+        //TODO trigger listeners for events
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~load scene logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

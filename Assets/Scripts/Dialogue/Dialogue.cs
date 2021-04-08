@@ -280,6 +280,7 @@ public class Dialogue : MonoBehaviour
 						}
 						break;
 					//SPECIAL mode 3 disables users from clicking to proceed, will auto proceed after certain seconds
+					//-param 1: seconds to wait
 					case 3:
 						//called once above previous to the double for loop
 						break;

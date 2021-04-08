@@ -73,7 +73,7 @@ public class LoadScene : MonoBehaviour {
 		
 		//play loading animation and other good stuff
 		yield return new WaitForSeconds (3);
-		StartCoroutine (Global.LoadAsyncScene (scn_to_load));
+		Global.LoadAsyncScene(scn_to_load);
 	}
 
 
