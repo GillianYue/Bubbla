@@ -29,6 +29,25 @@ public class QuestDetail : MonoBehaviour {
 
 		register.onClick.AddListener (acceptQuest);
 		go.onClick.AddListener(goToQuestDefaultSite);
+
+		int questStatus = GlobalSingleton.Instance.questStatus.getSingleQuestStatus(questIndex);
+
+		ColorBlock colors = register.colors;
+		//depending on the status of this quest, we set the buttons' color
+
+		switch (questStatus)
+        {
+			case 0: //inactive
+				colors.normalColor = new Color(1, 1, 1, 0.7f); //non-active
+				break;
+			case 1: //available
+				colors.normalColor = new Color(1, 1, 1, 0.7f); //registerable
+				break;
+			case 2: //currently accepted
+				colors.normalColor = new Color(1, 1, 1, 0.9f); //accepted (highlight)
+				break;
+        }
+
 	}
 		
 	void Update () {
@@ -53,7 +72,10 @@ public class QuestDetail : MonoBehaviour {
 	}
 
 	void goToQuestDefaultSite() {
-		StartCoroutine(LoadTravelSceneWithSiteCoroutine(int siteIndex)
+		MapLoader mapLoader = FindObjectOfType<MapLoader>();
+		GameControl gameControl = FindObjectOfType<GameControl>();
+
+		Global.LoadTravelSceneWithSite(questLoader.getQuest(questIndex).defaultSite, -1, mapLoader, gameControl);
 	}
 
 }

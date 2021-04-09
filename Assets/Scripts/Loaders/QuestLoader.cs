@@ -326,6 +326,8 @@ public class QuestStatusData
 
     /// <summary>
     /// should be called when a quest is accepted, its setup file parsed and split into events with their conditions
+    ///
+    /// will set allQuestsStatus[q] to be "accepted" (2)
     /// </summary>
     /// <param name="questIndex"></param>
     /// <param name="questScript"></param>
@@ -356,7 +358,7 @@ public class ActiveQuestData
     }
 
     /// <summary>
-    /// mark a new active quest upon taking it
+    /// mark a new active quest upon taking it, generating a new instance of questProgress
     /// </summary>
     /// <param name="index"></param>
     public void setActiveQuest(int index, string[,] questScript, List<QuestEvent> questEvents) { 
