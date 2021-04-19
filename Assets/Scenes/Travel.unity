@@ -393,7 +393,7 @@ PrefabInstance:
         type: 3}
       propertyPath: vfxCanvas
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1575807592}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96291e58f09982d4f8a305b08dbde043, type: 3}
 --- !u!1001 &1012308185
@@ -403,6 +403,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 23789271091681722, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: goToLineOnStart
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23789271091681722, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: startLine
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 23789271091681723, guid: fe1ec531264345a4fb6ff045df505584,
         type: 3}
       propertyPath: m_Name
@@ -518,6 +528,21 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4158615704818813164, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -32.99994
+      objectReference: {fileID: 0}
+    - target: {fileID: 4228194099439760995, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -112.599976
+      objectReference: {fileID: 0}
+    - target: {fileID: 4228194099439760995, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.340027
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe1ec531264345a4fb6ff045df505584, type: 3}
 --- !u!1001 &1260475566
@@ -616,6 +641,12 @@ MonoBehaviour:
   shakeTransform: {fileID: 0}
   infiniteShake: 0
   active: 0
+--- !u!1 &1575807592 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2503990087627565692, guid: 668bc50e1a491954abf8bb8e42167bfe,
+    type: 3}
+  m_PrefabInstance: {fileID: 1579459491}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1579459491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -623,6 +654,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2503990087627565692, guid: 668bc50e1a491954abf8bb8e42167bfe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9001115275121079128, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_LocalPosition.x

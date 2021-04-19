@@ -1295,6 +1295,11 @@ PrefabInstance:
       propertyPath: prefabHolder
       value: 
       objectReference: {fileID: 403371821}
+    - target: {fileID: 1078953684821714253, guid: 96291e58f09982d4f8a305b08dbde043,
+        type: 3}
+      propertyPath: Hs_Holder
+      value: 
+      objectReference: {fileID: 8741535068796359915}
     - target: {fileID: 6984527361794076252, guid: 96291e58f09982d4f8a305b08dbde043,
         type: 3}
       propertyPath: enemyLoader
@@ -3750,6 +3755,16 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1085993628626259007, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3909358350592922295, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1754511770}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe1ec531264345a4fb6ff045df505584, type: 3}
 --- !u!1 &30884623416892707 stripped
@@ -6473,6 +6488,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1754511770}
+    - target: {fileID: 9001115275356634940, guid: 668bc50e1a491954abf8bb8e42167bfe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9219470914659307741, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_Camera

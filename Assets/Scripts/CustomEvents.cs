@@ -28,7 +28,6 @@ public class CustomEvents : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public BGMover bgMover;
 
-    protected GameObject vfxCanvas;
     public LevelScript levelScript;
 
     [Inject(InjectFrom.Anywhere)]
@@ -54,8 +53,6 @@ public class CustomEvents : MonoBehaviour
 
     void Start()
     {
-
-        vfxCanvas = (gameControl.vfxCanvas) ? gameControl.vfxCanvas : GameObject.FindGameObjectWithTag("VfxCanvas");
 
         foreach (identifier i in FindObjectsOfType<identifier>())
         {
@@ -756,9 +753,12 @@ public class CustomEvents : MonoBehaviour
      *      -1: black fade out to screen content
      *      -2
      * optional param 1: alternative color in the form of "rValue,gValue,bValue"   
+     * optional param 2: duration of the action
      */
     public IEnumerator fadeInOutToColor(bool[] done, string[] prms)
     {
+        GameObject vfxCanvas = gameControl.vfxCanvas;
+
         vfxCanvas.SetActive(true);
         print("fade start");
         gameControl.p.navigationMode = Player.NavMode.FREEZE;
@@ -771,29 +771,32 @@ public class CustomEvents : MonoBehaviour
         Color col = Color.black;
         if(prms.Length > 1) Global.parseColorParameter(prms[1], ref col);
 
+        float duration;
+        if(!float.TryParse(prms[2], out duration)) duration = 2;
+
         switch (index)
         {
-            case 1: //fade out to black canvas; default fade out is 2 seconds in total
+            case 0: //fade to black canvas; default is 2 seconds in total
                 if (img != null)
                 {
 
-                    for (float o = 0; o <= 1; o += 0.025f) //fade out of sprite
+                    for (float o = 0; o <= 1; o += 0.025f) //fade out of sprite, happens 40 times in total
                     {
                         img.color = new Color(col.r, col.g, col.b, o);
-                        yield return new WaitForSeconds(0.05f);
+                        yield return new WaitForSeconds(duration / 40);
                     }
                     if (img.color.a < 1) img.color = new Color(col.r, col.g, col.b, 1); //black
 
                 }
                 break;
-            case 0: //black canvas fading back into view, reverse process of case 0
+            case 1: //fade into view/screen, reverse process of case 0
                 if (img != null)
                 {
 
                     for (float o = 1; o >= 0; o -= 0.025f) //fade out of sprite
                     {
                         img.color = new Color(col.r, col.g, col.b, o);
-                        yield return new WaitForSeconds(0.05f);
+                        yield return new WaitForSeconds(duration / 40);
                     }
                     if (img.color.a > 0) img.color = new Color(col.r, col.g, col.b, 0); //transparent
                     vfxCanvas.SetActive(false);
@@ -859,6 +862,8 @@ public class CustomEvents : MonoBehaviour
      */
     public IEnumerator screenFlash(bool[] done, string[] prms)
     {
+        GameObject vfxCanvas = gameControl.vfxCanvas;
+
         int times;
         if (!int.TryParse(prms[0], out times)) times = 1;
 

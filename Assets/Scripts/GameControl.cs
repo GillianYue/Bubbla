@@ -97,17 +97,18 @@ public class GameControl : MonoBehaviour {
             hearts = prefabHolder.hearts;
             aim = prefabHolder.aim;
         }
-
+        
         if(vfxCanvas == null) { vfxCanvas = GameObject.FindGameObjectWithTag("VfxCanvas"); }
+
+        int currScene = SceneManager.GetActiveScene().buildIndex;
+        print("currScene: " + currScene);
+        switchSceneReupdateReferences(currScene);
     }
 
     void Start () {
 
         if (GameOverC) GameOverC.SetActive(false);
         if (vfxCanvas) vfxCanvas.SetActive(false); //to prevent blocking of buttons
-
-        int currScene = SceneManager.GetActiveScene().buildIndex;
-        switchSceneReupdateReferences(currScene);
 
         StartCoroutine(StartGame());
     }
@@ -357,9 +358,10 @@ public class GameControl : MonoBehaviour {
                 break;
             case Global.TRAVEL_SCENE_NUMBER:
                 sceneType = GameMode.TRAVEL;
+                if (p == null) p = FindObjectOfType<Player>();
+                if (player == null) player = p.gameObject;
 
                 p.navigationMode = Player.NavMode.TOUCH;
-                if (player == null) player = p.gameObject;
                 break;
         }
     }

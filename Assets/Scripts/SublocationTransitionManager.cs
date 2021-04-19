@@ -83,14 +83,14 @@ public class SublocationTransitionManager : MonoBehaviour
 
         if (startSpot == null) startSpot = sublocations[transitionTo].transform.Find("TransitionEnterSpot").gameObject;
 
-        yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("0"));
+        yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("0", "", "1"));
 
         player.transform.position = startSpot.transform.position;
         camFollow.resetPosition();
 
         yield return new WaitForSeconds(1f);
 
-        yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("0"));
+        yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("1", "", "1"));
 
     }
 
