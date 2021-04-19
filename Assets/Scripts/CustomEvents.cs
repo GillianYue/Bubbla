@@ -55,7 +55,7 @@ public class CustomEvents : MonoBehaviour
     void Start()
     {
 
-        vfxCanvas = (gameControl.vfxCanvas) ? gameControl.vfxCanvas : null;
+        vfxCanvas = (gameControl.vfxCanvas) ? gameControl.vfxCanvas : GameObject.FindGameObjectWithTag("VfxCanvas");
 
         foreach (identifier i in FindObjectsOfType<identifier>())
         {

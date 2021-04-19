@@ -42,8 +42,6 @@ public class ListScroller : MonoBehaviour
 
         float heightNeeded = numItems * prefHeight;
 
-        print("height needed " + heightNeeded + " single " + prefHeight);
-
         //stretches rect so it's long enough to fit all the prefabs; this thing will then be scrolled within scrollRect
         if (heightNeeded > rectHeight)
         {

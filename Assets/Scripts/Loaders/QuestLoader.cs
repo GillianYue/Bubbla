@@ -113,7 +113,7 @@ public class QuestLoader : Loader
             allQuests[q-1] = quest; //so quest on questsData[row 1] will be quest 0 in allQuests, and will be assigned a questIndex of 0
         }
 
-        print("quest loader done, "+numOfQuests);
+        print("quest loader done: "+numOfQuests+" quests");
         questLoaderDone = true; //data loaded and parsed
     }
 

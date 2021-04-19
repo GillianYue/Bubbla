@@ -171,7 +171,7 @@ public class Player : MovingObject
                 {
                     //GameControl will send touch along if it's valid, nudge() will be called
                 }
-                if(gameControl.sceneType == GameControl.Mode.GAME) //TODO iffy way of dealing with this here
+                if(gameControl.sceneType == GameControl.GameMode.GAME) //TODO iffy way of dealing with this here
                 gameControl.updateLife(life);
 
             }

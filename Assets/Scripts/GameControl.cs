@@ -74,33 +74,38 @@ public class GameControl : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public GameTestBehavior testBehav;
 
+    [Inject(InjectFrom.Anywhere)]
+    public TitleController titleControl;
+
     private float pressTime=-1;
     public bool ckTouch = true;
     private float touchCooler = 0.5f; //half a second before reset; used for checking for fast double tap
     private int touchCount = 0; 
-    public enum Mode { QUEST_SELECT, GAME, TRAVEL }; //scene type
-    public Mode sceneType;
+    public enum GameMode { QUEST_SELECT, GAME, TRAVEL }; //scene type
+    public GameMode sceneType;
 
     public AudioSource bgmSource;
 
     void Awake()
     {
         //locate prefabs
-        if (sceneType == Mode.GAME)
+        if (sceneType == GameMode.GAME)
         {
             HeartPopVFX = prefabHolder.heartPop;
             hearts = prefabHolder.hearts;
             aim = prefabHolder.aim;
         }
+
+        if(vfxCanvas == null) { vfxCanvas = GameObject.FindGameObjectWithTag("VfxCanvas"); }
     }
 
     void Start () {
         
-        if(sceneType == Mode.GAME && GameOverC) GameOverC.SetActive (false);
+        if(sceneType == GameMode.GAME && GameOverC) GameOverC.SetActive (false);
         if(vfxCanvas) vfxCanvas.SetActive(false); //to prevent blocking of buttons
         //player.GetComponent<Player> ().enabled = false;
 
-        if (sceneType == Mode.GAME) { 
+        if (sceneType == GameMode.GAME) { 
             //gadgets are GOs like life container that are needed in game play but not in DLG mode
             if (gadgets != null)
             foreach (GameObject g in gadgets) {
@@ -120,23 +125,24 @@ public class GameControl : MonoBehaviour {
             }
 
             p.navigationMode = Player.NavMode.ACCL;
+            player = p.gameObject;
         }
-        else
+        else if (sceneType == GameMode.TRAVEL)
         {
             p.navigationMode = Player.NavMode.TOUCH;
+            player = p.gameObject;
         }
 
-        player = p.gameObject;
         StartCoroutine(StartGame());
     }
 
     void Update () {
 
-        if (sceneType == Mode.GAME) 
+        if (sceneType == GameMode.GAME) 
         {
             switch (gameFlow.currMode)
             {
-                case GameFlow.Mode.DLG:
+                case GameFlow.ScriptMode.DLG:
                     //mouseclick
                     if (Input.GetMouseButtonDown(0) && ckTouch)
                     {
@@ -153,7 +159,7 @@ public class GameControl : MonoBehaviour {
                     }
                     break;
 
-                case GameFlow.Mode.GAME:
+                case GameFlow.ScriptMode.GAME:
 
                         if (touchCooler > 0) { touchCooler -= 1 * Time.deltaTime; }
                         else { 
@@ -230,7 +236,7 @@ public class GameControl : MonoBehaviour {
 
             }//end switch for gameFlow state
         }
-        else if(sceneType == Mode.TRAVEL)
+        else if(sceneType == GameMode.TRAVEL)
         {
 
                 if (Input.GetMouseButtonDown(0) && ckTouch)
@@ -270,7 +276,7 @@ public class GameControl : MonoBehaviour {
 
 
         }
-        else if (sceneType == Mode.QUEST_SELECT)
+        else if (sceneType == GameMode.QUEST_SELECT)
         {
             //in title scene
 
@@ -283,7 +289,7 @@ public class GameControl : MonoBehaviour {
 
         yield return new WaitUntil(() => loadScene.isAllLoadDone());
 
-        if (sceneType == Mode.GAME)
+        if (sceneType == GameMode.GAME)
         {
             int tempPT = -1; //temp pointer, is passive, updates as gFlow pointer updates
             int gfP; //game flow pointer
@@ -296,6 +302,9 @@ public class GameControl : MonoBehaviour {
                 }
                 yield return new WaitForSeconds(0.1f); //essentially check dialogue status every one s
             } while (!gameFlow.checkIfEnded()); //as long as there's still something to be done
+        }else if(sceneType == GameMode.QUEST_SELECT)
+        {
+            titleControl.startTitle();
         }
     }
         
@@ -362,13 +371,13 @@ public class GameControl : MonoBehaviour {
     public void pauseGame()
     {
         Time.timeScale = 0.0f; //stop gameplay
-        bgManager.setBackgroundsActive(false);
+        if(bgManager) bgManager.setBackgroundsActive(false);
     }
 
     public void resumeGame()
     {
         Time.timeScale = 1.0f; //resume gameplay
-        bgManager.setBackgroundsActive(true);
+        if (bgManager) bgManager.setBackgroundsActive(true);
     }
 
 

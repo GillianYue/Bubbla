@@ -91,9 +91,6 @@ public class CharacterLoader : Loader
             Part1AnimationClipNames.Add(new List<string>(new string[5]));
             Part2AnimationClipNames.Add(new List<string>(new string[5]));
 
-            //bool1Name[r - 1] = data[2, r]; left blank for now
-            //bool2Name[r - 1] = data[3, r];
-
             pathName[r - 1] = data[4, r]; //col 4 is file path for animator
             int R, G, B;
             int.TryParse(data[5, r], out R);
@@ -127,17 +124,20 @@ public class CharacterLoader : Loader
 
             if (d[1, i] != "") //clip belongs to BASE layer
             {
+                //print("part 0" + animClipName + " " + cCode);
                 int.TryParse(d[1, i], out stateNum);
                 checkExpandList(baseStateAnimationClipNames[cCode], stateNum, "");
                 baseStateAnimationClipNames[cCode][stateNum] = animClipName;
             } else if (d[2, i] != "") //PART 1 layer
             {
+                //print("part 1" + animClipName + " " + cCode);
                 int.TryParse(d[2, i], out stateNum);
                 checkExpandList(Part1AnimationClipNames[cCode], stateNum, "");
                 Part1AnimationClipNames[cCode][stateNum] = animClipName;
                 //print("part 1 for char " + cCode + " state " + stateNum + " recorded: " + animClipName);
             } else if (d[3, i] != "") //PART 2 layer
             {
+                //print("part 2" + animClipName + " " + cCode);
                 int.TryParse(d[3, i], out stateNum);
                 checkExpandList(Part2AnimationClipNames[cCode], stateNum, "");
                 Part2AnimationClipNames[cCode][stateNum] = animClipName;
@@ -303,7 +303,7 @@ public class CharacterLoader : Loader
         }
         else
         {
-            Debug.Log("character " + cCode + " does not have base state " + state);
+            Debug.Log("character " + cCode + " does not have base state " + state + ", "+ baseStateAnimationClipNames[cCode].Count);
         }
     }
 

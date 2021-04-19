@@ -33,8 +33,8 @@ public class GameFlow : MonoBehaviour {
     public QuestLoader questLoader;
 
     //IVS stands for investigate
-    public enum Mode { DLG, GAME, IVS, END };
-    public Mode currMode;
+    public enum ScriptMode { DLG, GAME, IVS, END };
+    public ScriptMode currMode;
 
     //row 0 are names of the categories
     private int pointer = -1; //indicates which line of script the game is at; starting at 2 b/c of format
@@ -54,7 +54,7 @@ public class GameFlow : MonoBehaviour {
     void Awake()
     {
         specialDLGstarts = new ArrayList(); specialDLGends = new ArrayList();
-        currMode = Mode.GAME;
+        currMode = ScriptMode.GAME;
     }
 
     void Start() {
@@ -75,7 +75,7 @@ public class GameFlow : MonoBehaviour {
 
 
     public bool checkIfEnded() { //checks if ended
-        return (currMode.Equals(Mode.END)); //the "big" done
+        return (currMode.Equals(ScriptMode.END)); //the "big" done
     }
 
     public bool checkGameFlowLoadDone()
@@ -147,33 +147,33 @@ public class GameFlow : MonoBehaviour {
                 if (ln != 0) setPointer(ln); else Debug.LogError("SPECIAL block end didn't specify goto line number");
                 yield break; //breaks out of the coroutine
             }
-            if (currMode == Mode.DLG)
+            if (currMode == ScriptMode.DLG)
             {
                 dialogue.disableDialogueBox(); //if transitioning from dlg to others
             }
             
-            currMode = (Mode)System.Enum.Parse(typeof(Mode), data[0, pointer]); ///////////the actual changing of mode
+            currMode = (ScriptMode)System.Enum.Parse(typeof(ScriptMode), data[0, pointer]); ///////////the actual changing of mode
 
 
-            if (currMode == Mode.DLG) { 
+            if (currMode == ScriptMode.DLG) { 
                 dialogue.enableDialogueBox();
                 if (gameControl) { 
                     gameControl.hideAllIcons();
                     gameControl.bgManager.setBackgroundsActive(false); //pause
                 }
             } 
-            else if(currMode == Mode.IVS)
+            else if(currMode == ScriptMode.IVS)
             {
                 if (gameControl) gameControl.showAllIcons();
                 if(player) player.setNavigationMode(Player.NavMode.TOUCH);
             }
-            else if (currMode == Mode.GAME)
+            else if (currMode == ScriptMode.GAME)
             {
                 if(gameControl) gameControl.showAllIcons();
                 if(player) player.setNavigationMode(Player.NavMode.ACCL);
             }
 
-            if (currMode != Mode.GAME)
+            if (currMode != ScriptMode.GAME)
             {
                 try
                 {
@@ -191,12 +191,12 @@ public class GameFlow : MonoBehaviour {
         }
 
         switch (currMode) {
-            case Mode.DLG: //still in dialogue mode
+            case ScriptMode.DLG: //still in dialogue mode
                 dialogue.displayOneLine(data[1, pointer], data[2, pointer], data[3, pointer], data[4, pointer], data[5, pointer],
                     data[7, pointer], data[8, pointer], data[9, pointer], data[10, pointer]); //
                 break;
 
-            case Mode.GAME:
+            case ScriptMode.GAME:
                 Global.scaleRatio = (int) GameObject.FindWithTag("Player").transform.localScale.x;
                 if (data[1, pointer].Equals("99")) {
                     //special customized event
@@ -241,7 +241,7 @@ public class GameFlow : MonoBehaviour {
                     gameControl.startEnemyWaves(wv, em, wvwt, intv, spnm);
                 }
                 break;
-            case Mode.IVS:
+            case ScriptMode.IVS:
                 //ivs related actions encountered in csv files
                 int indexIVS = -1;
                 int.TryParse(data[1, pointer], out indexIVS);
@@ -336,7 +336,7 @@ public class GameFlow : MonoBehaviour {
 
                 break;
 
-            case Mode.END:
+            case ScriptMode.END:
                 print("level ended!");
                 break;
 

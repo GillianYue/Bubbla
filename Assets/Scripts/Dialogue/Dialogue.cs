@@ -106,8 +106,8 @@ public class Dialogue : MonoBehaviour
 			prevChaName = c_name;
 		}
 
-		int SpriteNum;
-		if (!int.TryParse(sprite_state, out SpriteNum)) SpriteNum = 0;
+		int SpriteStateNum;
+		if (!int.TryParse(sprite_state, out SpriteStateNum)) SpriteStateNum = 0;
 
 		//display speed
 		float disp_spd;
@@ -124,7 +124,7 @@ public class Dialogue : MonoBehaviour
 		setPartLayerParam(cIndex, character, 1, 2);
 
 		//sets default base state 
-		setAnimBaseState(cIndex, character, SpriteNum);
+		setAnimBaseState(cIndex, character, SpriteStateNum);
 
         int special;
         int.TryParse(special_index, out special);

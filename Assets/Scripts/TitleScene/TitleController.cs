@@ -33,6 +33,14 @@ public class TitleController : MonoBehaviour {
     public ArrayList specialDLGstarts, specialDLGends; //arraylist of ints
 
     void Start () {
+    }
+
+    void Update()
+    {
+    }
+
+    public void startTitle()
+    {
         StartCoroutine(initializeCoroutine());
     }
 
@@ -90,12 +98,8 @@ public class TitleController : MonoBehaviour {
         yield return new WaitUntil(() => loadScene.isAllLoadDone());
 
         yield return StartCoroutine(startTitleScreenAnim());
-        yield return StartCoroutine(moveGameFlowPointer());
+       // yield return StartCoroutine(moveGameFlowPointer());
     }
-	
-	void Update () {
-	
-	}
 
     public bool checkTitleLoadDone()
     { //check if title loaders are ready for game
