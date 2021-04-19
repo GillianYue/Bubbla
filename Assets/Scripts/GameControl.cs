@@ -88,6 +88,8 @@ public class GameControl : MonoBehaviour {
 
     void Awake()
     {
+        if (prefabHolder == null) prefabHolder = FindObjectOfType<PrefabHolder>();
+
         //locate prefabs
         if (sceneType == GameMode.GAME)
         {
@@ -100,38 +102,12 @@ public class GameControl : MonoBehaviour {
     }
 
     void Start () {
-        
-        if(sceneType == GameMode.GAME && GameOverC) GameOverC.SetActive (false);
-        if(vfxCanvas) vfxCanvas.SetActive(false); //to prevent blocking of buttons
-        //player.GetComponent<Player> ().enabled = false;
 
-        if (sceneType == GameMode.GAME) { 
-            //gadgets are GOs like life container that are needed in game play but not in DLG mode
-            if (gadgets != null)
-            foreach (GameObject g in gadgets) {
-                g.SetActive (false);
-            }
+        if (GameOverC) GameOverC.SetActive(false);
+        if (vfxCanvas) vfxCanvas.SetActive(false); //to prevent blocking of buttons
 
-            //setting mask to the right dimension
-            GameObject BGMask = GameObject.FindWithTag("BGMask");
-            if (BGMask != null)
-            {
-
-                Vector3 sSize = BGMask.GetComponent<SpriteMask>().sprite.bounds.size;
-                var ratioX = BGMask.GetComponent<RectTransform>().rect.width / sSize.x;
-                var ratioY = BGMask.GetComponent<RectTransform>().rect.height / sSize.y;
-                Vector3 scale = new Vector3(ratioX, ratioY-0.04f, 1);
-                BGMask.GetComponent<RectTransform>().localScale = scale;
-            }
-
-            p.navigationMode = Player.NavMode.ACCL;
-            player = p.gameObject;
-        }
-        else if (sceneType == GameMode.TRAVEL)
-        {
-            p.navigationMode = Player.NavMode.TOUCH;
-            player = p.gameObject;
-        }
+        int currScene = SceneManager.GetActiveScene().buildIndex;
+        switchSceneReupdateReferences(currScene);
 
         StartCoroutine(StartGame());
     }
@@ -335,6 +311,57 @@ public class GameControl : MonoBehaviour {
 
     public void updateLife(int life){
         genHearts (life);
+    }
+
+    /// <summary>
+    /// updates references to objects, while also (de)activating things appropriately
+    /// </summary>
+    /// <param name="scene_number"></param>
+    public void switchSceneReupdateReferences(int scene_number)
+    {
+        switch (scene_number)
+        {
+            case Global.TITLE_SCENE_NUMBER:
+                sceneType = GameMode.QUEST_SELECT;
+
+                break;
+            case Global.GAME_SCENE_NUMBER:
+                sceneType = GameMode.GAME;
+
+                if (mainCanvas == null) mainCanvas = GameObject.FindGameObjectWithTag("Canvas");
+                if(Hs_Holder==null) Hs_Holder = GameObject.Find("HeartsHolder"); //////////TODO
+                if(Ballz==null) Ballz = mainCanvas.transform.Find("Ballz").gameObject;
+
+
+                //gadgets are GOs like life container that are needed in game play but not in DLG mode
+                if (gadgets != null)
+                    foreach (GameObject g in gadgets)
+                    {
+                        g.SetActive(false);
+                    }
+
+                //setting mask to the right dimension
+                GameObject BGMask = GameObject.FindWithTag("BGMask");
+                if (BGMask != null)
+                {
+
+                    Vector3 sSize = BGMask.GetComponent<SpriteMask>().sprite.bounds.size;
+                    var ratioX = BGMask.GetComponent<RectTransform>().rect.width / sSize.x;
+                    var ratioY = BGMask.GetComponent<RectTransform>().rect.height / sSize.y;
+                    Vector3 scale = new Vector3(ratioX, ratioY - 0.04f, 1);
+                    BGMask.GetComponent<RectTransform>().localScale = scale;
+                }
+
+                p.navigationMode = Player.NavMode.ACCL;
+                if(player==null) player = p.gameObject;
+                break;
+            case Global.TRAVEL_SCENE_NUMBER:
+                sceneType = GameMode.TRAVEL;
+
+                p.navigationMode = Player.NavMode.TOUCH;
+                if (player == null) player = p.gameObject;
+                break;
+        }
     }
 
     /*

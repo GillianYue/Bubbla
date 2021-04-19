@@ -760,6 +760,9 @@ public class CustomEvents : MonoBehaviour
     public IEnumerator fadeInOutToColor(bool[] done, string[] prms)
     {
         vfxCanvas.SetActive(true);
+        print("fade start");
+        gameControl.p.navigationMode = Player.NavMode.FREEZE;
+        gameControl.p.stopNudge();
 
         int index;
         int.TryParse(prms[0], out index);
@@ -799,6 +802,8 @@ public class CustomEvents : MonoBehaviour
 
         }
 
+        print("fade end");
+        gameControl.p.navigationMode = Player.NavMode.TOUCH;
         done[0] = true;
     }
 

@@ -233,7 +233,7 @@ public class Player : MovingObject
 
 	public void stopNudge()
 	{
-		if (navigationMode == NavMode.TOUCH) active = false;
+		active = false;
 	}
 
 	/// <summary>

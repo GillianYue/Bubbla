@@ -30,7 +30,9 @@ public class Global : MonoBehaviour
     * consistency. This value will be set from player's scale once we enter game mode.   
     */
 
-        public static Camera mainCamera;
+    public static Camera mainCamera;
+
+    public const int TITLE_SCENE_NUMBER = 0, GAME_SCENE_NUMBER = 1, TRAVEL_SCENE_NUMBER = 2;
 
     public static Dictionary<string, int> intVariables = new Dictionary<string, int>();
     public static Dictionary<string, bool> boolVariables = new Dictionary<string, bool>();
