@@ -162,8 +162,7 @@ public class TitleController : MonoBehaviour {
 			UIBar2.GetComponent<RectTransform> ().localScale = v2;
 			v1.x += 0.008f;
 			v2.x += 0.008f;
-			StartCoroutine
-			(singleRowAnim (spritesParent.transform.GetChild (r).GetComponent<SpriteRenderer> ()));
+			StartCoroutine (singleRowAnim (spritesParent.transform.GetChild (r).GetComponent<SpriteRenderer> ()));
 			yield return new WaitForSeconds (startAnimWait);
 		}
 		for (int r = 10; r>=0; r--) {

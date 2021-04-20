@@ -760,7 +760,7 @@ public class CustomEvents : MonoBehaviour
         GameObject vfxCanvas = gameControl.vfxCanvas;
 
         vfxCanvas.SetActive(true);
-        print("fade start");
+
         gameControl.p.navigationMode = Player.NavMode.FREEZE;
         gameControl.p.stopNudge();
 
@@ -772,7 +772,7 @@ public class CustomEvents : MonoBehaviour
         if(prms.Length > 1) Global.parseColorParameter(prms[1], ref col);
 
         float duration;
-        if(!float.TryParse(prms[2], out duration)) duration = 2;
+        if(prms.Length < 3 || !float.TryParse(prms[2], out duration)) duration = 2;
 
         switch (index)
         {
@@ -805,7 +805,6 @@ public class CustomEvents : MonoBehaviour
 
         }
 
-        print("fade end");
         gameControl.p.navigationMode = Player.NavMode.TOUCH;
         done[0] = true;
     }
@@ -1271,11 +1270,14 @@ public class CustomEvents : MonoBehaviour
         int site = int.Parse(prms[0]);
 
         int sub = 1;
-        int.TryParse(prms[1], out sub);
+        if (prms.Length > 1)
+        {
+            if (!int.TryParse(prms[1], out sub)) sub = 1;
+        }
 
         yield return Global.LoadTravelSceneWithSiteCoroutine(site, sub, mapLoader, gameControl);
 
-        print("transitioned to site " + site);
+        print("transitioned to site " + site+": "+mapLoader.getSiteNameOfIndex(site));
 
         done[0] = true;
     }
@@ -1287,6 +1289,9 @@ public class CustomEvents : MonoBehaviour
      * 
      * param 0: target sublocation index 
      * optional param 1: from sublocation index
+     * optional param 2: whether to add fade in/out effect before and after transition
+     *         -0: no
+     *         -1: yes (default)
      * 
      */
     public IEnumerator transitionToSublocation(bool[] done, string[] prms)
@@ -1295,7 +1300,13 @@ public class CustomEvents : MonoBehaviour
         int from = -1;
         if(prms.Length > 1) int.TryParse(prms[1], out from);
 
-        yield return sublocationTransitionManager.triggerSublocationTransition(to, from);
+        int fade = 1;
+        if(prms.Length > 2)
+        {
+            if (!int.TryParse(prms[2], out fade)) fade = 1;
+        }
+
+        yield return sublocationTransitionManager.triggerSublocationTransition(to, from, fade == 1);
         done[0] = true;
     }
 

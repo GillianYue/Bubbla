@@ -23,6 +23,8 @@ public class GlobalSingleton : MonoBehaviour
     public LoadScene loadScene;
     [Inject(InjectFrom.Anywhere)]
     public SaveLoad saveLoad;
+    [Inject(InjectFrom.Anywhere)]
+    public ResolveScene resolveScene;
 
     public GameObject siteInstance; //holds the instantiated site instance if in travel mode (from site prefabs)
 

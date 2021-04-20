@@ -380,8 +380,29 @@ MonoBehaviour:
   testBehav: {fileID: 0}
   titleControl: {fileID: 0}
   ckTouch: 1
-  sceneType: 1
+  sceneType: 2
   bgmSource: {fileID: 0}
+--- !u!114 &961545441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7022139208466741086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d6a1cae24f674afeb15b615d48d6e7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameControl: {fileID: 0}
+  gameFlow: {fileID: 0}
+  eSpawner: {fileID: 0}
+  pSpawner: {fileID: 0}
+  bgMover: {fileID: 0}
+  levelScript: {fileID: 0}
+  sublocationTransitionManager: {fileID: 0}
+  mapLoader: {fileID: 0}
+  identified: []
 --- !u!1001 &8532775519492199563
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -549,8 +570,16 @@ PrefabInstance:
       propertyPath: Ballz
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1622582800560033857, guid: 2ab1bf52ba78ef14fa1750b43ed3969e, type: 3}
+    - {fileID: 8532775518385008724, guid: 2ab1bf52ba78ef14fa1750b43ed3969e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2ab1bf52ba78ef14fa1750b43ed3969e, type: 3}
+--- !u!1 &7022139208466741086 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1664401428535043029, guid: 2ab1bf52ba78ef14fa1750b43ed3969e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8532775519492199563}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7018396370749598986 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1660940338947225985, guid: 2ab1bf52ba78ef14fa1750b43ed3969e,

@@ -39,7 +39,7 @@ public class TriggerSublocationTransition : MonoBehaviour
                     break;
                 case TransitionType.DIRECT:
                     //do the transition
-                    StartCoroutine(sublocationTransitionManager.triggerSublocationTransition(transitionToSublocationIndex, mySublocationIndex));
+                    StartCoroutine(sublocationTransitionManager.triggerSublocationTransition(transitionToSublocationIndex, mySublocationIndex, true));
                     break;
             }
 
@@ -69,7 +69,7 @@ public class TriggerSublocationTransition : MonoBehaviour
         if (collidePlayer && myTransitionType == TransitionType.HINT)
         {
             //trigger sublocation transition
-            StartCoroutine(sublocationTransitionManager.triggerSublocationTransition(transitionToSublocationIndex, mySublocationIndex));
+            StartCoroutine(sublocationTransitionManager.triggerSublocationTransition(transitionToSublocationIndex, mySublocationIndex, true));
         }
     }
 

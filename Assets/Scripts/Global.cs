@@ -384,16 +384,17 @@ public class Global : MonoBehaviour
     //TODO might need loading screen here
     public static IEnumerator LoadTravelSceneWithSiteCoroutine(int siteIndex, int subIndex, MapLoader mapLoader, GameControl gameControl)
     {
+
+        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(20, Global.makeParamString("0")); //fade out
+
         //if within travel scene, just switch the site; else alter scene first
         int currScene = SceneManager.GetActiveScene().buildIndex;
-        if (currScene != 2)//TODO change this to static var
-            yield return LoadAsyncSceneCoroutine(2);
+        if (currScene != Global.TRAVEL_SCENE_NUMBER)
+            yield return LoadAsyncSceneCoroutine(Global.TRAVEL_SCENE_NUMBER);
 
-        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(50, Global.makeParamString(siteIndex.ToString()));
-
-        //TODO fadeOut, maybe to loading screen
-        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(20, Global.makeParamString("0")); //fade out
         if (GlobalSingleton.Instance.siteInstance != null) Destroy(GlobalSingleton.Instance.siteInstance); //destroy prev site if exists
+
+        gameControl.switchSceneReupdateReferences(Global.TRAVEL_SCENE_NUMBER);
 
         string sitePrefabPath = "Sites/" + mapLoader.getSiteAtIndex(siteIndex).prefabName;
         GameObject sitePrefab = Resources.Load(sitePrefabPath) as GameObject;
@@ -402,11 +403,13 @@ public class Global : MonoBehaviour
 
         GlobalSingleton.Instance.siteInstance.transform.parent = gameControl.mainCanvas.transform;
 
+        //do this after instantiating the site
+        GlobalSingleton.Instance.resolveScene.resolveScene(); //reupdate the references, some might only exist in the new scene
 
-        yield return GlobalSingleton.Instance.siteInstance.GetComponent<SublocationTransitionManager>().triggerSublocationTransition(subIndex, -1);
+        yield return GlobalSingleton.Instance.siteInstance.GetComponent<SublocationTransitionManager>().triggerSublocationTransition(subIndex, -1, false);
 
-        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(20, Global.makeParamString("1"));
-        yield return new WaitForSeconds(0.5f);
+        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(20, Global.makeParamString("1")); //fade in
+        yield return new WaitForSeconds(3f);
 
         //TODO trigger listeners for events
     }

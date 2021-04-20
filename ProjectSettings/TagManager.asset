@@ -11,8 +11,6 @@ TagManager:
   - Enemy
   - Hearts
   - AudioStorage
-  - Potion
-  - Sprite
   - Canvas
   - BlackSpace
   - BGMask
@@ -21,6 +19,8 @@ TagManager:
   - Boss
   - BossLife
   - VfxCanvas
+  - UICanvas
+  - Dialogue
   layers:
   - Default
   - TransparentFX

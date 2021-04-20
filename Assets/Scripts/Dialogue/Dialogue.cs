@@ -159,7 +159,7 @@ public class Dialogue : MonoBehaviour
 		}
 
 
-		int endSentencePartIDefaultBack = 1;
+		int endSentencePartIDefaultBack = 0;
 		int currOpenTagIndex = -1, currEndTagIndex = -1;
 		string currOpenTag = "", currEndTag = "";
 

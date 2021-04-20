@@ -11,7 +11,7 @@ public class SublocationTransitionManager : MonoBehaviour
     public List<GameObject> sublocationGOs; //each should have a UIText child named "SublocationIndex", this is how we match sublocation GOs with their indices
     public Dictionary<int, GameObject> sublocations; //created with list above, which requires in-editor assignment
 
-    [Inject(InjectFrom.Anywhere)] [HideInInspector]
+    [Inject(InjectFrom.Anywhere)] 
     public Player p;
 
     [Inject(InjectFrom.Anywhere)]
@@ -61,7 +61,7 @@ public class SublocationTransitionManager : MonoBehaviour
     /// <param name="player"></param>
     /// <param name="transitionTo"></param>
     /// <param name="fromSublocation"></param>
-    public IEnumerator triggerSublocationTransition(int transitionTo, int fromSublocation)
+    public IEnumerator triggerSublocationTransition(int transitionTo, int fromSublocation, bool withFadeInOut)
     {
         GameObject player = p.gameObject;
 
@@ -83,14 +83,14 @@ public class SublocationTransitionManager : MonoBehaviour
 
         if (startSpot == null) startSpot = sublocations[transitionTo].transform.Find("TransitionEnterSpot").gameObject;
 
-        yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("0", "", "1"));
+        if(withFadeInOut) yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("0", "", "1"));
 
         player.transform.position = startSpot.transform.position;
         camFollow.resetPosition();
 
         yield return new WaitForSeconds(1f);
 
-        yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("1", "", "1"));
+        if (withFadeInOut) yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("1", "", "1"));
 
     }
 

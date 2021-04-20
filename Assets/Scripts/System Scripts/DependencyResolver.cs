@@ -445,22 +445,22 @@ public class DependencyResolver
         {
             if (!ResolveMemberDependencyFromHierarchy(injectable, injectableMember))
             {
-                //Debug.LogError(
-                //    "Failed to resolve dependency for " + injectableMember.Category + ". Member: " + injectableMember.Name + ", MonoBehaviour: " + injectable.GetType().Name + ", GameObject: " + injectable.gameObject.name + "\r\n" +
-                //    "Failed to find a dependency that matches " + injectableMember.MemberType.Name + ".",
-                //    injectable
-                //);
+/*                Debug.LogError(
+                    "Failed to resolve dependency for " + injectableMember.Category + ". Member: " + injectableMember.Name + ", MonoBehaviour: " + injectable.GetType().Name + ", GameObject: " + injectable.gameObject.name + "\r\n" +
+                    "Failed to find a dependency that matches " + injectableMember.MemberType.Name + ".",
+                    injectable
+                );*/
             }
         }
         else if (injectableMember.InjectFrom == InjectFrom.Anywhere)
         {
             if (!ResolveMemberDependencyFromAnywhere(injectable, injectableMember))
             {
-                //Debug.LogError(
-                //    "Failed to resolve dependency for " + injectableMember.Category + ". Member: " + injectableMember.Name + ", MonoBehaviour: " + injectable.GetType().Name + ", GameObject: " + injectable.gameObject.name + "\r\n" +
-                //    "Failed to find a dependency that matches " + injectableMember.MemberType.Name + ".",
-                //    injectable
-                //);
+/*                Debug.LogError(
+                    "Failed to resolve dependency for " + injectableMember.Category + ". Member: " + injectableMember.Name + ", MonoBehaviour: " + injectable.GetType().Name + ", GameObject: " + injectable.gameObject.name + "\r\n" +
+                    "Failed to find a dependency that matches " + injectableMember.MemberType.Name + ".",
+                    injectable
+                );*/
             }
         }
         else
@@ -509,6 +509,7 @@ public class DependencyResolver
 
         foreach (var injectable in injectables)
         {
+           //Debug.Log("processing " + injectable.ToString());
             ResolveDependencies(injectable);
         }
     }

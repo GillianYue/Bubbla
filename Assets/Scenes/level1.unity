@@ -3645,6 +3645,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 23789271091681722, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: goToLineOnStart
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 23789271091681722, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: startLine
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 23789271091681723, guid: fe1ec531264345a4fb6ff045df505584,
         type: 3}
       propertyPath: m_Name
@@ -3765,6 +3775,31 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1754511770}
+    - target: {fileID: 4158615704818813164, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -32.99994
+      objectReference: {fileID: 0}
+    - target: {fileID: 4228194092999973595, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -60.659973
+      objectReference: {fileID: 0}
+    - target: {fileID: 4228194099439760995, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -112.599976
+      objectReference: {fileID: 0}
+    - target: {fileID: 4228194099439760995, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.340027
+      objectReference: {fileID: 0}
+    - target: {fileID: 4228194099977998323, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 32.55005
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe1ec531264345a4fb6ff045df505584, type: 3}
 --- !u!1 &30884623416892707 stripped
@@ -3985,7 +4020,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6984538032353389052}
+      - m_Target: {fileID: 0}
         m_MethodName: restart
         m_Mode: 1
         m_Arguments:
@@ -4426,7 +4461,7 @@ PrefabInstance:
         type: 3}
       propertyPath: gameControl
       value: 
-      objectReference: {fileID: 6984538032353389052}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85a748d810cac4d939596b46881e6030, type: 3}
 --- !u!1001 &801364498612837751
@@ -5925,18 +5960,6 @@ PrefabInstance:
       objectReference: {fileID: 8742514188755349447}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e130b5d27df3b774891d2f8e735dea84, type: 3}
---- !u!114 &6984538032353389052 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6984538031729493194, guid: 96291e58f09982d4f8a305b08dbde043,
-    type: 3}
-  m_PrefabInstance: {fileID: 1070624054}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf9753d191d4048f892e7b73d3262abc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7108292628932481482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6368,11 +6391,21 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1072028089}
-    - target: {fileID: 5290862241748158154, guid: 668bc50e1a491954abf8bb8e42167bfe,
+    - target: {fileID: 2503990087627565692, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
-      propertyPath: gameControl
-      value: 
-      objectReference: {fileID: 6984538032353389052}
+      propertyPath: m_Name
+      value: VfxCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2503990087627565692, guid: 668bc50e1a491954abf8bb8e42167bfe,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3415264271129647960, guid: 668bc50e1a491954abf8bb8e42167bfe,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1162923533
+      objectReference: {fileID: 0}
     - target: {fileID: 9001115275121079128, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6488,11 +6521,6 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1754511770}
-    - target: {fileID: 9001115275356634940, guid: 668bc50e1a491954abf8bb8e42167bfe,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 9219470914659307741, guid: 668bc50e1a491954abf8bb8e42167bfe,
         type: 3}
       propertyPath: m_Camera

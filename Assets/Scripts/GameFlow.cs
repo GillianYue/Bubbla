@@ -19,10 +19,6 @@ public class GameFlow : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public LoadScene loadScene;
 
-    //Manually assign dialogue, since can be duplicate testers
-    public Dialogue dialogue;
-
-
     [Inject(InjectFrom.Anywhere)]
     public EnemyLoader enemyLoader;
     [Inject(InjectFrom.Anywhere)]
@@ -149,14 +145,14 @@ public class GameFlow : MonoBehaviour {
             }
             if (currMode == ScriptMode.DLG)
             {
-                dialogue.disableDialogueBox(); //if transitioning from dlg to others
+                gameControl.dialogue.disableDialogueBox(); //if transitioning from dlg to others
             }
             
             currMode = (ScriptMode)System.Enum.Parse(typeof(ScriptMode), data[0, pointer]); ///////////the actual changing of mode
 
 
-            if (currMode == ScriptMode.DLG) { 
-                dialogue.enableDialogueBox();
+            if (currMode == ScriptMode.DLG) {
+                gameControl.dialogue.enableDialogueBox();
                 if (gameControl) { 
                     gameControl.hideAllIcons();
                     gameControl.bgManager.setBackgroundsActive(false); //pause
@@ -192,7 +188,7 @@ public class GameFlow : MonoBehaviour {
 
         switch (currMode) {
             case ScriptMode.DLG: //still in dialogue mode
-                dialogue.displayOneLine(data[1, pointer], data[2, pointer], data[3, pointer], data[4, pointer], data[5, pointer],
+                gameControl.dialogue.displayOneLine(data[1, pointer], data[2, pointer], data[3, pointer], data[4, pointer], data[5, pointer],
                     data[7, pointer], data[8, pointer], data[9, pointer], data[10, pointer]); //
                 break;
 
@@ -352,7 +348,7 @@ public class GameFlow : MonoBehaviour {
     //this should only be used for dialogues, not in other modes
     //in other modes, incrementPointer, which is instantaneous, should be used
     public IEnumerator movePointer() {
-        if (canMovePointer && dialogue.checkCurrentLineDone() && pointerCheck) {
+        if (canMovePointer && gameControl.dialogue.checkCurrentLineDone() && pointerCheck) {
             pointerCheck = false;
             if (specialGoToLine == -1)
             { //normally increment

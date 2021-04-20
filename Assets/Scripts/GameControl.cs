@@ -29,7 +29,7 @@ using UnityEngine.UI;
 public class GameControl : MonoBehaviour {
     //screen: 320x480
     //world to screen factor: 1:35.6
-    public GameObject mainCanvas, vfxCanvas; //vfxCanvas has a sorting order of 99 since it should be above everything
+    public GameObject mainCanvas, vfxCanvas, UICanvas; //vfxCanvas has a sorting order of 99 since it should be above everything
     public Camera mainCamera;
     public GameObject Hs_Holder, Ballz; //ballz is the empty parent GO holding all paintballs
     //Hs_holder likewise for hearts
@@ -88,21 +88,12 @@ public class GameControl : MonoBehaviour {
 
     void Awake()
     {
-        if (prefabHolder == null) prefabHolder = FindObjectOfType<PrefabHolder>();
-
-        //locate prefabs
-        if (sceneType == GameMode.GAME)
-        {
-            HeartPopVFX = prefabHolder.heartPop;
-            hearts = prefabHolder.hearts;
-            aim = prefabHolder.aim;
-        }
-        
-        if(vfxCanvas == null) { vfxCanvas = GameObject.FindGameObjectWithTag("VfxCanvas"); }
-
         int currScene = SceneManager.GetActiveScene().buildIndex;
-        print("currScene: " + currScene);
+
         switchSceneReupdateReferences(currScene);
+
+        //DontDestroyOnLoad(mainCanvas);
+        DontDestroyOnLoad(UICanvas);
     }
 
     void Start () {
@@ -262,7 +253,7 @@ public class GameControl : MonoBehaviour {
 
     }
 
-    IEnumerator StartGame(){ 
+    IEnumerator StartGame(){
 
         yield return new WaitUntil(() => loadScene.isAllLoadDone());
 
@@ -320,6 +311,14 @@ public class GameControl : MonoBehaviour {
     /// <param name="scene_number"></param>
     public void switchSceneReupdateReferences(int scene_number)
     {
+        if (p == null) p = FindObjectOfType<Player>();
+        if (player == null) player = p.gameObject;
+        if (mainCanvas == null) mainCanvas = GameObject.FindWithTag("Canvas");
+        if (UICanvas == null) UICanvas = GameObject.FindWithTag("UICanvas");
+        if (prefabHolder == null) prefabHolder = FindObjectOfType<PrefabHolder>();
+        if (vfxCanvas == null) { vfxCanvas = GameObject.FindWithTag("VfxCanvas"); }
+        if (dialogue == null) dialogue = GameObject.FindGameObjectWithTag("Dialogue").GetComponent<Dialogue>();
+
         switch (scene_number)
         {
             case Global.TITLE_SCENE_NUMBER:
@@ -329,10 +328,12 @@ public class GameControl : MonoBehaviour {
             case Global.GAME_SCENE_NUMBER:
                 sceneType = GameMode.GAME;
 
-                if (mainCanvas == null) mainCanvas = GameObject.FindGameObjectWithTag("Canvas");
                 if(Hs_Holder==null) Hs_Holder = GameObject.Find("HeartsHolder"); //////////TODO
                 if(Ballz==null) Ballz = mainCanvas.transform.Find("Ballz").gameObject;
 
+                HeartPopVFX = prefabHolder.heartPop;
+                hearts = prefabHolder.hearts;
+                aim = prefabHolder.aim;
 
                 //gadgets are GOs like life container that are needed in game play but not in DLG mode
                 if (gadgets != null)
@@ -354,12 +355,10 @@ public class GameControl : MonoBehaviour {
                 }
 
                 p.navigationMode = Player.NavMode.ACCL;
-                if(player==null) player = p.gameObject;
                 break;
             case Global.TRAVEL_SCENE_NUMBER:
                 sceneType = GameMode.TRAVEL;
-                if (p == null) p = FindObjectOfType<Player>();
-                if (player == null) player = p.gameObject;
+                
 
                 p.navigationMode = Player.NavMode.TOUCH;
                 break;

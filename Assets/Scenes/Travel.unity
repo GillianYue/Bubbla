@@ -324,11 +324,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GlobalSingleton
       objectReference: {fileID: 0}
-    - target: {fileID: 1078953683312498512, guid: 96291e58f09982d4f8a305b08dbde043,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1078953683312498518, guid: 96291e58f09982d4f8a305b08dbde043,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -383,11 +378,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1078953684821714253, guid: 96291e58f09982d4f8a305b08dbde043,
-        type: 3}
-      propertyPath: sceneType
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1078953684821714253, guid: 96291e58f09982d4f8a305b08dbde043,
         type: 3}
@@ -769,6 +759,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UICanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 9001115275121079132, guid: 668bc50e1a491954abf8bb8e42167bfe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 668bc50e1a491954abf8bb8e42167bfe, type: 3}
 --- !u!224 &1617286648 stripped
@@ -1039,6 +1034,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCanvas: {fileID: 0}
   vfxCanvas: {fileID: 0}
+  UICanvas: {fileID: 0}
   mainCamera: {fileID: 0}
   Hs_Holder: {fileID: 0}
   Ballz: {fileID: 0}
@@ -1200,7 +1196,6 @@ MonoBehaviour:
   customEvents: {fileID: 0}
   player: {fileID: 0}
   loadScene: {fileID: 0}
-  dialogue: {fileID: 0}
   enemyLoader: {fileID: 0}
   characterLoader: {fileID: 0}
   itemLoader: {fileID: 0}
@@ -1363,6 +1358,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Mapleville
+      objectReference: {fileID: 0}
+    - target: {fileID: 8511502342158171573, guid: 880a9cff48c80954e9c42c61b0401e6f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8511502342158171574, guid: 880a9cff48c80954e9c42c61b0401e6f,
         type: 3}
