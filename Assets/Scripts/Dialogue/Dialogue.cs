@@ -469,7 +469,6 @@ public class Dialogue : MonoBehaviour
 	/// returns a List of: struct containing (tagPos int[], string openTag, string endTag)
 	/// - prevents long words at end of line from jumping to the next when rendering
 	/// - adds the parsed sentences to ArrayList "result" one by one(reflected in a modified result)
-	/// - replaces the terms in the form of [key] as actual terms according to Strings.cs
 	///    
 	/// Checks if there are tags first.
 	/// If yes, stores the positions of the opening and ending tags in an int array that's returned.
@@ -503,21 +502,6 @@ public class Dialogue : MonoBehaviour
 
 			tagsList.Add((tagPos, openTag, endTag));
 		}
-
-		//keyword replacements
-		while (text.Contains("["))
-        {
-			int[] bracketPos = new int[2];
-			bracketPos[0] = text.IndexOf('[');
-			bracketPos[1] = text.IndexOf(']');
-
-			int key_length = bracketPos[1] - bracketPos[0] - 1;
-			string key = text.Substring(bracketPos[0]+1, key_length);
-			text = text.Remove(bracketPos[0], key_length+2);
-
-			string term = Strings.Get(key);
-			text = text.Insert(bracketPos[0], term);
-        }
 
 		string[] words = text.Split(' ');
 

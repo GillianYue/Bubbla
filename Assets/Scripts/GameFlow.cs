@@ -62,7 +62,10 @@ public class GameFlow : MonoBehaviour {
         //TODO move this to separate loader
         loadDone = new bool[1];
         bool[] parseDone = new bool[1];
-        if (DlgCsv != null) StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, setData, parseDone, true));
+        if (DlgCsv != null) StartCoroutine(LoadScene.processCSV(loadDone, DlgCsv, (string[,] d, bool[] don) => {
+            data = d;
+            gameControl.loadScene.questLoader.preprocessQuestTexts(data);
+        }, parseDone, true));
         else parseDone[0] = true;
 
         yield return new WaitUntil(()=>loadScene.isAllLoadDone());

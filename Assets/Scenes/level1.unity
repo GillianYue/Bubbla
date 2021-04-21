@@ -1290,6 +1290,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1078953683312498539, guid: 96291e58f09982d4f8a305b08dbde043,
+        type: 3}
+      propertyPath: useTestScript
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1078953684821714253, guid: 96291e58f09982d4f8a305b08dbde043,
         type: 3}
       propertyPath: prefabHolder
@@ -3648,7 +3653,7 @@ PrefabInstance:
     - target: {fileID: 23789271091681722, guid: fe1ec531264345a4fb6ff045df505584,
         type: 3}
       propertyPath: goToLineOnStart
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23789271091681722, guid: fe1ec531264345a4fb6ff045df505584,
         type: 3}

@@ -40,40 +40,28 @@ public class QuestLoader : Loader
         StartCoroutine(startLoad());
     }
 
-    void Update()
-    {
-        
+    void Update() {
     }
 
-    IEnumerator startLoad()
-    {
+    IEnumerator startLoad() {
         yield return StartCoroutine(parseQuestsData()); //will set the correct numOfQuests
-
-
     }
 
     /// <summary>
     /// overrides parent
     /// </summary>
     /// <returns></returns>
-    public override bool isLoadDone()
-    {
-        return questLoaderDone;
-    }
+    public override bool isLoadDone() { return questLoaderDone; }
 
-    public void setQuestsData(string[,] d)
-    {
-        questsData = d;
-    }
+    public void setQuestsData(string[,] d) { questsData = d; }
 
     //returns num of all quests available in loader
-    public int getNumQuests()
-    {
-        return numOfQuests; 
-    }
+    public int getNumQuests() { return numOfQuests; }
 
     /// <summary>
     /// parses data for all quest entries (general quests load, not setting up any of them)
+    /// 
+    /// setting up of individual quest takes place upon accepting that quest
     /// </summary>
     /// <returns></returns>
     IEnumerator parseQuestsData()
@@ -81,12 +69,12 @@ public class QuestLoader : Loader
         //data[col,1] will be the first quest (tho in excel visually it's at line 2)
         yield return LoadScene.processCSV(loadDone, questCsv, setQuestsData, false);
 
-        numOfQuests = questsData.GetLength(1) - 1; //exclude title row; data[col, 1_to_numOfQuests] are the quests
+        numOfQuests = questsData.GetLength(1) - 1; //exclude title row; data[col, 1 : numOfQuests] are the quests
 
         allQuests = new Quest[numOfQuests]; //b/c 0 doesn't count; the first quest's index is 1
         allQuests[0] = null;
 
-        for(int q=1; q<=numOfQuests; q++)
+        for (int q = 1; q <= numOfQuests; q++)
         {
             Quest quest = new Quest(q);
             quest.type = questsData[0, q]; quest.description = questsData[1, q];
@@ -95,25 +83,25 @@ public class QuestLoader : Loader
 
             int s = -1;
             int.TryParse(questsData[3, q], out s);
-            if(s != -1) quest.defaultSite = s;
+            if (s != -1) quest.defaultSite = s;
 
             int col1 = -1, col2 = -1, col3 = -1;
             int.TryParse(questsData[4, q], out col1); int.TryParse(questsData[5, q], out col2);
             int.TryParse(questsData[6, q], out col3);
-            if(col1 == -1 || col2 == -1 || col3 == -1) { print("parse error"); }
+            if (col1 == -1 || col2 == -1 || col3 == -1) { print("parse error"); }
 
-            quest.message_color = new Color(col1/255.0f, col2 / 255.0f, col3 / 255.0f);
+            quest.message_color = new Color(col1 / 255.0f, col2 / 255.0f, col3 / 255.0f);
 
-            quest.specifics = questsData[7, q]; 
+            quest.specifics = questsData[7, q];
             quest.long_message = questsData[8, q];
 
             quest.setupFilePath = questsData[9, q];
 
 
-            allQuests[q-1] = quest; //so quest on questsData[row 1] will be quest 0 in allQuests, and will be assigned a questIndex of 0
+            allQuests[q - 1] = quest; //so quest on questsData[row 1] will be quest 0 in allQuests, and will be assigned a questIndex of 0
         }
 
-        print("quest loader done: "+numOfQuests+" quests");
+        print("quest loader done: " + numOfQuests + " quests");
         questLoaderDone = true; //data loaded and parsed
     }
 
@@ -123,7 +111,9 @@ public class QuestLoader : Loader
     }
 
     /// <summary>
+    /// accepts a quest, loads the setup script of that quest, and parses the events within the quest, storing info accordingly
     /// 
+    /// additionally, will preprocess the texts within the setup script to ready them for actual game
     /// </summary>
     /// <param name="qIndex"></param>
     /// <param name="setupDataRef"></param>
@@ -132,8 +122,11 @@ public class QuestLoader : Loader
     {
         //gets the setup csv content to questScript of active quest
         string[,] setupScript = new string[1, 1];
-        print("qIndex: " + qIndex + " quests " + allQuests.Length);
-        yield return assignQuestSetupData(allQuests[qIndex], (string[,] d)=> { setupScript = d; });
+        //print("qIndex: " + qIndex + " number of total quests: " + allQuests.Length);
+        yield return assignQuestSetupData(allQuests[qIndex], (string[,] d) => {
+            setupScript = d;
+            preprocessQuestTexts(setupScript); 
+        });
 
         //parse events of the quest
         List<QuestEvent> qes = parseQuestEvents(setupScript);
@@ -164,7 +157,6 @@ public class QuestLoader : Loader
         actionListenerManager.onTriggerListener(ActionListener.Listener.onStart, new string[1]);
     }
 
-
     /// <summary>
     /// assumes quest's setupFilePath is a valid csv
     /// 
@@ -175,7 +167,7 @@ public class QuestLoader : Loader
     {
         print("quest setup " + q.description);
 
-        TextAsset setupCSV = Resources.Load<TextAsset>("Quests/Setup/"+q.setupFilePath);
+        TextAsset setupCSV = Resources.Load<TextAsset>("Quests/Setup/" + q.setupFilePath);
         if (!setupCSV) Debug.LogError("invalid csv path: " + "Quests/Setup/" + q.setupFilePath);
 
         bool[] done = new bool[1];
@@ -191,13 +183,13 @@ public class QuestLoader : Loader
         int numRows = questScript.GetLength(1); bool toggle = false;
         for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
         {
-            if (questScript[0, r].Length >=2 && questScript[0, r].Substring(0, 2).Equals("##"))
+            if (questScript[0, r].Length >= 2 && questScript[0, r].Substring(0, 2).Equals("##"))
             {
                 if (!toggle) //start of event
                 {
-                    
+
                     string eventName = questScript[0, r].Substring(2); //from the third character to end
-                    int startLineNumber = r+1, endLineNumber = -1; //endline will be set later
+                    int startLineNumber = r + 1, endLineNumber = -1; //endline will be set later
                     bool retriggerable = false; //defaults to false
                     bool.TryParse(questScript[1, r], out retriggerable);
 
@@ -214,7 +206,7 @@ public class QuestLoader : Loader
                         if (leftBracket != -1) //has params inside [ ]
                         {
                             conditionS = conditionString.Substring(0, leftBracket);
-                            conditionParams = conditionString.Substring(leftBracket+1, rightBracket - leftBracket-1);
+                            conditionParams = conditionString.Substring(leftBracket + 1, rightBracket - leftBracket - 1);
                         }
                         else
                         {
@@ -244,7 +236,7 @@ public class QuestLoader : Loader
                 else //end of event
                 {
                     QuestEvent qe = questEvents[questEvents.Count - 1];
-                    qe.endLineNumber = r-1;
+                    qe.endLineNumber = r - 1;
                     //print("end of event at " + r);
                 }
                 toggle = !toggle;
@@ -255,20 +247,73 @@ public class QuestLoader : Loader
     }
 
 
-
-    public Quest getQuest(int index)
-    {
-        return allQuests[index];
-    }
-
-
+    public Quest getQuest(int index) { return allQuests[index]; }
 
     /// <summary>
     /// will return literally all quests that ever existed
     /// </summary>
     /// <returns></returns>
-    public Quest[] getAllQuests() { return allQuests;  }
-}
+    public Quest[] getAllQuests() { return allQuests; }
+
+    /// <summary>
+    /// goes through the contents of a quest script and preprocesses the texts
+    /// 
+    /// - for dialogue items, replaces the terms in the form of [key] as actual terms according to Strings.cs
+    /// </summary>
+    /// <param name="setupScript"></param>
+    public void preprocessQuestTexts(string[,] setupScript)
+    {
+
+        int numRows = setupScript.GetLength(1);
+        bool isDLG = false;
+
+        for (int r = 1; r < numRows; r++) //-1 because title row doesn't count
+        {
+            if (setupScript[0, r].Equals("DLG")) 
+            { 
+                isDLG = true; 
+            }
+            else if (!setupScript[0, r].Equals("")) //if is specifically some other mode, as opposed to an empty string (could be a continuation of DLG)
+            {
+                isDLG = false;
+            }
+
+            if (isDLG)
+            {
+                
+                string text = setupScript[2, r];
+                bool hasBracket = false;
+
+                //keyword replacements
+                while (text.Contains("["))
+                {
+                    hasBracket = true;
+
+                    int[] bracketPos = new int[2];
+                    bracketPos[0] = text.IndexOf('[');
+                    bracketPos[1] = text.IndexOf(']');
+
+                    int key_length = bracketPos[1] - bracketPos[0] - 1;
+                    string key = text.Substring(bracketPos[0] + 1, key_length);
+                    text = text.Remove(bracketPos[0], key_length + 2);
+
+                    string term = Strings.Get(key);
+                    text = text.Insert(bracketPos[0], term);
+                }
+
+                if (hasBracket)
+                {
+                    setupScript[2, r] = text; //replacement
+                }
+            }
+
+
+        }
+
+
+    }
+
+} //end of QuestLoader
 
 // class for one single quest
 /// <summary>
