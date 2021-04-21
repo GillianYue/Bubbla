@@ -374,8 +374,8 @@ public class Global : MonoBehaviour
     //TODO might need loading screen here
     public static IEnumerator LoadTravelSceneWithSiteCoroutine(int siteIndex, int subIndex, MapLoader mapLoader, GameControl gameControl)
     {
-
-        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(20, Global.makeParamString("0")); //fade out
+        gameControl.ckTouch = false;
+        yield return gameControl.customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("0")); //fade out
 
         //if within travel scene, just switch the site; else alter scene first
         int currScene = SceneManager.GetActiveScene().buildIndex;
@@ -398,10 +398,11 @@ public class Global : MonoBehaviour
 
         yield return GlobalSingleton.Instance.siteInstance.GetComponent<SublocationTransitionManager>().triggerSublocationTransition(subIndex, -1, false);
 
-        yield return GlobalSingleton.Instance.customEvents.customEventCoroutine(20, Global.makeParamString("1")); //fade in
-        yield return new WaitForSeconds(3f);
+        yield return gameControl.customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("1")); //fade in
+        yield return new WaitForSeconds(1.75f);
 
-        //TODO trigger listeners for events
+        gameControl.ckTouch = true;
+        //TODO trigger listeners for events?
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~load scene logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -50,7 +50,7 @@ public class GameFlow : MonoBehaviour {
     void Awake()
     {
         specialDLGstarts = new ArrayList(); specialDLGends = new ArrayList();
-        currMode = ScriptMode.GAME;
+        //currMode = ScriptMode.GAME;
     }
 
     void Start() {
@@ -136,10 +136,10 @@ public class GameFlow : MonoBehaviour {
         if (data[0, pointer] != "") {//check if story done (if yes move on to actual game play)
             if (data[0, pointer].Equals("SPECIAL")) //this will only happen to the ending SPECIAL tags
                 /* customEvents is in charge of calling levelScript, which is 
-                 * in charge of using certain SPECIAL blocks (with specific index)
-                 * 
-                 * e.g. levelscript.levelScriptEvent(3) calls a coroutine which uses SPECIAL block 5 and SPECIAL block 6              
-                 */
+                * in charge of using certain SPECIAL blocks (with specific index)
+                * 
+                * e.g. levelscript.levelScriptEvent(3) calls a coroutine which uses SPECIAL block 5 and SPECIAL block 6              
+                */
             {
                 int ln;
                 int.TryParse(data[1, pointer], out ln);
@@ -356,6 +356,7 @@ public class GameFlow : MonoBehaviour {
             if (specialGoToLine == -1)
             { //normally increment
                 pointer++;
+                //print("pointer moved");
             }
             else
             {
@@ -370,7 +371,10 @@ public class GameFlow : MonoBehaviour {
     public void incrementPointer()
     {
         if (canMovePointer)
-        pointer++; 
+        {
+            pointer++;
+            //print("pointer incremented");
+        }
     }
 
     public void setPointer(int p)

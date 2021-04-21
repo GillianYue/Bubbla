@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameTestBehavior : MonoBehaviour
 {
     public int startLine; //which line for levelDLG to start
 
+    [Inject(InjectFrom.Anywhere)]
+    public GameControl gameControl;
     [Inject(InjectFrom.Anywhere)]
     public GameFlow gf;
     [Inject(InjectFrom.Anywhere)]
@@ -16,7 +19,9 @@ public class GameTestBehavior : MonoBehaviour
     [Inject(InjectFrom.Anywhere)]
     public SetUpQuestBoard qb;
 
-    public bool test, invincible, goToLineOnStart;
+    public Text GameModeIndicator, ScriptModeIndicator;
+
+    public bool test, invincible, goToLineOnStart, displayDebugTexts;
     public int speedUpRate;
 
     void Start()
@@ -48,6 +53,10 @@ public class GameTestBehavior : MonoBehaviour
                 Time.timeScale = 1.0f;
             }
 
+            if (displayDebugTexts) { 
+                if (GameModeIndicator) GameModeIndicator.text = "GameMode: "+gameControl.sceneType.ToString();
+                if (ScriptModeIndicator) ScriptModeIndicator.text = "ScriptMode: " + gf.currMode.ToString();
+            }
             //if (Input.GetKeyDown(KeyCode.S)) //save
             //{
             //    saveLoad.SaveQuestStatus(qb.getCurrentQuestStatus());

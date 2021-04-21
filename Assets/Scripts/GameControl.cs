@@ -106,8 +106,8 @@ public class GameControl : MonoBehaviour {
 
     void Update () {
 
-        if (sceneType == GameMode.GAME) 
-        {
+/*        if (sceneType == GameMode.GAME) 
+        {*/
             switch (gameFlow.currMode)
             {
                 case GameFlow.ScriptMode.DLG:
@@ -152,7 +152,6 @@ public class GameControl : MonoBehaviour {
                                     touchCount += 1;
                                 }
 
-
                                 return; //do not check for attack logic
                             }
 
@@ -163,10 +162,10 @@ public class GameControl : MonoBehaviour {
 
                                 if (Global.touching(new Vector2(Input.mousePosition.x,
                                     Input.mousePosition.y), //screen 
-                              icon, //screen
-                        i.GetComponent<Image>().sprite.rect.width * i.transform.localScale.x,
-                        i.GetComponent<Image>().sprite.rect.height * i.transform.localScale.y
-                        ))
+                                    icon, //screen
+                                    i.GetComponent<Image>().sprite.rect.width * i.transform.localScale.x,
+                                    i.GetComponent<Image>().sprite.rect.height * i.transform.localScale.y
+                                    ))
                                 {
                                     //if code reaches here, means that one icon is pressed
                                     return; //prevents held interactions
@@ -199,48 +198,53 @@ public class GameControl : MonoBehaviour {
 
 
                     break;
+                case GameFlow.ScriptMode.IVS:
+                print("IVS updating");
+                    if (Input.GetMouseButtonDown(0) && ckTouch)
+                    {
+                        foreach (GameObject i in interactables)
+                        {
+                            Vector2 go = Global.WorldToScreen(mainCamera, i.transform.position); //screen
+
+                            if (Global.touching(new Vector2(Input.mousePosition.x,
+                                Input.mousePosition.y), //screen 
+                                go, //screen
+                                i.GetComponent<SpriteRenderer>().sprite.rect.width * i.transform.localScale.x,
+                                i.GetComponent<SpriteRenderer>().sprite.rect.height * i.transform.localScale.y
+                              ))
+                            {
+                                //if code reaches here, means that one sprite is clicked, get the ivs-related script & call function
+                                interactable itr = i.GetComponent<interactable>();
+                                if (itr.closeEnough(player)) //if within interactable distance
+                                {
+                                    // player.GetComponent<Player>().setNavigationMode(Player.Mode.FREEZE);
+                                    //gFlow.setPointer(ivs.getIvsGoToLine());
+                                    //TODO
+                                    itr.interact();
+                                    Debug.Log("interacting with GO");
+                                    //non-linear way of displaying message
+                                }
+                                return;
+                            }
+                        }//end foreach
+
+                        p.startNudge(); //notifies player to start moving toward dest
+                    }
+                    else if (Input.GetMouseButtonUp(0) && ckTouch)
+                    {
+                        p.stopNudge();
+                    }
+
+                    break;
                 default:
                     break;
 
             }//end switch for gameFlow state
-        }
+/*        }
         else if(sceneType == GameMode.TRAVEL)
         {
 
-                if (Input.GetMouseButtonDown(0) && ckTouch)
-            {
-                foreach (GameObject i in interactables)
-                {
-                    Vector2 go = Global.WorldToScreen(mainCamera, i.transform.position); //screen
 
-                    if (Global.touching(new Vector2(Input.mousePosition.x,
-                        Input.mousePosition.y), //screen 
-                        go, //screen
-                        i.GetComponent<SpriteRenderer>().sprite.rect.width * i.transform.localScale.x,
-                        i.GetComponent<SpriteRenderer>().sprite.rect.height * i.transform.localScale.y
-                      ))
-                    {
-                        //if code reaches here, means that one sprite is clicked, get the ivs-related script & call function
-                        interactable itr = i.GetComponent<interactable>();
-                        if (itr.closeEnough(player)) //if within interactable distance
-                        {
-                            // player.GetComponent<Player>().setNavigationMode(Player.Mode.FREEZE);
-                            //gFlow.setPointer(ivs.getIvsGoToLine());
-                            //TODO
-                            itr.interact();
-                            Debug.Log("interacting with GO");
-                            //non-linear way of displaying message
-                        }
-                        return;
-                    }
-                }//end foreach
-               
-                p.startNudge(); //notifies player to start moving toward dest
-            }
-            else if(Input.GetMouseButtonUp(0) && ckTouch)
-            {
-                p.stopNudge();
-            }
 
 
         }
@@ -249,7 +253,7 @@ public class GameControl : MonoBehaviour {
             //in title scene
 
 
-        }
+        }*/
 
     }
 

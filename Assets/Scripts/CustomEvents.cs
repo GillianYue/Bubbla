@@ -79,8 +79,10 @@ public class CustomEvents : MonoBehaviour
      * 
      * contains a switch statement for different custom events
      * the custom events all use the params parsed and the done bool array instantiated at the start
+     * 
+     * NOTE: never call this from outside script, as it messes with pointer increments
      */
-    public IEnumerator customEventCoroutine(int index, string[] prms)
+    IEnumerator customEventCoroutine(int index, string[] prms)
     {
 
         bool[] done = new bool[1];
@@ -162,7 +164,11 @@ public class CustomEvents : MonoBehaviour
                 break;
         }
 
+        //if (index == 50) 
+            print(index+" not yet done");
         yield return new WaitUntil(() => done[0]);
+        //if (index == 50) 
+            print(index+" done");
 
         //move on to the next command, we only need to update the csv pointer in game flow
         if (index != 31) //conditional switch/waitUntil modifies the pointer already, should not have an additional increment
@@ -1265,8 +1271,6 @@ public class CustomEvents : MonoBehaviour
      */
     public IEnumerator transitionToSite(bool[] done, string[] prms)
     {
-
-
         int site = int.Parse(prms[0]);
 
         int sub = 1;
@@ -1280,6 +1284,7 @@ public class CustomEvents : MonoBehaviour
         print("transitioned to site " + site+": "+mapLoader.getSiteNameOfIndex(site));
 
         done[0] = true;
+        print("transition to site done set to true");
     }
 
     /*
