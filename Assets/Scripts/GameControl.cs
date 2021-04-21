@@ -30,7 +30,7 @@ public class GameControl : MonoBehaviour {
     //screen: 320x480
     //world to screen factor: 1:35.6
     public GameObject mainCanvas, vfxCanvas, UICanvas; //vfxCanvas has a sorting order of 99 since it should be above everything
-    public Camera mainCamera;
+    public Camera mainCamera, uiCamera;
     public GameObject Hs_Holder, Ballz; //ballz is the empty parent GO holding all paintballs
     //Hs_holder likewise for hearts
 
@@ -77,6 +77,9 @@ public class GameControl : MonoBehaviour {
     [Inject(InjectFrom.Anywhere)]
     public TitleController titleControl;
 
+    [Inject(InjectFrom.Anywhere)]
+    public CameraFollow camFollow;
+
     private float pressTime=-1;
     public bool ckTouch = true;
     private float touchCooler = 0.5f; //half a second before reset; used for checking for fast double tap
@@ -94,6 +97,8 @@ public class GameControl : MonoBehaviour {
 
         //DontDestroyOnLoad(mainCanvas);
         DontDestroyOnLoad(UICanvas);
+        DontDestroyOnLoad(mainCamera);
+        DontDestroyOnLoad(uiCamera);
     }
 
     void Start () {
@@ -311,6 +316,8 @@ public class GameControl : MonoBehaviour {
 
     /// <summary>
     /// updates references to objects, while also (de)activating things appropriately
+    /// 
+    /// NOTE: does not include dependency injection's ResolveScene(), needs to be called manually if needed. See Global.LoadTravelSceneWithSiteCoroutine()
     /// </summary>
     /// <param name="scene_number"></param>
     public void switchSceneReupdateReferences(int scene_number)
@@ -320,6 +327,7 @@ public class GameControl : MonoBehaviour {
         if (mainCanvas == null) mainCanvas = GameObject.FindWithTag("Canvas");
         if (UICanvas == null) UICanvas = GameObject.FindWithTag("UICanvas");
         if (mainCamera == null) mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        if (uiCamera == null) uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
 
         if (prefabHolder == null) prefabHolder = FindObjectOfType<PrefabHolder>();
         if (vfxCanvas == null) { vfxCanvas = GameObject.FindWithTag("VfxCanvas"); }
@@ -364,7 +372,7 @@ public class GameControl : MonoBehaviour {
                 break;
             case Global.TRAVEL_SCENE_NUMBER:
                 sceneType = GameMode.TRAVEL;
-                
+                camFollow.active = true;
 
                 p.navigationMode = Player.NavMode.TOUCH;
                 break;
@@ -413,8 +421,6 @@ public class GameControl : MonoBehaviour {
         Time.timeScale = 1.0f; //resume gameplay
         if (bgManager) bgManager.setBackgroundsActive(true);
     }
-
-
 
     /*
      * a function best called in customized GameOver()s, 

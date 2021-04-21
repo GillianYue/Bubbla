@@ -32,6 +32,7 @@ public class GameTestBehavior : MonoBehaviour
         }
 
         if (invincible) player.invincible = true;
+
     }
 
     void Update()

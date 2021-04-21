@@ -86,7 +86,7 @@ public class SublocationTransitionManager : MonoBehaviour
         if(withFadeInOut) yield return customEvents.fadeInOutToColor(new bool[1], Global.makeParamString("0", "", "1"));
 
         player.transform.position = startSpot.transform.position;
-        camFollow.resetPosition();
+        camFollow.recenterOnPlayer();
 
         yield return new WaitForSeconds(1f);
 

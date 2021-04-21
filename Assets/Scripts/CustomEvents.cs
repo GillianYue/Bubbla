@@ -164,11 +164,10 @@ public class CustomEvents : MonoBehaviour
                 break;
         }
 
-        //if (index == 50) 
-            print(index+" not yet done");
+
+            //print(index+" not yet done");
         yield return new WaitUntil(() => done[0]);
-        //if (index == 50) 
-            print(index+" done");
+           // print(index+" done");
 
         //move on to the next command, we only need to update the csv pointer in game flow
         if (index != 31) //conditional switch/waitUntil modifies the pointer already, should not have an additional increment
@@ -895,14 +894,14 @@ public class CustomEvents : MonoBehaviour
      * moves the camera in a certain manner
      * 
      * param 0: move mode
-     *  -0: delta position (change in position)
-     *  -1: absolute local position of the camera
+     *      -0: delta position (change in position)
+     *      -1: absolute local position of the camera
      * param 1: x coordinate(s) of position(s), separated by comma if multiple
      * param 2: y coordinate(s) of position(s), ...
      * param 3: duration(s) of each movement, in seconds
      * optional param 4: wait mode
-     *  -0: wait until camera movement done
-     *  -1: go to next line immediately
+     *      -0 (default): wait until camera movement done
+     *      -1: go to next line immediately
      * 
      */
     public IEnumerator cameraMovement(bool[] done, string[] prms)
@@ -913,8 +912,8 @@ public class CustomEvents : MonoBehaviour
             yVals = Global.parseMultipleIntParameter(prms[2]),
             durations = Global.parseMultipleIntParameter(prms[3]);
 
-        int waitMode = 0;
-        int.TryParse(prms[4], out waitMode);
+        int waitMode;
+        if(!int.TryParse(prms[4], out waitMode)) waitMode = 0;
 
         for(int i=0; i<xVals.Length; i++)
         {
@@ -929,11 +928,13 @@ public class CustomEvents : MonoBehaviour
                     dest = new Vector3(xVals[i], yVals[i], dest.z);
                     break;
             }
-
+            /////////////////////////////TODO: shouldn't and couldn't use Global.moveTo for camera movement. Do with CameraFollow instead, there's mechanism built in to make work
             switch (waitMode)
             {
                 case 0: //wait
+                    print("before move, dest " + dest + " cam " + gameControl.mainCamera.transform.localPosition);
                     yield return Global.moveToLocalPositionInSecs(gameControl.mainCamera.gameObject, dest, durations[i], new bool[1]);
+                    print("after move, dest " + dest + " cam " + gameControl.mainCamera.transform.localPosition);
                     done[0] = true;
                     break;
                 case 1: //don't wait

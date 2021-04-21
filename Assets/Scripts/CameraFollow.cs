@@ -46,7 +46,7 @@ public class CameraFollow : MovingObject
         objCollider = GetComponent<CapsuleCollider2D>();
         layerMaskName = "Boundary";
         movementMode = MovementMode.DEST_BASED;
-        active = true;
+        active = false; //defaults to inactive, will need to be manually activated if in Travel GameMode
         followSpeedPercent = 0.11f;
 
         upHits = new RaycastHit2D[5]; downHits = new RaycastHit2D[5];
@@ -110,7 +110,7 @@ public class CameraFollow : MovingObject
     /// <summary>
     /// refocuses on player
     /// </summary>
-    public void resetPosition()
+    public void recenterOnPlayer()
     {
         transform.position = new Vector3(player.transform.position.x, player.transform.position.y, startCameraZ);
     }

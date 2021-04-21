@@ -3650,18 +3650,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 205487393, guid: fe1ec531264345a4fb6ff045df505584, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -104.80005
-      objectReference: {fileID: 0}
-    - target: {fileID: 205487394, guid: fe1ec531264345a4fb6ff045df505584, type: 3}
-      propertyPath: m_FontData.m_FontStyle
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 558534069, guid: fe1ec531264345a4fb6ff045df505584, type: 3}
-      propertyPath: m_FontData.m_FontStyle
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 23789271091681723, guid: fe1ec531264345a4fb6ff045df505584,
         type: 3}
       propertyPath: m_Name
