@@ -19,7 +19,7 @@ public class CameraFitScreen : MonoBehaviour
 
 
             
-        Global.setGlobalConstants(cam);
+        Global.setGlobalConstants();
 
         if (canvasToScale)
         {

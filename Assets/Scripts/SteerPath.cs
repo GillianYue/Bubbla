@@ -26,20 +26,19 @@ public class SteerPath : MonoBehaviour
     //for testing purposes
     void Update()
     {
-        if (mouseGenPath && Input.GetMouseButtonDown(0))
+/*        if (mouseGenPath && Input.GetMouseButtonDown(0))
         {
             Vector3 mouse = Global.ScreenToWorld(Input.mousePosition);
             addNode(mouse);
             GameObject marking = GameObject.Instantiate(markingPrefab);
             marking.transform.position = mouse;
-
         }
 
         if (Input.GetMouseButtonDown(1))
         {
             Vector3 mouse = Global.ScreenToWorld(Input.mousePosition);
             addNode(mouse);
-        }
+        }*/
     }
 
     public SteerPath(List<Vector3> list)

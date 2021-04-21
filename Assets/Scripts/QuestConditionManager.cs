@@ -47,6 +47,7 @@ public class QuestConditionManager : MonoBehaviour
         //loop through existing events in the curr active quest
         foreach(QuestEvent qEvent in GlobalSingleton.Instance.questStatus.activeQuestData.getQuestEvents())
         {
+            //print("event: " + qEvent.conditions[0].Item2[0]);
             if (qEvent.conditionsMet(listener, eventParams)) //might need parameters here too
             {
                 //conditions met

@@ -299,7 +299,7 @@ public class CharacterLoader : Loader
         if (baseStateAnimationClipNames[cCode] != null && baseStateAnimationClipNames[cCode][state] != null)
         {
             a.Play(baseStateAnimationClipNames[cCode][state]);
-            print("playing " + baseStateAnimationClipNames[cCode][state]);
+            //print("playing " + baseStateAnimationClipNames[cCode][state]);
         }
         else
         {

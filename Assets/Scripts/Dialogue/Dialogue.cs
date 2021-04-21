@@ -75,7 +75,7 @@ public class Dialogue : MonoBehaviour
 		{
 			cIndex = -1; //cCode of the upcoming character
 			cIndex = characterLoader.getIndex(c_name);
-			print("cIndex got from loader for " + c_name + ": " + cIndex);
+			//print("cIndex got from loader for " + c_name + ": " + cIndex);
 
 			if (cIndex == -1) //not found, check for special param instructing which Animator to use
 			{
@@ -114,7 +114,9 @@ public class Dialogue : MonoBehaviour
 		if(!float.TryParse(display_spd, out disp_spd)) disp_spd = 1; //converts string to int
 
 		//format sentence
-		string[] store; ArrayList result = new ArrayList();
+		string[] store; 
+		ArrayList result = new ArrayList();
+
 		List<(int[], string, string)> tags = GetFormattedText(DIALOGUE, content, result);
 		store = result.ToArray(typeof(string)) as string[];
 		Canvas.ForceUpdateCanvases();
@@ -462,17 +464,22 @@ public class Dialogue : MonoBehaviour
 		skipping = true;
 	}
 
-	/*
-	 * returns a List of structs containing a tagPos int[], string openTag, string endTag
-	 * 
-	 * prevents long words at end of line from jumping to the next when rendering
-	 * adds the parsed sentences to ArrayList result one by one (reflected in a modified result)
-	 *     
-	 * Checks if there are tags first. 
-	 * If yes, stores the positions of the opening and ending tags in an int array that's returned.
-	 * If no, the returned array[0] will be -1, indicating that there's no tags in this sentence.
-	 * 
-	 */
+	/// <summary>
+	/// 
+	/// returns a List of: struct containing (tagPos int[], string openTag, string endTag)
+	/// - prevents long words at end of line from jumping to the next when rendering
+	/// - adds the parsed sentences to ArrayList "result" one by one(reflected in a modified result)
+	/// - replaces the terms in the form of [key] as actual terms according to Strings.cs
+	///    
+	/// Checks if there are tags first.
+	/// If yes, stores the positions of the opening and ending tags in an int array that's returned.
+	/// If no, the returned array[0] will be -1, indicating that there's no tags in this sentence.
+	///
+	/// </summary>
+	/// <param name="textUI"></param>
+	/// <param name="text"></param>
+	/// <param name="result"></param>
+	/// <returns></returns>
 	private List<(int[], string, string)> GetFormattedText(Text textUI, string text, ArrayList result)
 	{
 		List<(int[], string, string)> tagsList = new List<(int[], string, string)>(); //(tagPos, openTag, endTag)
@@ -504,10 +511,12 @@ public class Dialogue : MonoBehaviour
 			bracketPos[0] = text.IndexOf('[');
 			bracketPos[1] = text.IndexOf(']');
 
-			int key_length = bracketPos[1] - bracketPos[0] + 1;
-			string key = text.Substring(bracketPos[0], key_length);
-			text = text.Remove(bracketPos[0], key_length);
-			text.Insert(bracketPos[0], Strings.Get(key));
+			int key_length = bracketPos[1] - bracketPos[0] - 1;
+			string key = text.Substring(bracketPos[0]+1, key_length);
+			text = text.Remove(bracketPos[0], key_length+2);
+
+			string term = Strings.Get(key);
+			text = text.Insert(bracketPos[0], term);
         }
 
 		string[] words = text.Split(' ');

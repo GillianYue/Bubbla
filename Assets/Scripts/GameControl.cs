@@ -158,7 +158,7 @@ public class GameControl : MonoBehaviour {
 
                             foreach (GameObject i in icons) //check for UI trigger
                             {
-                                Vector2 icon = Global.WorldToScreen(i.GetComponent<
+                                Vector2 icon = Global.WorldToScreen(mainCamera, i.GetComponent<
                                 RectTransform>().position); //screen
 
                                 if (Global.touching(new Vector2(Input.mousePosition.x,
@@ -211,7 +211,7 @@ public class GameControl : MonoBehaviour {
             {
                 foreach (GameObject i in interactables)
                 {
-                    Vector2 go = Global.WorldToScreen(i.transform.position); //screen
+                    Vector2 go = Global.WorldToScreen(mainCamera, i.transform.position); //screen
 
                     if (Global.touching(new Vector2(Input.mousePosition.x,
                         Input.mousePosition.y), //screen 
@@ -315,6 +315,8 @@ public class GameControl : MonoBehaviour {
         if (player == null) player = p.gameObject;
         if (mainCanvas == null) mainCanvas = GameObject.FindWithTag("Canvas");
         if (UICanvas == null) UICanvas = GameObject.FindWithTag("UICanvas");
+        if (mainCamera == null) mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+
         if (prefabHolder == null) prefabHolder = FindObjectOfType<PrefabHolder>();
         if (vfxCanvas == null) { vfxCanvas = GameObject.FindWithTag("VfxCanvas"); }
         if (dialogue == null) dialogue = GameObject.FindGameObjectWithTag("Dialogue").GetComponent<Dialogue>();

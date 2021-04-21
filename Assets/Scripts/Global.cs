@@ -30,8 +30,6 @@ public class Global : MonoBehaviour
     * consistency. This value will be set from player's scale once we enter game mode.   
     */
 
-    public static Camera mainCamera;
-
     public const int TITLE_SCENE_NUMBER = 0, GAME_SCENE_NUMBER = 1, TRAVEL_SCENE_NUMBER = 2;
 
     public static Dictionary<string, int> intVariables = new Dictionary<string, int>();
@@ -43,19 +41,11 @@ public class Global : MonoBehaviour
 
     public static int Scene_To_Load;
 
-    public static void setGlobalConstants(Camera mainCamera)
+    public static void setGlobalConstants()
     {
-        Global.mainCamera = mainCamera;
-        Vector3 zero = mainCamera.WorldToScreenPoint(new Vector3(0,
-    0,0));
-        Vector3 one = mainCamera.WorldToScreenPoint(new Vector3(1,
-           1,0));
-        //WTSfactor = new Vector2((one.x - zero.x), (one.y - zero.y));
-
-        //STWfactor = new Vector2((1.0f / WTSfactor.x), (1.0f /WTSfactor.y));
     
         gameViewSize = UnityEditor.Handles.GetMainGameViewSize();
-        //Debug.Log("WTS: " + WTSfactor + " STW: " + STWfactor);
+
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~game play logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,20 +100,20 @@ public class Global : MonoBehaviour
     }
 
 
-    public static Vector2 ScreenToWorld(Vector2 mousePos)
+    public static Vector2 ScreenToWorld(Camera cam, Vector2 mousePos)
     {
-        Vector3 res = mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 0));
+        Vector3 res = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 0));
         return new Vector2(res.x, res.y);
     }
 
-    public static Vector3 ScreenToWorld(Vector2 mousePos, float z)
+    public static Vector3 ScreenToWorld(Camera cam, Vector2 mousePos, float z)
     {
-        return mainCamera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, z)); 
+        return cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, z)); 
     }
 
-    public static Vector2 WorldToScreen(Vector3 pos)
+    public static Vector2 WorldToScreen(Camera cam, Vector3 pos)
     {
-        Vector3 res = mainCamera.WorldToScreenPoint(pos);
+        Vector3 res = cam.WorldToScreenPoint(pos);
         return new Vector2(res.x, res.y);
 
     }

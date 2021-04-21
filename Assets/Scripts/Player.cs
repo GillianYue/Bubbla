@@ -81,7 +81,7 @@ public class Player : MovingObject
 
 	protected override void FixedUpdate()
     {
-		Vector2 mouseInWorld = Global.ScreenToWorld(Input.mousePosition);
+		Vector2 mouseInWorld = Global.ScreenToWorld(gameControl.mainCamera, Input.mousePosition);
 		destPos = mouseInWorld;
 
 		base.FixedUpdate();
@@ -209,7 +209,7 @@ public class Player : MovingObject
 	{
 		if (canMove) { 
 		Rigidbody2D rb = GetComponent<Rigidbody2D>();
-		Vector3 to = Global.mainCamera.ScreenToWorldPoint(new Vector3(mouseX, mouseY, 5)); //TODO that 5
+		Vector3 to = gameControl.mainCamera.ScreenToWorldPoint(new Vector3(mouseX, mouseY, 5)); //TODO that 5
 		rb.MovePosition(to);
 		}
 	}
@@ -246,7 +246,7 @@ public class Player : MovingObject
     {
         yield return new WaitUntil(() => //delegate called after each Update()
         {
-            Vector2 mouseInWorld = Global.ScreenToWorld(Input.mousePosition);
+            Vector2 mouseInWorld = Global.ScreenToWorld(gameControl.mainCamera, Input.mousePosition);
             Global.nudgeTowards(gameObject, (int)mouseInWorld.x, (int)mouseInWorld.y, 10);
             if (Input.GetMouseButtonUp(0))
             {
@@ -305,7 +305,7 @@ public class Player : MovingObject
 			float sc_x = r.localScale.x, sc_y = r.localScale.y;
 			float w = r.rect.width * sc_x;
 			float h = r.rect.height * sc_y;
-			Vector2 p = Global.WorldToScreen(BulletContCenter.transform.position);
+			Vector2 p = Global.WorldToScreen(gameControl.mainCamera, BulletContCenter.transform.position);
 
 			int index = -1;
 
@@ -335,7 +335,7 @@ public class Player : MovingObject
 
 	public int whichGauge(Vector2 touchPos)
     {
-		Vector2 b = Global.WorldToScreen(BulletContBase.transform.position);
+		Vector2 b = Global.WorldToScreen(gameControl.mainCamera, BulletContBase.transform.position);
 		float h = borderRect.rect.height * borderRect.localScale.y;
 
 		int index = -1;

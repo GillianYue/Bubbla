@@ -78,7 +78,7 @@ public class PirateShip : BossBehavior
     public void fireCannonball(bool[] done)
     {
         //start pointin cannon
-        Vector3 ship = Global.WorldToScreen(gameObject.transform.position);
+        Vector3 ship = Global.WorldToScreen(gameControl.mainCamera, gameObject.transform.position);
         Vector3 direction = Camera.main.WorldToScreenPoint(player.transform.position) - ship;
         float tan = direction.x / direction.y;
         float angle = Mathf.Atan(tan);
@@ -95,7 +95,7 @@ public class PirateShip : BossBehavior
     public void fireEnemy(bool[] done, int eCode)
     {
         //start pointin cannon
-        Vector3 ship = Global.WorldToScreen(gameObject.transform.position);
+        Vector3 ship = Global.WorldToScreen(gameControl.mainCamera, gameObject.transform.position);
         Vector3 direction = Camera.main.WorldToScreenPoint(player.transform.position) - ship;
         float tan = direction.x / direction.y;
         float angle = Mathf.Atan(tan);

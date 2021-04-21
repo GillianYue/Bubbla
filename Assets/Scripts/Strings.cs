@@ -19,7 +19,15 @@ public class Strings : MonoBehaviour
     public static string Get(string key)
     {
         string val;
-        if(!terms.TryGetValue(key, out val)) Debug.LogError("terms does not contain "+key);
+        if (!terms.TryGetValue(key, out val))
+        {
+            Debug.LogError("terms does not contain " + key);
+            val = "null_term";
+        }
+        else
+        {
+            //Debug.Log("term for " + key + " is " + val);
+        }
 
         return val;
     }
