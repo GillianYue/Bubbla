@@ -893,16 +893,17 @@ public class CustomEvents : MonoBehaviour
      * 
      * moves the camera in a certain manner
      * 
-     * param 0: move mode
+     * param 0: move mode (for now, defaults to linear movement)
      *      -0: delta position (change in position)
-     *      -1: absolute local position of the camera
+     *      -1: absolute LOCAL position of the camera
      * param 1: x coordinate(s) of position(s), separated by comma if multiple
      * param 2: y coordinate(s) of position(s), ...
      * param 3: duration(s) of each movement, in seconds
      * optional param 4: wait mode
      *      -0 (default): wait until camera movement done
      *      -1: go to next line immediately
-     * 
+     * optional param 5: linger time after reached (defaults to 1 second if all unspecified), separated by comma if multiple
+     * optional param 6: camera follows player after done, defaults to the current followPlayer state in CameraFollow
      */
     public IEnumerator cameraMovement(bool[] done, string[] prms)
     {
@@ -912,36 +913,48 @@ public class CustomEvents : MonoBehaviour
             yVals = Global.parseMultipleIntParameter(prms[2]),
             durations = Global.parseMultipleIntParameter(prms[3]);
 
+        int[] lingerDurations = (prms[5]=="") ? new int[xVals.Length] : Global.parseMultipleIntParameter(prms[5]);
+        if(prms[5] == "") //set default linger time if param not provided
+        {
+            for (int l = 0; l < lingerDurations.Length; l++) lingerDurations[l] = 1;
+        }
+
         int waitMode;
         if(!int.TryParse(prms[4], out waitMode)) waitMode = 0;
 
+        float lingerTime = 1;
+        if (!float.TryParse(prms[5], out lingerTime)) lingerTime = 1;
+
+        bool followPlayerAfterDone;
+        if (!bool.TryParse(prms[6], out followPlayerAfterDone)) followPlayerAfterDone = gameControl.camFollow.followPlayer;
+
         for(int i=0; i<xVals.Length; i++)
         {
-            Vector3 dest = gameControl.mainCamera.transform.localPosition;
+            Vector3 destLocal = gameControl.mainCamera.transform.localPosition,
+                dest = gameControl.mainCamera.transform.position; //world
 
             switch (moveMode)
             {
-                case 0:
+                case 0: //delta pos
                     dest = new Vector3(dest.x + xVals[i], dest.y + yVals[i], dest.z);
                     break;
-                case 1:
-                    dest = new Vector3(xVals[i], yVals[i], dest.z);
+                case 1: //local pos (needs to convert into world)
+                    dest = new Vector3(dest.x + (xVals[i] - destLocal.x), dest.y + (yVals[i] - destLocal.y), dest.z);
                     break;
             }
-            /////////////////////////////TODO: shouldn't and couldn't use Global.moveTo for camera movement. Do with CameraFollow instead, there's mechanism built in to make work
-            switch (waitMode)
-            {
-                case 0: //wait
-                    print("before move, dest " + dest + " cam " + gameControl.mainCamera.transform.localPosition);
-                    yield return Global.moveToLocalPositionInSecs(gameControl.mainCamera.gameObject, dest, durations[i], new bool[1]);
-                    print("after move, dest " + dest + " cam " + gameControl.mainCamera.transform.localPosition);
-                    done[0] = true;
-                    break;
-                case 1: //don't wait
-                    StartCoroutine(Global.moveToLocalPositionInSecs(gameControl.mainCamera.gameObject, dest, durations[i], new bool[1]));
-                    done[0] = true;
-                    break;
+            if (waitMode == 0) {
+                print("before move, dest " + dest + " cam " + gameControl.mainCamera.transform.position);
+                yield return gameControl.camFollow.moveWorldDestLinear(dest, durations[i], lingerDurations[i], (i == xVals.Length - 1)? followPlayerAfterDone : false);
+                print("after move, dest " + dest + " cam " + gameControl.mainCamera.transform.position);
+                if(i == xVals.Length - 1) done[0] = true; //the last one
             }
+            else if(waitMode == 1)
+            {  //don't wait
+                if(i==0) done[0] = true; //done on start, move on to next line while movement runs
+                yield return gameControl.camFollow.moveWorldDestLinear(dest, durations[i], lingerDurations[i], (i == xVals.Length - 1) ? followPlayerAfterDone : false);
+            }
+
+            
         }
 
         
@@ -1285,7 +1298,6 @@ public class CustomEvents : MonoBehaviour
         print("transitioned to site " + site+": "+mapLoader.getSiteNameOfIndex(site));
 
         done[0] = true;
-        print("transition to site done set to true");
     }
 
     /*

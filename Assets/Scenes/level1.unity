@@ -3765,6 +3765,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1754511770}
+    - target: {fileID: 4228194099439760995, guid: fe1ec531264345a4fb6ff045df505584,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -112.599976
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe1ec531264345a4fb6ff045df505584, type: 3}
 --- !u!1 &30884623416892707 stripped
@@ -5923,6 +5928,11 @@ PrefabInstance:
       propertyPath: canvasToScale
       value: 
       objectReference: {fileID: 8742514188755349447}
+    - target: {fileID: 8399882933666657340, guid: e130b5d27df3b774891d2f8e735dea84,
+        type: 3}
+      propertyPath: followPlayer
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e130b5d27df3b774891d2f8e735dea84, type: 3}
 --- !u!1001 &7108292628932481482
