@@ -96,7 +96,7 @@ public class GameControl : MonoBehaviour {
         switchSceneReupdateReferences(currScene);
 
         //DontDestroyOnLoad(mainCanvas);
-        DontDestroyOnLoad(UICanvas);
+        if(UICanvas != null) DontDestroyOnLoad(UICanvas);
         DontDestroyOnLoad(mainCamera);
         DontDestroyOnLoad(uiCamera);
     }
@@ -323,7 +323,7 @@ public class GameControl : MonoBehaviour {
     public void switchSceneReupdateReferences(int scene_number)
     {
         if (p == null) p = FindObjectOfType<Player>();
-        if (player == null) player = p.gameObject;
+        if (p!=null && player == null) player = p.gameObject;
         if (mainCanvas == null) mainCanvas = GameObject.FindWithTag("Canvas");
         if (UICanvas == null) UICanvas = GameObject.FindWithTag("UICanvas");
         if (mainCamera == null) mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();

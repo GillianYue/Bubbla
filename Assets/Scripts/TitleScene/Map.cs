@@ -149,9 +149,8 @@ public class Map : MonoBehaviour
                 sublocationList[index].displayImage); });
 
         //pan & zoom to site, and then open up site detail panel
-        panToSite(dots[siteIndex-1].transform.position, openSiteDetailPanel);
+        panToSite(dots[siteIndex-1].transform.position - transform.position, openSiteDetailPanel);
 
-        print("selected site at " + mapLoader.getSiteNameOfIndex(siteIndex));
     }
 
     /// <summary>

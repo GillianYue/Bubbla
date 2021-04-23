@@ -204,7 +204,7 @@ public class PanZoom : MonoBehaviour
         panDest.z = zDestination;
 
         if (cb != null) lerpEndCallback = cb;
-        print("lerp trying to move to " + panDest);
+
     }
 
     bool checkForDestReach()
