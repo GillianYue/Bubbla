@@ -8,7 +8,8 @@ public class CameraFollow : MovingObject
     [Inject(InjectFrom.Anywhere)]
     public Player player;
 
-    public bool followPlayer = false;
+    //currDestReached is only used when setting move destinations for camera when it's not following player
+    public bool followPlayer = false, currDestReached = false;
     private Vector3 startOffset = new Vector3(0, -400, 0); //offset from center of screen (adjusts player's visible pos in game)
 
     public GameObject Boundary;
@@ -66,6 +67,14 @@ public class CameraFollow : MovingObject
             //updates the camera destPos to be player with offset
             if (followPlayer) destPos = player.transform.position - startOffset; //setting destPos relative to cam-player offset
 
+            if (!followPlayer && !currDestReached && destReached()) //if not following player and dest has just been reached
+            {
+                currDestReached = true; //update the status so that future updates won't have to unnecessarily move
+                //print("reached " + Vector2.Distance(new Vector2(destPos.x, destPos.y), new Vector2(transform.position.x, transform.position.y)));
+            }
+
+            if (currDestReached && !followPlayer) return; //don't move the cam if dest already reached; wait till new dest is set 
+
             Vector2 delta = new Vector2();
             if (movementMode == MovementMode.DEST_BASED)
             {
@@ -88,13 +97,13 @@ public class CameraFollow : MovingObject
              */
 
             if ((upHits[0].collider != null && delta.y > 0 && upHits[0].distance < Screen.height / 2 - spaceBeyond)) 
-            { 
+            {
                 delta.y = 0;
                 destPos = new Vector3(destPos.x, transform.position.y, destPos.z);
             }
             //up hit & moving up & reaching upper wall
             if (downHits[0].collider != null && delta.y < 0 && downHits[0].distance < Screen.height / 2 - spaceBeyond) 
-            { 
+            {
                 delta.y = 0;
                 destPos = new Vector3(destPos.x, transform.position.y, destPos.z);
             }
@@ -139,6 +148,7 @@ public class CameraFollow : MovingObject
     /// <param name="duration"></param>
     public IEnumerator moveWorldDestLinear(Vector3 dest, float duration, float lingerAfterReach, bool followPlayerAfterReach)
     {
+        currDestReached = false;
         followPlayer = false;
 
         movementMode = MovementMode.LINEAR;
@@ -147,20 +157,19 @@ public class CameraFollow : MovingObject
         linearSpeed = distPerSec * Time.fixedDeltaTime * 2;
         destPos = new Vector3(dest.x, dest.y, destPos.z);
 
-        print("destPos " + destPos + " " + transform.position + " " + Vector2.Distance(new Vector2(destPos.x, destPos.y), new Vector2(transform.position.x, transform.position.y)));
-
         float startTime = Time.time;
 
         yield return new WaitUntil(() => {
-            if (Vector2.Distance(new Vector2(destPos.x, destPos.y), new Vector2(transform.position.x, transform.position.y)) < 5) 
+            if (currDestReached) //means destReached returned true in fixedUpdate
             {
-                print("destPos " + destPos + " " + transform.position + " reached " + Vector2.Distance(new Vector2(destPos.x, destPos.y), new Vector2(transform.position.x, transform.position.y)));
-                return true; 
+                //print("destPos " + destPos + " " + transform.position + " reached " + Vector2.Distance(new Vector2(destPos.x, destPos.y), 
+                //    new Vector2(transform.position.x, transform.position.y)));
+                return true; //can end 
             }
 
-            if (Time.time - startTime > 10f)
+            if (Time.time - startTime > 10f) 
             {
-                Debug.LogError("dest not reached within 10 seconds, skipped");
+                Debug.Log("dest not reached within 10 seconds, skipped");
                 return true;
             }
 
@@ -199,5 +208,10 @@ public class CameraFollow : MovingObject
     public override IEnumerator moveWorldDestAccl(Vector3 dest)
     {
         return base.moveWorldDestAccl(dest);
+    }
+
+    public bool destReached()
+    {
+        return Vector2.Distance(new Vector2(destPos.x, destPos.y), new Vector2(transform.position.x, transform.position.y)) < 20;
     }
 }

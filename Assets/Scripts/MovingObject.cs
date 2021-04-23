@@ -94,7 +94,7 @@ public abstract class MovingObject : MonoBehaviour
         float startTime = Time.time;
 
         yield return new WaitUntil(()=> {
-            if (Vector2.Distance(new Vector2(destPos.x, destPos.y), new Vector2(transform.position.x, transform.position.y)) < 5) return true;
+            if (Vector2.Distance(new Vector2(destPos.x, destPos.y), new Vector2(transform.position.x, transform.position.y)) < 20) return true;
             if (Time.time - startTime > 10f)
                 Debug.LogError("dest not reached within 10 seconds, skipped");
                 return true; });

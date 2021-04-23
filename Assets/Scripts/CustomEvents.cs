@@ -943,7 +943,7 @@ public class CustomEvents : MonoBehaviour
                     break;
             }
             if (waitMode == 0) {
-                print("before move, dest " + dest + " cam " + gameControl.mainCamera.transform.position);
+                print("before move, dest " + dest + " cam " + gameControl.mainCamera.transform.position + " " + followPlayerAfterDone);
                 yield return gameControl.camFollow.moveWorldDestLinear(dest, durations[i], lingerDurations[i], (i == xVals.Length - 1)? followPlayerAfterDone : false);
                 print("after move, dest " + dest + " cam " + gameControl.mainCamera.transform.position);
                 if(i == xVals.Length - 1) done[0] = true; //the last one
