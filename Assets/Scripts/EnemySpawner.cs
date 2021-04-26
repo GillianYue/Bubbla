@@ -131,6 +131,7 @@ public class EnemySpawner : MonoBehaviour {
             genMonster((-range + c*(2*range/(float)(numEnemy-1))), spawnValues.y, 
                 spawnValues.z, enemyCode);
 
+
         }
     }
 
@@ -184,6 +185,7 @@ public class EnemySpawner : MonoBehaviour {
         Vector3 spawnPosition = new Vector3 (x, y, z);
         e.transform.position = spawnPosition;
         e.transform.parent = enemiez.transform;
+
         return e;
     }
 

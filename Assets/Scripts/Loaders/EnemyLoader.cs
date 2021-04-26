@@ -78,27 +78,57 @@ public class EnemyLoader : Loader
         {
             e.GetComponent<SpriteRenderer>().enabled = false;
             e.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
+
+            e.GetComponent<Enemy>().sprite_on_child = true;
+        }
+        else
+        {
+            e.GetComponent<Enemy>().sprite_on_child = false;
         }
 
         //Animator
         Animator animator = e.GetComponent<Animator>();
 
-        AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
-
-        if (S0_ANIM[eCode] != null)
+        if (S0_ANIM[eCode] != null || S1_ANIM[eCode] != null || S2_ANIM[eCode] != null)
         {
-            animatorOverrideController["State0anim"] = S0_ANIM[eCode];
+            AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+            animatorOverrideController.name = "overrideEnemyAnimator";
+
+            if (S0_ANIM[eCode] != null)
+                animatorOverrideController["State0anim"] = S0_ANIM[eCode];
+
+            if (S1_ANIM[eCode] != null)
+                animatorOverrideController["State1anim"] = S1_ANIM[eCode];
+
+            if (S2_ANIM[eCode] != null)
+                animatorOverrideController["State2anim"] = S2_ANIM[eCode];
+
+            animator.runtimeAnimatorController = animatorOverrideController;
 
         }
-
-        if (S1_ANIM[eCode] != null)
-            animatorOverrideController["State1anim"] = S1_ANIM[eCode];
-
-        if (S2_ANIM[eCode] != null)
-            animatorOverrideController["State2anim"] = S2_ANIM[eCode];
-
-        animator.runtimeAnimatorController = animatorOverrideController;
         animator.Update(0.0f);
+
+        if (initial_sprite[eCode] != "")
+        {
+            Sprite ini_spr = Resources.Load<Sprite>("Sprites/Enemies/" + initial_sprite[eCode]);
+
+            if (ini_spr == null)
+            {
+                Debug.LogError("sprite " + initial_sprite[eCode] + " NOT found");
+            }
+            else
+            {//if initial_sprite exists and successfully loaded
+                if (sprite_on_child[eCode])
+                {
+                    Transform childSprite = e.transform.Find("childSprite");
+                    childSprite.GetComponent<SpriteRenderer>().sprite = ini_spr;
+                }
+                else
+                {
+                    e.GetComponent<SpriteRenderer>().sprite = ini_spr;
+                }
+            }
+        }
 
         //Enemy stats
         e.name = enemyName[eCode];
@@ -130,7 +160,6 @@ public class EnemyLoader : Loader
         {
             List<List<Vector2>> enemy_Paths = e.GetComponent<PixelCollider2D>().Regenerate(sprite_on_child[eCode]);
             enemyColliders[eCode] = enemy_Paths;
-
         }
         else
         {
@@ -220,23 +249,32 @@ public class EnemyLoader : Loader
 
     private void loadAnimationClips(AnimationClip[] s0, AnimationClip[] s1, AnimationClip[] s2)
     {
+        int totalEnemies = s0.GetLength(0);
 
         //load the animation clips into the arrays
-        for (int eCode = 0; eCode < s0.GetLength(0); eCode++)
+        for (int eCode = 0; eCode < totalEnemies; eCode++)
         {
             if (!s0_anim[eCode].Equals(""))
             {
                 var tmpAnim0 = Resources.Load("Animation/"+s0_anim[eCode]) as AnimationClip;
 
-            if (tmpAnim0 == null)
-            {
-                Debug.LogError("Animation 0 NOT found");
+                if (tmpAnim0 == null)
+                {
+                    Debug.LogError("Animation 0 NOT found");
+                }
+                else
+                {
+                    s0[eCode] = tmpAnim0;
+                }
             }
             else
             {
-                s0[eCode] = tmpAnim0;
+                if (eCode == totalEnemies - 1)
+                {
+                    var defaultAnim = Resources.Load("Animation/generalHoverChild") as AnimationClip;
+                    s0[eCode] = defaultAnim; //so that even if the last enemy has a nil s0, loader will know it's done (see condition for enemyLoaderDone)
+                }
             }
-        }
 
 
             if (!s1_anim[eCode].Equals(""))
@@ -244,14 +282,14 @@ public class EnemyLoader : Loader
                 var tmpAnim1 = Resources.Load("Animation/" + s1_anim[eCode]) as AnimationClip;
 
                 if (tmpAnim1 == null)
-            {
-                Debug.LogError("Animation 1 NOT found");
+                {
+                    Debug.LogError("Animation 1 NOT found");
+                }
+                else
+                {
+                    s1[eCode] = tmpAnim1;
+                }
             }
-            else
-            {
-                s1[eCode] = tmpAnim1;
-            }
-        }
 
             if (!s2_anim[eCode].Equals(""))
             {

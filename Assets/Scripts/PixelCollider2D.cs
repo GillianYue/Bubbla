@@ -17,12 +17,14 @@ public sealed class PixelCollider2D : MonoBehaviour
         Sprite_on_child = sprite_on_child;
 
         alphaCutoff = Mathf.Clamp(alphaCutoff, 0, 1);
-        PolygonCollider2D PGC2D = GetComponent<PolygonCollider2D>();
+        PolygonCollider2D PGC2D = sprite_on_child ? transform.GetChild(0).gameObject.AddComponent<PolygonCollider2D>() : gameObject.AddComponent<PolygonCollider2D>();
+
         if (PGC2D == null)
         {
             throw new Exception($"PixelCollider2D could not be regenerated because there is no PolygonCollider2D component on \"{gameObject.name}\".");
         }
         SpriteRenderer SR = sprite_on_child ? transform.GetChild(0).GetComponent<SpriteRenderer>() : GetComponent<SpriteRenderer>();
+        //print("curr spr " + SR.sprite.name + " on "+SR.gameObject.name);
         if (SR == null)
         {
             PGC2D.pathCount = 0;

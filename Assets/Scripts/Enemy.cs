@@ -28,6 +28,8 @@ public class Enemy : MonoBehaviour {
 
 	public EnemySteering steer;
 
+	public bool sprite_on_child; //whether the visual representation of this enemy is on its child
+
 
 	void Start () {
 		if(!audioz) audioz = GameObject.FindWithTag ("AudioStorage").GetComponent<AudioStorage>();
@@ -44,6 +46,9 @@ public class Enemy : MonoBehaviour {
 			audioz.enemyDefeatedSE ();
 			Destroy (gameObject);
 		}
+
+
+		//print("child sprite " + transform.GetChild(0).GetComponent<SpriteRenderer>().sprite.name);
 	}
 
 	public void passReferences(PrefabHolder ph, GameControl gc)
@@ -147,7 +152,7 @@ public class Enemy : MonoBehaviour {
 	IEnumerator damageVFXenemy(Color col){
 			for (int i = 0; i < 2; i++) {
 //				//flip visibility on and off
-				GetComponent<SpriteRenderer> ().enabled = !GetComponent<SpriteRenderer> ().enabled;
+				GetComponent<SpriteRenderer> ().enabled = !GetComponent<SpriteRenderer> ().enabled; //TODO sprite might be on child
 
 				yield return new WaitForSeconds (0.1f);
 			}

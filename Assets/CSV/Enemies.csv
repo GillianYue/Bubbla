@@ -3,5 +3,5 @@ ENEMY_CODE,ENEMY_NAME,LIFE,ATTACK,SIZE_SCALE,INITIAL_SPRITE(if animation does no
 1,Crab,4,1,1,,Crab,,,1,25,,bubble,0,25,0,1,0.2,0.4,0.5
 2,Crow,3,1,1.3,,Crow,,,0,30,,,,,,,,,
 3,Wasp,3,1,0.7,,Wasp,,,1,35,TRUE,pin,1,50,0,1.5,0.2,0.7,1
-4,TrainingEnemy1,1,1,1,TrainingEnemy1,generalHoverChild,,,0,20,,,,,,,,,
-5,TrainingEnemy2,1,1,1,TrainingEnemy2,generalHoverChild,,,0,20,,,,,,,,,
+4,TrainingEnemy1,1,1,2,TrainingEnemy1,generalHoverChild,,,0,50,TRUE,,,,,,,,
+5,TrainingEnemy2,1,1,2,TrainingEnemy2,generalHoverChild,,,0,50,TRUE,,,,,,,,
