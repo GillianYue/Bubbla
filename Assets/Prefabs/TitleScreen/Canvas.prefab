@@ -2581,7 +2581,6 @@ MonoBehaviour:
   customEvents: {fileID: 0}
   player: {fileID: 0}
   loadScene: {fileID: 0}
-  dialogue: {fileID: 0}
   enemyLoader: {fileID: 0}
   characterLoader: {fileID: 0}
   itemLoader: {fileID: 0}
